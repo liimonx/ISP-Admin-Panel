@@ -1,6 +1,7 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator
+from django.utils import timezone
 from decimal import Decimal
 from customers.models import Customer
 from subscriptions.models import Subscription
@@ -318,3 +319,99 @@ class Payment(models.Model):
         """Mark payment as refunded."""
         self.status = self.Status.REFUNDED
         self.save()
+
+
+class BillingCycle(models.Model):
+    """
+    Billing cycle model for managing billing periods.
+    """
+    class Status(models.TextChoices):
+        ACTIVE = 'active', _('Active')
+        INACTIVE = 'inactive', _('Inactive')
+        SUSPENDED = 'suspended', _('Suspended')
+    
+    # Relationships
+    customer = models.ForeignKey(
+        Customer,
+        on_delete=models.CASCADE,
+        related_name='billing_cycles',
+        help_text=_('Customer for this billing cycle')
+    )
+    subscription = models.ForeignKey(
+        Subscription,
+        on_delete=models.CASCADE,
+        related_name='billing_cycles',
+        help_text=_('Subscription for this billing cycle')
+    )
+    
+    # Billing Cycle Details
+    cycle_number = models.PositiveIntegerField(help_text=_('Billing cycle number'))
+    start_date = models.DateField(help_text=_('Billing cycle start date'))
+    end_date = models.DateField(help_text=_('Billing cycle end date'))
+    
+    # Status and Dates
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.ACTIVE,
+        help_text=_('Billing cycle status')
+    )
+    
+    # Amounts
+    base_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal('0.00'))],
+        help_text=_('Base amount for this cycle')
+    )
+    total_amount = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        validators=[MinValueValidator(Decimal('0.00'))],
+        help_text=_('Total amount for this cycle')
+    )
+    
+    # Notes and Additional Info
+    notes = models.TextField(blank=True, help_text=_('Additional notes'))
+    
+    # Timestamps
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _('Billing Cycle')
+        verbose_name_plural = _('Billing Cycles')
+        ordering = ['-start_date']
+        unique_together = ['customer', 'subscription', 'cycle_number']
+        indexes = [
+            models.Index(fields=['customer']),
+            models.Index(fields=['subscription']),
+            models.Index(fields=['status']),
+            models.Index(fields=['start_date']),
+            models.Index(fields=['end_date']),
+        ]
+    
+    def __str__(self):
+        return f"Billing Cycle {self.cycle_number} - {self.customer.name}"
+    
+    @property
+    def is_active(self):
+        """Check if billing cycle is active."""
+        return self.status == self.Status.ACTIVE
+    
+    @property
+    def is_current(self):
+        """Check if this is the current billing cycle."""
+        today = timezone.now().date()
+        return self.start_date <= today <= self.end_date
+    
+    def calculate_total(self):
+        """Calculate total amount."""
+        self.total_amount = self.base_amount
+        return self.total_amount
+    
+    def save(self, *args, **kwargs):
+        """Override save to calculate total."""
+        if not self.total_amount:
+            self.calculate_total()
+        super().save(*args, **kwargs)

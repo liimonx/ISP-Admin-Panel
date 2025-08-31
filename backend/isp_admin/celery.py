@@ -17,6 +17,22 @@ app.config_from_object('django.conf:settings', namespace='CELERY')
 # Load task modules from all registered Django apps.
 app.autodiscover_tasks()
 
+# Configure periodic tasks
+app.conf.beat_schedule = {
+    'check-main-router-health': {
+        'task': 'network.tasks.check_main_router_health',
+        'schedule': 300.0,  # Every 5 minutes
+    },
+    'sync-main-router-data': {
+        'task': 'network.tasks.sync_main_router_data',
+        'schedule': 900.0,  # Every 15 minutes
+    },
+    'backup-main-router-config': {
+        'task': 'network.tasks.backup_main_router_config',
+        'schedule': 86400.0,  # Daily
+    },
+}
+
 
 @app.task(bind=True, ignore_result=True)
 def debug_task(self):

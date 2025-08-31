@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema, OpenApiParameter
+from core.responses import APIResponse, paginate_response
 from .models import Customer
 from .serializers import (
     CustomerSerializer, CustomerCreateSerializer, CustomerUpdateSerializer,
@@ -31,6 +32,24 @@ class CustomerListView(generics.ListCreateAPIView):
         if self.request.method == 'POST':
             return CustomerCreateSerializer
         return CustomerListSerializer
+    
+    def list(self, request, *args, **kwargs):
+        return paginate_response(
+            self.get_queryset(),
+            request,
+            self.get_serializer_class()
+        )
+    
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        if serializer.is_valid():
+            customer = serializer.save()
+            return APIResponse.success(
+                CustomerDetailSerializer(customer).data,
+                message='Customer created successfully',
+                status_code=201
+            )
+        return APIResponse.validation_error(serializer.errors)
 
 
 @extend_schema(
@@ -48,6 +67,31 @@ class CustomerDetailView(generics.RetrieveUpdateDestroyAPIView):
         if self.request.method in ['PUT', 'PATCH']:
             return CustomerUpdateSerializer
         return CustomerDetailSerializer
+    
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        serializer = self.get_serializer(instance)
+        return APIResponse.success(serializer.data)
+    
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        if serializer.is_valid():
+            customer = serializer.save()
+            return APIResponse.success(
+                CustomerDetailSerializer(customer).data,
+                message='Customer updated successfully'
+            )
+        return APIResponse.validation_error(serializer.errors)
+    
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        instance.delete()
+        return APIResponse.success(
+            message='Customer deleted successfully',
+            status_code=204
+        )
 
 
 @extend_schema(
@@ -61,7 +105,10 @@ def customer_search_view(request):
     """Search customers by various criteria."""
     query = request.query_params.get('q', '')
     if not query:
-        return Response({'error': 'Query parameter "q" is required'}, status=400)
+        return APIResponse.error(
+            message='Query parameter "q" is required',
+            status_code=400
+        )
     
     customers = Customer.objects.filter(
         models.Q(name__icontains=query) |
@@ -71,7 +118,7 @@ def customer_search_view(request):
     )[:20]  # Limit results
     
     serializer = CustomerListSerializer(customers, many=True)
-    return Response(serializer.data)
+    return APIResponse.success(serializer.data)
 
 
 @extend_schema(
@@ -107,7 +154,7 @@ def customer_stats_view(request):
         'active_percentage': round((active_customers / total_customers * 100) if total_customers > 0 else 0, 2)
     }
     
-    return Response(stats)
+    return APIResponse.success(stats)
 
 
 @extend_schema(
@@ -123,20 +170,19 @@ def bulk_update_status_view(request):
     new_status = request.data.get('status')
     
     if not customer_ids or not new_status:
-        return Response(
-            {'error': 'Both customer_ids and status are required'}, 
-            status=400
+        return APIResponse.error(
+            message='Both customer_ids and status are required',
+            status_code=400
         )
     
     if new_status not in dict(Customer.Status.choices):
-        return Response(
-            {'error': f'Invalid status. Must be one of: {list(dict(Customer.Status.choices).keys())}'}, 
-            status=400
+        return APIResponse.error(
+            message=f'Invalid status. Must be one of: {list(dict(Customer.Status.choices).keys())}',
+            status_code=400
         )
     
     updated_count = Customer.objects.filter(id__in=customer_ids).update(status=new_status)
     
-    return Response({
-        'message': f'Successfully updated {updated_count} customers to {new_status}',
+    return APIResponse.success({
         'updated_count': updated_count
-    })
+    }, message=f'Successfully updated {updated_count} customers to {new_status}')

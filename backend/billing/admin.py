@@ -8,7 +8,7 @@ from .models import Invoice, Payment
 @admin.register(Invoice)
 class InvoiceAdmin(admin.ModelAdmin):
     list_display = [
-        'invoice_number', 'customer', 'subscription', 'amount', 
+        'invoice_number', 'customer', 'subscription', 'total_amount', 
         'status', 'due_date', 'created_at'
     ]
     list_filter = ['status', 'due_date', 'created_at', 'subscription__plan']
@@ -50,24 +50,24 @@ class InvoiceAdmin(admin.ModelAdmin):
 @admin.register(Payment)
 class PaymentAdmin(admin.ModelAdmin):
     list_display = [
-        'payment_id', 'invoice', 'amount', 'provider', 'status', 
-        'paid_at', 'created_at'
+        'payment_number', 'invoice', 'amount', 'payment_method', 'status', 
+        'payment_date', 'created_at'
     ]
-    list_filter = ['provider', 'status', 'paid_at', 'created_at']
-    search_fields = ['payment_id', 'invoice__invoice_number', 'external_id']
-    readonly_fields = ['payment_id', 'created_at', 'updated_at']
+    list_filter = ['status', 'payment_method', 'created_at']
+    search_fields = ['payment_number', 'invoice__invoice_number', 'external_id']
+    readonly_fields = ['payment_number', 'created_at', 'updated_at']
     date_hierarchy = 'created_at'
     
     fieldsets = (
         ('Payment Information', {
-            'fields': ('payment_id', 'invoice', 'amount', 'provider', 'status')
+            'fields': ('payment_number', 'invoice', 'amount', 'payment_method', 'status')
         }),
         ('External Data', {
-            'fields': ('external_id', 'transaction_data'),
+            'fields': ('external_id', 'transaction_id'),
             'classes': ('collapse',)
         }),
         ('Dates', {
-            'fields': ('paid_at', 'created_at', 'updated_at')
+            'fields': ('payment_date', 'created_at', 'updated_at')
         }),
     )
     

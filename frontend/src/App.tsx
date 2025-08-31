@@ -1,7 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { Toaster } from 'react-hot-toast';
 
 // Import Atomix CSS
 import '@shohojdhara/atomix/css';
@@ -22,6 +20,10 @@ import Billing from '@/pages/Billing';
 import Network from '@/pages/Network';
 import Monitoring from '@/pages/Monitoring';
 import Users from '@/pages/Users';
+import RouterManagement from '@/pages/RouterManagement';
+import MainRouterDashboard from '@/pages/MainRouterDashboard';
+import Settings from '@/pages/Settings';
+import Reports from '@/pages/Reports';
 
 // Protected Route Component
 import ProtectedRoute from '@/components/common/ProtectedRoute';
@@ -40,7 +42,7 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router>
+        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route
@@ -58,6 +60,11 @@ function App() {
               <Route path="billing" element={<Billing />} />
               <Route path="network" element={<Network />} />
               <Route path="monitoring" element={<Monitoring />} />
+              <Route path="routers" element={<RouterManagement />} />
+              <Route path="main-router" element={<MainRouterDashboard />} />
+              <Route path="settings/system" element={<Settings />} />
+              <Route path="reports/usage" element={<Reports />} />
+              <Route path="reports/revenue" element={<Reports />} />
               <Route
                 path="users"
                 element={
@@ -69,29 +76,6 @@ function App() {
             </Route>
           </Routes>
         </Router>
-        <Toaster
-          position="top-right"
-          toastOptions={{
-            duration: 4000,
-            style: {
-              background: '#212121',
-              color: '#FFFFFF',
-              border: '1px solid #7AFFD7',
-            },
-            success: {
-              iconTheme: {
-                primary: '#4DFF9F',
-                secondary: '#000000',
-              },
-            },
-            error: {
-              iconTheme: {
-                primary: '#DD6061',
-                secondary: '#FFFFFF',
-              },
-            },
-          }}
-        />
       </AuthProvider>
     </QueryClientProvider>
   );

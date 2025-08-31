@@ -1,11 +1,36 @@
 import { format, formatDistanceToNow } from 'date-fns';
 
-// Currency formatting
-export const formatCurrency = (amount: number, currency = 'USD'): string => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency,
-  }).format(amount);
+/**
+ * Safely converts a value to a number for financial calculations.
+ * Handles both string and number inputs from API responses.
+ * @param value - The value to convert (string or number)
+ * @returns The number value, or 0 if conversion fails
+ */
+export const toNumber = (value: string | number | null | undefined): number => {
+  if (value === null || value === undefined) return 0;
+  if (typeof value === 'number') return value;
+  if (typeof value === 'string') {
+    const parsed = parseFloat(value);
+    return isNaN(parsed) ? 0 : parsed;
+  }
+  // Handle unexpected types (objects, arrays, etc.)
+  console.warn('toNumber received unexpected type:', typeof value, value);
+  return 0;
+};
+
+/**
+ * Formats a number as currency with proper decimal places.
+ * @param value - The value to format (string or number)
+ * @param currency - The currency symbol (default: '$')
+ * @returns Formatted currency string
+ */
+export const formatCurrency = (value: string | number | null | undefined, currency: string = '$'): string => {
+  const numValue = toNumber(value);
+  // Additional safety check to ensure numValue is a number
+  if (typeof numValue !== 'number' || isNaN(numValue)) {
+    return `${currency}0.00`;
+  }
+  return `${currency}${numValue.toFixed(2)}`;
 };
 
 // Date formatting

@@ -1,22 +1,26 @@
 from django.contrib import admin
 from django.utils.html import format_html
 from django.urls import reverse
-from .models import SNMPData, UsageSnapshot
+from .models import SNMPSnapshot, UsageSnapshot
 
 
-@admin.register(SNMPData)
-class SNMPDataAdmin(admin.ModelAdmin):
+@admin.register(SNMPSnapshot)
+class SNMPSnapshotAdmin(admin.ModelAdmin):
     list_display = [
-        'router', 'metric_type', 'value', 'unit', 'timestamp'
+        'router', 'cpu_usage', 'memory_usage', 'uptime', 'temperature', 'timestamp'
     ]
-    list_filter = ['metric_type', 'router', 'timestamp']
-    search_fields = ['router__name', 'metric_type']
+    list_filter = ['router', 'timestamp']
+    search_fields = ['router__name']
     readonly_fields = ['timestamp']
     date_hierarchy = 'timestamp'
     
     fieldsets = (
-        ('SNMP Data', {
-            'fields': ('router', 'metric_type', 'value', 'unit')
+        ('System Resources', {
+            'fields': ('router', 'cpu_usage', 'memory_usage', 'uptime', 'temperature')
+        }),
+        ('Network Interfaces', {
+            'fields': ('interface_data',),
+            'classes': ('collapse',)
         }),
         ('Metadata', {
             'fields': ('timestamp',),
@@ -34,17 +38,6 @@ class SNMPDataAdmin(admin.ModelAdmin):
         return '-'
     router_link.short_description = 'Router'
     
-    def value_display(self, obj):
-        if obj.unit:
-            return f"{obj.value} {obj.unit}"
-        return obj.value
-    value_display.short_description = 'Value'
-    
-    # Override list_display to use custom methods
-    list_display = [
-        'router_link', 'metric_type', 'value_display', 'timestamp'
-    ]
-    
     # Add actions for data management
     actions = ['export_data', 'cleanup_old_data']
     
@@ -54,18 +47,19 @@ class SNMPDataAdmin(admin.ModelAdmin):
         from django.utils import timezone
         
         response = HttpResponse(content_type='text/csv')
-        response['Content-Disposition'] = f'attachment; filename="snmp_data_{timezone.now().strftime("%Y%m%d_%H%M%S")}.csv"'
+        response['Content-Disposition'] = f'attachment; filename="snmp_snapshots_{timezone.now().strftime("%Y%m%d_%H%M%S")}.csv"'
         
         writer = csv.writer(response)
-        writer.writerow(['Router', 'Metric Type', 'Value', 'Unit', 'Timestamp'])
+        writer.writerow(['Router', 'CPU Usage (%)', 'Memory Usage (%)', 'Uptime (s)', 'Temperature (°C)', 'Timestamp'])
         
-        for data in queryset:
+        for snapshot in queryset:
             writer.writerow([
-                data.router.name if data.router else '',
-                data.metric_type,
-                data.value,
-                data.unit or '',
-                data.timestamp.strftime('%Y-%m-%d %H:%M:%S')
+                snapshot.router.name if snapshot.router else '',
+                snapshot.cpu_usage or '',
+                snapshot.memory_usage or '',
+                snapshot.uptime or '',
+                snapshot.temperature or '',
+                snapshot.timestamp.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
         return response
@@ -82,7 +76,7 @@ class SNMPDataAdmin(admin.ModelAdmin):
         
         self.message_user(
             request, 
-            f"🗑️ Deleted {deleted_count} old SNMP data records"
+            f"🗑️ Deleted {deleted_count} old SNMP snapshot records"
         )
     
     cleanup_old_data.short_description = "Clean up old data (30+ days)"
@@ -91,69 +85,49 @@ class SNMPDataAdmin(admin.ModelAdmin):
 @admin.register(UsageSnapshot)
 class UsageSnapshotAdmin(admin.ModelAdmin):
     list_display = [
-        'subscription', 'data_used', 'data_limit', 'usage_percentage', 
-        'period_start', 'period_end'
+        'router', 'total_bytes_in', 'total_bytes_out', 'total_gb', 
+        'active_connections', 'timestamp'
     ]
-    list_filter = ['subscription__plan', 'period_start', 'period_end']
-    search_fields = ['subscription__customer__name', 'subscription__username']
-    readonly_fields = ['created_at']
-    date_hierarchy = 'period_start'
+    list_filter = ['router', 'timestamp']
+    search_fields = ['router__name']
+    readonly_fields = ['timestamp', 'total_gb']
+    date_hierarchy = 'timestamp'
     
     fieldsets = (
-        ('Usage Information', {
-            'fields': ('subscription', 'data_used', 'data_limit', 'period_start', 'period_end')
+        ('Router Information', {
+            'fields': ('router',)
+        }),
+        ('Usage Statistics', {
+            'fields': ('total_bytes_in', 'total_bytes_out', 'active_connections')
+        }),
+        ('PPPoE Statistics', {
+            'fields': ('pppoe_users_count', 'pppoe_active_sessions'),
+            'classes': ('collapse',)
         }),
         ('Metadata', {
-            'fields': ('created_at',),
+            'fields': ('timestamp', 'total_gb'),
             'classes': ('collapse',)
         }),
     )
     
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related(
-            'subscription', 'subscription__customer', 'subscription__plan'
-        )
+        return super().get_queryset(request).select_related('router')
     
-    def subscription_link(self, obj):
-        if obj.subscription:
-            url = reverse('admin:subscriptions_subscription_change', args=[obj.subscription.id])
-            return format_html('<a href="{}">{}</a>', url, obj.subscription.username)
+    def router_link(self, obj):
+        if obj.router:
+            url = reverse('admin:network_router_change', args=[obj.router.id])
+            return format_html('<a href="{}">{}</a>', url, obj.router.name)
         return '-'
-    subscription_link.short_description = 'Subscription'
+    router_link.short_description = 'Router'
     
-    def customer_name(self, obj):
-        return obj.subscription.customer.name if obj.subscription and obj.subscription.customer else '-'
-    customer_name.short_description = 'Customer'
-    
-    def usage_percentage(self, obj):
-        if obj.data_limit and obj.data_limit > 0:
-            percentage = (obj.data_used / obj.data_limit) * 100
-            if percentage > 90:
-                color = 'red'
-            elif percentage > 75:
-                color = 'orange'
-            else:
-                color = 'green'
-            
-            return format_html(
-                '<span style="color: {}; font-weight: bold;">{:.1f}%</span>',
-                color, percentage
-            )
-        return '-'
-    usage_percentage.short_description = 'Usage %'
-    
-    def data_used_display(self, obj):
-        return f"{obj.data_used} GB"
-    data_used_display.short_description = 'Data Used'
-    
-    def data_limit_display(self, obj):
-        return f"{obj.data_limit} GB"
-    data_limit_display.short_description = 'Data Limit'
+    def total_gb_display(self, obj):
+        return f"{obj.total_gb:.2f} GB"
+    total_gb_display.short_description = 'Total Data (GB)'
     
     # Override list_display to use custom methods
     list_display = [
-        'subscription_link', 'customer_name', 'data_used_display', 
-        'data_limit_display', 'usage_percentage', 'period_start', 'period_end'
+        'router_link', 'total_bytes_in', 'total_bytes_out', 
+        'total_gb_display', 'active_connections', 'timestamp'
     ]
     
     # Add actions for usage management
@@ -169,21 +143,20 @@ class UsageSnapshotAdmin(admin.ModelAdmin):
         
         writer = csv.writer(response)
         writer.writerow([
-            'Customer', 'Subscription', 'Plan', 'Data Used (GB)', 
-            'Data Limit (GB)', 'Usage %', 'Period Start', 'Period End'
+            'Router', 'Bytes In', 'Bytes Out', 'Total Data (GB)', 
+            'Active Connections', 'PPPoE Users', 'PPPoE Sessions', 'Timestamp'
         ])
         
         for snapshot in queryset:
-            usage_pct = (snapshot.data_used / snapshot.data_limit * 100) if snapshot.data_limit > 0 else 0
             writer.writerow([
-                snapshot.subscription.customer.name if snapshot.subscription and snapshot.subscription.customer else '',
-                snapshot.subscription.username if snapshot.subscription else '',
-                snapshot.subscription.plan.name if snapshot.subscription and snapshot.subscription.plan else '',
-                snapshot.data_used,
-                snapshot.data_limit,
-                f"{usage_pct:.1f}%",
-                snapshot.period_start.strftime('%Y-%m-%d'),
-                snapshot.period_end.strftime('%Y-%m-%d')
+                snapshot.router.name if snapshot.router else '',
+                snapshot.total_bytes_in,
+                snapshot.total_bytes_out,
+                f"{snapshot.total_gb:.2f}",
+                snapshot.active_connections,
+                snapshot.pppoe_users_count,
+                snapshot.pppoe_active_sessions,
+                snapshot.timestamp.strftime('%Y-%m-%d %H:%M:%S')
             ])
         
         return response

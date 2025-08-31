@@ -11,7 +11,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
         'access_method', 'created_at'
     ]
     list_filter = [
-        'status', 'access_method', 'plan', 'router', 'created_at', 'expires_at'
+        'status', 'access_method', 'plan', 'router', 'created_at', 'end_date'
     ]
     search_fields = [
         'username', 'customer__name', 'customer__email', 'customer__phone'
@@ -31,7 +31,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
             'classes': ('collapse',)
         }),
         ('Dates', {
-            'fields': ('start_date', 'expires_at', 'created_at', 'updated_at')
+            'fields': ('start_date', 'end_date', 'created_at', 'updated_at')
         }),
         ('Notes', {
             'fields': ('notes',),

@@ -126,7 +126,7 @@ class RouterSessionListSerializer(serializers.ModelSerializer):
     """Serializer for router session list view."""
     
     router_name = serializers.CharField(source='router.name', read_only=True)
-    total_bytes = serializers.BigIntegerField(read_only=True)
+    total_bytes = serializers.IntegerField(read_only=True)
     total_gb = serializers.FloatField(read_only=True)
     
     class Meta:

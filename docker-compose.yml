@@ -43,6 +43,17 @@ services:
       - DEBUG=False
       - SECRET_KEY=your-secret-key-here
       - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+      # Main Router Configuration
+      - MAIN_ROUTER_IP=103.115.252.60
+      - MAIN_ROUTER_API_PORT=8728
+      - MAIN_ROUTER_SSH_PORT=22
+      - MAIN_ROUTER_USERNAME=admin
+      - MAIN_ROUTER_PASSWORD=your-router-password-here
+      - MAIN_ROUTER_USE_TLS=True
+      # Network Configuration
+      - ROUTER_API_TIMEOUT=30
+      - ROUTER_CONNECTION_RETRIES=3
+      - ROUTER_HEALTH_CHECK_INTERVAL=300
     volumes:
       - ./backend/media:/app/media
       - ./backend/staticfiles:/app/staticfiles

@@ -77,10 +77,34 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       const tokens = authService.getStoredTokens();
       if (tokens) {
         try {
+          // Check if we have cached user data
+          const cachedUser = localStorage.getItem('cached_user');
+          if (cachedUser) {
+            try {
+              const user = JSON.parse(cachedUser);
+              dispatch({ type: 'LOGIN_SUCCESS', payload: { ...tokens, user } });
+              // Fetch fresh user data in background
+              setTimeout(async () => {
+                try {
+                  const freshUser = await authService.getCurrentUser();
+                  localStorage.setItem('cached_user', JSON.stringify(freshUser));
+                  dispatch({ type: 'UPDATE_USER', payload: freshUser });
+                } catch (error) {
+                  console.warn('Failed to fetch fresh user data:', error);
+                }
+              }, 100);
+              return;
+            } catch (error) {
+              console.warn('Failed to parse cached user data:', error);
+            }
+          }
+          
           const user = await authService.getCurrentUser();
+          localStorage.setItem('cached_user', JSON.stringify(user));
           dispatch({ type: 'LOGIN_SUCCESS', payload: { ...tokens, user } });
         } catch (error) {
           authService.clearTokens();
+          localStorage.removeItem('cached_user');
           dispatch({ type: 'LOGIN_FAILURE' });
         }
       } else {
@@ -104,6 +128,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const logout = () => {
     authService.logout();
+    localStorage.removeItem('cached_user');
     dispatch({ type: 'LOGOUT' });
   };
 

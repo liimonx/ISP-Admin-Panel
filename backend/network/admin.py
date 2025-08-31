@@ -12,7 +12,7 @@ class RouterAdmin(admin.ModelAdmin):
     ]
     list_filter = ['status', 'router_type', 'location', 'created_at']
     search_fields = ['name', 'host', 'location', 'description']
-    readonly_fields = ['created_at', 'updated_at', 'last_sync_at']
+    readonly_fields = ['created_at', 'updated_at']
     date_hierarchy = 'created_at'
     
     fieldsets = (

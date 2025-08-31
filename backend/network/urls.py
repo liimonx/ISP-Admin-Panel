@@ -1,23 +1,28 @@
-from django.urls import path
-from .views import (
-    RouterListView, RouterDetailView, test_router_connection_view,
-    update_router_status_view, router_sessions_view, router_pppoe_users_view,
-    create_pppoe_user_view, delete_pppoe_user_view, router_stats_view,
-    RouterSessionListView, bulk_update_router_status_view
-)
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from . import views
 
-app_name = 'network'
+# Create router for ViewSets
+router = DefaultRouter()
+router.register(r'routers', views.RouterViewSet)
 
 urlpatterns = [
-    path('routers/', RouterListView.as_view(), name='router_list'),
-    path('routers/<int:pk>/', RouterDetailView.as_view(), name='router_detail'),
-    path('routers/<int:pk>/test-connection/', test_router_connection_view, name='test_connection'),
-    path('routers/<int:pk>/status/', update_router_status_view, name='update_status'),
-    path('routers/<int:pk>/sessions/', router_sessions_view, name='router_sessions'),
-    path('routers/<int:pk>/pppoe-users/', router_pppoe_users_view, name='router_pppoe_users'),
-    path('routers/<int:pk>/create-pppoe-user/', create_pppoe_user_view, name='create_pppoe_user'),
-    path('routers/<int:pk>/delete-pppoe-user/', delete_pppoe_user_view, name='delete_pppoe_user'),
-    path('routers/stats/', router_stats_view, name='router_stats'),
-    path('routers/bulk-update-status/', bulk_update_router_status_view, name='bulk_update_status'),
-    path('sessions/', RouterSessionListView.as_view(), name='session_list'),
+    # Include ViewSet routes
+    path('', include(router.urls)),
+    
+    # Router statistics endpoint (accessible at /api/network/routers/stats/)
+    path('routers/stats/', views.router_stats_view, name='router_stats'),
+    
+    # Main Router specific endpoints
+    path('main-router/status/', views.main_router_status, name='main_router_status'),
+    path('main-router/interfaces/', views.main_router_interfaces, name='main_router_interfaces'),
+    path('main-router/bandwidth/', views.main_router_bandwidth, name='main_router_bandwidth'),
+    path('main-router/connections/', views.main_router_connections, name='main_router_connections'),
+    path('main-router/dhcp-leases/', views.main_router_dhcp_leases, name='main_router_dhcp_leases'),
+    path('main-router/resources/', views.main_router_resources, name='main_router_resources'),
+    path('main-router/logs/', views.main_router_logs, name='main_router_logs'),
+    path('main-router/alerts/', views.main_router_alerts, name='main_router_alerts'),
+    path('main-router/execute-command/', views.main_router_execute_command, name='main_router_execute_command'),
+    path('main-router/test-connection/', views.main_router_test_connection, name='main_router_test_connection'),
+    path('main-router/restart/', views.main_router_restart, name='main_router_restart'),
 ]

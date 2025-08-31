@@ -5,8 +5,8 @@
     "lib": ["ES2020", "DOM", "DOM.Iterable"],
     "module": "ESNext",
     "skipLibCheck": true,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "moduleResolution": "node",
+
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
@@ -16,6 +16,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "baseUrl": ".",
+    "allowSyntheticDefaultImports": true,
     "paths": {
       "@/*": ["src/*"],
       "@/components/*": ["src/components/*"],

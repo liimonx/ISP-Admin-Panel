@@ -40,6 +40,7 @@ THIRD_PARTY_APPS = [
 ]
 
 LOCAL_APPS = [
+    'core',
     'accounts',
     'customers',
     'plans',
@@ -53,15 +54,21 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
+    # 'core.middleware.SecurityHeadersMiddleware',  # Temporarily disabled
+    # 'core.middleware.RateLimitMiddleware',  # Temporarily disabled
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
+    # 'core.middleware.PerformanceMiddleware',  # Temporarily disabled
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'core.middleware.RequestLoggingMiddleware',  # Temporarily disabled
+    # 'core.middleware.APIVersionMiddleware',  # Temporarily disabled
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'core.middleware.PerformanceHeadersMiddleware',  # Temporarily disabled
 ]
 
 ROOT_URLCONF = 'isp_admin.urls'
@@ -125,6 +132,9 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Custom User Model
+AUTH_USER_MODEL = 'accounts.User'
+
 # REST Framework settings
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -136,6 +146,15 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
+    # 'EXCEPTION_HANDLER': 'core.exceptions.custom_exception_handler',  # Temporarily disabled
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '1000/hour'
+    }
 }
 
 # JWT Settings
@@ -215,3 +234,100 @@ ROUTEROS_DEFAULT_PASSWORD = env('ROUTEROS_DEFAULT_PASSWORD', default='')
 SNMP_COMMUNITY = env('SNMP_COMMUNITY', default='public')
 SNMP_TIMEOUT = env.int('SNMP_TIMEOUT', default=1)
 SNMP_RETRIES = env.int('SNMP_RETRIES', default=3)
+
+# Rate Limiting Settings
+RATE_LIMITS = {
+    'authenticated': env.int('RATE_LIMIT_AUTHENTICATED', default=200),  # requests per minute
+    'anonymous': env.int('RATE_LIMIT_ANONYMOUS', default=60),
+    'login': env.int('RATE_LIMIT_LOGIN', default=10),
+    'password_reset': env.int('RATE_LIMIT_PASSWORD_RESET', default=5),
+}
+
+# Logging Configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+        'json': {
+            'format': '{"level": "%(levelname)s", "time": "%(asctime)s", "module": "%(module)s", "message": "%(message)s"}',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(BASE_DIR, 'logs', 'django.log'),
+            'maxBytes': 1024*1024*15,  # 15MB
+            'backupCount': 10,
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple',
+        },
+    },
+    'root': {
+        'handlers': ['console', 'file'],
+        'level': 'INFO',
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False,
+        },
+        'core': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+        'billing': {
+            'handlers': ['console', 'file'],
+            'level': 'DEBUG' if DEBUG else 'INFO',
+            'propagate': False,
+        },
+    },
+}
+
+# Create logs directory if it doesn't exist
+import os
+log_dir = os.path.join(BASE_DIR, 'logs')
+if not os.path.exists(log_dir):
+    os.makedirs(log_dir)
+
+# Performance Settings
+CONN_MAX_AGE = env.int('CONN_MAX_AGE', default=60)
+DATABASES['default']['CONN_MAX_AGE'] = CONN_MAX_AGE
+
+# Cache Configuration
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': env('REDIS_URL', default='redis://127.0.0.1:6379/1'),
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+# Main Router Configuration
+MAIN_ROUTER_IP = os.getenv('MAIN_ROUTER_IP', '103.115.252.60')
+MAIN_ROUTER_API_PORT = int(os.getenv('MAIN_ROUTER_API_PORT', 8728))
+MAIN_ROUTER_SSH_PORT = int(os.getenv('MAIN_ROUTER_SSH_PORT', 22))
+MAIN_ROUTER_USERNAME = os.getenv('MAIN_ROUTER_USERNAME', 'admin')
+MAIN_ROUTER_PASSWORD = os.getenv('MAIN_ROUTER_PASSWORD', '')
+MAIN_ROUTER_USE_TLS = os.getenv('MAIN_ROUTER_USE_TLS', 'True').lower() == 'true'
+
+# Router API Configuration
+ROUTER_API_TIMEOUT = int(os.getenv('ROUTER_API_TIMEOUT', 30))
+ROUTER_CONNECTION_RETRIES = int(os.getenv('ROUTER_CONNECTION_RETRIES', 3))
+ROUTER_HEALTH_CHECK_INTERVAL = int(os.getenv('ROUTER_HEALTH_CHECK_INTERVAL', 300))

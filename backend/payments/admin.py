@@ -146,44 +146,8 @@ class PaymentAdminActions:
     sync_payment_status.short_description = "Sync payment status"
 
 
-# Add a simple admin view for payment statistics
-@admin.register(type('PaymentStats', (), {
-    '__module__': 'payments.admin',
-    'Meta': type('Meta', (), {'app_label': 'payments'}),
-    '__str__': lambda self: 'Payment Statistics',
-    '__repr__': lambda self: 'PaymentStats()'
-}))
-class PaymentStatsAdmin(admin.ModelAdmin):
-    """Admin interface for payment statistics"""
-    
-    def changelist_view(self, request, extra_context=None):
-        """Custom changelist view for payment statistics"""
-        from django.shortcuts import render
-        from django.db.models import Count, Sum
-        from billing.models import Payment
-        
-        # Get payment statistics
-        stats = {
-            'total_payments': Payment.objects.count(),
-            'total_amount': Payment.objects.filter(status='completed').aggregate(
-                total=Sum('amount')
-            )['total'] or 0,
-            'payments_by_provider': Payment.objects.values('provider').annotate(
-                count=Count('id')
-            ),
-            'recent_payments': Payment.objects.order_by('-created_at')[:10],
-        }
-        
-        extra_context = extra_context or {}
-        extra_context['stats'] = stats
-        
-        return render(request, 'admin/payments/payment_stats.html', extra_context)
-    
-    def has_add_permission(self, request):
-        return False
-    
-    def has_change_permission(self, request, obj=None):
-        return False
-    
-    def has_delete_permission(self, request, obj=None):
-        return False
+# Payment statistics view (to be implemented when models are ready)
+# @admin.register(PaymentStats)
+# class PaymentStatsAdmin(admin.ModelAdmin):
+#     """Admin interface for payment statistics"""
+#     pass

@@ -1,15 +1,17 @@
 import React, { useState } from 'react';
 import { Navigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-import * as yup from 'yup';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
-
-const schema = yup.object({
-  username: yup.string().required('Username is required'),
-  password: yup.string().required('Password is required'),
-});
+import {
+  Card,
+  Input,
+  Button,
+  Icon,
+  Container,
+  Grid,
+  GridCol,
+  Callout,
+} from '@shohojdhara/atomix';
 
 type LoginFormData = {
   username: string;
@@ -20,27 +22,65 @@ const Login: React.FC = () => {
   const { login, isAuthenticated, isLoading } = useAuth();
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors, isSubmitting },
-  } = useForm<LoginFormData>({
-    resolver: yupResolver(schema),
+  const [formData, setFormData] = useState<LoginFormData>({
+    username: '',
+    password: '',
   });
+  const [errors, setErrors] = useState<Partial<LoginFormData>>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   if (isAuthenticated) {
     return <Navigate to="/" replace />;
   }
 
-  const onSubmit = async (data: LoginFormData) => {
+  const validateForm = () => {
+    const newErrors: Partial<LoginFormData> = {};
+    
+    if (!formData.username.trim()) {
+      newErrors.username = 'Username is required';
+    }
+    
+    if (!formData.password.trim()) {
+      newErrors.password = 'Password is required';
+    }
+    
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  const handleInputChange = (field: keyof LoginFormData, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+    
+    // Clear error when user starts typing
+    if (errors[field]) {
+      setErrors(prev => ({
+        ...prev,
+        [field]: undefined
+      }));
+    }
+  };
+
+  const onSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!validateForm()) {
+      return;
+    }
+    
+    setIsSubmitting(true);
+    setLoginError(null);
+    
     try {
-      setLoginError(null);
-      await login(data.username, data.password);
+      await login(formData.username, formData.password);
       toast.success('Login successful!');
     } catch (error) {
       setLoginError('Invalid username or password');
       toast.error('Login failed');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -49,99 +89,109 @@ const Login: React.FC = () => {
   };
 
   return (
-    <div className="login-container">
-      <div className="login-card">
-        {/* Logo and Title */}
-        <div className="login-header">
-          <div className="login-logo">🌐</div>
-          <h1 className="login-title">ISP Admin Panel</h1>
-          <p className="login-subtitle">Sign in to manage your ISP operations</p>
-        </div>
-
-        {/* Login Form */}
-        <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-          {loginError && (
-            <div className="login-error">
-              {loginError}
+    <Container className="u-height-100vh u-d-flex u-align-items-center u-justify-content-center">
+      <Grid>
+        <GridCol xs={12}>
+          <Card className="u-p-6">
+            {/* Logo and Title */}
+            <div className="u-text-center u-mb-6">
+              <div className="u-mb-4">
+                <Icon name="Globe" size={48} className="u-text-primary" />
+              </div>
+              <h1 className="u-mb-2">ISP Admin Panel</h1>
+              <p className="u-text-secondary">Sign in to manage your ISP operations</p>
             </div>
-          )}
 
-          <div className="form-group">
-            <label htmlFor="username" className="form-label">Username</label>
-            <div className="form-input-wrapper">
-              <span className="form-input-icon">👤</span>
-              <input
-                {...register('username')}
-                type="text"
-                id="username"
-                className={`form-input ${errors.username ? 'form-input--error' : ''}`}
-                placeholder="Enter your username"
-                autoComplete="username"
-                autoFocus
-              />
-            </div>
-            {errors.username && (
-              <div className="form-error">{errors.username.message}</div>
-            )}
-          </div>
+            {/* Login Form */}
+            <form onSubmit={onSubmit}>
+              {loginError && (
+                <Callout variant="error" className="u-mb-4">
+                  {loginError}
+                </Callout>
+              )}
 
-          <div className="form-group">
-            <label htmlFor="password" className="form-label">Password</label>
-            <div className="form-input-wrapper">
-              <span className="form-input-icon">🔒</span>
-              <input
-                {...register('password')}
-                type={showPassword ? 'text' : 'password'}
-                id="password"
-                className={`form-input ${errors.password ? 'form-input--error' : ''}`}
-                placeholder="Enter your password"
-                autoComplete="current-password"
-              />
-              <button
-                type="button"
-                className="form-input-toggle"
-                onClick={togglePasswordVisibility}
-                aria-label="Toggle password visibility"
+              <div className="u-mb-4">
+                <label htmlFor="username" className="u-block u-mb-2 u-font-weight-medium">Username</label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Enter your username"
+                  autoComplete="username"
+                  autoFocus
+                  value={formData.username}
+                  onChange={(e) => handleInputChange('username', e.target.value)}
+                  name="username"
+                />
+                {errors.username && (
+                  <div className="u-text-error u-text-sm u-mt-1">{errors.username}</div>
+                )}
+              </div>
+
+              <div className="u-mb-6">
+                <label htmlFor="password" className="u-block u-mb-2 u-font-weight-medium">Password</label>
+                <div className="u-relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Enter your password"
+                    autoComplete="current-password"
+                    value={formData.password}
+                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    name="password"
+                  />
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={togglePasswordVisibility}
+                    aria-label="Toggle password visibility"
+                    className="u-position-absolute u-right-2 u-top-50 u-transform-translate-y-neg-50"
+                  >
+                    <Icon name={showPassword ? 'EyeSlash' : 'Eye'} size={16} />
+                  </Button>
+                </div>
+                {errors.password && (
+                  <div className="u-text-error u-text-sm u-mt-1">{errors.password}</div>
+                )}
+              </div>
+
+              <Button
+                type="submit"
+                variant="primary"
+                size="lg"
+                className="u-width-100"
+                disabled={isSubmitting || isLoading}
               >
-                {showPassword ? '🙈' : '👁️'}
-              </button>
-            </div>
-            {errors.password && (
-              <div className="form-error">{errors.password.message}</div>
-            )}
-          </div>
+                {isSubmitting || isLoading ? 'Signing In...' : 'Sign In'}
+              </Button>
+            </form>
 
-          <button
-            type="submit"
-            className="login-button"
-            disabled={isSubmitting || isLoading}
-          >
-            {isSubmitting || isLoading ? 'Signing In...' : 'Sign In'}
-          </button>
-        </form>
-
-        {/* Demo Credentials */}
-        <div className="login-demo">
-          <h3>Demo Credentials:</h3>
-          <div className="login-demo-credentials">
-            <div className="login-demo-item">
-              <strong>Admin:</strong> admin / admin123
+            {/* Demo Credentials */}
+            <div className="u-mt-6 u-pt-6 u-border-top">
+              <h3 className="u-mb-3">Demo Credentials:</h3>
+              <div className="u-space-y-2">
+                <div className="u-d-flex u-justify-content-between u-text-sm">
+                  <span><strong>Admin:</strong></span>
+                  <span>admin / admin123</span>
+                </div>
+                <div className="u-d-flex u-justify-content-between u-text-sm">
+                  <span><strong>Support:</strong></span>
+                  <span>support / support123</span>
+                </div>
+                <div className="u-d-flex u-justify-content-between u-text-sm">
+                  <span><strong>Accountant:</strong></span>
+                  <span>accountant / accountant123</span>
+                </div>
+              </div>
             </div>
-            <div className="login-demo-item">
-              <strong>Support:</strong> support / support123
-            </div>
-            <div className="login-demo-item">
-              <strong>Accountant:</strong> accountant / accountant123
-            </div>
-          </div>
-        </div>
-      </div>
+          </Card>
+        </GridCol>
+      </Grid>
 
       {/* Footer */}
-      <div className="login-footer">
+      <div className="u-position-absolute u-bottom-4 u-left-50 u-transform-translate-x-neg-50 u-text-center u-text-sm u-text-secondary">
         <p>© 2024 ISP Admin Panel. All rights reserved.</p>
       </div>
-    </div>
+    </Container>
   );
 };
 

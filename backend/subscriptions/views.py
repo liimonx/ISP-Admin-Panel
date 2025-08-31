@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
+from core.responses import APIResponse
 from .models import Subscription
 from .serializers import (
     SubscriptionSerializer, SubscriptionCreateSerializer, SubscriptionUpdateSerializer,
@@ -134,9 +135,17 @@ def reset_data_usage_view(request, pk):
 @permission_classes([permissions.IsAuthenticated])
 def active_subscriptions_view(request):
     """Get active subscriptions."""
-    subscriptions = Subscription.objects.filter(status='active')
-    serializer = SubscriptionListSerializer(subscriptions, many=True)
-    return Response(serializer.data)
+    try:
+        subscriptions = Subscription.objects.filter(status='active')
+        serializer = SubscriptionListSerializer(subscriptions, many=True)
+        return APIResponse.success(
+            data=serializer.data,
+            message="Active subscriptions retrieved successfully"
+        )
+    except Exception as e:
+        return APIResponse.error(
+            message=f"Failed to retrieve active subscriptions: {str(e)}"
+        )
 
 
 @extend_schema(
@@ -148,9 +157,17 @@ def active_subscriptions_view(request):
 @permission_classes([permissions.IsAuthenticated])
 def suspended_subscriptions_view(request):
     """Get suspended subscriptions."""
-    subscriptions = Subscription.objects.filter(status='suspended')
-    serializer = SubscriptionListSerializer(subscriptions, many=True)
-    return Response(serializer.data)
+    try:
+        subscriptions = Subscription.objects.filter(status='suspended')
+        serializer = SubscriptionListSerializer(subscriptions, many=True)
+        return APIResponse.success(
+            data=serializer.data,
+            message="Suspended subscriptions retrieved successfully"
+        )
+    except Exception as e:
+        return APIResponse.error(
+            message=f"Failed to retrieve suspended subscriptions: {str(e)}"
+        )
 
 
 @extend_schema(
@@ -180,30 +197,38 @@ def expired_subscriptions_view(request):
 @permission_classes([permissions.IsAuthenticated])
 def subscription_stats_view(request):
     """Get subscription statistics."""
-    total_subscriptions = Subscription.objects.count()
-    active_subscriptions = Subscription.objects.filter(status='active').count()
-    suspended_subscriptions = Subscription.objects.filter(status='suspended').count()
-    pending_subscriptions = Subscription.objects.filter(status='pending').count()
-    cancelled_subscriptions = Subscription.objects.filter(status='cancelled').count()
-    
-    # Revenue statistics
-    total_monthly_revenue = sum(sub.monthly_fee for sub in Subscription.objects.filter(status='active'))
-    
-    # Data usage statistics
-    total_data_used = sum(float(sub.data_used) for sub in Subscription.objects.all())
-    
-    stats = {
-        'total_subscriptions': total_subscriptions,
-        'active_subscriptions': active_subscriptions,
-        'suspended_subscriptions': suspended_subscriptions,
-        'pending_subscriptions': pending_subscriptions,
-        'cancelled_subscriptions': cancelled_subscriptions,
-        'total_monthly_revenue': float(total_monthly_revenue),
-        'total_data_used_gb': round(total_data_used, 2),
-        'active_percentage': round((active_subscriptions / total_subscriptions * 100) if total_subscriptions > 0 else 0, 2)
-    }
-    
-    return Response(stats)
+    try:
+        total_subscriptions = Subscription.objects.count()
+        active_subscriptions = Subscription.objects.filter(status='active').count()
+        suspended_subscriptions = Subscription.objects.filter(status='suspended').count()
+        pending_subscriptions = Subscription.objects.filter(status='pending').count()
+        cancelled_subscriptions = Subscription.objects.filter(status='cancelled').count()
+        
+        # Revenue statistics
+        total_monthly_revenue = sum(sub.monthly_fee for sub in Subscription.objects.filter(status='active'))
+        
+        # Data usage statistics
+        total_data_used = sum(float(sub.data_used) for sub in Subscription.objects.all())
+        
+        stats = {
+            'total_subscriptions': total_subscriptions,
+            'active_subscriptions': active_subscriptions,
+            'suspended_subscriptions': suspended_subscriptions,
+            'pending_subscriptions': pending_subscriptions,
+            'cancelled_subscriptions': cancelled_subscriptions,
+            'total_monthly_revenue': float(total_monthly_revenue),
+            'total_data_used_gb': round(total_data_used, 2),
+            'active_percentage': round((active_subscriptions / total_subscriptions * 100) if total_subscriptions > 0 else 0, 2)
+        }
+        
+        return APIResponse.success(
+            data=stats,
+            message="Subscription statistics retrieved successfully"
+        )
+    except Exception as e:
+        return APIResponse.error(
+            message=f"Failed to retrieve subscription statistics: {str(e)}"
+        )
 
 
 @extend_schema(
