@@ -3,8 +3,6 @@ Network services for MikroTik RouterOS API integration.
 """
 import logging
 import time
-import random
-from datetime import datetime, timedelta
 from typing import Dict, List, Optional, Any
 from django.conf import settings
 from .models import Router
@@ -25,77 +23,25 @@ class MikroTikService:
         self.password = router.password
         self.use_tls = router.use_tls
         
-        # For now, we'll use dynamic mock data that changes over time
+        # For now, we'll use mock data
         # In production, you would use a MikroTik API library like:
         # from librouteros import connect
         self._mock_mode = True
-        self._base_time = time.time()
-    
-    def _get_dynamic_cpu_usage(self) -> int:
-        """Generate dynamic CPU usage based on time."""
-        # Simulate CPU usage that varies between 15-85% with some patterns
-        base = 25
-        time_factor = (time.time() - self._base_time) / 60  # Minutes since start
-        variation = int(20 * abs((time_factor % 10) - 5))  # Oscillating pattern
-        noise = random.randint(-5, 5)
-        return max(5, min(95, base + variation + noise))
-    
-    def _get_dynamic_memory_usage(self) -> int:
-        """Generate dynamic memory usage."""
-        base = 45
-        time_factor = (time.time() - self._base_time) / 120  # Slower variation
-        variation = int(15 * abs((time_factor % 8) - 4))
-        noise = random.randint(-3, 3)
-        return max(20, min(90, base + variation + noise))
-    
-    def _get_dynamic_bandwidth(self) -> Dict[str, int]:
-        """Generate dynamic bandwidth data."""
-        time_factor = (time.time() - self._base_time) / 30  # 30-second cycles
-        base_download = 15000000  # 15 Mbps base
-        base_upload = 3000000     # 3 Mbps base
-        
-        # Add realistic variations
-        download_variation = int(base_download * 0.3 * abs((time_factor % 6) - 3))
-        upload_variation = int(base_upload * 0.4 * abs((time_factor % 4) - 2))
-        
-        download_noise = random.randint(-1000000, 1000000)
-        upload_noise = random.randint(-500000, 500000)
-        
-        return {
-            'download_speed': max(1000000, base_download + download_variation + download_noise),
-            'upload_speed': max(500000, base_upload + upload_variation + upload_noise),
-        }
-    
-    def _get_dynamic_temperature(self) -> int:
-        """Generate dynamic temperature."""
-        base = 45
-        time_factor = (time.time() - self._base_time) / 180  # 3-minute cycles
-        variation = int(10 * abs((time_factor % 5) - 2.5))
-        noise = random.randint(-2, 2)
-        return max(35, min(65, base + variation + noise))
-    
-    def _get_dynamic_connections(self) -> int:
-        """Generate dynamic connection count."""
-        base = 2
-        time_factor = (time.time() - self._base_time) / 60
-        variation = int(3 * abs((time_factor % 8) - 4))
-        noise = random.randint(-1, 1)
-        return max(1, base + variation + noise)
     
     def test_connection(self) -> Dict[str, Any]:
         """Test connection to the router."""
         try:
             if self._mock_mode:
-                # Dynamic connection test data
+                # Mock connection test
                 time.sleep(0.1)  # Simulate network delay
                 return {
                     'success': True,
-                    'response_time_ms': random.randint(30, 80),
+                    'response_time_ms': 45,
                     'api_version': '6.49.7',
                     'router_name': self.router.name,
                     'uptime': '15 days, 3 hours, 45 minutes',
-                    'cpu_usage': self._get_dynamic_cpu_usage(),
-                    'memory_usage': self._get_dynamic_memory_usage(),
+                    'cpu_usage': 25,
+                    'memory_usage': 45,
                 }
             else:
                 # Real MikroTik API connection
@@ -152,20 +98,19 @@ class MikroTikService:
     def get_bandwidth_usage(self) -> Dict[str, Any]:
         """Get bandwidth usage statistics."""
         if self._mock_mode:
-            bandwidth = self._get_dynamic_bandwidth()
             return {
-                'total_download': 2500000000 + random.randint(0, 100000000),  # Growing total
-                'total_upload': 500000000 + random.randint(0, 50000000),      # Growing total
-                'download_speed': bandwidth['download_speed'],
-                'upload_speed': bandwidth['upload_speed'],
+                'total_download': 2500000000,  # 2.5 GB in bytes
+                'total_upload': 500000000,     # 500 MB in bytes
+                'download_speed': 15000000,    # 15 Mbps in bytes/s
+                'upload_speed': 3000000,       # 3 Mbps in bytes/s
                 'interfaces': {
                     'ether1': {
-                        'download': int(bandwidth['download_speed'] * 0.7),
-                        'upload': int(bandwidth['upload_speed'] * 0.7),
+                        'download': 10000000,
+                        'upload': 2000000,
                     },
                     'ether2': {
-                        'download': int(bandwidth['download_speed'] * 0.3),
-                        'upload': int(bandwidth['upload_speed'] * 0.3),
+                        'download': 5000000,
+                        'upload': 1000000,
                     },
                 }
             }
@@ -176,22 +121,22 @@ class MikroTikService:
     def get_connections(self) -> List[Dict[str, Any]]:
         """Get active connections."""
         if self._mock_mode:
-            connection_count = self._get_dynamic_connections()
-            connections = []
-            
-            for i in range(connection_count):
-                protocols = ['TCP', 'UDP']
-                states = ['established', 'time_wait', 'close_wait']
-                
-                connections.append({
-                    'protocol': random.choice(protocols),
-                    'source': f'192.168.1.{100 + i}:{random.randint(1000, 65535)}',
-                    'destination': f'{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}.{random.randint(1, 255)}:{random.choice([80, 443, 53, 22])}',
-                    'state': random.choice(states),
-                    'duration': f'{random.randint(0, 59):02d}:{random.randint(0, 59):02d}:{random.randint(0, 59):02d}',
-                })
-            
-            return connections
+            return [
+                {
+                    'protocol': 'TCP',
+                    'source': '192.168.1.100:54321',
+                    'destination': '8.8.8.8:443',
+                    'state': 'established',
+                    'duration': '00:15:30',
+                },
+                {
+                    'protocol': 'UDP',
+                    'source': '192.168.1.101:12345',
+                    'destination': '1.1.1.1:53',
+                    'state': 'established',
+                    'duration': '00:02:15',
+                },
+            ]
         else:
             # Real MikroTik API call
             pass
@@ -199,20 +144,22 @@ class MikroTikService:
     def get_dhcp_leases(self) -> List[Dict[str, Any]]:
         """Get DHCP leases."""
         if self._mock_mode:
-            lease_count = random.randint(2, 8)
-            leases = []
-            
-            for i in range(lease_count):
-                expires_time = datetime.now() + timedelta(hours=random.randint(1, 24))
-                leases.append({
-                    'ip_address': f'192.168.1.{100 + i}',
-                    'mac_address': f'{random.randint(0, 255):02X}:{random.randint(0, 255):02X}:{random.randint(0, 255):02X}:{random.randint(0, 255):02X}:{random.randint(0, 255):02X}:{random.randint(0, 255):02X}',
-                    'hostname': f'device-{i + 1}',
+            return [
+                {
+                    'ip_address': '192.168.1.100',
+                    'mac_address': 'AA:BB:CC:DD:EE:FF',
+                    'hostname': 'johns-iphone',
                     'status': 'active',
-                    'expires': expires_time.isoformat(),
-                })
-            
-            return leases
+                    'expires': '2024-01-15T10:30:00Z',
+                },
+                {
+                    'ip_address': '192.168.1.101',
+                    'mac_address': '11:22:33:44:55:66',
+                    'hostname': 'janes-laptop',
+                    'status': 'active',
+                    'expires': '2024-01-15T11:45:00Z',
+                },
+            ]
         else:
             # Real MikroTik API call
             pass
@@ -221,16 +168,12 @@ class MikroTikService:
         """Get system resource usage."""
         if self._mock_mode:
             return {
-                'cpu_usage': self._get_dynamic_cpu_usage(),
-                'memory_usage': self._get_dynamic_memory_usage(),
-                'disk_usage': random.randint(10, 20),
-                'temperature': self._get_dynamic_temperature(),
+                'cpu_usage': 25,
+                'memory_usage': 45,
+                'disk_usage': 12,
+                'temperature': 45,
                 'uptime': '15 days, 3 hours, 45 minutes',
-                'load_average': [
-                    round(random.uniform(0.1, 1.0), 1),
-                    round(random.uniform(0.1, 0.8), 1),
-                    round(random.uniform(0.1, 0.6), 1),
-                ],
+                'load_average': [0.5, 0.3, 0.2],
             }
         else:
             # Real MikroTik API call
@@ -239,33 +182,23 @@ class MikroTikService:
     def get_logs(self, limit: int = 50) -> List[Dict[str, Any]]:
         """Get system logs."""
         if self._mock_mode:
-            log_entries = [
+            return [
                 {
-                    'timestamp': (datetime.now() - timedelta(minutes=random.randint(1, 60))).isoformat(),
-                    'level': random.choice(['info', 'warning', 'error']),
-                    'message': f'DHCP lease {"added" if random.choice([True, False]) else "removed"}: 192.168.1.{random.randint(100, 200)} -> {random.randint(0, 255):02X}:{random.randint(0, 255):02X}:{random.randint(0, 255):02X}:{random.randint(0, 255):02X}:{random.randint(0, 255):02X}:{random.randint(0, 255):02X}',
-                },
-                {
-                    'timestamp': (datetime.now() - timedelta(minutes=random.randint(1, 60))).isoformat(),
+                    'timestamp': '2024-01-15T10:30:00Z',
                     'level': 'info',
-                    'message': f'Interface {random.choice(["ether1", "ether2", "wlan1"])} is {"up" if random.choice([True, False]) else "down"}',
+                    'message': 'DHCP lease added: 192.168.1.100 -> AA:BB:CC:DD:EE:FF',
                 },
                 {
-                    'timestamp': (datetime.now() - timedelta(minutes=random.randint(1, 60))).isoformat(),
+                    'timestamp': '2024-01-15T10:25:00Z',
                     'level': 'warning',
-                    'message': f'{"High" if random.choice([True, False]) else "Normal"} {"CPU" if random.choice([True, False]) else "Memory"} usage detected: {random.randint(60, 95)}%',
+                    'message': 'High CPU usage detected: 85%',
                 },
-            ]
-            
-            # Add more random log entries
-            for i in range(limit - 3):
-                log_entries.append({
-                    'timestamp': (datetime.now() - timedelta(minutes=random.randint(1, 120))).isoformat(),
-                    'level': random.choice(['info', 'warning', 'error']),
-                    'message': f'System event {i + 1}: {random.choice(["traffic", "connection", "resource", "security"])} related activity',
-                })
-            
-            return sorted(log_entries, key=lambda x: x['timestamp'], reverse=True)[:limit]
+                {
+                    'timestamp': '2024-01-15T10:20:00Z',
+                    'level': 'info',
+                    'message': 'Interface ether1 is up',
+                },
+            ][:limit]
         else:
             # Real MikroTik API call
             pass
