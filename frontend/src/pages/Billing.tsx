@@ -419,18 +419,24 @@ Generated on: ${new Date().toLocaleString()}
           {/* Recent Activity */}
           <Grid>
             <GridCol xs={12} lg={6}>
-              <Card>
+              <Card >
                 <h3 className="u-mb-4">Recent Invoices</h3>
                 {invoicesLoading ? (
-                  <div className="u-d-flex u-justify-content-center u-py-4">
+                  <div className="u-d-flex u-justify-content-center u-gap-2 u-py-4">
                     <Spinner />
                   </div>
                 ) : invoicesData?.results?.slice(0, 5).length ? (
-                  <div className="u-space-y-3">
+                  <div className="u-d-flex u-flex-wrap u-gap-3">
                     {invoicesData.results.slice(0, 5).map((invoice) => (
                       <div
                         key={invoice.id}
-                        className="u-d-flex u-justify-content-between u-align-items-center u-p-3 u-border u-rounded u-cursor-pointer u-hover-bg-gray-50"
+                        className={`c-btn c-btn--outline-${
+                          invoice.status === "paid"
+                            ? "success"
+                            : invoice.status === "overdue"
+                            ? "error"
+                            : "warning"
+                        } u-justify-content-between u-align-items-start u-flex-1 u-max-w-100`}
                         onClick={() => handleViewInvoice(invoice)}
                       >
                         <div>
@@ -441,7 +447,7 @@ Generated on: ${new Date().toLocaleString()}
                             {invoice.customer?.name}
                           </div>
                         </div>
-                        <div className="u-text-right">
+                        <div className="u-text-end">
                           <div className="u-fw-medium">
                             {formatCurrency(invoice.total_amount)}
                           </div>
@@ -455,6 +461,7 @@ Generated on: ${new Date().toLocaleString()}
                             }
                             size="sm"
                             label={invoice.status}
+                            className="u-mt-1"
                           />
                         </div>
                       </div>
@@ -478,7 +485,7 @@ Generated on: ${new Date().toLocaleString()}
                     {paymentsData.results.slice(0, 5).map((payment) => (
                       <div
                         key={payment.id}
-                        className="u-d-flex u-justify-content-between u-align-items-center u-p-3 u-border u-rounded u-cursor-pointer u-hover-bg-gray-50"
+                        className="u-d-flex u-justify-content-between u-align-items-center u-mb- 2 u-p-3 u-border u-rounded u-cursor-pointer u-hover-brand-bg-subtle"
                         onClick={() => handleViewPayment(payment)}
                       >
                         <div>
@@ -555,7 +562,7 @@ Generated on: ${new Date().toLocaleString()}
           ) : invoicesData?.results?.length ? (
             <Grid>
               {invoicesData.results.map((invoice) => (
-                <GridCol key={invoice.id} xs={12} md={6} lg={4}>
+                <GridCol key={invoice.id} xs={12} md={6} lg={4} className="u-mb-4">
                   <InvoiceCard
                     invoice={invoice}
                     onView={handleViewInvoice}
@@ -645,7 +652,7 @@ Generated on: ${new Date().toLocaleString()}
           ) : paymentsData?.results?.length ? (
             <Grid>
               {paymentsData.results.map((payment) => (
-                <GridCol key={payment.id} xs={12} md={6} lg={4}>
+                <GridCol key={payment.id} xs={12} md={6} lg={4} className="u-mb-4">
                   <PaymentCard
                     payment={payment}
                     onView={handleViewPayment}

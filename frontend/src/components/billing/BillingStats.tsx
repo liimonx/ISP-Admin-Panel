@@ -44,7 +44,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
 
   return (
     <Grid className="u-mb-6">
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Total Revenue"
           value={formatCurrency(totalRevenue)}
@@ -58,7 +58,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Outstanding Amount"
           value={formatCurrency(calculatedStats.outstandingAmount)}
@@ -72,7 +72,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Overdue Amount"
           value={formatCurrency(calculatedStats.overdueAmount)}
@@ -86,7 +86,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Collection Rate"
           value={`${collectionRate.toFixed(1)}%`}
@@ -101,7 +101,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
       </GridCol>
 
       {/* Additional Stats Row */}
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Total Invoices"
           value={totalInvoices.toString()}
@@ -115,7 +115,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Pending Invoices"
           value={pendingInvoices.toString()}
@@ -129,7 +129,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Overdue Invoices"
           value={overdueInvoices.toString()}
@@ -143,7 +143,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Paid Invoices"
           value={paidInvoices.toString()}
@@ -158,7 +158,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
       </GridCol>
 
       {/* Payment Stats Row */}
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Total Payments"
           value={totalPayments.toString()}
@@ -172,7 +172,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Successful Payments"
           value={successfulPayments.toString()}
@@ -186,7 +186,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Failed Payments"
           value={failedPayments.toString()}
@@ -200,7 +200,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         />
       </GridCol>
       
-      <GridCol xs={12} md={6} lg={3}>
+      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
         <StatCard
           title="Average Payment"
           value={formatCurrency(averagePaymentAmount)}

@@ -89,7 +89,7 @@ const Login: React.FC = () => {
   };
 
   return (
-    <Container className="u-height-100vh u-d-flex u-align-items-center u-justify-content-center">
+    <Container className="u-h-100vh u-d-flex u-align-items-center u-justify-content-center">
       <Grid>
         <GridCol xs={12}>
           <Card className="u-p-6">
@@ -144,7 +144,7 @@ const Login: React.FC = () => {
                     size="sm"
                     onClick={togglePasswordVisibility}
                     aria-label="Toggle password visibility"
-                    className="u-position-absolute u-right-2 u-top-50 u-transform-translate-y-neg-50"
+                    className="u-position-absolute u-right-2 u-top-50 u-transform-translate-y-50"
                   >
                     <Icon name={showPassword ? 'EyeSlash' : 'Eye'} size={16} />
                   </Button>
