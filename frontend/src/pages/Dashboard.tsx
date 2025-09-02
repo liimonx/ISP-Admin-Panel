@@ -19,6 +19,7 @@ import {
   Spinner,
 } from "@shohojdhara/atomix";
 import { StatCard } from "../components/molecules/StatCard";
+import { QuickActions } from "../components/ui";
 
 
 // Time period options for charts
@@ -272,32 +273,44 @@ const Dashboard: React.FC = () => {
   return (
     <div>
       {/* Page Header */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
-        <div>
-          <h1 className="u-mb-2">Dashboard</h1>
-          <p>
-            Welcome back! Here's what's happening with your ISP operations
-            today.
-          </p>
+      <div className="u-mb-8">
+        <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
+          <div>
+            <h1 className="u-text-3xl u-font-weight-bold u-mb-2 u-text-foreground">Dashboard</h1>
+            <p className="u-text-secondary u-text-lg">
+              Welcome back! Here's what's happening with your ISP operations today.
+            </p>
+          </div>
+          <div className="u-d-flex u-gap-3 u-align-items-center">
+            <Button 
+              variant="outline" 
+              size="md"
+              onClick={() => refreshMutation.mutate()}
+              disabled={refreshMutation.isPending}
+            >
+              <Icon name="ArrowClockwise" size={16} />
+              <span className="u-d-none u-d-sm-inline">
+                {refreshMutation.isPending ? 'Refreshing...' : 'Refresh'}
+              </span>
+            </Button>
+            <Button variant="outline" size="md">
+              <Icon name="Download" size={16} />
+              <span className="u-d-none u-d-sm-inline">Export</span>
+            </Button>
+            <Button variant="primary" size="md">
+              <Icon name="Plus" size={16} />
+              <span className="u-d-none u-d-sm-inline">Add Customer</span>
+            </Button>
+          </div>
         </div>
-        <div className="u-d-flex u-gap-2 u-align-items-center">
-          <Button 
-            variant="outline" 
-            size="md"
-            onClick={() => refreshMutation.mutate()}
-            disabled={refreshMutation.isPending}
-          >
-            <Icon name="ArrowClockwise" size={16} />
-            {refreshMutation.isPending ? 'Refreshing...' : 'Refresh'}
-          </Button>
-          <Button variant="outline" size="md">
-            <Icon name="Download" size={16} />
-            Export Report
-          </Button>
-          <Button variant="primary" size="md">
-            <Icon name="Plus" size={16} />
-            Add Customer
-          </Button>
+        
+        {/* Quick Stats Summary */}
+        <div className="u-d-flex u-gap-4 u-text-sm u-text-secondary">
+          <span>Last updated: {new Date().toLocaleTimeString()}</span>
+          <span>•</span>
+          <span>Auto-refresh: 30s</span>
+          <span>•</span>
+          <span>Status: All systems operational</span>
         </div>
       </div>
 
@@ -364,17 +377,22 @@ const Dashboard: React.FC = () => {
       </Grid>
 
       {/* Interactive Charts Section */}
-      <Grid className="u-mb-6">
+      <Grid className="u-mb-8">
         <GridCol xs={12} lg={8}>
-          <Card>
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
-              <h3>
-                {selectedChart === "revenue" && "Revenue Analytics"}
-                {selectedChart === "traffic" && "Network Traffic"}
-                {selectedChart === "customers" && "Customer Growth"}
-                {selectedChart === "network" && "Network Performance"}
-              </h3>
-              <div className="u-d-flex u-gap-2">
+          <Card className="u-h-100">
+            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+              <div>
+                <h3 className="u-text-xl u-font-weight-semibold u-mb-1">
+                  {selectedChart === "revenue" && "Revenue Analytics"}
+                  {selectedChart === "traffic" && "Network Traffic"}
+                  {selectedChart === "customers" && "Customer Growth"}
+                  {selectedChart === "network" && "Network Performance"}
+                </h3>
+                <p className="u-text-sm u-text-secondary">
+                  Track your key metrics over time
+                </p>
+              </div>
+              <div className="u-d-flex u-gap-2 u-flex-wrap">
                 {TIME_PERIODS.map((period) => (
                   <Button
                     key={period.value}
@@ -387,19 +405,52 @@ const Dashboard: React.FC = () => {
                 ))}
               </div>
             </div>
-            {selectedChart === "revenue" && <AreaChart datasets={revenueData} size="lg" />}
-            {selectedChart === "traffic" && <BarChart datasets={trafficData} size="lg" />}
-            {selectedChart === "customers" && <LineChart datasets={customerGrowthData} size="lg" />}
-            {selectedChart === "network" && <LineChart datasets={networkStatus} size="lg" />}
+            
+            {/* Chart Type Selector */}
+            <div className="u-d-flex u-gap-2 u-mb-4 u-flex-wrap">
+              {[
+                { key: "revenue", label: "Revenue", icon: "CurrencyDollar" },
+                { key: "traffic", label: "Traffic", icon: "Globe" },
+                { key: "customers", label: "Customers", icon: "Users" },
+                { key: "network", label: "Network", icon: "Share" },
+              ].map((chart) => (
+                <Button
+                  key={chart.key}
+                  variant={selectedChart === chart.key ? "primary" : "ghost"}
+                  size="sm"
+                  onClick={() => handleChartChange(chart.key)}
+                >
+                  <Icon name={chart.icon as any} size={16} />
+                  {chart.label}
+                </Button>
+              ))}
+            </div>
+            
+            <div className="u-min-height-400">
+              {selectedChart === "revenue" && <AreaChart datasets={revenueData} size="lg" />}
+              {selectedChart === "traffic" && <BarChart datasets={trafficData} size="lg" />}
+              {selectedChart === "customers" && <LineChart datasets={customerGrowthData} size="lg" />}
+              {selectedChart === "network" && <LineChart datasets={networkStatus} size="lg" />}
+            </div>
           </Card>
         </GridCol>
         <GridCol xs={12} lg={4}>
-          <Card>
-            <h3 className="u-mb-4">Customer Distribution</h3>
-            <DonutChart datasets={customerDistribution} size="lg" />
-            <div className="u-mt-4 u-text-center">
+          <Card className="u-h-100">
+            <div className="u-mb-4">
+              <h3 className="u-text-xl u-font-weight-semibold u-mb-1">Plan Distribution</h3>
               <p className="u-text-sm u-text-secondary">
-                Total: {stats?.total_subscriptions ?? 'N/A'} subscriptions
+                Customer subscription breakdown
+              </p>
+            </div>
+            <div className="u-min-height-300">
+              <DonutChart datasets={customerDistribution} size="lg" />
+            </div>
+            <div className="u-mt-4 u-text-center u-pt-4 u-border-top">
+              <div className="u-text-2xl u-font-weight-bold u-text-primary u-mb-1">
+                {stats?.total_subscriptions ?? 'N/A'}
+              </div>
+              <p className="u-text-sm u-text-secondary">
+                Total Active Subscriptions
               </p>
             </div>
           </Card>
@@ -422,12 +473,98 @@ const Dashboard: React.FC = () => {
         </GridCol>
       </Grid>
 
+      {/* Quick Actions */}
+      <Grid className="u-mb-8">
+        <GridCol xs={12} lg={4}>
+          <QuickActions
+            title="Quick Actions"
+            actions={[
+              {
+                id: "add-customer",
+                label: "Add Customer",
+                icon: "UserPlus",
+                onClick: () => window.location.href = '/customers',
+                variant: "primary"
+              },
+              {
+                id: "create-plan",
+                label: "Create Plan",
+                icon: "Lightning",
+                onClick: () => window.location.href = '/plans'
+              },
+              {
+                id: "generate-invoice",
+                label: "Generate Invoice",
+                icon: "Receipt",
+                onClick: () => window.location.href = '/billing'
+              },
+              {
+                id: "view-reports",
+                label: "View Reports",
+                icon: "ChartBar",
+                onClick: () => window.location.href = '/reports'
+              }
+            ]}
+          />
+        </GridCol>
+        <GridCol xs={12} lg={8}>
+          <Card className="u-h-100">
+            <div className="u-mb-4">
+              <h3 className="u-text-xl u-font-weight-semibold u-mb-1">System Overview</h3>
+              <p className="u-text-sm u-text-secondary">
+                Key metrics and performance indicators
+              </p>
+            </div>
+            
+            <Grid>
+              <GridCol xs={6} md={3}>
+                <div className="u-text-center u-p-4">
+                  <div className="u-text-2xl u-font-weight-bold u-text-success u-mb-1">
+                    {((stats?.online_routers / stats?.total_routers) * 100 || 0).toFixed(1)}%
+                  </div>
+                  <div className="u-text-sm u-text-secondary">Uptime</div>
+                </div>
+              </GridCol>
+              <GridCol xs={6} md={3}>
+                <div className="u-text-center u-p-4">
+                  <div className="u-text-2xl u-font-weight-bold u-text-primary u-mb-1">
+                    {stats?.total_customers || 0}
+                  </div>
+                  <div className="u-text-sm u-text-secondary">Customers</div>
+                </div>
+              </GridCol>
+              <GridCol xs={6} md={3}>
+                <div className="u-text-center u-p-4">
+                  <div className="u-text-2xl u-font-weight-bold u-text-warning u-mb-1">
+                    {stats?.total_routers || 0}
+                  </div>
+                  <div className="u-text-sm u-text-secondary">Routers</div>
+                </div>
+              </GridCol>
+              <GridCol xs={6} md={3}>
+                <div className="u-text-center u-p-4">
+                  <div className="u-text-2xl u-font-weight-bold u-text-info u-mb-1">
+                    ${(stats?.total_monthly_revenue || 0).toLocaleString()}
+                  </div>
+                  <div className="u-text-sm u-text-secondary">Revenue</div>
+                </div>
+              </GridCol>
+            </Grid>
+          </Card>
+        </GridCol>
+      </Grid>
+
       {/* Recent Activity Section */}
       <Grid>
         <GridCol xs={12} lg={8}>
-          <Card>
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
-              <h3>Recent Customers</h3>
+          <Card className="u-h-100">
+            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+              <div>
+                <h3 className="u-text-xl u-font-weight-semibold u-mb-1">Recent Customers</h3>
+                <p className="u-text-sm u-text-secondary">
+                  Latest customer registrations and activity
+                </p>
+              </div>
               <Button variant="ghost" size="sm">
                 View All
                 <Icon name="CaretRight" size={16} />
@@ -478,43 +615,64 @@ const Dashboard: React.FC = () => {
           </Card>
         </GridCol>
         <GridCol xs={12} lg={4}>
-          <Card>
-            <h3 className="u-mb-4">System Status</h3>
-            <div className="u-space-y-4">
+          <Card className="u-h-100">
+            <div className="u-mb-6">
+              <h3 className="u-text-xl u-font-weight-semibold u-mb-1">System Health</h3>
+              <p className="u-text-sm u-text-secondary">
+                Real-time system performance metrics
+              </p>
+            </div>
+            
+            <div className="u-space-y-6">
               <div>
-                <div className="u-d-flex u-justify-content-between u-mb-2">
-                  <span className="u-text-sm">Server Load</span>
-                  <span>{systemStatus.serverLoad}%</span>
+                <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+                  <div className="u-d-flex u-align-items-center u-gap-2">
+                    <Icon name="Cpu" size={16} className="u-text-primary" />
+                    <span className="u-text-sm u-font-weight-medium">Server Load</span>
+                  </div>
+                  <span className="u-text-sm u-font-weight-semibold">{systemStatus.serverLoad}%</span>
                 </div>
                 <Progress 
                   value={systemStatus.serverLoad} 
                   variant={systemStatus.serverLoad > 80 ? "error" : systemStatus.serverLoad > 60 ? "warning" : "primary"} 
                 />
               </div>
+              
               <div>
-                <div className="u-d-flex u-justify-content-between u-mb-2">
-                  <span className="u-text-sm">Memory Usage</span>
-                  <span>{systemStatus.memoryUsage}%</span>
+                <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+                  <div className="u-d-flex u-align-items-center u-gap-2">
+                    <Icon name="Memory" size={16} className="u-text-success" />
+                    <span className="u-text-sm u-font-weight-medium">Memory Usage</span>
+                  </div>
+                  <span className="u-text-sm u-font-weight-semibold">{systemStatus.memoryUsage}%</span>
                 </div>
                 <Progress 
                   value={systemStatus.memoryUsage} 
                   variant={systemStatus.memoryUsage > 80 ? "error" : systemStatus.memoryUsage > 60 ? "warning" : "success"} 
                 />
               </div>
+              
               <div>
-                <div className="u-d-flex u-justify-content-between u-mb-2">
-                  <span className="u-text-sm">Storage</span>
-                  <span>{systemStatus.storage}%</span>
+                <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+                  <div className="u-d-flex u-align-items-center u-gap-2">
+                    <Icon name="HardDrive" size={16} className="u-text-info" />
+                    <span className="u-text-sm u-font-weight-medium">Storage</span>
+                  </div>
+                  <span className="u-text-sm u-font-weight-semibold">{systemStatus.storage}%</span>
                 </div>
                 <Progress 
                   value={systemStatus.storage} 
                   variant={systemStatus.storage > 80 ? "error" : systemStatus.storage > 60 ? "warning" : "success"} 
                 />
               </div>
+              
               <div>
-                <div className="u-d-flex u-justify-content-between u-mb-2">
-                  <span className="u-text-sm">Network Load</span>
-                  <span>{systemStatus.networkLoad}%</span>
+                <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+                  <div className="u-d-flex u-align-items-center u-gap-2">
+                    <Icon name="Globe" size={16} className="u-text-warning" />
+                    <span className="u-text-sm u-font-weight-medium">Network Load</span>
+                  </div>
+                  <span className="u-text-sm u-font-weight-semibold">{systemStatus.networkLoad}%</span>
                 </div>
                 <Progress 
                   value={systemStatus.networkLoad} 
@@ -523,11 +681,14 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="u-mt-4 u-pt-4 u-border-top">
-              <h4 className="u-mb-3">Active Administrators</h4>
-              <div className="u-d-flex">
-                <Avatar initials="JD" size="sm" className="u-mr-neg-2" />
-                <Avatar initials="JS" size="sm" className="u-mr-neg-2" />
+            <div className="u-mt-6 u-pt-6 u-border-top">
+              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3">
+                <h4 className="u-text-sm u-font-weight-semibold">Active Administrators</h4>
+                <Badge variant="success" size="sm" label="3 online" />
+              </div>
+              <div className="u-d-flex u-gap-2">
+                <Avatar initials="JD" size="sm" />
+                <Avatar initials="JS" size="sm" />
                 <Avatar initials="BW" size="sm" />
               </div>
             </div>

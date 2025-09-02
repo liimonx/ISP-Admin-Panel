@@ -242,53 +242,70 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div
-      className={`u-h-100 u-border-right u-d-flex u-flex-column u-transition-all ${
+      className={`u-h-100 u-bg-surface u-border-right u-d-flex u-flex-column u-transition-all u-shadow-sm ${
         collapsed ? "u-width-16" : "u-width-64"
       } ${className}`}
       data-testid={testId}
+      style={{ height: '100vh' }}
     >
       {/* Header */}
-      <div className="u-pt-4 u-pb-2 u-border-b u-border-brand-subtle u-mb-4">
+      <div className="u-p-4 u-border-bottom">
         <div className="u-d-flex u-align-items-center u-justify-content-between">
           {!collapsed && (
             <div className="u-d-flex u-align-items-center u-gap-2">
-              <Icon name="Globe" size={24} color="#7AFFD7" />
-              <span className="u-font-weight-bold u-text-lg">ISP Admin</span>
+              <Icon name="Globe" size={24} className="u-text-primary" />
+              <span className="u-font-weight-bold u-text-lg u-text-primary">BCN ISP</span>
             </div>
           )}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={onToggle}
-            aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-            className={collapsed ? "u-mx-auto" : ""}
-          >
-            <Icon name={collapsed ? "CaretRight" : "CaretLeft"} size={16} />
-          </Button>
+          {collapsed && (
+            <div className="u-d-flex u-justify-content-center u-w-100">
+              <Icon name="Globe" size={24} className="u-text-primary" />
+            </div>
+          )}
+          {!collapsed && (
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onToggle}
+              aria-label="Collapse sidebar"
+            >
+              <Icon name="CaretLeft" size={16} />
+            </Button>
+          )}
         </div>
       </div>
 
       {/* User Profile */}
-      {user && !collapsed && (
-        <div className="u-p-4 u-bg-brand-subtle u-rounded-lg u-mb-2">
-          <div className="u-d-flex u-align-items-center u-gap-3">
+      {user && (
+        <div className={`u-p-4 u-border-bottom ${collapsed ? 'u-text-center' : ''}`}>
+          {collapsed ? (
             <Avatar
               src={user.avatar}
               alt={user.name}
               size="sm"
               initials={user.name?.charAt(0)?.toUpperCase() || '?'}
+              className="u-mx-auto"
             />
-            <div className="u-flex-1">
-              <div className="u-fw-medium u-fs-sm">
-                {user.name}
-              </div>
-              {user.role && (
-                <div className="u-fs-xs u-text-uppercase">
-                  {user.role}
+          ) : (
+            <div className="u-d-flex u-align-items-center u-gap-3">
+              <Avatar
+                src={user.avatar}
+                alt={user.name}
+                size="sm"
+                initials={user.name?.charAt(0)?.toUpperCase() || '?'}
+              />
+              <div className="u-flex-1 u-min-width-0">
+                <div className="u-font-weight-medium u-text-sm u-truncate">
+                  {user.name}
                 </div>
-              )}
+                {user.role && (
+                  <div className="u-text-xs u-text-secondary u-truncate">
+                    {user.role}
+                  </div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -302,15 +319,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Footer */}
-      <div className="u-p-4 u-border-top u-bg-brand-subtle u-rounded-lg">
+      <div className="u-p-4 u-border-top u-mt-auto">
         {!collapsed ? (
-          <div className="u-d-flex u-align-items-center u-gap-2 u-fs-xs u-text-muted">
+          <div className="u-d-flex u-align-items-center u-gap-2 u-text-xs u-text-secondary">
             <Icon name="Info" size={14} />
-            <span>BCN ISP Admin v1.0.0</span>
+            <span>BCN ISP v1.0.0</span>
           </div>
         ) : (
           <div className="u-d-flex u-justify-content-center">
-            <Icon name="Info" size={16} />
+            <Icon name="Info" size={16} className="u-text-secondary" />
           </div>
         )}
       </div>

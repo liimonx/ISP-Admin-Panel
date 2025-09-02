@@ -3,13 +3,19 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./styles/globals.css";
 
+// Initialize security measures
+import { initSecurity } from "./utils/security";
+
 // Initialize API interceptor and error handlers
 import "./utils/apiInterceptor";
-import { ErrorNotificationHandler } from "./utils/errorHandler";
+import { ErrorNotificationHandler, ErrorLogger } from "./utils/errorHandler";
+
+// Initialize security
+initSecurity();
 
 // Initialize global error handler for uncaught errors
 ErrorNotificationHandler.subscribe((error) => {
-  console.error("Global API Error:", error);
+  ErrorLogger.log(error);
   // You can add toast notifications or other error UI here
 });
 

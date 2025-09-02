@@ -78,14 +78,19 @@ const MainRouterDashboard: React.FC = () => {
     refetchInterval: 30000, // Refresh every 30 seconds
   });
 
-  // Execute command mutation
+  // Execute command mutation with basic validation
   const executeCommandMutation = useMutation({
-    mutationFn: (command: string) => routerService.executeMainRouterCommand(command),
+    mutationFn: (command: string) => {
+      if (!command.trim() || command.includes(';') || command.includes('&')) {
+        throw new Error('Invalid command');
+      }
+      return routerService.executeMainRouterCommand(command.trim());
+    },
     onSuccess: (data) => {
       setCommandResult(data.result || data.message || "Command executed successfully");
     },
     onError: (error: any) => {
-      setCommandResult(error.response?.data?.message || "Command execution failed");
+      setCommandResult(error.message || error.response?.data?.message || "Command execution failed");
     },
   });
 

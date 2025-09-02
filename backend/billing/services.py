@@ -76,9 +76,10 @@ class BillingService:
         )
 
         logger.info(
-            f"Generated invoice {invoice_number} for subscription {subscription.id}",
+            "Generated invoice for subscription",
             extra={
                 'invoice_id': invoice.id,
+                'invoice_number': invoice_number,
                 'subscription_id': subscription.id,
                 'customer_id': subscription.customer.id,
                 'amount': str(total_amount)
@@ -192,10 +193,12 @@ class BillingService:
                 payment.mark_as_completed()
 
             logger.info(
-                f"Processed payment {payment_number} for invoice {invoice.invoice_number}",
+                "Processed payment for invoice",
                 extra={
                     'payment_id': payment.id,
+                    'payment_number': payment_number,
                     'invoice_id': invoice.id,
+                    'invoice_number': invoice.invoice_number,
                     'amount': str(payment.amount),
                     'method': payment.payment_method
                 }
@@ -267,7 +270,8 @@ class BillingService:
 
             except Exception as e:
                 logger.error(
-                    f"Failed to generate invoice for subscription {subscription.id}: {str(e)}",
+                    "Failed to generate invoice for subscription",
+                    extra={'subscription_id': subscription.id, 'error': str(e)},
                     exc_info=True
                 )
                 errors.append({
@@ -277,7 +281,12 @@ class BillingService:
                 })
 
         logger.info(
-            f"Bulk invoice generation completed: {len(generated_invoices)} generated, {len(errors)} errors"
+            "Bulk invoice generation completed",
+            extra={
+                'generated_count': len(generated_invoices),
+                'error_count': len(errors),
+                'total_subscriptions': subscriptions.count()
+            }
         )
 
         return {
@@ -304,9 +313,10 @@ class BillingService:
             updated_count += 1
 
             logger.warning(
-                f"Invoice {invoice.invoice_number} marked as overdue",
+                "Invoice marked as overdue",
                 extra={
                     'invoice_id': invoice.id,
+                    'invoice_number': invoice.invoice_number,
                     'customer_id': invoice.customer.id,
                     'days_overdue': invoice.days_overdue,
                     'amount': str(invoice.total_amount)

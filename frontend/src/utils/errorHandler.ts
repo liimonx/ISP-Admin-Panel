@@ -247,16 +247,18 @@ export class ErrorLogger {
   private static isDevelopment = process.env.NODE_ENV === 'development';
 
   static log(error: AppError, context?: Record<string, any>): void {
+    // Sanitize error message to prevent log injection
+    const sanitizedMessage = error.message.replace(/[\r\n\t]/g, ' ').substring(0, 500);
+    
     const logEntry = {
       timestamp: error.timestamp,
-      message: error.message,
+      message: sanitizedMessage,
       code: error.code,
       status: error.status,
       field: error.field,
-      context,
-      stack: error.stack,
-      userAgent: navigator.userAgent,
-      url: window.location.href,
+      context: context ? JSON.stringify(context).substring(0, 1000) : undefined,
+      userAgent: navigator.userAgent.substring(0, 200),
+      url: window.location.href.substring(0, 500),
     };
 
     if (this.isDevelopment) {

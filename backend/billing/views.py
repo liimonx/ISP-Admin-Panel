@@ -52,16 +52,16 @@ class InvoiceListView(generics.ListCreateAPIView):
 
         if start_date:
             try:
-                start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
+                start_date = datetime.fromisoformat(start_date).date()
                 queryset = queryset.filter(created_at__date__gte=start_date)
-            except ValueError:
+            except (ValueError, TypeError):
                 pass
 
         if end_date:
             try:
-                end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
+                end_date = datetime.fromisoformat(end_date).date()
                 queryset = queryset.filter(created_at__date__lte=end_date)
-            except ValueError:
+            except (ValueError, TypeError):
                 pass
 
         # Filter by amount range
@@ -283,12 +283,18 @@ def invoice_stats_view(request):
         queryset = Invoice.objects.all()
 
         if start_date:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-            queryset = queryset.filter(created_at__date__gte=start_date)
+            try:
+                start_date = datetime.fromisoformat(start_date).date()
+                queryset = queryset.filter(created_at__date__gte=start_date)
+            except (ValueError, TypeError):
+                return APIResponse.error('Invalid start_date format', status_code=400)
 
         if end_date:
-            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-            queryset = queryset.filter(created_at__date__lte=end_date)
+            try:
+                end_date = datetime.fromisoformat(end_date).date()
+                queryset = queryset.filter(created_at__date__lte=end_date)
+            except (ValueError, TypeError):
+                return APIResponse.error('Invalid end_date format', status_code=400)
 
         # Basic counts
         total_invoices = queryset.count()
@@ -399,12 +405,18 @@ def payment_stats_view(request):
         queryset = Payment.objects.all()
 
         if start_date:
-            start_date = datetime.strptime(start_date, '%Y-%m-%d').date()
-            queryset = queryset.filter(created_at__date__gte=start_date)
+            try:
+                start_date = datetime.fromisoformat(start_date).date()
+                queryset = queryset.filter(created_at__date__gte=start_date)
+            except (ValueError, TypeError):
+                return APIResponse.error('Invalid start_date format', status_code=400)
 
         if end_date:
-            end_date = datetime.strptime(end_date, '%Y-%m-%d').date()
-            queryset = queryset.filter(created_at__date__lte=end_date)
+            try:
+                end_date = datetime.fromisoformat(end_date).date()
+                queryset = queryset.filter(created_at__date__lte=end_date)
+            except (ValueError, TypeError):
+                return APIResponse.error('Invalid end_date format', status_code=400)
 
         # Basic counts and amounts
         total_payments = queryset.count()
@@ -498,8 +510,8 @@ def generate_invoice_view(request):
         # Parse billing date or use current date
         if billing_date:
             try:
-                billing_date = datetime.strptime(billing_date, '%Y-%m-%d').date()
-            except ValueError:
+                billing_date = datetime.fromisoformat(billing_date).date()
+            except (ValueError, TypeError):
                 return APIResponse.error(
                     message="Invalid billing_date format. Use YYYY-MM-DD",
                     status_code=status.HTTP_400_BAD_REQUEST
@@ -636,8 +648,8 @@ def bulk_generate_invoices_view(request):
 
         if billing_date:
             try:
-                billing_date = datetime.strptime(billing_date, '%Y-%m-%d').date()
-            except ValueError:
+                billing_date = datetime.fromisoformat(billing_date).date()
+            except (ValueError, TypeError):
                 return APIResponse.error(
                     message="Invalid billing_date format. Use YYYY-MM-DD",
                     status_code=status.HTTP_400_BAD_REQUEST

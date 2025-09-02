@@ -128,7 +128,8 @@ class Invoice(models.Model):
         ]
     
     def __str__(self):
-        return f"Invoice {self.invoice_number} - {self.customer.name}"
+        from django.utils.html import escape
+        return f"Invoice {escape(self.invoice_number)} - {escape(self.customer.name)}"
     
     @property
     def is_paid(self):
@@ -287,7 +288,8 @@ class Payment(models.Model):
         ]
     
     def __str__(self):
-        return f"Payment {self.payment_number} - {self.customer.name}"
+        from django.utils.html import escape
+        return f"Payment {escape(self.payment_number)} - {escape(self.customer.name)}"
     
     @property
     def is_completed(self):
@@ -392,7 +394,8 @@ class BillingCycle(models.Model):
         ]
     
     def __str__(self):
-        return f"Billing Cycle {self.cycle_number} - {self.customer.name}"
+        from django.utils.html import escape
+        return f"Billing Cycle {self.cycle_number} - {escape(self.customer.name)}"
     
     @property
     def is_active(self):

@@ -171,15 +171,15 @@ const Login: React.FC = () => {
               <div className="u-space-y-2">
                 <div className="u-d-flex u-justify-content-between u-text-sm">
                   <span><strong>Admin:</strong></span>
-                  <span>admin / admin123</span>
+                  <span>admin /  changeme123!</span>
                 </div>
                 <div className="u-d-flex u-justify-content-between u-text-sm">
                   <span><strong>Support:</strong></span>
-                  <span>support / support123</span>
+                  <span>support /  changeme123!</span>
                 </div>
                 <div className="u-d-flex u-justify-content-between u-text-sm">
                   <span><strong>Accountant:</strong></span>
-                  <span>accountant / accountant123</span>
+                  <span>accountant /  changeme123!</span>
                 </div>
               </div>
             </div>

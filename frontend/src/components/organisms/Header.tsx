@@ -73,7 +73,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <Navbar
-      className={`u-justify-content-between ${className}`}
+      className={`u-bg-surface u-border-bottom u-shadow-sm ${className}`}
       data-testid={testId}
       position="fixed"
       containerWidth="100%"
@@ -85,21 +85,20 @@ export const Header: React.FC<HeaderProps> = ({
             size="md"
             onClick={onMenuToggle}
             aria-label="Toggle navigation menu"
-            className="u-d-lg-none"
           >
             <Icon name="List" size={20} />
           </Button>
 
-          <div className="u-d-flex u-align-items-center u-gap-2">
+          <div className="u-d-flex u-align-items-center u-gap-2 u-d-none u-d-lg-flex">
             <Icon name="Globe" size={24} className="u-text-primary" />
             <span className="u-text-lg u-font-weight-semibold u-text-primary">
-              ISP Admin
+              BCN ISP Admin
             </span>
           </div>
         </div>
 
         {showSearch && (
-          <div className="u-d-none u-d-md-flex u-flex-1 u-max-width-md u-mx-6">
+          <div className="u-d-none u-d-md-flex u-flex-1 u-max-width-lg u-mx-6">
             <SearchBar
               value={searchValue}
               onSearch={(value) => {
@@ -107,13 +106,13 @@ export const Header: React.FC<HeaderProps> = ({
                 handleSearch(value);
               }}
               onClear={handleSearchClear}
-              placeholder="Search..."
+              placeholder="Search customers, plans, invoices..."
               fullWidth
             />
           </div>
         )}
 
-        <div className="u-d-flex u-align-items-center u-gap-2">
+        <div className="u-d-flex u-align-items-center u-gap-3">
           {showSearch && (
             <Button
               variant="ghost"

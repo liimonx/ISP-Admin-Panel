@@ -21,15 +21,15 @@ class AuthService {
   }
 
   private loadTokensFromStorage() {
-    this.accessToken = localStorage.getItem("access_token");
-    this.refreshToken = localStorage.getItem("refresh_token");
+    this.accessToken = sessionStorage.getItem('access_token');
+    this.refreshToken = sessionStorage.getItem('refresh_token');
   }
 
   private saveTokensToStorage(tokens: AuthTokens) {
-    localStorage.setItem("access_token", tokens.access);
-    localStorage.setItem("refresh_token", tokens.refresh);
     this.accessToken = tokens.access;
     this.refreshToken = tokens.refresh;
+    sessionStorage.setItem('access_token', tokens.access);
+    sessionStorage.setItem('refresh_token', tokens.refresh);
   }
 
   private handleResponse<T>(response: AxiosResponse): T {
@@ -165,7 +165,7 @@ class AuthService {
       }
 
       this.accessToken = newAccessToken;
-      localStorage.setItem("access_token", newAccessToken);
+      sessionStorage.setItem('access_token', newAccessToken);
     } catch (error: any) {
       this.clearTokens();
       throw new Error("Failed to refresh token");
@@ -237,20 +237,17 @@ class AuthService {
   }
 
   clearTokens(): void {
-    localStorage.removeItem("access_token");
-    localStorage.removeItem("refresh_token");
     this.accessToken = null;
     this.refreshToken = null;
+    sessionStorage.removeItem('access_token');
+    sessionStorage.removeItem('refresh_token');
   }
 
   getStoredTokens(): { access: string; refresh: string } | null {
-    const access = localStorage.getItem("access_token");
-    const refresh = localStorage.getItem("refresh_token");
-
-    if (access && refresh) {
-      return { access, refresh };
+    // Tokens are in httpOnly cookies, not accessible via JS
+    if (this.accessToken && this.refreshToken) {
+      return { access: this.accessToken, refresh: this.refreshToken };
     }
-
     return null;
   }
 

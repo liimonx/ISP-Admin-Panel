@@ -608,9 +608,6 @@ const datasets = [{
 ## Resources
 
 - [Atomix GitHub Repository](https://github.com/Shohojdhara/atomix)
-- [Atomix Documentation](https://shohojdhara.github.io/atomix/)
-- [Atomic Design Methodology](https://bradfrost.com/blog/post/atomic-web-design/)
-- [Component Library Best Practices](https://www.designsystems.com/)
 
 ## Contributing
 

@@ -2,8 +2,9 @@ from rest_framework import status, generics, permissions
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, TokenError
 from django.contrib.auth import update_session_auth_hash
+from django.db import IntegrityError, transaction
 from drf_spectacular.utils import extend_schema, OpenApiParameter
 from core.responses import APIResponse, paginate_response
 from .models import User
@@ -57,8 +58,10 @@ def logout_view(request):
             token = RefreshToken(refresh_token)
             token.blacklist()
         return APIResponse.success(message='Successfully logged out')
-    except Exception:
-        return APIResponse.success(message='Successfully logged out')
+    except TokenError:
+        return APIResponse.error('Invalid token', status_code=status.HTTP_400_BAD_REQUEST)
+    except Exception as e:
+        return APIResponse.error('Logout failed', status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @extend_schema(
@@ -86,15 +89,23 @@ class UserCreateView(generics.CreateAPIView):
     permission_classes = [permissions.IsAdminUser]
     
     def create(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.save()
-            return APIResponse.success(
-                UserSerializer(user).data,
-                message='User created successfully',
-                status_code=status.HTTP_201_CREATED
-            )
-        return APIResponse.validation_error(serializer.errors)
+        try:
+            with transaction.atomic():
+                serializer = self.get_serializer(data=request.data)
+                if serializer.is_valid():
+                    user = serializer.save()
+                    return APIResponse.success(
+                        UserSerializer(user).data,
+                        message='User created successfully',
+                        status_code=status.HTTP_201_CREATED
+                    )
+                return APIResponse.validation_error(serializer.errors)
+        except IntegrityError:
+            return APIResponse.error('User with this username or email already exists', 
+                                   status_code=status.HTTP_400_BAD_REQUEST)
+        except Exception as e:
+            return APIResponse.error('Failed to create user', 
+                                   status_code=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 
 @extend_schema(
@@ -137,7 +148,7 @@ class UserDetailView(generics.RetrieveUpdateDestroyAPIView):
         return APIResponse.success(serializer.data)
     
     def update(self, request, *args, **kwargs):
-        partial = kwargs.pop('partial', False)
+        partial = request.method == 'PATCH'
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         if serializer.is_valid():

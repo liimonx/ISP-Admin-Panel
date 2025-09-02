@@ -261,33 +261,51 @@ const Plans: React.FC = () => {
   return (
     <div className="u-space-y-6">
       {/* Page Header */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center">
-        <div>
-          <h1 className="u-text-3xl u-font-weight-bold u-mb-2">Internet Plans</h1>
-          <p className="u-text-secondary">
-            Manage your internet service plans and pricing strategies
-          </p>
+      <div className="u-mb-8">
+        <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
+          <div>
+            <h1 className="u-text-3xl u-font-weight-bold u-mb-2 u-text-foreground">Internet Plans</h1>
+            <p className="u-text-secondary u-text-lg">
+              Manage your internet service plans, pricing strategies, and subscription offerings
+            </p>
+          </div>
+          <div className="u-d-flex u-gap-3">
+            <Button 
+              variant="outline" 
+              size="md"
+              onClick={handleExportPlans}
+            >
+              <Icon name="Download" size={16} />
+              <span className="u-d-none u-d-sm-inline">Export</span>
+            </Button>
+            <Button 
+              variant="primary" 
+              size="md"
+              onClick={() => {
+                setEditingPlan(null);
+                setIsFormOpen(true);
+              }}
+            >
+              <Icon name="Plus" size={16} />
+              <span className="u-d-none u-d-sm-inline">Add Plan</span>
+            </Button>
+          </div>
         </div>
-        <div className="u-d-flex u-gap-3">
-          <Button 
-            variant="outline" 
-            size="md"
-            onClick={handleExportPlans}
-          >
-            <Icon name="Download" size={16} />
-            Export
-          </Button>
-          <Button 
-            variant="primary" 
-            size="md"
-            onClick={() => {
-              setEditingPlan(null);
-              setIsFormOpen(true);
-            }}
-          >
-            <Icon name="Plus" size={16} />
-            Add Plan
-          </Button>
+        
+        {/* Quick Overview */}
+        <div className="u-d-flex u-gap-6 u-text-sm">
+          <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-w-3 u-h-3 u-bg-primary u-rounded-circle"></div>
+            <span className="u-text-secondary">Total: {totalPlans} plans</span>
+          </div>
+          <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-w-3 u-h-3 u-bg-success u-rounded-circle"></div>
+            <span className="u-text-secondary">Active: {plans.filter(p => p.is_active).length}</span>
+          </div>
+          <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-w-3 u-h-3 u-bg-warning u-rounded-circle"></div>
+            <span className="u-text-secondary">Featured: {plans.filter(p => p.is_featured).length}</span>
+          </div>
         </div>
       </div>
 

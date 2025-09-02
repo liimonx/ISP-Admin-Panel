@@ -7,6 +7,9 @@ import '@shohojdhara/atomix/css';
 // Context
 import { AuthProvider } from '@/context/AuthContext';
 
+// UI Components
+import { NotificationContainer } from '@/components/ui';
+
 // Layout
 import Layout from '@/components/layout/Layout';
 
@@ -76,6 +79,7 @@ function App() {
             </Route>
           </Routes>
         </Router>
+        <NotificationContainer />
       </AuthProvider>
     </QueryClientProvider>
   );

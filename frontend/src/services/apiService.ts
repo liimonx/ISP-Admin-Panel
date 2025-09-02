@@ -140,8 +140,13 @@ class ApiService {
     query: string,
     params?: Record<string, any>,
   ): Promise<ApiResponse<Customer>> {
+    // Sanitize search query to prevent injection
+    const sanitizedQuery = query.replace(/[^a-zA-Z0-9\s@.-]/g, '').trim();
+    if (!sanitizedQuery) {
+      throw new Error('Invalid search query');
+    }
     const response = await axios.get(`${API_BASE_URL}/customers/search/`, {
-      params: { q: query, ...params },
+      params: { q: sanitizedQuery, ...params },
     });
     return this.handlePaginatedResponse(response);
   }
@@ -150,10 +155,19 @@ class ApiService {
     customerIds: number[],
     status: string,
   ): Promise<any> {
+    // Validate inputs to prevent injection
+    const validStatuses = ['active', 'inactive', 'suspended'];
+    if (!validStatuses.includes(status)) {
+      throw new Error('Invalid status value');
+    }
+    const validIds = customerIds.filter(id => Number.isInteger(id) && id > 0);
+    if (validIds.length === 0) {
+      throw new Error('No valid customer IDs provided');
+    }
     const response = await axios.post(
       `${API_BASE_URL}/customers/bulk-update-status/`,
       {
-        customer_ids: customerIds,
+        customer_ids: validIds,
         status,
       },
     );
@@ -234,6 +248,14 @@ class ApiService {
     id: number,
     status: string,
   ): Promise<Subscription> {
+    // Validate status to prevent injection
+    const validStatuses = ['active', 'suspended', 'cancelled', 'expired'];
+    if (!validStatuses.includes(status)) {
+      throw new Error('Invalid subscription status');
+    }
+    if (!Number.isInteger(id) || id <= 0) {
+      throw new Error('Invalid subscription ID');
+    }
     const response = await axios.patch(
       `${API_BASE_URL}/subscriptions/${id}/status/`,
       { status },

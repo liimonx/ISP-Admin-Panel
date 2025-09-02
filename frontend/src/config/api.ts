@@ -47,11 +47,9 @@ export const apiClient = axios.create({
 // Request interceptor for authentication
 apiClient.interceptors.request.use(
   (config) => {
-    // Add authentication token if available
-    const token = localStorage.getItem('access_token');
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
+    // Tokens are now in httpOnly cookies, no need to add Authorization header
+    // The browser will automatically include cookies
+    config.withCredentials = true;
     
     // Add request timestamp for tracking
     (config as any).metadata = { startTime: Date.now() };
@@ -66,9 +64,11 @@ apiClient.interceptors.request.use(
 // Response interceptor for error handling
 apiClient.interceptors.response.use(
   (response) => {
-    // Log successful requests
+    // Log successful requests (sanitized)
     const duration = Date.now() - (response.config as any).metadata?.startTime;
-    console.debug(`API Request: ${response.config.method?.toUpperCase()} ${response.config.url} - ${duration}ms`);
+    const method = response.config.method?.toUpperCase() || 'UNKNOWN';
+    const url = response.config.url?.substring(0, 100) || 'unknown';
+    console.debug(`API Request: ${method} ${url} - ${duration}ms`);
     
     return response;
   },
@@ -80,23 +80,15 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
       
       try {
-        const refreshToken = localStorage.getItem('refresh_token');
-        if (refreshToken) {
-          const response = await axios.post('/api/auth/refresh/', {
-            refresh: refreshToken
-          });
-          
-          const { access } = response.data;
-          localStorage.setItem('access_token', access);
-          
-          // Retry original request with new token
-          originalRequest.headers.Authorization = `Bearer ${access}`;
-          return apiClient(originalRequest);
-        }
+        // Try to refresh token via httpOnly cookie
+        const response = await axios.post('/api/auth/refresh/', {}, {
+          withCredentials: true
+        });
+        
+        // Retry original request - cookies will be included automatically
+        return apiClient(originalRequest);
       } catch (refreshError) {
         // Refresh failed, redirect to login
-        localStorage.removeItem('access_token');
-        localStorage.removeItem('refresh_token');
         window.location.href = '/login';
       }
     }

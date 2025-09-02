@@ -1,3 +1,4 @@
+import os
 from django.core.management.base import BaseCommand
 from django.contrib.auth import get_user_model
 from customers.models import Customer
@@ -21,7 +22,7 @@ class Command(BaseCommand):
             admin_user = User.objects.create_superuser(
                 username='admin',
                 email='admin@isp.com',
-                password='admin123',
+                password=os.environ.get('ADMIN_PASSWORD', 'changeme123!'),
                 first_name='Admin',
                 last_name='User',
                 role='admin'
@@ -33,7 +34,7 @@ class Command(BaseCommand):
             support_user = User.objects.create_user(
                 username='support',
                 email='support@isp.com',
-                password='support123',
+                password=os.environ.get('SUPPORT_PASSWORD', 'changeme123!'),
                 first_name='Support',
                 last_name='Staff',
                 role='support'
@@ -45,7 +46,7 @@ class Command(BaseCommand):
             accountant_user = User.objects.create_user(
                 username='accountant',
                 email='accountant@isp.com',
-                password='accountant123',
+                password=os.environ.get('ACCOUNTANT_PASSWORD', 'changeme123!'),
                 first_name='Accountant',
                 last_name='User',
                 role='accountant'
@@ -170,7 +171,7 @@ class Command(BaseCommand):
                 host='192.168.1.1',
                 api_port=8729,
                 username='admin',
-                password='router123',
+                password=os.environ.get('ROUTER_PASSWORD', 'RouterPass123!'),
                 use_tls=True,
                 status='online',
                 location='Main Office',
@@ -181,7 +182,5 @@ class Command(BaseCommand):
         self.stdout.write(
             self.style.SUCCESS('Successfully set up initial ISP data!')
         )
-        self.stdout.write('\nDefault login credentials:')
-        self.stdout.write('Admin: admin / admin123')
-        self.stdout.write('Support: support / support123')
-        self.stdout.write('Accountant: accountant / accountant123')
+        self.stdout.write('\n⚠️  Default passwords set - CHANGE IN PRODUCTION!')
+        self.stdout.write('Set environment variables: ADMIN_PASSWORD, SUPPORT_PASSWORD, ACCOUNTANT_PASSWORD, ROUTER_PASSWORD')

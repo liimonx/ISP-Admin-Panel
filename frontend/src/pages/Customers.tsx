@@ -17,6 +17,7 @@ import {
 } from "@shohojdhara/atomix";
 import { Customer } from "@/types";
 import { apiService } from "@/services/apiService";
+import { sanitizeText, sanitizeEmail, sanitizePhone } from "@/utils/sanitizer";
 
 
 
@@ -191,40 +192,66 @@ const Customers: React.FC = () => {
   return (
     <div>
       {/* Page Header */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
-        <div>
-          <h1 className="u-mb-2 u-text-brand-emphasis">Customer Management</h1>
-          <p className="u-text-secondary-emphasis">
-            Manage your customer accounts and information
-          </p>
+      <div className="u-mb-8">
+        <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
+          <div>
+            <h1 className="u-text-3xl u-font-weight-bold u-mb-2 u-text-foreground">Customer Management</h1>
+            <p className="u-text-secondary u-text-lg">
+              Manage your customer accounts, subscriptions, and billing information
+            </p>
+          </div>
+          <div className="u-d-flex u-gap-3">
+            <Button variant="outline" size="md">
+              <Icon name="Download" size={16} />
+              <span className="u-d-none u-d-sm-inline">Export</span>
+            </Button>
+            <Button variant="primary" size="md" onClick={handleCreateCustomer}>
+              <Icon name="Plus" size={16} />
+              <span className="u-d-none u-d-sm-inline">Add Customer</span>
+            </Button>
+          </div>
         </div>
-        <div className="u-d-flex u-gap-2">
-          <Button variant="outline" size="md">
-            <Icon name="Download" size={16} />
-            Export
-          </Button>
-          <Button variant="primary" size="md" onClick={handleCreateCustomer}>
-            <Icon name="Plus" size={16} />
-            Add Customer
-          </Button>
+        
+        {/* Quick Stats */}
+        <div className="u-d-flex u-gap-6 u-text-sm">
+          <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-w-3 u-h-3 u-bg-success u-rounded-circle"></div>
+            <span className="u-text-secondary">Total: {customersData?.count || 0} customers</span>
+          </div>
+          <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-w-3 u-h-3 u-bg-primary u-rounded-circle"></div>
+            <span className="u-text-secondary">Active: {customersData?.results?.filter(c => c.status === 'active').length || 0}</span>
+          </div>
+          <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-w-3 u-h-3 u-bg-warning u-rounded-circle"></div>
+            <span className="u-text-secondary">Suspended: {customersData?.results?.filter(c => c.status === 'suspended').length || 0}</span>
+          </div>
         </div>
       </div>
 
       {/* Search and Filters */}
-      <Card className="u-mb-6">
-        <div className="u-d-flex u-gap-4 u-align-items-center">
-          <div className="u-flex-fill">
-            <Input
-              type="text"
-              placeholder="Search customers..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+      <Card className="u-mb-8">
+        <div className="u-d-flex u-gap-4 u-align-items-center u-flex-wrap">
+          <div className="u-flex-1 u-min-width-300">
+            <div className="u-position-relative">
+              <Icon 
+                name="MagnifyingGlass" 
+                size={16} 
+                className="u-position-absolute u-left-3 u-top-50 u-transform-translate-y-neg-50 u-text-secondary" 
+              />
+              <Input
+                type="text"
+                placeholder="Search by name, email, phone, or company..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="u-pl-10"
+              />
+            </div>
           </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="u-p-3 u-border u-rounded u-min-width-150"
+            className="u-p-3 u-border u-rounded u-min-width-150 u-bg-surface"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -234,7 +261,7 @@ const Customers: React.FC = () => {
           </select>
           <Button variant="outline" size="md">
             <Icon name="Funnel" size={16} />
-            Filter
+            <span className="u-d-none u-d-md-inline">Advanced Filters</span>
           </Button>
         </div>
       </Card>
@@ -255,10 +282,10 @@ const Customers: React.FC = () => {
                 <div className="u-d-flex u-align-items-center u-gap-3 u-mb-4">
                   <Avatar initials={customer.name?.charAt(0) || '?'} size="md" />
                   <div className="u-flex-fill">
-                    <h3 className="u-mb-1">{customer.name}</h3>
+                    <h3 className="u-mb-1">{sanitizeText(customer.name)}</h3>
                     {customer.company_name && (
                       <p className="u-fs-sm u-text-secondary u-mb-1">
-                        {customer.company_name}
+                        {sanitizeText(customer.company_name)}
                       </p>
                     )}
                     <div className="u-d-flex u-align-items-center u-gap-2">
@@ -274,11 +301,11 @@ const Customers: React.FC = () => {
                       size={16}
                       className="u-text-brand-emphasis"
                     />
-                    <span className="u-fs-sm">{customer.email}</span>
+                    <span className="u-fs-sm">{sanitizeEmail(customer.email)}</span>
                   </div>
                   <div className="u-d-flex u-align-items-center u-gap-2 u-mb-2">
                     <Icon name="Phone" size={16} className="u-text-brand-emphasis" />
-                    <span className="u-fs-sm">{customer.phone}</span>
+                    <span className="u-fs-sm">{sanitizePhone(customer.phone)}</span>
                   </div>
                   <div className="u-d-flex u-align-items-center u-gap-2 u-mb-2">
                     <Icon
@@ -287,7 +314,7 @@ const Customers: React.FC = () => {
                       className="u-text-brand-emphasis"
                     />
                     <span className="u-fs-sm">
-                      {customer.city}, {customer.state}
+                      {sanitizeText(customer.city)}, {sanitizeText(customer.state)}
                     </span>
                   </div>
                   <div className="u-d-flex u-align-items-center u-gap-2">

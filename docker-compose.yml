@@ -4,10 +4,12 @@ services:
   # Database
   db:
     image: postgres:15-alpine
+    env_file:
+      - .env
     environment:
-      POSTGRES_DB: isp_admin
-      POSTGRES_USER: isp_admin
-      POSTGRES_PASSWORD: isp_admin_password
+      POSTGRES_DB: ${POSTGRES_DB:-isp_admin}
+      POSTGRES_USER: ${POSTGRES_USER:-isp_admin}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
@@ -36,19 +38,21 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
-      - DATABASE_URL=postgresql://isp_admin:isp_admin_password@db:5432/isp_admin
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-isp_admin}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-isp_admin}
       - REDIS_URL=redis://redis:6379/0
       - DJANGO_SETTINGS_MODULE=isp_admin.settings
       - DEBUG=False
-      - SECRET_KEY=your-secret-key-here
+      - SECRET_KEY=${SECRET_KEY}
       - ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
       # Main Router Configuration
       - MAIN_ROUTER_IP=103.115.252.60
       - MAIN_ROUTER_API_PORT=8728
       - MAIN_ROUTER_SSH_PORT=22
       - MAIN_ROUTER_USERNAME=admin
-      - MAIN_ROUTER_PASSWORD=your-router-password-here
+      - MAIN_ROUTER_PASSWORD=${MAIN_ROUTER_PASSWORD}
       - MAIN_ROUTER_USE_TLS=True
       # Network Configuration
       - ROUTER_API_TIMEOUT=30
@@ -76,12 +80,14 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
-      - DATABASE_URL=postgresql://isp_admin:isp_admin_password@db:5432/isp_admin
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-isp_admin}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-isp_admin}
       - REDIS_URL=redis://redis:6379/0
       - DJANGO_SETTINGS_MODULE=isp_admin.settings
       - DEBUG=False
-      - SECRET_KEY=your-secret-key-here
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
       - ./backend/media:/app/media
     depends_on:
@@ -97,12 +103,14 @@ services:
     build:
       context: ./backend
       dockerfile: Dockerfile
+    env_file:
+      - .env
     environment:
-      - DATABASE_URL=postgresql://isp_admin:isp_admin_password@db:5432/isp_admin
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-isp_admin}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB:-isp_admin}
       - REDIS_URL=redis://redis:6379/0
       - DJANGO_SETTINGS_MODULE=isp_admin.settings
       - DEBUG=False
-      - SECRET_KEY=your-secret-key-here
+      - SECRET_KEY=${SECRET_KEY}
     volumes:
       - ./backend/media:/app/media
     depends_on:

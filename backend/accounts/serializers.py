@@ -92,3 +92,15 @@ class ChangePasswordSerializer(serializers.Serializer):
         if not user.check_password(value):
             raise serializers.ValidationError('Old password is incorrect')
         return value
+    
+    def validate_new_password(self, value):
+        # Add password strength validation
+        if len(value) < 8:
+            raise serializers.ValidationError('Password must be at least 8 characters long')
+        if not any(c.isupper() for c in value):
+            raise serializers.ValidationError('Password must contain at least one uppercase letter')
+        if not any(c.islower() for c in value):
+            raise serializers.ValidationError('Password must contain at least one lowercase letter')
+        if not any(c.isdigit() for c in value):
+            raise serializers.ValidationError('Password must contain at least one digit')
+        return value
