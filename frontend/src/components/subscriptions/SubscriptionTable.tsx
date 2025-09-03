@@ -73,7 +73,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       <div className="u-w-100">
         <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-1">
           <span className="u-fs-xs u-text-secondary-emphasis">
-            {used.toFixed(1)} GB / {quota} GB
+            {(Number(used) || 0).toFixed(1)} GB / {quota} GB
           </span>
           <span className={`u-fs-xs u-fw-medium ${isHigh ? 'u-text-error-emphasis' : isMedium ? 'u-text-warning-emphasis' : 'u-text-success-emphasis'}`}>
             {percentage.toFixed(0)}%
@@ -179,11 +179,11 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     dataUsage: (
       <div style={{ minWidth: "120px" }}>
         {subscription.plan?.data_quota ? (
-          getDataUsageProgress(subscription.data_used, subscription.plan.data_quota)
+          getDataUsageProgress(Number(subscription.data_used) || 0, subscription.plan.data_quota)
         ) : (
           <div className="u-text-center">
             <div className="u-fw-medium u-text-primary-emphasis">
-              {subscription.data_used.toFixed(1)} GB
+              {(Number(subscription.data_used) || 0).toFixed(1)} GB
             </div>
             <div className="u-fs-xs u-text-secondary-emphasis">Unlimited</div>
           </div>

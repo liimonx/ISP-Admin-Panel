@@ -1,59 +1,61 @@
 import React, { useState } from "react";
-import {
-  Card,
-  Button,
-  Badge,
-  Icon,
-} from "@shohojdhara/atomix";
-
-interface ReportData {
-  period: string;
-  totalRevenue: number;
-  totalCustomers: number;
-  newSubscriptions: number;
-  churnedSubscriptions: number;
-  averageUsage: number;
-  peakUsage: number;
-  bandwidthUtilization: number;
-}
-
-const mockUsageData: ReportData[] = [
-  {
-    period: "2024-01",
-    totalRevenue: 125000,
-    totalCustomers: 245,
-    newSubscriptions: 12,
-    churnedSubscriptions: 3,
-    averageUsage: 45.2,
-    peakUsage: 78.5,
-    bandwidthUtilization: 65,
-  },
-  {
-    period: "2024-02",
-    totalRevenue: 132000,
-    totalCustomers: 251,
-    newSubscriptions: 15,
-    churnedSubscriptions: 2,
-    averageUsage: 48.7,
-    peakUsage: 82.1,
-    bandwidthUtilization: 68,
-  },
-  {
-    period: "2024-03",
-    totalRevenue: 128500,
-    totalCustomers: 248,
-    newSubscriptions: 8,
-    churnedSubscriptions: 5,
-    averageUsage: 43.9,
-    peakUsage: 75.3,
-    bandwidthUtilization: 62,
-  },
-];
+import { useQuery } from "@tanstack/react-query";
+import { Card, Button, Icon, Callout } from "@shohojdhara/atomix";
+import { apiService } from "../services/apiService";
+import { UsageWidget, UsageChart, TopUsersWidget } from "../components/reports";
 
 const Reports: React.FC = () => {
   const [reportType, setReportType] = useState("usage");
   const [timeRange, setTimeRange] = useState("monthly");
-  const [selectedPeriod, setSelectedPeriod] = useState("2024-03");
+  const [dateRange, setDateRange] = useState({
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+    end: new Date().toISOString().split('T')[0],
+  });
+
+  // Fetch usage reports
+  const { data: usageData, isLoading: usageLoading, error: usageError } = useQuery({
+    queryKey: ["usage-reports", timeRange, dateRange],
+    queryFn: () => apiService.getUsageReports({ 
+      time_range: timeRange,
+      start_date: dateRange.start,
+      end_date: dateRange.end 
+    }),
+    staleTime: 60000,
+  });
+
+  // Fetch top users
+  const { data: topUsersData, isLoading: topUsersLoading } = useQuery({
+    queryKey: ["top-users", timeRange, dateRange],
+    queryFn: () => apiService.getTopUsers({ 
+      time_range: timeRange,
+      start_date: dateRange.start,
+      end_date: dateRange.end,
+      limit: 10
+    }),
+    staleTime: 60000,
+  });
+
+  // Fetch usage trends
+  const { data: trendsData, isLoading: trendsLoading } = useQuery({
+    queryKey: ["usage-trends", timeRange, dateRange],
+    queryFn: () => apiService.getUsageTrends({ 
+      time_range: timeRange,
+      start_date: dateRange.start,
+      end_date: dateRange.end 
+    }),
+    staleTime: 60000,
+  });
+
+  // Fetch revenue reports
+  const { data: revenueData, isLoading: revenueLoading } = useQuery({
+    queryKey: ["revenue-reports", timeRange, dateRange],
+    queryFn: () => apiService.getRevenueReports({ 
+      time_range: timeRange,
+      start_date: dateRange.start,
+      end_date: dateRange.end 
+    }),
+    staleTime: 60000,
+  });
 
   const formatCurrency = (amount: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -62,44 +64,47 @@ const Reports: React.FC = () => {
     }).format(amount);
   };
 
-  const formatPercentage = (value: number) => {
-    return `${value.toFixed(1)}%`;
-  };
-
-  const getCurrentData = () => {
-    return mockUsageData.find((data) => data.period === selectedPeriod) || mockUsageData[2];
-  };
-
-  const currentData = getCurrentData();
-
-  const tabs = [
-    { id: "usage", label: "Usage Reports" },
-    { id: "revenue", label: "Revenue Reports" },
-    { id: "customers", label: "Customer Reports" },
-    { id: "network", label: "Network Reports" },
-  ];
+  if (usageError) {
+    return (
+      <div className="u-p-6">
+        <Callout variant="error" className="u-mb-4">
+          <div className="u-d-flex u-align-items-center u-gap-2">
+            <Icon name="Warning" size={20} />
+            <div>
+              <strong>Error loading reports</strong>
+              <p className="u-mb-0 u-mt-1">Please try refreshing the page or contact support.</p>
+            </div>
+          </div>
+        </Callout>
+      </div>
+    );
+  }
 
   return (
-    <div className="u-p-6 u-max-width-7xl u-mx-auto">
+    <div className="u-p-6">
       <div className="u-mb-6">
-        <h1 className="u-text-2xl u-font-bold u-mb-2">Reports & Analytics</h1>
-        <p className="u-text-muted">
+        <h1 className="u-fs-1 u-fw-bold u-text-primary-emphasis u-mb-2">
+          <Icon name="ChartBar" size={32} className="u-me-3" />
+          Reports & Analytics
+        </h1>
+        <p className="u-text-secondary-emphasis u-fs-5">
           View detailed reports and analytics for your ISP operations.
         </p>
       </div>
 
       {/* Report Controls */}
-      <Card className="u-mb-6">
+      <Card className="u-mb-6 u-border-0 u-shadow-sm">
         <div className="u-p-4">
-          <div className="u-d-flex u-gap-4 u-align-items-center u-flex-wrap">
+          <div className="u-d-flex u-gap-4 u-align-items-end u-flex-wrap">
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-2 u-d-block">
                 Report Type
               </label>
               <select
                 value={reportType}
                 onChange={(e) => setReportType(e.target.value)}
-                className="u-width-40 u-p-2 u-border u-rounded u-bg-white"
+                className="form-select"
+                style={{ minWidth: "160px" }}
               >
                 <option value="usage">Usage Reports</option>
                 <option value="revenue">Revenue Reports</option>
@@ -109,13 +114,14 @@ const Reports: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-2 u-d-block">
                 Time Range
               </label>
               <select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="u-width-40 u-p-2 u-border u-rounded u-bg-white"
+                className="form-select"
+                style={{ minWidth: "140px" }}
               >
                 <option value="daily">Daily</option>
                 <option value="weekly">Weekly</option>
@@ -126,40 +132,57 @@ const Reports: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
-                Period
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-2 u-d-block">
+                Start Date
               </label>
-              <select
-                value={selectedPeriod}
-                onChange={(e) => setSelectedPeriod(e.target.value)}
-                className="u-width-40 u-p-2 u-border u-rounded u-bg-white"
-              >
-                {mockUsageData.map((data) => (
-                  <option key={data.period} value={data.period}>
-                    {data.period}
-                  </option>
-                ))}
-              </select>
+              <input
+                type="date"
+                value={dateRange.start}
+                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                className="form-input"
+              />
             </div>
 
-            <Button variant="primary" className="u-mt-6">
-              <Icon name="Download" size={16} className="u-mr-2" />
-              Export Report
-            </Button>
+            <div>
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-2 u-d-block">
+                End Date
+              </label>
+              <input
+                type="date"
+                value={dateRange.end}
+                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                className="form-input"
+              />
+            </div>
+
+            <div className="u-d-flex u-gap-2">
+              <Button variant="outline" size="md">
+                <Icon name="Download" size={16} />
+                Export
+              </Button>
+              <Button variant="primary" size="md">
+                <Icon name="ArrowClockwise" size={16} />
+                Refresh
+              </Button>
+            </div>
           </div>
         </div>
       </Card>
 
       {/* Tabs Navigation */}
       <div className="u-mb-6">
-        <div className="u-d-flex u-gap-1 u-border-bottom">
-          {tabs.map((tab) => (
+        <div className="u-d-flex u-gap-1 u-border-b u-border-secondary-subtle">
+          {[
+            { id: "usage", label: "Usage Reports" },
+            { id: "revenue", label: "Revenue Reports" },
+            { id: "customers", label: "Customer Reports" },
+            { id: "network", label: "Network Reports" },
+          ].map((tab) => (
             <Button
               key={tab.id}
               variant={reportType === tab.id ? "primary" : "outline"}
               size="sm"
               onClick={() => setReportType(tab.id)}
-              className="u-border-radius-0 u-border-bottom-0"
             >
               {tab.label}
             </Button>
@@ -171,166 +194,119 @@ const Reports: React.FC = () => {
       <div>
         {/* Usage Reports */}
         {reportType === "usage" && (
-          <div className="u-grid u-grid-cols-1 u-gap-6 lg:u-grid-cols-3">
-            {/* Usage Overview */}
-            <Card>
-              <div className="u-p-4 u-border-bottom">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <Icon name="ChartLine" size={20} />
-                  <h2 className="u-text-lg u-font-semibold">Usage Overview</h2>
-                </div>
-              </div>
-              <div className="u-p-4 u-space-y-4">
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">Average Usage</span>
-                  <span className="u-font-semibold">
-                    {currentData.averageUsage} GB
-                  </span>
-                </div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">Peak Usage</span>
-                  <span className="u-font-semibold">
-                    {currentData.peakUsage} GB
-                  </span>
-                </div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">Bandwidth Utilization</span>
-                  <Badge
-                    variant={currentData.bandwidthUtilization > 80 ? "warning" : "success"}
-                    label={formatPercentage(currentData.bandwidthUtilization)}
-                  />
-                </div>
-              </div>
-            </Card>
+          <div>
+            {/* Usage Overview Widgets */}
+            <div className="u-d-grid u-gap-4 u-mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
+              <UsageWidget
+                title="Total Data Usage"
+                icon="Database"
+                value={`${usageData?.total_usage?.toFixed(1) || '0'} GB`}
+                subtitle="Current period"
+                trend={usageData?.usage_trend ? {
+                  value: usageData.usage_trend,
+                  isPositive: usageData.usage_trend > 0
+                } : undefined}
+                color="primary"
+                isLoading={usageLoading}
+              />
+              <UsageWidget
+                title="Average Usage"
+                icon="ChartLine"
+                value={`${usageData?.average_usage?.toFixed(1) || '0'} GB`}
+                subtitle="Per customer"
+                color="info"
+                isLoading={usageLoading}
+              />
+              <UsageWidget
+                title="Peak Usage"
+                icon="TrendUp"
+                value={`${usageData?.peak_usage?.toFixed(1) || '0'} GB`}
+                subtitle="Highest recorded"
+                color="warning"
+                isLoading={usageLoading}
+              />
+              <UsageWidget
+                title="Bandwidth Utilization"
+                icon="Gauge"
+                value={`${usageData?.bandwidth_utilization?.toFixed(1) || '0'}%`}
+                subtitle="Network capacity"
+                color={usageData?.bandwidth_utilization > 80 ? "error" : "success"}
+                isLoading={usageLoading}
+              />
+            </div>
 
-            {/* Usage Trends */}
-            <Card>
-              <div className="u-p-4 u-border-bottom">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <Icon name="TrendUp" size={20} />
-                  <h2 className="u-text-lg u-font-semibold">Usage Trends</h2>
-                </div>
-              </div>
-              <div className="u-p-4">
-                <div className="u-text-center u-py-8">
-                  <Icon name="ChartBar" size={48} className="u-text-muted u-mb-4" />
-                  <p className="u-text-muted">Usage trend chart will be displayed here</p>
-                </div>
-              </div>
-            </Card>
-
-            {/* Top Users */}
-            <Card>
-              <div className="u-p-4 u-border-bottom">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <Icon name="Users" size={20} />
-                  <h2 className="u-text-lg u-font-semibold">Top Users</h2>
-                </div>
-              </div>
-              <div className="u-p-4">
-                <div className="u-space-y-3">
-                  <div className="u-d-flex u-justify-content-between u-align-items-center">
-                    <span className="u-text-sm">John Doe</span>
-                    <span className="u-text-sm u-font-medium">125 GB</span>
-                  </div>
-                  <div className="u-d-flex u-justify-content-between u-align-items-center">
-                    <span className="u-text-sm">Jane Smith</span>
-                    <span className="u-text-sm u-font-medium">98 GB</span>
-                  </div>
-                  <div className="u-d-flex u-justify-content-between u-align-items-center">
-                    <span className="u-text-sm">Bob Johnson</span>
-                    <span className="u-text-sm u-font-medium">87 GB</span>
-                  </div>
-                </div>
-              </div>
-            </Card>
+            {/* Charts and Top Users */}
+            <div className="u-d-grid u-gap-6" style={{ gridTemplateColumns: "2fr 1fr" }}>
+              <UsageChart
+                title="Usage Trends"
+                data={trendsData?.trends || []}
+                isLoading={trendsLoading}
+              />
+              <TopUsersWidget
+                users={topUsersData?.users || []}
+                isLoading={topUsersLoading}
+              />
+            </div>
           </div>
         )}
 
         {/* Revenue Reports */}
         {reportType === "revenue" && (
-          <div className="u-grid u-grid-cols-1 u-gap-6 lg:u-grid-cols-3">
-            {/* Revenue Overview */}
-            <Card>
-              <div className="u-p-4 u-border-bottom">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <Icon name="CurrencyDollar" size={20} />
-                  <h2 className="u-text-lg u-font-semibold">Revenue Overview</h2>
-                </div>
-              </div>
-              <div className="u-p-4 u-space-y-4">
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">Total Revenue</span>
-                  <span className="u-font-semibold u-text-lg">
-                    {formatCurrency(currentData.totalRevenue)}
-                  </span>
-                </div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">Active Customers</span>
-                  <span className="u-font-semibold">{currentData.totalCustomers}</span>
-                </div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">Average Revenue per Customer</span>
-                  <span className="u-font-semibold">
-                    {formatCurrency(currentData.totalRevenue / currentData.totalCustomers)}
-                  </span>
-                </div>
-              </div>
-            </Card>
-
-            {/* Revenue Chart */}
-            <Card>
-              <div className="u-p-4 u-border-bottom">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <Icon name="ChartPie" size={20} />
-                  <h2 className="u-text-lg u-font-semibold">Revenue Trends</h2>
-                </div>
-              </div>
-              <div className="u-p-4">
-                <div className="u-text-center u-py-8">
-                  <Icon name="ChartPie" size={48} className="u-text-muted u-mb-4" />
-                  <p className="u-text-muted">Revenue trend chart will be displayed here</p>
-                </div>
-              </div>
-            </Card>
-
-            {/* Subscription Changes */}
-            <Card>
-              <div className="u-p-4 u-border-bottom">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <Icon name="UserPlus" size={20} />
-                  <h2 className="u-text-lg u-font-semibold">Subscription Changes</h2>
-                </div>
-              </div>
-              <div className="u-p-4 u-space-y-4">
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">New Subscriptions</span>
-                  <Badge variant="success" label={`+${currentData.newSubscriptions}`} />
-                </div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">Churned Subscriptions</span>
-                  <Badge variant="error" label={`-${currentData.churnedSubscriptions}`} />
-                </div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center">
-                  <span className="u-text-sm u-text-muted">Net Growth</span>
-                  <Badge
-                    variant={currentData.newSubscriptions > currentData.churnedSubscriptions ? "success" : "error"}
-                    label={`+${currentData.newSubscriptions - currentData.churnedSubscriptions}`}
-                  />
-                </div>
-              </div>
-            </Card>
+          <div>
+            <div className="u-d-grid u-gap-4 u-mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
+              <UsageWidget
+                title="Total Revenue"
+                icon="CurrencyDollar"
+                value={formatCurrency(revenueData?.total_revenue || 0)}
+                subtitle="Current period"
+                trend={revenueData?.revenue_trend ? {
+                  value: revenueData.revenue_trend,
+                  isPositive: revenueData.revenue_trend > 0
+                } : undefined}
+                color="success"
+                isLoading={revenueLoading}
+              />
+              <UsageWidget
+                title="Active Customers"
+                icon="Users"
+                value={revenueData?.active_customers || 0}
+                subtitle="Paying customers"
+                color="primary"
+                isLoading={revenueLoading}
+              />
+              <UsageWidget
+                title="ARPU"
+                icon="Calculator"
+                value={formatCurrency(revenueData?.arpu || 0)}
+                subtitle="Average revenue per user"
+                color="info"
+                isLoading={revenueLoading}
+              />
+              <UsageWidget
+                title="MRR Growth"
+                icon="TrendUp"
+                value={`${revenueData?.mrr_growth?.toFixed(1) || '0'}%`}
+                subtitle="Monthly recurring revenue"
+                color={revenueData?.mrr_growth > 0 ? "success" : "error"}
+                isLoading={revenueLoading}
+              />
+            </div>
+            <UsageChart
+              title="Revenue Trends"
+              data={revenueData?.trends || []}
+              isLoading={revenueLoading}
+            />
           </div>
         )}
 
         {/* Customer Reports */}
         {reportType === "customers" && (
-          <Card>
+          <Card className="u-border-0 u-shadow-sm">
             <div className="u-p-6">
               <div className="u-text-center u-py-8">
-                <Icon name="Users" size={48} className="u-text-muted u-mb-4" />
-                <h3 className="u-text-lg u-font-semibold u-mb-2">Customer Reports</h3>
-                <p className="u-text-muted">Detailed customer analytics and reports will be displayed here</p>
+                <Icon name="Users" size={48} className="u-text-secondary u-mb-4" />
+                <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">Customer Reports</h3>
+                <p className="u-text-secondary-emphasis">Detailed customer analytics and reports will be available soon</p>
               </div>
             </div>
           </Card>
@@ -338,12 +314,12 @@ const Reports: React.FC = () => {
 
         {/* Network Reports */}
         {reportType === "network" && (
-          <Card>
+          <Card className="u-border-0 u-shadow-sm">
             <div className="u-p-6">
               <div className="u-text-center u-py-8">
-                <Icon name="Share" size={48} className="u-text-muted u-mb-4" />
-                <h3 className="u-text-lg u-font-semibold u-mb-2">Network Reports</h3>
-                <p className="u-text-muted">Network performance and infrastructure reports will be displayed here</p>
+                <Icon name="Globe" size={48} className="u-text-secondary u-mb-4" />
+                <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">Network Reports</h3>
+                <p className="u-text-secondary-emphasis">Network performance and infrastructure reports will be available soon</p>
               </div>
             </div>
           </Card>

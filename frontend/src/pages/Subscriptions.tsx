@@ -101,7 +101,11 @@ const Subscriptions: React.FC = () => {
     },
     onError: (error: any) => {
       console.error("Failed to create subscription:", error);
-      alert(`Failed to create subscription: ${error.message || 'Unknown error'}`);
+      if (error.message?.includes('Authentication error: 400') || error.message?.includes('401')) {
+        alert('Authentication failed. Please log in with valid credentials (admin / changeme123!)');
+      } else {
+        alert(`Failed to create subscription: ${error.message || 'Unknown error'}`);
+      }
     },
   });
 
@@ -211,12 +215,30 @@ const Subscriptions: React.FC = () => {
       return;
     }
     
-    console.log('Submitting form data:', formData);
+    // Transform form data to match backend expectations
+    const submitData = {
+      customer: formData.customer_id,
+      plan: formData.plan_id,
+      router: formData.router_id,
+      username: formData.username,
+      password: formData.password,
+      access_method: formData.access_method,
+      static_ip: formData.static_ip || null,
+      mac_address: formData.mac_address || null,
+      status: formData.status,
+      start_date: formData.start_date,
+      end_date: formData.end_date || null,
+      monthly_fee: formData.monthly_fee,
+      setup_fee: formData.setup_fee,
+      notes: formData.notes || null,
+    };
+    
+    console.log('Submitting transformed data:', submitData);
     
     if (selectedSubscription) {
-      updateMutation.mutate({ id: selectedSubscription.id, data: formData });
+      updateMutation.mutate({ id: selectedSubscription.id, data: submitData });
     } else {
-      createMutation.mutate(formData);
+      createMutation.mutate(submitData);
     }
   };
 
@@ -241,7 +263,7 @@ const Subscriptions: React.FC = () => {
       <div className="u-p-6">
         <Callout variant="error" className="u-mb-4">
           <div className="u-d-flex u-align-items-center u-gap-2">
-            <Icon name="ExclamationTriangle" size={20} />
+            <Icon name="Warning" size={20} />
             <div>
               <strong>Error loading subscriptions</strong>
               <p className="u-mb-0 u-mt-1">Please try refreshing the page or contact support if the problem persists.</p>

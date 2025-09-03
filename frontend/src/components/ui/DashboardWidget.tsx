@@ -60,7 +60,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       <div className={`u-flex-1 ${contentClassName}`}>
         {error ? (
           <div className="u-d-flex u-flex-column u-align-items-center u-justify-content-center u-py-8 u-text-center">
-            <Icon name="ExclamationTriangle" size={32} className="u-text-error u-mb-3" />
+            <Icon name="Warning" size={32} className="u-text-error u-mb-3" />
             <p className="u-text-error u-mb-2">Error loading data</p>
             <p className="u-text-sm u-text-secondary">{error}</p>
           </div>

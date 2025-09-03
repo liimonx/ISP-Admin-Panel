@@ -462,6 +462,27 @@ class ApiService {
     await axios.delete(`${API_BASE_URL}/auth/users/${id}/`);
   }
 
+  // Reports
+  async getUsageReports(params?: Record<string, any>): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/reports/usage/`, { params });
+    return this.handleResponse(response);
+  }
+
+  async getTopUsers(params?: Record<string, any>): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/reports/top-users/`, { params });
+    return this.handleResponse(response);
+  }
+
+  async getUsageTrends(params?: Record<string, any>): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/reports/usage-trends/`, { params });
+    return this.handleResponse(response);
+  }
+
+  async getRevenueReports(params?: Record<string, any>): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/reports/revenue/`, { params });
+    return this.handleResponse(response);
+  }
+
   // Enhanced Dashboard Stats
   async getDashboardStats(): Promise<Stats> {
     const [customerStats, subscriptionStats, routerStats, invoiceStats] =
