@@ -163,7 +163,7 @@ const MainRouterDashboard: React.FC = () => {
       <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
         <div>
           <h1 className="u-mb-2">Main Router Dashboard</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Real-time monitoring and management of main router at {MAIN_ROUTER_IP}
           </p>
         </div>
@@ -202,7 +202,7 @@ const MainRouterDashboard: React.FC = () => {
         <div className="u-d-flex u-justify-content-between u-align-items-center">
           <div>
             <h3 className="u-mb-2">Main Router Status</h3>
-            <p className="u-text-secondary u-mb-2">
+            <p className="u-text-secondary-emphasis u-mb-2">
               IP: {MAIN_ROUTER_IP} | Type: MikroTik RouterOS
             </p>
             <div className="u-d-flex u-gap-2 u-mb-3">
@@ -210,7 +210,7 @@ const MainRouterDashboard: React.FC = () => {
               <Badge variant="primary" size="sm" label="MikroTik" />
             </div>
             {routerStatus && (
-              <div className="u-text-sm u-text-secondary">
+              <div className="u-text-sm u-text-secondary-emphasis">
                 <div>Uptime: {routerStatus.uptime || "N/A"}</div>
                 <div>Version: {routerStatus.version || "N/A"}</div>
                 <div>Last Seen: {routerStatus.last_seen ? new Date(routerStatus.last_seen).toLocaleString() : "N/A"}</div>
@@ -246,7 +246,7 @@ const MainRouterDashboard: React.FC = () => {
               variant={selectedTab === tab.id ? "primary" : "outline"}
               size="sm"
               onClick={() => setSelectedTab(tab.id)}
-              className="u-border-radius-0 u-border-bottom-0"
+              className="u-rounded-0 u-border-bottom-0"
             >
               {tab.label}
             </Button>
@@ -264,7 +264,7 @@ const MainRouterDashboard: React.FC = () => {
                 <div className="u-text-center">
                   <Icon name="Globe" size={32} className="u-text-success u-mb-2" />
                   <h3 className="u-mb-1">{connections?.total_connections || 0}</h3>
-                  <p className="u-text-secondary">Active Connections</p>
+                  <p className="u-text-secondary-emphasis">Active Connections</p>
                 </div>
               </Card>
             </GridCol>
@@ -273,7 +273,7 @@ const MainRouterDashboard: React.FC = () => {
                 <div className="u-text-center">
                   <Icon name="TrendDown" size={32} className="u-text-primary u-mb-2" />
                   <h3 className="u-mb-1">{formatBandwidth(bandwidth?.total_download || 0)}</h3>
-                  <p className="u-text-secondary">Download Speed</p>
+                  <p className="u-text-secondary-emphasis">Download Speed</p>
                 </div>
               </Card>
             </GridCol>
@@ -282,7 +282,7 @@ const MainRouterDashboard: React.FC = () => {
                 <div className="u-text-center">
                   <Icon name="TrendUp" size={32} className="u-text-warning u-mb-2" />
                   <h3 className="u-mb-1">{formatBandwidth(bandwidth?.total_upload || 0)}</h3>
-                  <p className="u-text-secondary">Upload Speed</p>
+                  <p className="u-text-secondary-emphasis">Upload Speed</p>
                 </div>
               </Card>
             </GridCol>
@@ -291,7 +291,7 @@ const MainRouterDashboard: React.FC = () => {
                 <div className="u-text-center">
                   <Icon name="Users" size={32} className="u-text-info u-mb-2" />
                   <h3 className="u-mb-1">{dhcpLeases?.total_leases || 0}</h3>
-                  <p className="u-text-secondary">DHCP Leases</p>
+                  <p className="u-text-secondary-emphasis">DHCP Leases</p>
                 </div>
               </Card>
             </GridCol>
@@ -347,11 +347,11 @@ const MainRouterDashboard: React.FC = () => {
               <Grid>
                 {interfaces?.map((interface_: any, index: number) => (
                   <GridCol key={index} xs={12} md={6} lg={4}>
-                    <Card className="u-height-100">
+                    <Card className="u-h-100">
                       <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-3">
                         <div>
                           <h4 className="u-mb-1">{interface_.name}</h4>
-                          <p className="u-text-sm u-text-secondary">{interface_.type}</p>
+                          <p className="u-text-sm u-text-secondary-emphasis">{interface_.type}</p>
                         </div>
                         {getStatusBadge(interface_.status)}
                       </div>
@@ -393,7 +393,7 @@ const MainRouterDashboard: React.FC = () => {
                     <h4 className="u-mb-3">Download</h4>
                     <div className="u-text-center">
                       <h2 className="u-text-primary u-mb-2">{formatBandwidth(bandwidth?.total_download || 0)}</h2>
-                      <p className="u-text-secondary">Total Download Speed</p>
+                      <p className="u-text-secondary-emphasis">Total Download Speed</p>
                     </div>
                   </Card>
                 </GridCol>
@@ -402,7 +402,7 @@ const MainRouterDashboard: React.FC = () => {
                     <h4 className="u-mb-3">Upload</h4>
                     <div className="u-text-center">
                       <h2 className="u-text-warning u-mb-2">{formatBandwidth(bandwidth?.total_upload || 0)}</h2>
-                      <p className="u-text-secondary">Total Upload Speed</p>
+                      <p className="u-text-secondary-emphasis">Total Upload Speed</p>
                     </div>
                   </Card>
                 </GridCol>
@@ -548,7 +548,7 @@ const MainRouterDashboard: React.FC = () => {
                 <p>Loading logs...</p>
               </div>
             ) : (
-              <div className="u-max-height-400 u-overflow-y-auto">
+              <div className="u-max-h-400 u-overflow-y-auto">
                 {logs?.logs?.map((log: any, index: number) => (
                   <div key={index} className="u-p-3 u-border-bottom">
                     <div className="u-d-flex u-justify-content-between u-mb-1">
@@ -587,8 +587,8 @@ const MainRouterDashboard: React.FC = () => {
                           <h4 className="u-mb-1">{alert.title}</h4>
                           <Badge variant={alert.severity === "high" ? "error" : "warning"} size="sm" label={alert.severity} />
                         </div>
-                        <p className="u-text-secondary u-mb-2">{alert.message}</p>
-                        <div className="u-text-sm u-text-secondary">
+                        <p className="u-text-secondary-emphasis u-mb-2">{alert.message}</p>
+                        <div className="u-text-sm u-text-secondary-emphasis">
                           {new Date(alert.timestamp).toLocaleString()}
                         </div>
                       </div>
@@ -637,7 +637,7 @@ const MainRouterDashboard: React.FC = () => {
           {commandResult && (
             <div>
               <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">Result</label>
-              <div className="u-p-3 u-bg-gray-100 u-border-radius-2 u-font-mono u-text-sm u-max-height-200 u-overflow-y-auto">
+              <div className="u-p-3 u-bg-gray-100 u-rounded u-font-mono u-text-sm u-max-h-200 u-overflow-y-auto">
                 {commandResult}
               </div>
             </div>

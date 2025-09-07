@@ -283,7 +283,7 @@ const Subscriptions: React.FC = () => {
             <Icon name="Users" size={32} className="u-me-3" />
             Subscriptions
           </h1>
-          <p className="u-text-secondary-emphasis u-fs-5 u-mb-0">
+          <p className="u-text-secondary-emphasis-emphasis u-fs-5 u-mb-0">
             Manage customer subscriptions, service connections, and billing
           </p>
         </div>
@@ -353,11 +353,11 @@ const Subscriptions: React.FC = () => {
             </Button>
             
             <div className="u-d-flex u-align-items-center u-gap-2">
-              <span className="u-text-secondary-emphasis u-fs-sm">
+              <span className="u-text-secondary-emphasis-emphasis u-fs-sm">
                 Page {currentPage} of {totalPages}
               </span>
-              <span className="u-text-secondary-emphasis u-fs-sm">•</span>
-              <span className="u-text-secondary-emphasis u-fs-sm">
+              <span className="u-text-secondary-emphasis-emphasis u-fs-sm">•</span>
+              <span className="u-text-secondary-emphasis-emphasis u-fs-sm">
                 {subscriptionsData?.count || 0} total subscriptions
               </span>
             </div>

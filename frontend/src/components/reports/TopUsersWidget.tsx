@@ -57,18 +57,18 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
 
   if (isLoading) {
     return (
-      <Card className={`u-height-100 ${className}`}>
+      <Card className={`u-h-100 ${className}`}>
         <div className="u-p-4">
-          <h3 className="u-text-lg u-font-semibold u-mb-4">{title}</h3>
+          <h3 className="u-text-lg u-fw-semibold u-mb-4">{title}</h3>
           <div className="u-space-y-3">
             {Array.from({ length: 5 }).map((_, index) => (
               <div key={index} className="u-d-flex u-align-items-center u-gap-3">
-                <div className="u-bg-light u-width-8 u-height-8 u-border-radius-circle"></div>
+                <div className="u-bg-light u-w-8 u-h-8 u-rounded-full"></div>
                 <div className="u-flex-1">
-                  <div className="u-bg-light u-height-4 u-width-75 u-border-radius-1 u-mb-1"></div>
-                  <div className="u-bg-light u-height-3 u-width-50 u-border-radius-1"></div>
+                  <div className="u-bg-light u-h-4 u-w-75 u-rounded-sm u-mb-1"></div>
+                  <div className="u-bg-light u-h-3 u-w-50 u-rounded-sm"></div>
                 </div>
-                <div className="u-bg-light u-height-4 u-width-20 u-border-radius-1"></div>
+                <div className="u-bg-light u-h-4 u-w-20 u-rounded-sm"></div>
               </div>
             ))}
           </div>
@@ -80,9 +80,9 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
   const displayUsers = users.slice(0, limit);
 
   return (
-    <Card className={`u-height-100 ${className}`}>
+    <Card className={`u-h-100 ${className}`}>
       <div className="u-p-4">
-        <h3 className="u-text-lg u-font-semibold u-mb-4">{title}</h3>
+        <h3 className="u-text-lg u-fw-semibold u-mb-4">{title}</h3>
         
         {displayUsers.length === 0 ? (
           <div className="u-text-center u-py-8">
@@ -93,7 +93,7 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
             {displayUsers.map((user, index) => (
               <div key={user.id} className="u-d-flex u-align-items-center u-gap-3">
                 <div className="u-d-flex u-align-items-center u-gap-2">
-                  <span className="u-text-sm u-font-weight-bold u-text-muted u-min-width-6">
+                  <span className="u-text-sm u-fw-bold u-text-muted u-min-w-6">
                     {index + 1}
                   </span>
                   <Avatar 
@@ -102,8 +102,8 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
                   />
                 </div>
                 
-                <div className="u-flex-1 u-min-width-0">
-                  <div className="u-text-sm u-font-weight-medium u-truncate">
+                <div className="u-flex-1 u-min-w-0">
+                  <div className="u-text-sm u-fw-medium u-truncate">
                     {user.name}
                   </div>
                   <div className="u-text-xs u-text-muted u-truncate">
@@ -118,7 +118,7 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
                 
                 <div className="u-d-flex u-align-items-center u-gap-2">
                   <div className="u-text-right">
-                    <div className="u-text-sm u-font-weight-medium">
+                    <div className="u-text-sm u-fw-medium">
                       {formatUsage(user.usage, user.usage_unit)}
                     </div>
                     <div className="u-text-xs u-text-muted">usage</div>

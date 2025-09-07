@@ -35,15 +35,15 @@ export const StatCard: React.FC<StatCardProps> = ({
 }) => {
   if (loading) {
     return (
-      <Card className={`u-height-100 ${className}`} data-testid={testId}>
+      <Card className={`u-h-100 ${className}`} data-testid={testId}>
         <div className="u-d-flex u-justify-content-between u-align-items-flex-start u-mb-4">
           <div className="u-flex-1">
-            <div className="u-bg-light u-height-4 u-width-75 u-border-radius-1 u-mb-3"></div>
-            <div className="u-bg-light u-height-6 u-width-50 u-border-radius-1 u-mb-2"></div>
-            <div className="u-bg-light u-height-3 u-width-25 u-border-radius-1"></div>
+            <div className="u-bg-light u-h-4 u-w-75 u-rounded-sm u-mb-3"></div>
+            <div className="u-bg-light u-h-6 u-w-50 u-rounded-sm u-mb-2"></div>
+            <div className="u-bg-light u-h-3 u-w-25 u-rounded-sm"></div>
           </div>
           {icon && (
-            <div className="u-bg-light u-p-2 u-border-radius-2"></div>
+            <div className="u-bg-light u-p-2 u-rounded"></div>
           )}
         </div>
       </Card>
@@ -51,11 +51,11 @@ export const StatCard: React.FC<StatCardProps> = ({
   }
 
   return (
-    <Card className={`u-height-100 ${className}`} data-testid={testId}>
+    <Card className={`u-h-100 ${className}`} data-testid={testId}>
       <div className="u-d-flex u-justify-content-between u-align-items-start">
         <div className="u-flex-1">
           <div className="u-text-sm u-mb-2 u-text-muted">{title}</div>
-          <div className="u-text-2xl u-font-weight-bold u-mb-2">{value}</div>
+          <div className="u-text-2xl u-fw-bold u-mb-2">{value}</div>
           {trend && (
             <div className="u-d-flex u-align-items-center u-mb-2">
               <Icon
@@ -64,7 +64,7 @@ export const StatCard: React.FC<StatCardProps> = ({
                 className={trend.isPositive ? "u-text-success" : "u-text-error"}
               />
               <span
-                className={`u-text-sm u-ml-1 ${
+                className={`u-text-sm u-ms-1 ${
                   trend.isPositive ? "u-text-success" : "u-text-error"
                 }`}
               >
@@ -79,7 +79,7 @@ export const StatCard: React.FC<StatCardProps> = ({
 
         {icon && (
           <div
-            className="u-p-3 u-border-radius-2 u-d-flex u-align-items-center u-justify-content-center"
+            className="u-p-3 u-rounded u-d-flex u-align-items-center u-justify-content-center"
             style={{
               backgroundColor: `color-mix(in srgb, ${iconColor} 20%, transparent)`,
               color: iconColor,

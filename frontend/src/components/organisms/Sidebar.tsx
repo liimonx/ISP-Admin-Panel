@@ -199,7 +199,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             icon={<Icon name={item.icon as any} size={20} />}
             active={active}
             onClick={() => handleMenuClick(item)}
-            className={`${level > 0 ? "u-pl-8" : ""} ${collapsed ? "u-justify-content-center" : ""}`}
+            className={`${level > 0 ? "u-ps-8" : ""} ${collapsed ? "u-justify-content-center" : ""}`}
           >
             {!collapsed && item.label}
             {!collapsed && (
@@ -212,7 +212,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </SideMenuItem>
 
           {!collapsed && isExpanded && (
-            <SideMenuList className="u-pl-4 u-mt-1">
+            <SideMenuList className="u-ps-4 u-mt-1">
               {item.children!.map((child) => renderMenuItem(child, level + 1))}
             </SideMenuList>
           )}
@@ -226,7 +226,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         icon={<Icon name={item.icon as any} size={20} />}
         active={active}
         onClick={() => handleMenuClick(item)}
-        className={`${level > 0 ? "u-pl-8" : ""} ${collapsed ? "u-justify-content-center" : ""} u-mb-1`}
+        className={`${level > 0 ? "u-ps-8" : ""} ${collapsed ? "u-justify-content-center" : ""} u-mb-1`}
       >
         {!collapsed && item.label}
         {!collapsed && item.badge && (
@@ -243,7 +243,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <div
       className={`u-h-100 u-bg-surface u-border-right u-d-flex u-flex-column u-transition-all u-shadow-sm ${
-        collapsed ? "u-width-16" : "u-width-64"
+        collapsed ? "u-w-16" : "u-w-64"
       } ${className}`}
       data-testid={testId}
       style={{ height: '100vh' }}
@@ -254,7 +254,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!collapsed && (
             <div className="u-d-flex u-align-items-center u-gap-2">
               <Icon name="Globe" size={24} className="u-text-primary" />
-              <span className="u-font-weight-bold u-text-lg u-text-primary">BCN ISP</span>
+              <span className="u-fw-bold u-text-lg u-text-primary">BCN ISP</span>
             </div>
           )}
           {collapsed && (
@@ -294,12 +294,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 size="sm"
                 initials={user.name?.charAt(0)?.toUpperCase() || '?'}
               />
-              <div className="u-flex-1 u-min-width-0">
-                <div className="u-font-weight-medium u-text-sm u-truncate">
+              <div className="u-flex-1 u-min-w-0">
+                <div className="u-fw-medium u-text-sm u-truncate">
                   {user.name}
                 </div>
                 {user.role && (
-                  <div className="u-text-xs u-text-secondary u-truncate">
+                  <div className="u-text-xs u-text-secondary-emphasis u-truncate">
                     {user.role}
                   </div>
                 )}
@@ -321,13 +321,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Footer */}
       <div className="u-p-4 u-border-top u-mt-auto">
         {!collapsed ? (
-          <div className="u-d-flex u-align-items-center u-gap-2 u-text-xs u-text-secondary">
+          <div className="u-d-flex u-align-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
             <Icon name="Info" size={14} />
             <span>BCN ISP v1.0.0</span>
           </div>
         ) : (
           <div className="u-d-flex u-justify-content-center">
-            <Icon name="Info" size={16} className="u-text-secondary" />
+            <Icon name="Info" size={16} className="u-text-secondary-emphasis" />
           </div>
         )}
       </div>

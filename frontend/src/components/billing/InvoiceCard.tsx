@@ -69,11 +69,11 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
   const canPay = isPending || isOverdue;
 
   return (
-    <Card className="u-height-100">
+    <Card className="u-h-100">
       <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
         <div className="u-flex-fill">
           <h4 className="u-mb-1 u-fs-lg u-fw-semibold">{invoice.invoice_number}</h4>
-          <p className="u-fs-sm u-text-secondary u-mb-2">
+          <p className="u-fs-sm u-text-secondary-emphasis u-mb-2">
             {invoice.invoice_type} • Due: {new Date(invoice.due_date).toLocaleDateString()}
           </p>
           {getStatusBadge(invoice.status)}
@@ -99,10 +99,10 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           <div className="u-fw-medium u-fs-sm">
             {invoice.customer?.name || 'Unknown Customer'}
           </div>
-          <div className="u-fs-xs u-text-secondary">
+          <div className="u-fs-xs u-text-secondary-emphasis">
             {invoice.customer?.email || 'No email'}
           </div>
-          <div className="u-fs-xs u-text-secondary">
+          <div className="u-fs-xs u-text-secondary-emphasis">
             {invoice.customer?.phone || 'No phone'}
           </div>
         </div>
@@ -121,7 +121,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
             variant={isOverdue ? 'error' : 'primary'}
             className="u-mb-2"
           />
-          <div className="u-fs-xs u-text-secondary">
+          <div className="u-fs-xs u-text-secondary-emphasis">
             {formatCurrency(progress.remaining)} remaining
           </div>
         </div>

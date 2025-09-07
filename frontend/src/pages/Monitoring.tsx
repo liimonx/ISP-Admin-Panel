@@ -176,7 +176,7 @@ const Monitoring: React.FC = () => {
       <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
         <div>
           <h1 className="u-mb-2">Network Monitoring</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Real-time monitoring of network performance and router status
           </p>
         </div>
@@ -185,9 +185,9 @@ const Monitoring: React.FC = () => {
             <Icon
               name={autoRefresh ? "Play" : "Pause"}
               size={16}
-              className={autoRefresh ? "u-text-success" : "u-text-secondary"}
+              className={autoRefresh ? "u-text-success" : "u-text-secondary-emphasis"}
             />
-            <span className="u-fs-sm u-text-secondary">
+            <span className="u-fs-sm u-text-secondary-emphasis">
               {autoRefresh ? "Auto-refresh ON" : "Auto-refresh OFF"}
             </span>
             <Button
@@ -304,28 +304,28 @@ const Monitoring: React.FC = () => {
             <div className="u-mt-4 u-space-y-2">
               <div className="u-d-flex u-justify-content-between u-align-items-center">
                 <div className="u-d-flex u-align-items-center u-gap-2">
-                  <div className="u-width-3 u-height-3 u-bg-primary u-border-radius-circle"></div>
+                  <div className="u-w-3 u-h-3 u-bg-primary u-rounded-full"></div>
                   <span className="u-fs-sm">HTTP/HTTPS</span>
                 </div>
                 <span className="u-fs-sm u-fw-medium">45%</span>
               </div>
               <div className="u-d-flex u-justify-content-between u-align-items-center">
                 <div className="u-d-flex u-align-items-center u-gap-2">
-                  <div className="u-width-3 u-height-3 u-bg-success u-border-radius-circle"></div>
+                  <div className="u-w-3 u-h-3 u-bg-success u-rounded-full"></div>
                   <span className="u-fs-sm">Video Streaming</span>
                 </div>
                 <span className="u-fs-sm u-fw-medium">30%</span>
               </div>
               <div className="u-d-flex u-justify-content-between u-align-items-center">
                 <div className="u-d-flex u-align-items-center u-gap-2">
-                  <div className="u-width-3 u-height-3 u-bg-warning u-border-radius-circle"></div>
+                  <div className="u-w-3 u-h-3 u-bg-warning u-rounded-full"></div>
                   <span className="u-fs-sm">Gaming</span>
                 </div>
                 <span className="u-fs-sm u-fw-medium">15%</span>
               </div>
               <div className="u-d-flex u-justify-content-between u-align-items-center">
                 <div className="u-d-flex u-align-items-center u-gap-2">
-                  <div className="u-width-3 u-height-3 u-bg-error u-border-radius-circle"></div>
+                  <div className="u-w-3 u-h-3 u-bg-error u-rounded-full"></div>
                   <span className="u-fs-sm">File Transfer</span>
                 </div>
                 <span className="u-fs-sm u-fw-medium">10%</span>
@@ -372,11 +372,11 @@ const Monitoring: React.FC = () => {
         <Grid>
           {routersData?.results?.map((router) => (
             <GridCol key={router.id} xs={12} md={6} lg={4}>
-              <Card className="u-height-100">
+              <Card className="u-h-100">
                 <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
                   <div>
                     <h4 className="u-mb-1">{router.name}</h4>
-                    <p className="u-fs-sm u-text-secondary">{router.host}</p>
+                    <p className="u-fs-sm u-text-secondary-emphasis">{router.host}</p>
                   </div>
                   {getRouterStatusBadge(router.status)}
                 </div>
@@ -385,7 +385,7 @@ const Monitoring: React.FC = () => {
                   <div>
                     <div className="u-d-flex u-justify-content-between u-mb-1">
                       <span className="u-fs-sm">CPU Usage</span>
-                      <span className="u-fs-sm u-text-secondary">
+                      <span className="u-fs-sm u-text-secondary-emphasis">
                         {Math.floor(Math.random() * 100)}%
                       </span>
                     </div>
@@ -404,7 +404,7 @@ const Monitoring: React.FC = () => {
                   <div>
                     <div className="u-d-flex u-justify-content-between u-mb-1">
                       <span className="u-fs-sm">Memory Usage</span>
-                      <span className="u-fs-sm u-text-secondary">
+                      <span className="u-fs-sm u-text-secondary-emphasis">
                         {formatBytes(
                           Math.floor(Math.random() * 1024 * 1024 * 1024),
                         )}
@@ -419,7 +419,7 @@ const Monitoring: React.FC = () => {
                   <div>
                     <div className="u-d-flex u-justify-content-between u-mb-1">
                       <span className="u-fs-sm">Network Load</span>
-                      <span className="u-fs-sm u-text-secondary">
+                      <span className="u-fs-sm u-text-secondary-emphasis">
                         {Math.floor(Math.random() * 1000)} Mbps
                       </span>
                     </div>
@@ -435,13 +435,13 @@ const Monitoring: React.FC = () => {
                     <div className="u-fs-sm u-fw-medium">
                       {Math.floor(Math.random() * 200)} users
                     </div>
-                    <div className="u-fs-xs u-text-secondary">connected</div>
+                    <div className="u-fs-xs u-text-secondary-emphasis">connected</div>
                   </div>
                   <div>
                     <div className="u-fs-sm u-fw-medium">
                       {formatUptime(Math.floor(Math.random() * 86400 * 30))}
                     </div>
-                    <div className="u-fs-xs u-text-secondary">uptime</div>
+                    <div className="u-fs-xs u-text-secondary-emphasis">uptime</div>
                   </div>
                   <Button 
                     variant="outline" 
@@ -466,10 +466,10 @@ const Monitoring: React.FC = () => {
               <Icon
                 name="Globe"
                 size={48}
-                className="u-text-secondary u-mb-4"
+                className="u-text-secondary-emphasis u-mb-4"
               />
               <h3 className="u-mb-2">No routers found</h3>
-              <p className="u-text-secondary u-mb-4">
+              <p className="u-text-secondary-emphasis u-mb-4">
                 You need to add routers to monitor network performance.
               </p>
               <Button variant="primary">
@@ -496,8 +496,8 @@ const Monitoring: React.FC = () => {
               <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-3">
                 <div>
                   <h2 className="u-mb-1">{selectedRouter.name}</h2>
-                  <p className="u-text-secondary u-mb-2">{selectedRouter.description}</p>
-                  <p className="u-fs-sm u-text-secondary">{selectedRouter.host}:{selectedRouter.api_port}</p>
+                  <p className="u-text-secondary-emphasis u-mb-2">{selectedRouter.description}</p>
+                  <p className="u-fs-sm u-text-secondary-emphasis">{selectedRouter.host}:{selectedRouter.api_port}</p>
                 </div>
                 {getRouterStatusBadge(selectedRouter.status)}
               </div>
@@ -506,13 +506,13 @@ const Monitoring: React.FC = () => {
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Router Type</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Router Type</label>
                   <p className="u-fw-medium">{selectedRouter.router_type}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Location</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Location</label>
                   <p className="u-fw-medium">{selectedRouter.location || "Not specified"}</p>
                 </div>
               </GridCol>
@@ -521,13 +521,13 @@ const Monitoring: React.FC = () => {
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">API Port</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">API Port</label>
                   <p>{selectedRouter.api_port}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">SSH Port</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">SSH Port</label>
                   <p>{selectedRouter.ssh_port}</p>
                 </div>
               </GridCol>
@@ -536,13 +536,13 @@ const Monitoring: React.FC = () => {
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">SNMP Community</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">SNMP Community</label>
                   <p>{selectedRouter.snmp_community}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">SNMP Port</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">SNMP Port</label>
                   <p>{selectedRouter.snmp_port}</p>
                 </div>
               </GridCol>
@@ -554,28 +554,28 @@ const Monitoring: React.FC = () => {
                 <div>
                   <div className="u-d-flex u-justify-content-between u-mb-1">
                     <span className="u-fs-sm">CPU Usage</span>
-                    <span className="u-fs-sm u-text-secondary">67%</span>
+                    <span className="u-fs-sm u-text-secondary-emphasis">67%</span>
                   </div>
                   <Progress value={67} variant="warning" />
                 </div>
                 <div>
                   <div className="u-d-flex u-justify-content-between u-mb-1">
                     <span className="u-fs-sm">Memory Usage</span>
-                    <span className="u-fs-sm u-text-secondary">1.2 GB / 4 GB</span>
+                    <span className="u-fs-sm u-text-secondary-emphasis">1.2 GB / 4 GB</span>
                   </div>
                   <Progress value={30} variant="success" />
                 </div>
                 <div>
                   <div className="u-d-flex u-justify-content-between u-mb-1">
                     <span className="u-fs-sm">Network Load</span>
-                    <span className="u-fs-sm u-text-secondary">450 Mbps</span>
+                    <span className="u-fs-sm u-text-secondary-emphasis">450 Mbps</span>
                   </div>
                   <Progress value={45} variant="primary" />
                 </div>
                 <div>
                   <div className="u-d-flex u-justify-content-between u-mb-1">
                     <span className="u-fs-sm">Active Connections</span>
-                    <span className="u-fs-sm u-text-secondary">156 users</span>
+                    <span className="u-fs-sm u-text-secondary-emphasis">156 users</span>
                   </div>
                   <Progress value={78} variant="success" />
                 </div>
@@ -584,13 +584,13 @@ const Monitoring: React.FC = () => {
 
             {selectedRouter.notes && (
               <div className="u-mb-4">
-                <label className="u-fs-sm u-text-secondary u-mb-1">Notes</label>
+                <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Notes</label>
                 <p>{selectedRouter.notes}</p>
               </div>
             )}
 
             <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary u-mb-1">Last Seen</label>
+              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Last Seen</label>
               <p>{selectedRouter.last_seen ? new Date(selectedRouter.last_seen).toLocaleString() : "Never"}</p>
             </div>
 

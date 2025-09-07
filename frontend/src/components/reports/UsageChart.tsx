@@ -27,9 +27,9 @@ export const UsageChart: React.FC<UsageChartProps> = ({
 }) => {
   if (isLoading) {
     return (
-      <Card className={`u-height-100 ${className}`}>
+      <Card className={`u-h-100 ${className}`}>
         <div className="u-p-4">
-          <h3 className="u-text-lg u-font-semibold u-mb-4">{title}</h3>
+          <h3 className="u-text-lg u-fw-semibold u-mb-4">{title}</h3>
           <div className="u-d-flex u-justify-content-center u-align-items-center" style={{ height: `${height}px` }}>
             <div className="u-text-center">
               <div className="u-spinner u-mx-auto u-mb-2"></div>
@@ -54,9 +54,9 @@ export const UsageChart: React.FC<UsageChartProps> = ({
   ];
 
   return (
-    <Card className={`u-height-100 ${className}`}>
+    <Card className={`u-h-100 ${className}`}>
       <div className="u-p-4">
-        <h3 className="u-text-lg u-font-semibold u-mb-4">{title}</h3>
+        <h3 className="u-text-lg u-fw-semibold u-mb-4">{title}</h3>
         <div style={{ height: `${height}px` }}>
           <LineChart datasets={chartData} size="lg" />
         </div>

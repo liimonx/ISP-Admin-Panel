@@ -485,7 +485,7 @@ Generated on: ${new Date().toLocaleString()}
                     {paymentsData.results.slice(0, 5).map((payment) => (
                       <div
                         key={payment.id}
-                        className="u-d-flex u-justify-content-between u-align-items-center u-mb- 2 u-p-3 u-border u-rounded u-cursor-pointer u-hover-brand-bg-subtle"
+                        className="u-d-flex u-justify-content-between u-align-items-center u-mb-2 u-p-3 u-border u-rounded u-cursor-pointer u-bg-brand-subtle"
                         onClick={() => handleViewPayment(payment)}
                       >
                         <div>

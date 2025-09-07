@@ -72,7 +72,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     return (
       <div className="u-w-100">
         <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-1">
-          <span className="u-fs-xs u-text-secondary-emphasis">
+          <span className="u-fs-xs u-text-secondary-emphasis-emphasis">
             {(Number(used) || 0).toFixed(1)} GB / {quota} GB
           </span>
           <span className={`u-fs-xs u-fw-medium ${isHigh ? 'u-text-error-emphasis' : isMedium ? 'u-text-warning-emphasis' : 'u-text-success-emphasis'}`}>
@@ -99,7 +99,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               size={32}
               className="u-text-primary u-mb-3"
             />
-            <p className="u-text-secondary-emphasis">Loading subscriptions...</p>
+            <p className="u-text-secondary-emphasis-emphasis">Loading subscriptions...</p>
           </div>
         </div>
       </Card>
@@ -110,9 +110,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     return (
       <Card className="u-p-6">
         <div className="u-text-center u-py-8">
-          <Icon name="Users" size={48} className="u-text-secondary u-mb-3" />
+          <Icon name="Users" size={48} className="u-text-secondary-emphasis u-mb-3" />
           <h3 className="u-text-primary-emphasis u-mb-2">No subscriptions found</h3>
-          <p className="u-text-secondary-emphasis u-mb-4">
+          <p className="u-text-secondary-emphasis-emphasis u-mb-4">
             No subscriptions match your current filters. Try adjusting your search criteria.
           </p>
           <Button variant="primary" size="md" onClick={onCreate}>
@@ -136,7 +136,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           <div className="u-fw-medium u-text-primary-emphasis">
             {subscription.customer?.name || 'Unknown Customer'}
           </div>
-          <div className="u-fs-sm u-text-secondary-emphasis">
+          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
             {subscription.customer?.email || 'No email'}
           </div>
         </div>
@@ -147,7 +147,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
           {subscription.plan?.name || 'Unknown Plan'}
         </div>
-        <div className="u-fs-sm u-text-secondary-emphasis u-d-flex u-align-items-center u-gap-1">
+        <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-d-flex u-align-items-center u-gap-1">
           <Icon name="ArrowDown" size={12} />
           {subscription.plan?.download_speed || 0}
           <Icon name="ArrowUp" size={12} />
@@ -161,16 +161,16 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <div className="u-mb-2">
           {getAccessMethodBadge(subscription.access_method)}
         </div>
-        <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+        <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-mb-1">
           <strong>User:</strong> {subscription.username || 'No username'}
         </div>
         {subscription.static_ip && (
-          <div className="u-fs-sm u-text-secondary-emphasis">
+          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
             <strong>IP:</strong> {subscription.static_ip}
           </div>
         )}
         {subscription.mac_address && (
-          <div className="u-fs-sm u-text-secondary-emphasis">
+          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
             <strong>MAC:</strong> {subscription.mac_address}
           </div>
         )}
@@ -185,7 +185,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             <div className="u-fw-medium u-text-primary-emphasis">
               {(Number(subscription.data_used) || 0).toFixed(1)} GB
             </div>
-            <div className="u-fs-xs u-text-secondary-emphasis">Unlimited</div>
+            <div className="u-fs-xs u-text-secondary-emphasis-emphasis">Unlimited</div>
           </div>
         )}
       </div>
@@ -196,7 +196,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <div className="u-fw-medium u-text-primary-emphasis">
           ${formatCurrency(subscription.monthly_fee)}
         </div>
-        <div className="u-fs-sm u-text-secondary-emphasis">per month</div>
+        <div className="u-fs-sm u-text-secondary-emphasis-emphasis">per month</div>
         {subscription.setup_fee > 0 && (
           <div className="u-fs-xs u-text-warning-emphasis">
             +${formatCurrency(subscription.setup_fee)} setup
@@ -209,7 +209,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
           {subscription.router?.name || 'Unknown Router'}
         </div>
-        <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+        <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-mb-1">
           {subscription.router?.location || 'No location'}
         </div>
         <Badge 
@@ -225,7 +225,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           <strong>Started:</strong> {subscription.start_date ? new Date(subscription.start_date).toLocaleDateString() : 'No date'}
         </div>
         {subscription.end_date && (
-          <div className="u-fs-sm u-text-secondary-emphasis">
+          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
             <strong>Ends:</strong> {new Date(subscription.end_date).toLocaleDateString()}
           </div>
         )}

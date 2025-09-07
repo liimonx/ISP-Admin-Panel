@@ -87,7 +87,7 @@ const Reports: React.FC = () => {
           <Icon name="ChartBar" size={32} className="u-me-3" />
           Reports & Analytics
         </h1>
-        <p className="u-text-secondary-emphasis u-fs-5">
+        <p className="u-text-secondary-emphasis-emphasis u-fs-5">
           View detailed reports and analytics for your ISP operations.
         </p>
       </div>
@@ -97,7 +97,7 @@ const Reports: React.FC = () => {
         <div className="u-p-4">
           <div className="u-d-flex u-gap-4 u-align-items-end u-flex-wrap">
             <div>
-              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-2 u-d-block">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
                 Report Type
               </label>
               <select
@@ -114,7 +114,7 @@ const Reports: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-2 u-d-block">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
                 Time Range
               </label>
               <select
@@ -132,7 +132,7 @@ const Reports: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-2 u-d-block">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
                 Start Date
               </label>
               <input
@@ -144,7 +144,7 @@ const Reports: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-2 u-d-block">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
                 End Date
               </label>
               <input
@@ -304,9 +304,9 @@ const Reports: React.FC = () => {
           <Card className="u-border-0 u-shadow-sm">
             <div className="u-p-6">
               <div className="u-text-center u-py-8">
-                <Icon name="Users" size={48} className="u-text-secondary u-mb-4" />
+                <Icon name="Users" size={48} className="u-text-secondary-emphasis u-mb-4" />
                 <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">Customer Reports</h3>
-                <p className="u-text-secondary-emphasis">Detailed customer analytics and reports will be available soon</p>
+                <p className="u-text-secondary-emphasis-emphasis">Detailed customer analytics and reports will be available soon</p>
               </div>
             </div>
           </Card>
@@ -317,9 +317,9 @@ const Reports: React.FC = () => {
           <Card className="u-border-0 u-shadow-sm">
             <div className="u-p-6">
               <div className="u-text-center u-py-8">
-                <Icon name="Globe" size={48} className="u-text-secondary u-mb-4" />
+                <Icon name="Globe" size={48} className="u-text-secondary-emphasis u-mb-4" />
                 <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">Network Reports</h3>
-                <p className="u-text-secondary-emphasis">Network performance and infrastructure reports will be available soon</p>
+                <p className="u-text-secondary-emphasis-emphasis">Network performance and infrastructure reports will be available soon</p>
               </div>
             </div>
           </Card>

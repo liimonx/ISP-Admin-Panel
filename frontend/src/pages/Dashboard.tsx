@@ -260,7 +260,7 @@ const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="u-d-flex u-justify-content-center u-align-items-center u-height-50vh">
+      <div className="u-d-flex u-justify-content-center u-align-items-center u-h-50vh">
         <div className="u-text-center">
           <Spinner size="lg" className="u-mb-4" />
           <h3>Loading Dashboard...</h3>
@@ -276,8 +276,8 @@ const Dashboard: React.FC = () => {
       <div className="u-mb-8">
         <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
           <div>
-            <h1 className="u-text-3xl u-font-weight-bold u-mb-2 u-text-foreground">Dashboard</h1>
-            <p className="u-text-secondary u-text-lg">
+            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">Dashboard</h1>
+            <p className="u-text-secondary-emphasis u-text-lg">
               Welcome back! Here's what's happening with your ISP operations today.
             </p>
           </div>
@@ -305,7 +305,7 @@ const Dashboard: React.FC = () => {
         </div>
         
         {/* Quick Stats Summary */}
-        <div className="u-d-flex u-gap-4 u-text-sm u-text-secondary u-align-items-center">
+        <div className="u-d-flex u-gap-4 u-text-sm u-text-secondary-emphasis u-align-items-center">
           <span>Last updated: {new Date().toLocaleTimeString()}</span>
           <span>•</span>
           <span>Auto-refresh: 30s</span>
@@ -396,13 +396,13 @@ const Dashboard: React.FC = () => {
           <Card className="u-h-100">
             <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
               <div>
-                <h3 className="u-text-xl u-font-weight-semibold u-mb-1">
+                <h3 className="u-text-xl u-fw-semibold u-mb-1">
                   {selectedChart === "revenue" && "Revenue Analytics"}
                   {selectedChart === "traffic" && "Network Traffic"}
                   {selectedChart === "customers" && "Customer Growth"}
                   {selectedChart === "network" && "Network Performance"}
                 </h3>
-                <p className="u-text-sm u-text-secondary">
+                <p className="u-text-sm u-text-secondary-emphasis">
                   Track your key metrics over time
                 </p>
               </div>
@@ -440,7 +440,7 @@ const Dashboard: React.FC = () => {
               ))}
             </div>
             
-            <div className="u-min-height-400">
+            <div className="u-min-h-400">
               {selectedChart === "revenue" && <AreaChart datasets={revenueData} size="lg" />}
               {selectedChart === "traffic" && <BarChart datasets={trafficData} size="lg" />}
               {selectedChart === "customers" && <LineChart datasets={customerGrowthData} size="lg" />}
@@ -451,19 +451,19 @@ const Dashboard: React.FC = () => {
         <GridCol xs={12} lg={4}>
           <Card className="u-h-100">
             <div className="u-mb-4">
-              <h3 className="u-text-xl u-font-weight-semibold u-mb-1">Plan Distribution</h3>
-              <p className="u-text-sm u-text-secondary">
+              <h3 className="u-text-xl u-fw-semibold u-mb-1">Plan Distribution</h3>
+              <p className="u-text-sm u-text-secondary-emphasis">
                 Customer subscription breakdown
               </p>
             </div>
-            <div className="u-min-height-300">
+            <div className="u-min-h-300">
               <DonutChart datasets={customerDistribution} size="lg" />
             </div>
             <div className="u-mt-4 u-text-center u-pt-4 u-border-top">
-              <div className="u-text-2xl u-font-weight-bold u-text-primary u-mb-1">
+              <div className="u-text-2xl u-fw-bold u-text-primary u-mb-1">
                 {stats?.total_subscriptions ?? 'N/A'}
               </div>
-              <p className="u-text-sm u-text-secondary">
+              <p className="u-text-sm u-text-secondary-emphasis">
                 Total Active Subscriptions
               </p>
             </div>
@@ -524,8 +524,8 @@ const Dashboard: React.FC = () => {
         <GridCol xs={12} lg={8}>
           <Card className="u-h-100">
             <div className="u-mb-4">
-              <h3 className="u-text-xl u-font-weight-semibold u-mb-1">System Overview</h3>
-              <p className="u-text-sm u-text-secondary">
+              <h3 className="u-text-xl u-fw-semibold u-mb-1">System Overview</h3>
+              <p className="u-text-sm u-text-secondary-emphasis">
                 Key metrics and performance indicators
               </p>
             </div>
@@ -533,34 +533,34 @@ const Dashboard: React.FC = () => {
             <Grid>
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
-                  <div className="u-text-2xl u-font-weight-bold u-text-success u-mb-1">
+                  <div className="u-text-2xl u-fw-bold u-text-success u-mb-1">
                     {(((stats?.online_routers || 0) / (stats?.total_routers || 1)) * 100 || 0).toFixed(1)}%
                   </div>
-                  <div className="u-text-sm u-text-secondary">Uptime</div>
+                  <div className="u-text-sm u-text-secondary-emphasis">Uptime</div>
                 </div>
               </GridCol>
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
-                  <div className="u-text-2xl u-font-weight-bold u-text-primary u-mb-1">
+                  <div className="u-text-2xl u-fw-bold u-text-primary u-mb-1">
                     {stats?.total_customers || 0}
                   </div>
-                  <div className="u-text-sm u-text-secondary">Customers</div>
+                  <div className="u-text-sm u-text-secondary-emphasis">Customers</div>
                 </div>
               </GridCol>
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
-                  <div className="u-text-2xl u-font-weight-bold u-text-warning u-mb-1">
+                  <div className="u-text-2xl u-fw-bold u-text-warning u-mb-1">
                     {stats?.total_routers || 0}
                   </div>
-                  <div className="u-text-sm u-text-secondary">Routers</div>
+                  <div className="u-text-sm u-text-secondary-emphasis">Routers</div>
                 </div>
               </GridCol>
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
-                  <div className="u-text-2xl u-font-weight-bold u-text-info u-mb-1">
+                  <div className="u-text-2xl u-fw-bold u-text-info u-mb-1">
                     ${(stats?.total_monthly_revenue || 0).toLocaleString()}
                   </div>
-                  <div className="u-text-sm u-text-secondary">Revenue</div>
+                  <div className="u-text-sm u-text-secondary-emphasis">Revenue</div>
                 </div>
               </GridCol>
             </Grid>
@@ -574,8 +574,8 @@ const Dashboard: React.FC = () => {
           <Card className="u-h-100">
             <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
               <div>
-                <h3 className="u-text-xl u-font-weight-semibold u-mb-1">Recent Customers</h3>
-                <p className="u-text-sm u-text-secondary">
+                <h3 className="u-text-xl u-fw-semibold u-mb-1">Recent Customers</h3>
+                <p className="u-text-sm u-text-secondary-emphasis">
                   Latest customer registrations and activity
                 </p>
               </div>
@@ -588,19 +588,19 @@ const Dashboard: React.FC = () => {
               {recentCustomers.map((customer, index) => (
                 <div
                   key={customer.id || index}
-                  className="u-d-flex u-align-items-center u-justify-content-between u-p-3 u-border u-border-radius-2 u-cursor-pointer hover:u-bg-light"
+                  className="u-d-flex u-align-items-center u-justify-content-between u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-light"
                   onClick={() => handleCustomerClick(customer)}
                 >
                   <div className="u-d-flex u-align-items-center u-gap-3">
                     <Avatar initials={customer.name?.charAt(0) || '?'} size="sm" />
                     <div>
-                      <div className="u-font-weight-medium">
+                      <div className="u-fw-medium">
                         {customer.name}
                       </div>
-                      <div className="u-text-sm u-text-secondary">
+                      <div className="u-text-sm u-text-secondary-emphasis">
                         {customer.email}
                       </div>
-                      <div className="u-text-xs u-text-secondary">
+                      <div className="u-text-xs u-text-secondary-emphasis">
                         Joined {new Date(customer.created_at).toLocaleDateString()}
                       </div>
                     </div>
@@ -621,8 +621,8 @@ const Dashboard: React.FC = () => {
               ))}
               {recentCustomers.length === 0 && (
                 <div className="u-text-center u-py-8">
-                  <Icon name="Users" size={48} className="u-text-secondary u-mb-4" />
-                  <p className="u-text-secondary">No recent customers found</p>
+                  <Icon name="Users" size={48} className="u-text-secondary-emphasis u-mb-4" />
+                  <p className="u-text-secondary-emphasis">No recent customers found</p>
                 </div>
               )}
             </div>
@@ -631,8 +631,8 @@ const Dashboard: React.FC = () => {
         <GridCol xs={12} lg={4}>
           <Card className="u-h-100">
             <div className="u-mb-6">
-              <h3 className="u-text-xl u-font-weight-semibold u-mb-1">System Health</h3>
-              <p className="u-text-sm u-text-secondary">
+              <h3 className="u-text-xl u-fw-semibold u-mb-1">System Health</h3>
+              <p className="u-text-sm u-text-secondary-emphasis">
                 Real-time system performance metrics
               </p>
             </div>
@@ -642,9 +642,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
                   <div className="u-d-flex u-align-items-center u-gap-2">
                     <Icon name="Cpu" size={16} className="u-text-primary" />
-                    <span className="u-text-sm u-font-weight-medium">Server Load</span>
+                    <span className="u-text-sm u-fw-medium">Server Load</span>
                   </div>
-                  <span className="u-text-sm u-font-weight-semibold">{systemStatus.serverLoad}%</span>
+                  <span className="u-text-sm u-fw-semibold">{systemStatus.serverLoad}%</span>
                 </div>
                 <Progress 
                   value={systemStatus.serverLoad} 
@@ -656,9 +656,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
                   <div className="u-d-flex u-align-items-center u-gap-2">
                     <Icon name="Memory" size={16} className="u-text-success" />
-                    <span className="u-text-sm u-font-weight-medium">Memory Usage</span>
+                    <span className="u-text-sm u-fw-medium">Memory Usage</span>
                   </div>
-                  <span className="u-text-sm u-font-weight-semibold">{systemStatus.memoryUsage}%</span>
+                  <span className="u-text-sm u-fw-semibold">{systemStatus.memoryUsage}%</span>
                 </div>
                 <Progress 
                   value={systemStatus.memoryUsage} 
@@ -670,9 +670,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
                   <div className="u-d-flex u-align-items-center u-gap-2">
                     <Icon name="HardDrive" size={16} className="u-text-info" />
-                    <span className="u-text-sm u-font-weight-medium">Storage</span>
+                    <span className="u-text-sm u-fw-medium">Storage</span>
                   </div>
-                  <span className="u-text-sm u-font-weight-semibold">{systemStatus.storage}%</span>
+                  <span className="u-text-sm u-fw-semibold">{systemStatus.storage}%</span>
                 </div>
                 <Progress 
                   value={systemStatus.storage} 
@@ -684,9 +684,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
                   <div className="u-d-flex u-align-items-center u-gap-2">
                     <Icon name="Globe" size={16} className="u-text-warning" />
-                    <span className="u-text-sm u-font-weight-medium">Network Load</span>
+                    <span className="u-text-sm u-fw-medium">Network Load</span>
                   </div>
-                  <span className="u-text-sm u-font-weight-semibold">{systemStatus.networkLoad}%</span>
+                  <span className="u-text-sm u-fw-semibold">{systemStatus.networkLoad}%</span>
                 </div>
                 <Progress 
                   value={systemStatus.networkLoad} 
@@ -697,7 +697,7 @@ const Dashboard: React.FC = () => {
 
             <div className="u-mt-6 u-pt-6 u-border-top">
               <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3">
-                <h4 className="u-text-sm u-font-weight-semibold">Active Administrators</h4>
+                <h4 className="u-text-sm u-fw-semibold">Active Administrators</h4>
                 <Badge variant="success" size="sm" label="3 online" />
               </div>
               <div className="u-d-flex u-gap-2">
@@ -723,7 +723,7 @@ const Dashboard: React.FC = () => {
               <Avatar initials={selectedCustomer.name?.charAt(0) || '?'} size="lg" />
               <div>
                 <h2 className="u-mb-1">{selectedCustomer.name}</h2>
-                <p className="u-text-secondary u-mb-1">{selectedCustomer.email}</p>
+                <p className="u-text-secondary-emphasis u-mb-1">{selectedCustomer.email}</p>
                 <Badge
                   variant={selectedCustomer.status === "active" ? "success" : "warning"}
                   label={selectedCustomer.status}
@@ -734,20 +734,20 @@ const Dashboard: React.FC = () => {
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Plan</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Plan</label>
                   <p>{selectedCustomer.plan}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Status</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Status</label>
                   <p>{selectedCustomer.status}</p>
                 </div>
               </GridCol>
             </Grid>
 
             <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary u-mb-1">Joined</label>
+              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Joined</label>
               <p>{new Date(selectedCustomer.created_at).toLocaleString()}</p>
             </div>
 

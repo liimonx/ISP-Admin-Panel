@@ -52,7 +52,7 @@ const Layout: React.FC = () => {
       };
 
   return (
-    <div className="u-min-height-100vh u-d-flex u-flex-column">
+    <div className="u-min-vh-100 u-d-flex u-flex-column">
       {/* Header */}
       <Header
         user={mockUser}

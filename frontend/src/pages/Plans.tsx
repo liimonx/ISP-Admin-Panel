@@ -264,8 +264,8 @@ const Plans: React.FC = () => {
       <div className="u-mb-8">
         <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
           <div>
-            <h1 className="u-text-3xl u-font-weight-bold u-mb-2 u-text-foreground">Internet Plans</h1>
-            <p className="u-text-secondary u-text-lg">
+            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">Internet Plans</h1>
+            <p className="u-text-secondary-emphasis u-text-lg">
               Manage your internet service plans, pricing strategies, and subscription offerings
             </p>
           </div>
@@ -296,15 +296,15 @@ const Plans: React.FC = () => {
         <div className="u-d-flex u-gap-6 u-text-sm">
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-primary u-rounded-circle"></div>
-            <span className="u-text-secondary">Total: {totalPlans} plans</span>
+            <span className="u-text-secondary-emphasis">Total: {totalPlans} plans</span>
           </div>
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-success u-rounded-circle"></div>
-            <span className="u-text-secondary">Active: {plans.filter(p => p.is_active).length}</span>
+            <span className="u-text-secondary-emphasis">Active: {plans.filter(p => p.is_active).length}</span>
           </div>
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-warning u-rounded-circle"></div>
-            <span className="u-text-secondary">Featured: {plans.filter(p => p.is_featured).length}</span>
+            <span className="u-text-secondary-emphasis">Featured: {plans.filter(p => p.is_featured).length}</span>
           </div>
         </div>
       </div>
@@ -323,7 +323,7 @@ const Plans: React.FC = () => {
       <div className="u-d-flex u-justify-content-between u-align-items-center">
         <div className="u-d-flex u-gap-4 u-align-items-center">
           <div className="u-d-flex u-gap-2 u-align-items-center">
-            <span className="u-text-sm u-font-weight-medium">Sort by:</span>
+            <span className="u-text-sm u-fw-medium">Sort by:</span>
                          <Select
                value={sortBy}
                onChange={(e) => setSortBy(e.target.value)}
@@ -349,7 +349,7 @@ const Plans: React.FC = () => {
         </div>
 
         <div className="u-d-flex u-gap-2 u-align-items-center">
-          <span className="u-text-sm u-text-secondary">
+          <span className="u-text-sm u-text-secondary-emphasis">
             {totalPlans} plan{totalPlans !== 1 ? 's' : ''} total
           </span>
                        <Select
@@ -373,7 +373,7 @@ const Plans: React.FC = () => {
         <div className="u-d-flex u-justify-content-center u-align-items-center u-py-12">
           <div className="u-text-center">
             <Spinner size="lg" className="u-mb-4" />
-            <p className="u-text-secondary">Loading plans...</p>
+            <p className="u-text-secondary-emphasis">Loading plans...</p>
           </div>
         </div>
       ) : filteredAndSortedPlans.length > 0 ? (
@@ -397,11 +397,11 @@ const Plans: React.FC = () => {
 
                   {/* Plan Header */}
                   <div className="u-mb-4">
-                    <h3 className="u-text-lg u-font-weight-semibold u-mb-2 u-pr-16">
+                    <h3 className="u-text-lg u-fw-semibold u-mb-2 u-pe-16">
                       {plan.name}
                     </h3>
                     {plan.description && (
-                      <p className="u-text-secondary u-text-sm u-line-clamp-2">
+                      <p className="u-text-secondary-emphasis u-text-sm u-line-clamp-2">
                         {plan.description}
                       </p>
                     )}
@@ -410,15 +410,15 @@ const Plans: React.FC = () => {
                   {/* Plan Price */}
                   <div className="u-mb-4">
                     <div className="u-d-flex u-align-items-baseline u-gap-2">
-                      <span className="u-text-2xl u-font-weight-bold u-text-primary">
+                      <span className="u-text-2xl u-fw-bold u-text-primary">
                         {formatPrice(plan.price)}
                       </span>
-                      <span className="u-text-secondary">
+                      <span className="u-text-secondary-emphasis">
                         /{getBillingCycleLabel(plan.billing_cycle)?.toLowerCase()}
                       </span>
                     </div>
                     {(plan.setup_fee && plan.setup_fee > 0) && (
-                      <div className="u-text-sm u-text-secondary">
+                      <div className="u-text-sm u-text-secondary-emphasis">
                         Setup fee: {formatPrice(plan.setup_fee)}
                       </div>
                     )}
@@ -427,20 +427,20 @@ const Plans: React.FC = () => {
                   {/* Plan Specs */}
                   <div className="u-mb-4 u-space-y-2">
                     <div className="u-d-flex u-justify-content-between u-align-items-center">
-                      <span className="u-text-sm u-text-secondary">Download:</span>
-                      <span className="u-font-weight-medium">
+                      <span className="u-text-sm u-text-secondary-emphasis">Download:</span>
+                      <span className="u-fw-medium">
                         {formatSpeed(plan.download_speed, plan.speed_unit)}
                       </span>
                     </div>
                     <div className="u-d-flex u-justify-content-between u-align-items-center">
-                      <span className="u-text-sm u-text-secondary">Upload:</span>
-                      <span className="u-font-weight-medium">
+                      <span className="u-text-sm u-text-secondary-emphasis">Upload:</span>
+                      <span className="u-fw-medium">
                         {formatSpeed(plan.upload_speed, plan.speed_unit)}
                       </span>
                     </div>
                     <div className="u-d-flex u-justify-content-between u-align-items-center">
-                      <span className="u-text-sm u-text-secondary">Data:</span>
-                      <span className="u-font-weight-medium">
+                      <span className="u-text-sm u-text-secondary-emphasis">Data:</span>
+                      <span className="u-fw-medium">
                         {formatDataQuota(plan.data_quota || 0, plan.quota_unit)}
                       </span>
                     </div>
@@ -449,7 +449,7 @@ const Plans: React.FC = () => {
                   {/* Plan Features Preview */}
                   {plan.features && plan.features.length > 0 && (
                     <div className="u-mb-4">
-                      <h4 className="u-text-sm u-font-weight-medium u-mb-2">
+                      <h4 className="u-text-sm u-fw-medium u-mb-2">
                         Features:
                       </h4>
                       <div className="u-space-y-1">
@@ -467,7 +467,7 @@ const Plans: React.FC = () => {
                           </div>
                         ))}
                         {plan.features.length > 3 && (
-                          <div className="u-text-sm u-text-secondary">
+                          <div className="u-text-sm u-text-secondary-emphasis">
                             +{plan.features.length - 3} more features
                           </div>
                         )}
@@ -504,7 +504,7 @@ const Plans: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleDeletePlan(plan)}
-                        className="u-text-error hover:u-bg-error hover:u-text-white"
+                        className="u-text-error hover:u-bg-error hover:"
                         disabled={deletePlanMutation.isLoading}
                       >
                         <Icon name="Trash" size={16} />
@@ -534,15 +534,15 @@ const Plans: React.FC = () => {
             <Icon
               name="Globe"
               size={64}
-              className="u-text-secondary u-mb-4"
+              className="u-text-secondary-emphasis u-mb-4"
             />
-            <h3 className="u-text-xl u-font-weight-semibold u-mb-2">
+            <h3 className="u-text-xl u-fw-semibold u-mb-2">
               {filters.search || Object.values(filters).some(f => f !== "" && f !== false)
                 ? "No plans match your criteria"
                 : "No plans found"
               }
             </h3>
-            <p className="u-text-secondary u-mb-6 u-max-w-md u-mx-auto">
+            <p className="u-text-secondary-emphasis u-mb-6 u-max-w-md u-mx-auto">
               {filters.search || Object.values(filters).some(f => f !== "" && f !== false)
                 ? "Try adjusting your search criteria or filters to find what you're looking for."
                 : "Get started by creating your first internet plan to offer to customers."

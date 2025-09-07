@@ -91,14 +91,14 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="u-d-flex u-align-items-center u-gap-2 u-d-none u-d-lg-flex">
             <Icon name="Globe" size={24} className="u-text-primary" />
-            <span className="u-text-lg u-font-weight-semibold u-text-primary">
+            <span className="u-text-lg u-fw-semibold u-text-primary">
               BCN ISP Admin
             </span>
           </div>
         </div>
 
         {showSearch && (
-          <div className="u-d-none u-d-md-flex u-flex-1 u-max-width-lg u-mx-6">
+          <div className="u-d-none u-d-md-flex u-flex-1 u-max-w-lg u-mx-6">
             <SearchBar
               value={searchValue}
               onSearch={(value) => {

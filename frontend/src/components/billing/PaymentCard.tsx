@@ -83,11 +83,11 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
   const canRefund = payment.status === 'completed' && onRefund;
 
   return (
-    <Card className="u-height-100">
+    <Card className="u-h-100">
       <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
         <div className="u-flex-fill">
           <h4 className="u-mb-1 u-fs-lg u-fw-semibold">{payment.payment_number}</h4>
-          <p className="u-fs-sm u-text-secondary">
+          <p className="u-fs-sm u-text-secondary-emphasis">
             {payment.payment_date
               ? new Date(payment.payment_date).toLocaleDateString()
               : 'Pending'}
@@ -105,10 +105,10 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
           <div className="u-fw-medium u-fs-sm">
             {payment.customer?.name || 'Unknown Customer'}
           </div>
-          <div className="u-fs-xs u-text-secondary">
+          <div className="u-fs-xs u-text-secondary-emphasis">
             Invoice: {payment.invoice?.invoice_number || 'Unknown Invoice'}
           </div>
-          <div className="u-fs-xs u-text-secondary">
+          <div className="u-fs-xs u-text-secondary-emphasis">
             {payment.customer?.email || 'No email'}
           </div>
         </div>
@@ -116,19 +116,19 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
 
       <div className="u-mb-4">
         <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-          <span className="u-fs-sm u-text-secondary">Amount</span>
+          <span className="u-fs-sm u-text-secondary-emphasis">Amount</span>
           <span className="u-fs-xl u-fw-bold u-text-primary">
             {formatCurrency(payment.amount)}
           </span>
         </div>
         <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-          <span className="u-fs-sm u-text-secondary">Method</span>
+          <span className="u-fs-sm u-text-secondary-emphasis">Method</span>
           {getPaymentMethodBadge(payment.payment_method)}
         </div>
         {payment.transaction_id && (
           <div className="u-d-flex u-justify-content-between u-align-items-center">
-            <span className="u-fs-sm u-text-secondary">Transaction ID</span>
-            <span className="u-fs-xs u-text-secondary u-font-mono">
+            <span className="u-fs-sm u-text-secondary-emphasis">Transaction ID</span>
+            <span className="u-fs-xs u-text-secondary-emphasis u-font-mono">
               {payment.transaction_id.slice(0, 8)}...
             </span>
           </div>

@@ -175,7 +175,7 @@ const Users: React.FC = () => {
       <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
         <div>
           <h1 className="u-mb-2">User Management</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Manage system users and their permissions
           </p>
         </div>
@@ -205,7 +205,7 @@ const Users: React.FC = () => {
           <select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="u-p-3 u-border u-border-radius-2 u-min-width-150"
+            className="u-p-3 u-border u-rounded u-min-w-150"
           >
             <option value="all">All Roles</option>
             <option value="admin">Admin</option>
@@ -231,12 +231,12 @@ const Users: React.FC = () => {
         <Grid>
           {usersData?.results?.map((user) => (
             <GridCol key={user.id} xs={12} md={6} lg={4}>
-              <Card className="u-height-100">
+              <Card className="u-h-100">
                 <div className="u-d-flex u-align-items-center u-gap-3 u-mb-4">
                   <Avatar initials={(user.first_name?.charAt(0) || '') + (user.last_name?.charAt(0) || '') || '?'} size="md" />
                   <div className="u-flex-1">
                     <h3 className="u-mb-1">{user.first_name} {user.last_name}</h3>
-                    <p className="u-text-sm u-text-secondary u-mb-1">@{user.username}</p>
+                    <p className="u-text-sm u-text-secondary-emphasis u-mb-1">@{user.username}</p>
                     <div className="u-d-flex u-align-items-center u-gap-2">
                       {getRoleBadge(user.role)}
                       {getStatusBadge(user.is_active)}
@@ -246,17 +246,17 @@ const Users: React.FC = () => {
 
                 <div className="u-space-y-2 u-mb-4">
                   <div className="u-d-flex u-align-items-center u-gap-2">
-                    <Icon name="Envelope" size={16} className="u-text-secondary" />
+                    <Icon name="Envelope" size={16} className="u-text-secondary-emphasis" />
                     <span className="u-text-sm">{user.email}</span>
                   </div>
                   {user.phone && (
                     <div className="u-d-flex u-align-items-center u-gap-2">
-                      <Icon name="Phone" size={16} className="u-text-secondary" />
+                      <Icon name="Phone" size={16} className="u-text-secondary-emphasis" />
                       <span className="u-text-sm">{user.phone}</span>
                     </div>
                   )}
                   <div className="u-d-flex u-align-items-center u-gap-2">
-                    <Icon name="Calendar" size={16} className="u-text-secondary" />
+                    <Icon name="Calendar" size={16} className="u-text-secondary-emphasis" />
                     <span className="u-text-sm">
                       Joined {new Date(user.date_joined).toLocaleDateString()}
                     </span>
@@ -296,9 +296,9 @@ const Users: React.FC = () => {
       {!isLoading && (!usersData?.results || usersData.results.length === 0) && (
         <Card>
           <div className="u-text-center u-py-8">
-            <Icon name="Users" size={48} className="u-text-secondary u-mb-4" />
+            <Icon name="Users" size={48} className="u-text-secondary-emphasis u-mb-4" />
             <h3 className="u-mb-2">No users found</h3>
-            <p className="u-text-secondary u-mb-4">
+            <p className="u-text-secondary-emphasis u-mb-4">
               {searchQuery
                 ? "No users match your search criteria."
                 : "You haven't created any users yet."}
@@ -449,7 +449,7 @@ const Users: React.FC = () => {
                   onChange={(e) =>
                     setFormData({ ...formData, is_active: e.target.checked })
                   }
-                  className="u-mr-2"
+                  className="u-me-2"
                 />
                 Active Account
               </label>

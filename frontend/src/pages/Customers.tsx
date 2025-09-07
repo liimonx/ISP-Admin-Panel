@@ -195,8 +195,8 @@ const Customers: React.FC = () => {
       <div className="u-mb-8">
         <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
           <div>
-            <h1 className="u-text-3xl u-font-weight-bold u-mb-2 u-text-foreground">Customer Management</h1>
-            <p className="u-text-secondary u-text-lg">
+            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">Customer Management</h1>
+            <p className="u-text-secondary-emphasis u-text-lg">
               Manage your customer accounts, subscriptions, and billing information
             </p>
           </div>
@@ -216,15 +216,15 @@ const Customers: React.FC = () => {
         <div className="u-d-flex u-gap-6 u-text-sm">
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-success u-rounded-circle"></div>
-            <span className="u-text-secondary">Total: {customersData?.count || 0} customers</span>
+            <span className="u-text-secondary-emphasis">Total: {customersData?.count || 0} customers</span>
           </div>
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-primary u-rounded-circle"></div>
-            <span className="u-text-secondary">Active: {customersData?.results?.filter(c => c.status === 'active').length || 0}</span>
+            <span className="u-text-secondary-emphasis">Active: {customersData?.results?.filter(c => c.status === 'active').length || 0}</span>
           </div>
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-warning u-rounded-circle"></div>
-            <span className="u-text-secondary">Suspended: {customersData?.results?.filter(c => c.status === 'suspended').length || 0}</span>
+            <span className="u-text-secondary-emphasis">Suspended: {customersData?.results?.filter(c => c.status === 'suspended').length || 0}</span>
           </div>
         </div>
       </div>
@@ -232,26 +232,26 @@ const Customers: React.FC = () => {
       {/* Search and Filters */}
       <Card className="u-mb-8">
         <div className="u-d-flex u-gap-4 u-align-items-center u-flex-wrap">
-          <div className="u-flex-1 u-min-width-300">
+          <div className="u-flex-1 u-min-w-300">
             <div className="u-position-relative">
               <Icon 
                 name="MagnifyingGlass" 
                 size={16} 
-                className="u-position-absolute u-left-3 u-top-50 u-transform-translate-y-neg-50 u-text-secondary" 
+                className="u-position-absolute u-left-3 u-top-50 u-transform-translate-y-neg-50 u-text-secondary-emphasis" 
               />
               <Input
                 type="text"
                 placeholder="Search by name, email, phone, or company..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="u-pl-10"
+                className="u-ps-10"
               />
             </div>
           </div>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="u-p-3 u-border u-rounded u-min-width-150 u-bg-surface"
+            className="u-p-3 u-border u-rounded u-min-w-150 u-bg-surface"
           >
             <option value="all">All Status</option>
             <option value="active">Active</option>
@@ -284,7 +284,7 @@ const Customers: React.FC = () => {
                   <div className="u-flex-fill">
                     <h3 className="u-mb-1">{sanitizeText(customer.name)}</h3>
                     {customer.company_name && (
-                      <p className="u-fs-sm u-text-secondary u-mb-1">
+                      <p className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                         {sanitizeText(customer.company_name)}
                       </p>
                     )}
@@ -368,9 +368,9 @@ const Customers: React.FC = () => {
       {!isLoading && (!customersData?.results || customersData.results.length === 0) && (
         <Card>
           <div className="u-text-center u-py-8">
-            <Icon name="Users" size={48} className="u-text-secondary u-mb-4" />
+            <Icon name="Users" size={48} className="u-text-secondary-emphasis u-mb-4" />
             <h3 className="u-mb-2">No customers found</h3>
-            <p className="u-text-secondary u-mb-4">
+            <p className="u-text-secondary-emphasis u-mb-4">
               {searchQuery
                 ? "No customers match your search criteria."
                 : "You haven't created any customers yet."}
@@ -429,7 +429,7 @@ const Customers: React.FC = () => {
               <div>
                 <h2 className="u-mb-1">{selectedCustomer.name}</h2>
                 {selectedCustomer.company_name && (
-                  <p className="u-text-secondary u-mb-1">{selectedCustomer.company_name}</p>
+                  <p className="u-text-secondary-emphasis u-mb-1">{selectedCustomer.company_name}</p>
                 )}
                 {getStatusBadge(selectedCustomer.status)}
               </div>
@@ -438,39 +438,39 @@ const Customers: React.FC = () => {
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Email</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Email</label>
                   <p>{selectedCustomer.email}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Phone</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Phone</label>
                   <p>{selectedCustomer.phone}</p>
                 </div>
               </GridCol>
             </Grid>
 
             <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary u-mb-1">Address</label>
+              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Address</label>
               <p>{selectedCustomer.address}</p>
             </div>
 
             <Grid>
               <GridCol xs={12} md={4}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">City</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">City</label>
                   <p>{selectedCustomer.city}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={4}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">State</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">State</label>
                   <p>{selectedCustomer.state}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={4}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Postal Code</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Postal Code</label>
                   <p>{selectedCustomer.postal_code}</p>
                 </div>
               </GridCol>
@@ -479,13 +479,13 @@ const Customers: React.FC = () => {
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Country</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Country</label>
                   <p>{selectedCustomer.country}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary u-mb-1">Tax ID</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Tax ID</label>
                   <p>{selectedCustomer.tax_id || "N/A"}</p>
                 </div>
               </GridCol>
@@ -493,13 +493,13 @@ const Customers: React.FC = () => {
 
             {selectedCustomer.notes && (
               <div className="u-mb-3">
-                <label className="u-fs-sm u-text-secondary u-mb-1">Notes</label>
+                <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Notes</label>
                 <p>{selectedCustomer.notes}</p>
               </div>
             )}
 
             <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary u-mb-1">Created</label>
+              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Created</label>
               <p>{new Date(selectedCustomer.created_at).toLocaleString()}</p>
             </div>
 

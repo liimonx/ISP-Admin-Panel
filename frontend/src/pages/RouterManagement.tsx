@@ -53,10 +53,10 @@ const RouterCard: React.FC<RouterCardProps> = ({
   };
 
   return (
-    <Card className="u-p-4 u-border u-rounded u-shadow-sm u-flex u-flex-col u-justify-between">
+    <Card className="u-p-4 u-border u-rounded u-shadow-sm u-d-flex u-flex-col u-justify-between">
       <div>
-        <h3 className="u-text-lg u-font-semibold u-mb-2">{router.name}</h3>
-        <p className="u-text-sm u-text-secondary u-mb-2">{router.host}</p>
+        <h3 className="u-text-lg u-fw-semibold u-mb-2">{router.name}</h3>
+        <p className="u-text-sm u-text-secondary-emphasis u-mb-2">{router.host}</p>
         <div className="u-d-flex u-align-items-center u-gap-2 u-mb-2">
           <Icon name={getStatusIcon(router.status)} size={16} />
           <Badge variant={getStatusColor(router.status)} size="sm" label={router.status} />
@@ -255,9 +255,9 @@ const RouterManagement: React.FC = () => {
   };
 
   return (
-    <div className="u-p-6 u-max-width-7xl u-mx-auto">
+    <div className="u-p-6 u-max-w-7xl u-mx-auto">
       <div className="u-mb-6">
-        <h1 className="u-text-2xl u-font-bold u-mb-2">Router Management</h1>
+        <h1 className="u-text-2xl u-fw-bold u-mb-2">Router Management</h1>
         <p className="u-text-muted">
           Manage your network routers and their configurations.
         </p>
@@ -287,7 +287,7 @@ const RouterManagement: React.FC = () => {
               </select>
             </div>
             <Button variant="primary" onClick={handleCreate}>
-              <Icon name="Plus" size={16} className="u-mr-2" />
+              <Icon name="Plus" size={16} className="u-me-2" />
               Add Router
             </Button>
           </div>
@@ -304,7 +304,7 @@ const RouterManagement: React.FC = () => {
         <Card>
           <div className="u-p-6 u-text-center">
             <Icon name="Warning" size={48} className="u-text-error u-mb-4" />
-            <h3 className="u-text-lg u-font-semibold u-mb-2">Error Loading Routers</h3>
+            <h3 className="u-text-lg u-fw-semibold u-mb-2">Error Loading Routers</h3>
             <p className="u-text-muted">Failed to load router data. Please try again.</p>
           </div>
         </Card>
@@ -330,7 +330,7 @@ const RouterManagement: React.FC = () => {
       >
         <div className="u-space-y-4">
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Router Name *
             </label>
             <Input
@@ -342,7 +342,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Host/IP Address *
             </label>
             <Input
@@ -354,13 +354,13 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Router Type
             </label>
             <select
               value={formData.router_type}
               onChange={(e) => setFormData({ ...formData, router_type: e.target.value as Router["router_type"] })}
-              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
             >
               <option value="mikrotik">MikroTik</option>
               <option value="cisco">Cisco</option>
@@ -369,7 +369,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               SSH Port
             </label>
             <Input
@@ -383,7 +383,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Username *
             </label>
             <Input
@@ -395,7 +395,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Password
             </label>
             <Input
@@ -407,7 +407,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Use TLS/SSL
             </label>
             <div className="u-d-flex u-align-items-center u-gap-2">
@@ -415,14 +415,14 @@ const RouterManagement: React.FC = () => {
                 type="checkbox"
                 checked={formData.use_tls}
                 onChange={(e) => setFormData({ ...formData, use_tls: e.target.checked })}
-                className="u-mr-2"
+                className="u-me-2"
               />
               <span className="u-text-sm">Enable TLS/SSL for secure connections</span>
             </div>
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Location
             </label>
             <Input
@@ -433,14 +433,14 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Router description"
-              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
               rows={3}
             />
           </div>
@@ -471,7 +471,7 @@ const RouterManagement: React.FC = () => {
       >
         <div className="u-space-y-4">
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Router Name *
             </label>
             <Input
@@ -483,7 +483,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Host/IP Address *
             </label>
             <Input
@@ -495,13 +495,13 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Router Type
             </label>
             <select
               value={formData.router_type}
               onChange={(e) => setFormData({ ...formData, router_type: e.target.value as Router["router_type"] })}
-              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
             >
               <option value="mikrotik">MikroTik</option>
               <option value="cisco">Cisco</option>
@@ -510,7 +510,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               SSH Port
             </label>
             <Input
@@ -524,7 +524,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Username *
             </label>
             <Input
@@ -536,7 +536,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Password (leave blank to keep current)
             </label>
             <Input
@@ -548,7 +548,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Use TLS/SSL
             </label>
             <div className="u-d-flex u-align-items-center u-gap-2">
@@ -556,14 +556,14 @@ const RouterManagement: React.FC = () => {
                 type="checkbox"
                 checked={formData.use_tls}
                 onChange={(e) => setFormData({ ...formData, use_tls: e.target.checked })}
-                className="u-mr-2"
+                className="u-me-2"
               />
               <span className="u-text-sm">Enable TLS/SSL for secure connections</span>
             </div>
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Location
             </label>
             <Input
@@ -574,14 +574,14 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Description
             </label>
             <textarea
               value={formData.description}
               onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               placeholder="Router description"
-              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
               rows={3}
             />
           </div>
@@ -613,17 +613,17 @@ const RouterManagement: React.FC = () => {
         {selectedRouter && (
           <div className="u-space-y-4">
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">Name</label>
-              <p className="u-text-lg u-font-semibold">{selectedRouter.name}</p>
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">Name</label>
+              <p className="u-text-lg u-fw-semibold">{selectedRouter.name}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">Host</label>
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">Host</label>
               <p className="u-text-lg">{selectedRouter.host}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">Status</label>
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">Status</label>
               <Badge
                 variant={getStatusColor(selectedRouter.status)}
                 label={selectedRouter.status}
@@ -631,31 +631,31 @@ const RouterManagement: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">Username</label>
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">Username</label>
               <p>{selectedRouter.username}</p>
             </div>
 
             {selectedRouter.location && (
               <div>
-                <label className="u-block u-text-sm u-font-medium u-mb-1">Location</label>
+                <label className="u-d-block u-text-sm u-fw-medium u-mb-1">Location</label>
                 <p>{selectedRouter.location}</p>
               </div>
             )}
 
             {selectedRouter.description && (
               <div>
-                <label className="u-block u-text-sm u-font-medium u-mb-1">Description</label>
+                <label className="u-d-block u-text-sm u-fw-medium u-mb-1">Description</label>
                 <p>{selectedRouter.description}</p>
               </div>
             )}
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">Created</label>
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">Created</label>
               <p>{new Date(selectedRouter.created_at).toLocaleDateString()}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">Last Updated</label>
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">Last Updated</label>
               <p>{new Date(selectedRouter.updated_at).toLocaleDateString()}</p>
             </div>
           </div>

@@ -112,9 +112,9 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="u-p-6 u-max-width-6xl u-mx-auto">
+    <div className="u-p-6 u-max-w-6xl u-mx-auto">
       <div className="u-mb-6">
-        <h1 className="u-text-2xl u-font-bold u-mb-2">System Settings</h1>
+        <h1 className="u-text-2xl u-fw-bold u-mb-2">System Settings</h1>
         <p className="u-text-muted">
           Configure system-wide settings and preferences for your ISP admin panel.
         </p>
@@ -136,12 +136,12 @@ const Settings: React.FC = () => {
           <div className="u-p-4 u-border-bottom">
             <div className="u-d-flex u-align-items-center u-gap-2">
               <Icon name="Building" size={20} />
-              <h2 className="u-text-lg u-font-semibold">General Settings</h2>
+              <h2 className="u-text-lg u-fw-semibold">General Settings</h2>
             </div>
           </div>
           <div className="u-p-4 u-space-y-4">
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Company Name
               </label>
               <Input
@@ -152,7 +152,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Contact Email
               </label>
               <Input
@@ -164,7 +164,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Support Phone
               </label>
               <Input
@@ -175,13 +175,13 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Timezone
               </label>
               <select
                 value={settings.timezone}
                 onChange={(e) => handleInputChange("timezone", e.target.value)}
-                className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+                className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
               >
                 <option value="UTC">UTC</option>
                 <option value="America/New_York">Eastern Time</option>
@@ -192,13 +192,13 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Currency
               </label>
               <select
                 value={settings.currency}
                 onChange={(e) => handleInputChange("currency", e.target.value)}
-                className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+                className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
               >
                 <option value="USD">USD ($)</option>
                 <option value="EUR">EUR (€)</option>
@@ -214,12 +214,12 @@ const Settings: React.FC = () => {
           <div className="u-p-4 u-border-bottom">
             <div className="u-d-flex u-align-items-center u-gap-2">
               <Icon name="Shield" size={20} />
-              <h2 className="u-text-lg u-font-semibold">Security Settings</h2>
+              <h2 className="u-text-lg u-fw-semibold">Security Settings</h2>
             </div>
           </div>
           <div className="u-p-4 u-space-y-4">
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 API Rate Limit (requests/hour)
               </label>
               <Input
@@ -232,7 +232,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Session Timeout (minutes)
               </label>
               <Input
@@ -245,7 +245,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Max Login Attempts
               </label>
               <Input
@@ -258,7 +258,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Password Policy
               </label>
               <div className="u-space-y-2 u-p-3 u-bg-light u-rounded">
@@ -268,7 +268,7 @@ const Settings: React.FC = () => {
                     type="number"
                     value={settings.passwordPolicy.minLength}
                     onChange={(e) => handlePasswordPolicyChange("minLength", parseInt(e.target.value))}
-                    className="u-width-20"
+                    className="u-w-20"
                     min="6"
                     max="20"
                   />
@@ -279,7 +279,7 @@ const Settings: React.FC = () => {
                     type="checkbox"
                     checked={settings.passwordPolicy.requireUppercase}
                     onChange={(e) => handlePasswordPolicyChange("requireUppercase", e.target.checked)}
-                    className="u-ml-2"
+                    className="u-ms-2"
                   />
                 </div>
                 <div className="u-d-flex u-align-items-center u-justify-content-between">
@@ -288,7 +288,7 @@ const Settings: React.FC = () => {
                     type="checkbox"
                     checked={settings.passwordPolicy.requireLowercase}
                     onChange={(e) => handlePasswordPolicyChange("requireLowercase", e.target.checked)}
-                    className="u-ml-2"
+                    className="u-ms-2"
                   />
                 </div>
                 <div className="u-d-flex u-align-items-center u-justify-content-between">
@@ -297,7 +297,7 @@ const Settings: React.FC = () => {
                     type="checkbox"
                     checked={settings.passwordPolicy.requireNumbers}
                     onChange={(e) => handlePasswordPolicyChange("requireNumbers", e.target.checked)}
-                    className="u-ml-2"
+                    className="u-ms-2"
                   />
                 </div>
                 <div className="u-d-flex u-align-items-center u-justify-content-between">
@@ -306,7 +306,7 @@ const Settings: React.FC = () => {
                     type="checkbox"
                     checked={settings.passwordPolicy.requireSpecialChars}
                     onChange={(e) => handlePasswordPolicyChange("requireSpecialChars", e.target.checked)}
-                    className="u-ml-2"
+                    className="u-ms-2"
                   />
                 </div>
               </div>
@@ -319,13 +319,13 @@ const Settings: React.FC = () => {
           <div className="u-p-4 u-border-bottom">
             <div className="u-d-flex u-align-items-center u-gap-2">
               <Icon name="Gear" size={20} />
-              <h2 className="u-text-lg u-font-semibold">System Settings</h2>
+              <h2 className="u-text-lg u-fw-semibold">System Settings</h2>
             </div>
           </div>
           <div className="u-p-4 u-space-y-4">
             <div className="u-d-flex u-align-items-center u-justify-content-between">
               <div>
-                <label className="u-text-sm u-font-medium">Maintenance Mode</label>
+                <label className="u-text-sm u-fw-medium">Maintenance Mode</label>
                 <p className="u-text-xs u-text-muted">
                   Enable maintenance mode to restrict access
                 </p>
@@ -339,7 +339,7 @@ const Settings: React.FC = () => {
 
             <div className="u-d-flex u-align-items-center u-justify-content-between">
               <div>
-                <label className="u-text-sm u-font-medium">Auto Backup</label>
+                <label className="u-text-sm u-fw-medium">Auto Backup</label>
                 <p className="u-text-xs u-text-muted">
                   Automatically backup system data
                 </p>
@@ -353,13 +353,13 @@ const Settings: React.FC = () => {
 
             {settings.autoBackup && (
               <div>
-                <label className="u-block u-text-sm u-font-medium u-mb-1">
+                <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                   Backup Frequency
                 </label>
                 <select
                   value={settings.backupFrequency}
                   onChange={(e) => handleInputChange("backupFrequency", e.target.value)}
-                  className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+                  className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
                 >
                   <option value="hourly">Hourly</option>
                   <option value="daily">Daily</option>
@@ -371,7 +371,7 @@ const Settings: React.FC = () => {
 
             <div className="u-d-flex u-align-items-center u-justify-content-between">
               <div>
-                <label className="u-text-sm u-font-medium">Email Notifications</label>
+                <label className="u-text-sm u-fw-medium">Email Notifications</label>
                 <p className="u-text-xs u-text-muted">
                   Send email notifications for system events
                 </p>
@@ -385,7 +385,7 @@ const Settings: React.FC = () => {
 
             <div className="u-d-flex u-align-items-center u-justify-content-between">
               <div>
-                <label className="u-text-sm u-font-medium">SMS Notifications</label>
+                <label className="u-text-sm u-fw-medium">SMS Notifications</label>
                 <p className="u-text-xs u-text-muted">
                   Send SMS notifications for critical alerts
                 </p>
@@ -404,17 +404,17 @@ const Settings: React.FC = () => {
           <div className="u-p-4 u-border-bottom">
             <div className="u-d-flex u-align-items-center u-gap-2">
               <Icon name="Gear" size={20} />
-              <h2 className="u-text-lg u-font-semibold">Advanced Settings</h2>
+              <h2 className="u-text-lg u-fw-semibold">Advanced Settings</h2>
             </div>
           </div>
           <div className="u-p-4 u-space-y-4">
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 System Log Level
               </label>
               <select
                 defaultValue="info"
-                className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+                className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
               >
                 <option value="debug">Debug</option>
                 <option value="info">Info</option>
@@ -424,7 +424,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Database Connection Pool Size
               </label>
               <Input
@@ -436,7 +436,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Cache TTL (seconds)
               </label>
               <Input
@@ -448,7 +448,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-font-medium u-mb-1">
+              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Custom CSS
               </label>
               <Textarea

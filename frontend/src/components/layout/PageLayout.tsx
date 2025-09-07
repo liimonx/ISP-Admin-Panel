@@ -31,21 +31,21 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     <div className={`u-space-y-8 ${className}`}>
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="u-d-flex u-align-items-center u-gap-2 u-text-sm u-text-secondary">
+        <nav className="u-d-flex u-align-items-center u-gap-2 u-text-sm u-text-secondary-emphasis">
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
               {index > 0 && (
-                <Icon name="CaretRight" size={12} className="u-text-secondary" />
+                <Icon name="CaretRight" size={12} className="u-text-secondary-emphasis" />
               )}
               {crumb.href ? (
                 <a
                   href={crumb.href}
-                  className="u-text-secondary hover:u-text-primary u-transition-colors"
+                  className="u-text-secondary-emphasis hover:u-text-primary u-transition-colors"
                 >
                   {crumb.label}
                 </a>
               ) : (
-                <span className="u-text-foreground u-font-weight-medium">
+                <span className="u-text-foreground u-fw-medium">
                   {crumb.label}
                 </span>
               )}
@@ -57,18 +57,18 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
       {/* Page Header */}
       <div className="u-mb-8">
         <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
-          <div className="u-flex-1 u-min-width-0">
-            <h1 className="u-text-3xl u-font-weight-bold u-mb-2 u-text-foreground u-truncate">
+          <div className="u-flex-1 u-min-w-0">
+            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground u-truncate">
               {title}
             </h1>
             {description && (
-              <p className="u-text-secondary u-text-lg u-max-width-2xl">
+              <p className="u-text-secondary-emphasis u-text-lg u-max-w-2xl">
                 {description}
               </p>
             )}
           </div>
           {actions && (
-            <div className="u-d-flex u-gap-3 u-flex-shrink-0 u-ml-4">
+            <div className="u-d-flex u-gap-3 u-flex-shrink-0 u-ms-4">
               {actions}
             </div>
           )}
@@ -84,8 +84,8 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                     stat.color || "u-bg-primary"
                   }`}
                 ></div>
-                <span className="u-text-secondary">
-                  {stat.label}: <span className="u-font-weight-medium">{stat.value}</span>
+                <span className="u-text-secondary-emphasis">
+                  {stat.label}: <span className="u-fw-medium">{stat.value}</span>
                 </span>
               </div>
             ))}

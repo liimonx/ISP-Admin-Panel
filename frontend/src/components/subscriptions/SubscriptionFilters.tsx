@@ -36,7 +36,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
     <Card className={`u-mb-6 ${className}`}>
       <div className="u-p-4">
         <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
-          <h3 className="u-text-lg u-font-semibold">Filter Subscriptions</h3>
+          <h3 className="u-text-lg u-fw-semibold">Filter Subscriptions</h3>
           <Button
             variant="outline"
             size="sm"
@@ -50,7 +50,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
         <div className="u-grid u-grid-cols-1 u-gap-4 md:u-grid-cols-2 lg:u-grid-cols-4">
           {/* Search */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Search Subscriptions
             </label>
             <Input
@@ -63,13 +63,13 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Status Filter */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Status
             </label>
             <select
               value={statusFilter}
               onChange={(e) => onStatusChange(e.target.value)}
-              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
             >
               <option value="all">All Status</option>
               <option value="active">Active</option>
@@ -81,13 +81,13 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Plan Filter */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Plan
             </label>
             <select
               value={planFilter}
               onChange={(e) => onPlanChange(e.target.value)}
-              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
             >
               <option value="all">All Plans</option>
               <option value="basic">Basic Plan</option>
@@ -99,13 +99,13 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Router Filter */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Router
             </label>
             <select
               value={routerFilter}
               onChange={(e) => onRouterChange(e.target.value)}
-              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
             >
               <option value="all">All Routers</option>
               <option value="router-1">Router 1</option>

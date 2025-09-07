@@ -70,7 +70,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <div
-      className={`u-d-flex u-align-items-center u-gap-2 ${fullWidth ? "u-width-100" : ""} ${className}`}
+      className={`u-d-flex u-align-items-center u-gap-2 ${fullWidth ? "u-w-100" : ""} ${className}`}
       data-testid={testId}
     >
       <div className={`u-position-relative ${fullWidth ? "u-flex-1" : ""}`}>
@@ -82,7 +82,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           onKeyDown={handleKeyDown}
           disabled={disabled}
           size={size}
-          className="u-pr-10"
+          className="u-pe-10"
         />
         {searchValue && (
           <button

@@ -261,11 +261,11 @@ const Network: React.FC = () => {
                 <div className="u-text-sm u-text-secondery u-mb-1">
                   Total Routers
                 </div>
-                <div className="u-font-size-xl u-font-weight-bold">
+                <div className="u-text-xl u-fw-bold">
                   {routersData?.count || 0}
                 </div>
               </div>
-              <div className="u-bg-primary-light u-p-3 u-border-radius-2">
+              <div className="u-bg-primary-light u-p-3 u-rounded">
                 <Icon name="Globe" size={24} className="u-text-primary" />
               </div>
             </div>
@@ -278,12 +278,12 @@ const Network: React.FC = () => {
                 <div className="u-text-sm u-text-secondery u-mb-1">
                   Online Routers
                 </div>
-                <div className="u-font-size-xl u-font-weight-bold">
+                <div className="u-text-xl u-fw-bold">
                   {routersData?.results?.filter((r) => r.status === "online")
                     .length || 0}
                 </div>
               </div>
-              <div className="u-bg-success-light u-p-3 u-border-radius-2">
+              <div className="u-bg-success-light u-p-3 u-rounded">
                 <Icon name="CheckCircle" size={24} className="u-text-success" />
               </div>
             </div>
@@ -296,12 +296,12 @@ const Network: React.FC = () => {
                 <div className="u-text-sm u-text-secondery u-mb-1">
                   Offline Routers
                 </div>
-                <div className="u-font-size-xl u-font-weight-bold">
+                <div className="u-text-xl u-fw-bold">
                   {routersData?.results?.filter((r) => r.status === "offline")
                     .length || 0}
                 </div>
               </div>
-              <div className="u-bg-error-light u-p-3 u-border-radius-2">
+              <div className="u-bg-error-light u-p-3 u-rounded">
                 <Icon name="XCircle" size={24} className="u-text-error" />
               </div>
             </div>
@@ -314,13 +314,13 @@ const Network: React.FC = () => {
                 <div className="u-text-sm u-text-secondery u-mb-1">
                   Maintenance
                 </div>
-                <div className="u-font-size-xl u-font-weight-bold">
+                <div className="u-text-xl u-fw-bold">
                   {routersData?.results?.filter(
                     (r) => r.status === "maintenance",
                   ).length || 0}
                 </div>
               </div>
-              <div className="u-bg-warning-light u-p-3 u-border-radius-2">
+              <div className="u-bg-warning-light u-p-3 u-rounded">
                 <Icon name="Wrench" size={24} className="u-text-warning" />
               </div>
             </div>
@@ -385,7 +385,7 @@ const Network: React.FC = () => {
                   id: router.id,
                   router: (
                     <div>
-                      <div className="u-font-weight-medium">{router.name}</div>
+                      <div className="u-fw-medium">{router.name}</div>
                       {router.description && (
                         <div className="u-text-sm u-text-secondery">
                           {router.description}

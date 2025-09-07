@@ -128,12 +128,12 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     >
       <form onSubmit={handleSubmit}>
         <div className="u-mb-4">
-          <label className="u-fs-sm u-text-secondary u-mb-1">Invoice</label>
+          <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Invoice</label>
           <p className="u-fw-medium">{invoice.invoice_number}</p>
-          <p className="u-fs-sm u-text-secondary">
+          <p className="u-fs-sm u-text-secondary-emphasis">
             Customer: {invoice.customer?.name}
           </p>
-          <p className="u-fs-sm u-text-secondary">
+          <p className="u-fs-sm u-text-secondary-emphasis">
             Total: {formatCurrency(invoice.total_amount)} | 
             Paid: {formatCurrency(invoice.paid_amount)} | 
             Remaining: {formatCurrency(remainingAmount)}

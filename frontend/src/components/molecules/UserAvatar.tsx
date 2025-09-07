@@ -111,11 +111,11 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         </button>
 
         {isDropdownOpen && (
-          <div className="u-position-absolute u-right-0 u-border u-border-radius-2 u-shadow-lg u-z-50 u-min-width-48">
+          <div className="u-position-absolute u-right-0 u-border u-rounded u-shadow-lg u-z-50 u-min-w-48">
             <div className="u-py-2">
               {/* User Info Header */}
               <div className="u-px-4 u-py-2 u-border-bottom">
-                <div className="u-font-weight-medium u-text-sm">
+                <div className="u-fw-medium u-text-sm">
                   {user.name}
                 </div>
                 {user.email && (
@@ -138,7 +138,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
                     {item.divider && <div className="u-border-top u-my-1" />}
                     <button
                       type="button"
-                      className="u-width-100 u-text-left u-px-4 u-py-2 u-bg-transparent u-border-0 u-cursor-pointer u-d-flex u-align-items-center u-gap-2 hover:u-bg-light"
+                      className="u-w-100 u-text-left u-px-4 u-py-2 u-bg-transparent u-border-0 u-cursor-pointer u-d-flex u-align-items-center u-gap-2 hover:u-bg-light"
                       onClick={() => {
                         item.onClick();
                         setIsDropdownOpen(false);

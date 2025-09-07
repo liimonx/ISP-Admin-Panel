@@ -99,7 +99,7 @@ const Login: React.FC = () => {
                 <Icon name="Globe" size={48} className="u-text-primary" />
               </div>
               <h1 className="u-mb-2">ISP Admin Panel</h1>
-              <p className="u-text-secondary">Sign in to manage your ISP operations</p>
+              <p className="u-text-secondary-emphasis">Sign in to manage your ISP operations</p>
             </div>
 
             {/* Login Form */}
@@ -111,7 +111,7 @@ const Login: React.FC = () => {
               )}
 
               <div className="u-mb-4">
-                <label htmlFor="username" className="u-block u-mb-2 u-font-weight-medium">Username</label>
+                <label htmlFor="username" className="u-d-block u-mb-2 u-fw-medium">Username</label>
                 <Input
                   id="username"
                   type="text"
@@ -128,7 +128,7 @@ const Login: React.FC = () => {
               </div>
 
               <div className="u-mb-6">
-                <label htmlFor="password" className="u-block u-mb-2 u-font-weight-medium">Password</label>
+                <label htmlFor="password" className="u-d-block u-mb-2 u-fw-medium">Password</label>
                 <div className="u-relative">
                   <Input
                     id="password"
@@ -158,7 +158,7 @@ const Login: React.FC = () => {
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="u-width-100"
+                className="u-w-100"
                 disabled={isSubmitting || isLoading}
               >
                 {isSubmitting || isLoading ? 'Signing In...' : 'Sign In'}
@@ -188,7 +188,7 @@ const Login: React.FC = () => {
       </Grid>
 
       {/* Footer */}
-      <div className="u-position-absolute u-bottom-4 u-left-50 u-transform-translate-x-neg-50 u-text-center u-text-sm u-text-secondary">
+      <div className="u-position-absolute u-bottom-4 u-left-50 u-transform-translate-x-neg-50 u-text-center u-text-sm u-text-secondary-emphasis">
         <p>© 2024 ISP Admin Panel. All rights reserved.</p>
       </div>
     </Container>
