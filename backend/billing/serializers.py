@@ -36,6 +36,12 @@ class InvoiceSerializer(serializers.ModelSerializer):
     balance_due = serializers.ReadOnlyField()
     is_overdue = serializers.ReadOnlyField()
     is_paid = serializers.ReadOnlyField()
+    subtotal_float = serializers.SerializerMethodField()
+    tax_amount_float = serializers.SerializerMethodField()
+    discount_amount_float = serializers.SerializerMethodField()
+    total_amount_float = serializers.SerializerMethodField()
+    paid_amount_float = serializers.SerializerMethodField()
+    balance_due_float = serializers.SerializerMethodField()
 
     class Meta:
         model = Invoice
@@ -45,8 +51,34 @@ class InvoiceSerializer(serializers.ModelSerializer):
             'subtotal', 'tax_amount', 'discount_amount', 'total_amount',
             'paid_amount', 'balance_due', 'status', 'issue_date',
             'due_date', 'paid_date', 'notes', 'days_overdue',
-            'is_overdue', 'is_paid', 'created_at', 'updated_at'
+            'is_overdue', 'is_paid', 'subtotal_float', 'tax_amount_float',
+            'discount_amount_float', 'total_amount_float', 'paid_amount_float',
+            'balance_due_float', 'created_at', 'updated_at'
         ]
+    
+    def get_subtotal_float(self, obj):
+        """Get subtotal as float."""
+        return obj.get_subtotal_float()
+    
+    def get_tax_amount_float(self, obj):
+        """Get tax amount as float."""
+        return obj.get_tax_amount_float()
+    
+    def get_discount_amount_float(self, obj):
+        """Get discount amount as float."""
+        return obj.get_discount_amount_float()
+    
+    def get_total_amount_float(self, obj):
+        """Get total amount as float."""
+        return obj.get_total_amount_float()
+    
+    def get_paid_amount_float(self, obj):
+        """Get paid amount as float."""
+        return obj.get_paid_amount_float()
+    
+    def get_balance_due_float(self, obj):
+        """Get balance due as float."""
+        return obj.get_balance_due_float()
 
 
 class InvoiceCreateSerializer(serializers.ModelSerializer):
@@ -134,6 +166,7 @@ class PaymentSerializer(serializers.ModelSerializer):
     invoice = InvoiceListSerializer(read_only=True)
     is_completed = serializers.ReadOnlyField()
     is_failed = serializers.ReadOnlyField()
+    amount_float = serializers.SerializerMethodField()
 
     class Meta:
         model = Payment
@@ -141,8 +174,12 @@ class PaymentSerializer(serializers.ModelSerializer):
             'id', 'payment_number', 'customer', 'invoice',
             'amount', 'payment_method', 'status', 'payment_date',
             'external_id', 'transaction_id', 'notes',
-            'is_completed', 'is_failed', 'created_at', 'updated_at'
+            'is_completed', 'is_failed', 'amount_float', 'created_at', 'updated_at'
         ]
+    
+    def get_amount_float(self, obj):
+        """Get payment amount as float."""
+        return obj.get_amount_float()
 
 
 class PaymentCreateSerializer(serializers.ModelSerializer):

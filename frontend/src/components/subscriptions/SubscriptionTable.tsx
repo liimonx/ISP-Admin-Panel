@@ -204,6 +204,21 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         )}
       </div>
     ),
+    router: (
+      <div>
+        <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
+          {subscription.router?.name || 'Unknown Router'}
+        </div>
+        <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+          {subscription.router?.location || 'No location'}
+        </div>
+        <Badge 
+          variant={subscription.router?.status === 'online' ? 'success' : 'error'}
+          size="xs"
+          label={subscription.router?.status || 'unknown'}
+        />
+      </div>
+    ),
     dates: (
       <div>
         <div className="u-fs-sm u-text-primary-emphasis u-mb-1">
@@ -318,6 +333,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           { key: "dataUsage", title: "Data Usage" },
           { key: "status", title: "Status" },
           { key: "billing", title: "Billing" },
+          { key: "router", title: "Router" },
           { key: "dates", title: "Dates" },
           { key: "actions", title: "Actions" },
         ]}

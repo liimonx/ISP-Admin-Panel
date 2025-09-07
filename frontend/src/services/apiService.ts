@@ -36,13 +36,19 @@ interface StandardApiResponse<T = any> {
 // Generic API service with enhanced error handling and standardized responses
 class ApiService {
   private handleResponse<T>(response: AxiosResponse): T {
-    const data: StandardApiResponse<T> = response.data;
+    const data = response.data;
 
-    if (!data.success) {
-      throw new Error(data.message || "API request failed");
+    // Check if response is in standardized format
+    if (data && typeof data === 'object' && 'success' in data) {
+      const standardData: StandardApiResponse<T> = data;
+      if (!standardData.success) {
+        throw new Error(standardData.message || "API request failed");
+      }
+      return standardData.data;
     }
 
-    return data.data;
+    // If not in standardized format, return the data directly
+    return data;
   }
 
   private handlePaginatedResponse<T>(response: AxiosResponse): ApiResponse<T> {
@@ -101,6 +107,16 @@ class ApiService {
 
   async detailedHealthCheck(): Promise<any> {
     const response = await axios.get(`${API_BASE_URL}/health/detailed/`);
+    return this.handleResponse(response);
+  }
+
+  async readinessCheck(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/health/ready/`);
+    return this.handleResponse(response);
+  }
+
+  async livenessCheck(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/health/live/`);
     return this.handleResponse(response);
   }
 
@@ -264,18 +280,62 @@ class ApiService {
   }
 
   async getActiveSubscriptions(): Promise<Subscription[]> {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/subscriptions/active/`);
-      return this.handleResponse(response);
-    } catch (error) {
-      console.warn("Active subscriptions endpoint not available, using mock data");
-      return [];
-    }
+    const response = await axios.get(`${API_BASE_URL}/subscriptions/active/`);
+    return this.handleResponse(response);
   }
 
   async getSuspendedSubscriptions(): Promise<Subscription[]> {
     const response = await axios.get(
       `${API_BASE_URL}/subscriptions/suspended/`,
+    );
+    return this.handleResponse(response);
+  }
+
+  async getExpiredSubscriptions(): Promise<Subscription[]> {
+    const response = await axios.get(
+      `${API_BASE_URL}/subscriptions/expired/`,
+    );
+    return this.handleResponse(response);
+  }
+
+  async getSubscriptionStats(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/subscriptions/stats/`);
+    return this.handleResponse(response);
+  }
+
+  async updateDataUsage(id: number, dataUsage: number): Promise<Subscription> {
+    const response = await axios.patch(
+      `${API_BASE_URL}/subscriptions/${id}/data-usage/`,
+      { data_usage: dataUsage },
+    );
+    return this.handleResponse(response);
+  }
+
+  async resetDataUsage(id: number): Promise<Subscription> {
+    const response = await axios.post(
+      `${API_BASE_URL}/subscriptions/${id}/reset-data-usage/`,
+    );
+    return this.handleResponse(response);
+  }
+
+  async bulkUpdateSubscriptionStatus(
+    subscriptionIds: number[],
+    status: string,
+  ): Promise<any> {
+    const validStatuses = ['active', 'suspended', 'cancelled', 'expired'];
+    if (!validStatuses.includes(status)) {
+      throw new Error('Invalid subscription status');
+    }
+    const validIds = subscriptionIds.filter(id => Number.isInteger(id) && id > 0);
+    if (validIds.length === 0) {
+      throw new Error('No valid subscription IDs provided');
+    }
+    const response = await axios.post(
+      `${API_BASE_URL}/subscriptions/bulk-update-status/`,
+      {
+        subscription_ids: validIds,
+        status,
+      },
     );
     return this.handleResponse(response);
   }
@@ -322,6 +382,65 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  // Main Router specific endpoints
+  async getMainRouterStatus(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/network/main-router/status/`);
+    return this.handleResponse(response);
+  }
+
+  async getMainRouterInterfaces(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/network/main-router/interfaces/`);
+    return this.handleResponse(response);
+  }
+
+  async getMainRouterBandwidth(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/network/main-router/bandwidth/`);
+    return this.handleResponse(response);
+  }
+
+  async getMainRouterConnections(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/network/main-router/connections/`);
+    return this.handleResponse(response);
+  }
+
+  async getMainRouterDhcpLeases(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/network/main-router/dhcp-leases/`);
+    return this.handleResponse(response);
+  }
+
+  async getMainRouterResources(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/network/main-router/resources/`);
+    return this.handleResponse(response);
+  }
+
+  async getMainRouterLogs(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/network/main-router/logs/`);
+    return this.handleResponse(response);
+  }
+
+  async getMainRouterAlerts(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/network/main-router/alerts/`);
+    return this.handleResponse(response);
+  }
+
+  async executeMainRouterCommand(command: string): Promise<any> {
+    const response = await axios.post(
+      `${API_BASE_URL}/network/main-router/execute-command/`,
+      { command },
+    );
+    return this.handleResponse(response);
+  }
+
+  async testMainRouterConnection(): Promise<any> {
+    const response = await axios.post(`${API_BASE_URL}/network/main-router/test-connection/`);
+    return this.handleResponse(response);
+  }
+
+  async restartMainRouter(): Promise<any> {
+    const response = await axios.post(`${API_BASE_URL}/network/main-router/restart/`);
+    return this.handleResponse(response);
+  }
+
   // Enhanced Billing Endpoints
   async getInvoices(
     params?: Record<string, any>,
@@ -357,6 +476,8 @@ class ApiService {
     await axios.delete(`${API_BASE_URL}/billing/invoices/${id}/`);
   }
 
+  // Note: These endpoints may not exist in the current backend implementation
+  // They are kept for future implementation or removed if not needed
   async sendInvoice(id: number): Promise<any> {
     const response = await axios.post(
       `${API_BASE_URL}/billing/invoices/${id}/send/`,
@@ -391,20 +512,20 @@ class ApiService {
   async getPayments(
     params?: Record<string, any>,
   ): Promise<ApiResponse<Payment>> {
-    const response = await axios.get(`${API_BASE_URL}/billing/payments/`, {
+    const response = await axios.get(`${API_BASE_URL}/payments/payments/`, {
       params,
     });
     return this.handlePaginatedResponse(response);
   }
 
   async getPayment(id: number): Promise<Payment> {
-    const response = await axios.get(`${API_BASE_URL}/billing/payments/${id}/`);
+    const response = await axios.get(`${API_BASE_URL}/payments/payments/${id}/`);
     return this.handleResponse(response);
   }
 
   async recordPayment(data: any): Promise<Payment> {
     const response = await axios.post(
-      `${API_BASE_URL}/billing/payments/`,
+      `${API_BASE_URL}/payments/payments/`,
       data,
     );
     return this.handleResponse(response);
@@ -421,6 +542,17 @@ class ApiService {
     return this.handleResponse(response);
   }
 
+  // Alternative stats endpoints for compatibility
+  async getInvoiceStatsAlt(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/billing/stats/invoices/`);
+    return this.handleResponse(response);
+  }
+
+  async getPaymentStatsAlt(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/billing/stats/payments/`);
+    return this.handleResponse(response);
+  }
+
   // Monitoring
   async getMonitoringStats(): Promise<any> {
     const response = await axios.get(`${API_BASE_URL}/monitoring/stats/`);
@@ -431,6 +563,21 @@ class ApiService {
     const response = await axios.get(
       `${API_BASE_URL}/monitoring/routers/${routerId}/`,
     );
+    return this.handleResponse(response);
+  }
+
+  async getMonitoringHealthCheck(): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/monitoring/health/`);
+    return this.handleResponse(response);
+  }
+
+  async getSnmpSnapshots(params?: Record<string, any>): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/monitoring/snmp-snapshots/`, { params });
+    return this.handleResponse(response);
+  }
+
+  async getUsageSnapshots(params?: Record<string, any>): Promise<any> {
+    const response = await axios.get(`${API_BASE_URL}/monitoring/usage-snapshots/`, { params });
     return this.handleResponse(response);
   }
 
@@ -488,7 +635,7 @@ class ApiService {
     const [customerStats, subscriptionStats, routerStats, invoiceStats] =
       await Promise.all([
         this.getCustomerStats(),
-        this.getSubscriptions({ limit: 1 }),
+        this.getSubscriptionStats(),
         this.getRouterStats(),
         this.getInvoiceStats(),
       ]);
@@ -496,7 +643,7 @@ class ApiService {
     return {
       total_customers: customerStats.total_customers || 0,
       active_customers: customerStats.active_customers || 0,
-      total_subscriptions: subscriptionStats.count || 0,
+      total_subscriptions: subscriptionStats.total_subscriptions || 0,
       total_monthly_revenue: invoiceStats.total_monthly_revenue || 0,
       total_routers: routerStats.total_routers || 0,
       online_routers: routerStats.online_routers || 0,

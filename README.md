@@ -1,489 +1,368 @@
-# ISP Admin Panel
+# ISP Admin - Internet Service Provider Management System
 
-A comprehensive ISP (Internet Service Provider) management system with Django backend and React frontend, featuring customer management, billing, network monitoring, and payment integrations.
+A comprehensive web-based management system for Internet Service Providers (ISPs) built with Django REST Framework backend and React frontend.
 
 ## 🚀 Features
 
-### Backend (Django)
-- **Django 4.2** with Django REST Framework
-- **PostgreSQL** database with django-environ
-- **JWT Authentication** with SimpleJWT
-- **Role-Based Access Control** (Admin, Support, Accountant)
-- **Celery + Redis** for background tasks
-- **MikroTik RouterOS API** integration
-- **SNMP Monitoring** for network devices
-- **Payment Integrations** (Stripe, bKash, SSLCommerz)
-- **Swagger/OpenAPI** documentation
+### Core Functionality
+- **Customer Management**: Complete customer lifecycle management
+- **Subscription Management**: Plan-based subscription system with automated billing
+- **Network Management**: Router and network infrastructure monitoring
+- **Billing & Payments**: Automated invoicing and payment processing
+- **Reports & Analytics**: Comprehensive reporting and dashboard analytics
+- **User Management**: Role-based access control and authentication
 
-### Frontend (React)
-- **React 18** with TypeScript
-- **Atomix Design System** for consistent UI
-- **React Query** for server state management
-- **React Hook Form** with Yup validation
-- **React Router** for client-side routing
-- **Dark Mode** with ISP branding
-- **Responsive Design** for all screen sizes
+### Technical Features
+- **Modern Architecture**: Microservices-based architecture with Docker
+- **Real-time Monitoring**: Live network status and performance metrics
+- **API-First Design**: RESTful APIs with comprehensive documentation
+- **Responsive UI**: Modern, mobile-friendly user interface
+- **Security**: JWT authentication, HTTPS, and security best practices
+- **Scalability**: Horizontal scaling with load balancing
+
+## 🏗️ Architecture
+
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Frontend      │    │   Backend       │    │   Database      │
+│   (React)       │◄──►│   (Django)      │◄──►│   (PostgreSQL)  │
+│   Port: 3000    │    │   Port: 8000    │    │   Port: 5432    │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         │                       │                       │
+         ▼                       ▼                       ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Nginx         │    │   Redis         │    │   Celery        │
+│   (Reverse      │    │   (Cache)       │    │   (Background   │
+│   Proxy)        │    │   Port: 6379    │    │   Tasks)        │
+│   Port: 80      │    └─────────────────┘    └─────────────────┘
+└─────────────────┘
+```
+
+## 🛠️ Technology Stack
+
+### Backend
+- **Framework**: Django 4.2+ with Django REST Framework
+- **Database**: PostgreSQL 15
+- **Cache**: Redis 7
+- **Task Queue**: Celery with Redis broker
+- **Authentication**: JWT with djangorestframework-simplejwt
+- **API Documentation**: Django REST Framework browsable API
+
+### Frontend
+- **Framework**: React 18 with TypeScript
+- **Build Tool**: Vite
+- **UI Library**: Custom Atomix Design System
+- **State Management**: TanStack Query (React Query)
+- **HTTP Client**: Axios
+- **Styling**: SCSS with CSS Modules
+
+### Infrastructure
+- **Containerization**: Docker & Docker Compose
+- **Web Server**: Nginx
+- **Process Management**: Gunicorn
+- **Monitoring**: Health checks and logging
+- **Security**: HTTPS, CORS, CSRF protection
+
+## 📦 Quick Start
+
+### Prerequisites
+- Docker & Docker Compose
+- Git
+- Node.js 18+ (for local development)
+- Python 3.9+ (for local development)
+
+### 1. Clone the Repository
+```bash
+git clone <repository-url>
+cd bcn
+```
+
+### 2. Environment Setup
+```bash
+# Copy environment template
+cp backend/env.example .env
+
+# Edit environment variables
+nano .env
+```
+
+### 3. Start with Docker (Recommended)
+```bash
+# Build and start all services
+./build-all.sh
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+```
+
+### 4. Access the Application
+- **Frontend**: http://localhost:3000
+- **Backend API**: http://localhost:8000
+- **Admin Panel**: http://localhost:8000/admin
+
+## 🔧 Development Setup
+
+### Local Development
+```bash
+# Setup development environment
+./setup-dev.sh
+
+# Start backend (Terminal 1)
+cd backend
+source venv/bin/activate
+python manage.py runserver
+
+# Start frontend (Terminal 2)
+cd frontend
+npm run dev
+```
+
+### Available Scripts
+
+#### Build Scripts
+- `./build-all.sh` - Build all Docker images
+- `./build-frontend.sh` - Build frontend only
+- `./setup-dev.sh` - Setup development environment
+- `./deploy.sh` - Production deployment
+
+#### Frontend Scripts
+```bash
+cd frontend
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run lint         # Run ESLint
+npm run type-check   # Run TypeScript checks
+```
+
+#### Backend Scripts
+```bash
+cd backend
+python manage.py runserver     # Start development server
+python manage.py migrate       # Run database migrations
+python manage.py collectstatic # Collect static files
+python manage.py createsuperuser # Create admin user
+```
 
 ## 📁 Project Structure
 
 ```
-isp-admin-panel/
-├── backend/                   # Django backend
-│   ├── isp_admin/            # Django project settings
-│   ├── accounts/             # User management
-│   ├── customers/            # Customer management
-│   ├── plans/                # Internet plans
-│   ├── subscriptions/        # Customer subscriptions
-│   ├── billing/              # Billing and invoices
-│   ├── network/              # Network management
-│   ├── monitoring/           # Network monitoring
-│   ├── payments/             # Payment integrations
-│   ├── manage.py             # Django management
-│   ├── requirements.txt      # Python dependencies
-│   ├── env.example           # Environment template
-│   ├── Dockerfile            # Backend Docker config
-│   └── nginx.conf            # Backend nginx config
-├── frontend/                  # React frontend
+bcn/
+├── backend/                 # Django backend
+│   ├── accounts/           # User management
+│   ├── billing/            # Billing and invoicing
+│   ├── customers/          # Customer management
+│   ├── network/            # Network and router management
+│   ├── plans/              # Subscription plans
+│   ├── subscriptions/      # Subscription management
+│   ├── payments/           # Payment processing
+│   ├── monitoring/         # System monitoring
+│   ├── reports/            # Reporting system
+│   ├── core/               # Core utilities
+│   └── isp_admin/          # Django project settings
+├── frontend/               # React frontend
 │   ├── src/
-│   │   ├── components/       # React components
-│   │   ├── pages/            # Page components
-│   │   ├── services/         # API services
-│   │   ├── hooks/            # Custom hooks
-│   │   ├── utils/            # Utility functions
-│   │   ├── types/            # TypeScript types
-│   │   ├── context/          # React context
-│   │   └── styles/           # Global styles
-│   ├── package.json          # Node dependencies
-│   ├── tsconfig.json         # TypeScript config
-│   ├── vite.config.ts        # Vite config
-│   ├── Dockerfile            # Frontend Docker config
-│   └── nginx.conf            # Frontend nginx config
-├── docker-compose.yml         # Main Docker Compose
-├── nginx.conf                 # Root nginx reverse proxy
-└── README.md                  # This file
+│   │   ├── components/     # React components
+│   │   ├── pages/          # Page components
+│   │   ├── services/       # API services
+│   │   ├── hooks/          # Custom React hooks
+│   │   ├── utils/          # Utility functions
+│   │   └── types/          # TypeScript types
+│   ├── public/             # Static assets
+│   └── dist/               # Build output
+├── nginx/                  # Nginx configuration
+├── ssl/                    # SSL certificates
+├── docker-compose.yml      # Docker Compose configuration
+├── build-all.sh           # Build script
+├── setup-dev.sh           # Development setup
+├── deploy.sh              # Deployment script
+└── README.md              # This file
 ```
 
-## 🛠️ Tech Stack
+## 🔐 Environment Configuration
 
-### Backend
-- **Django 4.2** - Web framework
-- **Django REST Framework 3.14** - API framework
-- **PostgreSQL 15** - Database
-- **Redis 7** - Cache and message broker
-- **Celery 5.3** - Background tasks
-- **SimpleJWT 5.2** - JWT authentication
-- **drf-spectacular 0.26** - API documentation
+### Required Environment Variables
 
-### Frontend
-- **React 18.2.0** - UI library
-- **TypeScript 4.9.3** - Type safety
-- **Vite 4.2.0** - Build tool
-- **React Query 4.29.5** - Server state management
-- **React Hook Form 7.43.5** - Form management
-- **Atomix Design System** - UI components
-- **React Router 6.8.1** - Client-side routing
+Create a `.env` file in the project root:
 
-### Infrastructure
-- **Docker** - Containerization
-- **Docker Compose** - Multi-container orchestration
-- **Nginx** - Reverse proxy and static file serving
-- **PostgreSQL** - Database
-- **Redis** - Cache and message broker
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- **Docker** and **Docker Compose**
-- **Node.js 18+** (for local frontend development)
-- **Python 3.11+** (for local backend development)
-
-### Docker Setup (Recommended)
-
-1. **Clone the repository:**
-   ```bash
-   git clone <repository-url>
-   cd isp-admin-panel
-   ```
-
-2. **Set up environment variables:**
-   ```bash
-   cp backend/env.example backend/.env
-   # Edit backend/.env with your configuration
-   ```
-
-3. **Build and start all services:**
-   ```bash
-   docker-compose up --build -d
-   ```
-
-4. **Setup initial data:**
-   ```bash
-   docker-compose exec backend python manage.py migrate
-   docker-compose exec backend python manage.py setup_isp
-   ```
-
-5. **Access the application:**
-   - **Frontend**: http://localhost:3000
-   - **Backend API**: http://localhost:8000
-   - **Admin Interface**: http://localhost:8000/admin
-   - **API Documentation**: http://localhost:8000/api/schema/swagger-ui/
-
-### Local Development Setup
-
-#### Backend Setup
-
-1. **Navigate to backend directory:**
-   ```bash
-   cd backend
-   ```
-
-2. **Create virtual environment:**
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-
-4. **Set up environment:**
-   ```bash
-   cp env.example .env
-   # Edit .env with your configuration
-   ```
-
-5. **Setup database:**
-   ```bash
-   python manage.py migrate
-   python manage.py setup_isp
-   ```
-
-6. **Start development server:**
-   ```bash
-   python manage.py runserver
-   ```
-
-7. **Start Celery (in another terminal):**
-   ```bash
-   celery -A isp_admin worker --loglevel=info
-   celery -A isp_admin beat --loglevel=info
-   ```
-
-#### Frontend Setup
-
-1. **Navigate to frontend directory:**
-   ```bash
-   cd frontend
-   ```
-
-2. **Install dependencies:**
-   ```bash
-   npm install
-   ```
-
-3. **Start development server:**
-   ```bash
-   npm run dev
-   ```
-
-4. **Access the application:**
-   - **Frontend**: http://localhost:3000
-   - **Backend API**: http://localhost:8000
-
-## 🔧 Configuration
-
-### Environment Variables
-
-#### Backend (.env)
 ```env
-# Django Settings
-DEBUG=True
-SECRET_KEY=your-secret-key-here
-ALLOWED_HOSTS=localhost,127.0.0.1
+# Database Configuration
+POSTGRES_DB=isp_admin
+POSTGRES_USER=isp_admin
+POSTGRES_PASSWORD=your_secure_password
 
-# Database
-DATABASE_URL=postgresql://isp_admin:password@localhost:5432/isp_admin
+# Django Configuration
+SECRET_KEY=your_secret_key_here
+DEBUG=False
+ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 
-# Redis
-REDIS_URL=redis://localhost:6379/0
+# Main Router Configuration
+MAIN_ROUTER_IP=103.115.252.60
+MAIN_ROUTER_API_PORT=8728
+MAIN_ROUTER_SSH_PORT=22
+MAIN_ROUTER_USERNAME=admin
+MAIN_ROUTER_PASSWORD=your_router_password
+MAIN_ROUTER_USE_TLS=True
 
-# JWT Settings
-JWT_ACCESS_TOKEN_LIFETIME=5
-JWT_REFRESH_TOKEN_LIFETIME=1
-
-# Payment Providers
-STRIPE_SECRET_KEY=sk_test_...
-STRIPE_WEBHOOK_SECRET=whsec_...
-BKASH_APP_KEY=your-bkash-app-key
-SSLCOMMERZ_STORE_ID=your-store-id
-SSLCOMMERZ_STORE_PASSWORD=your-store-password
-
-# RouterOS Settings
-ROUTEROS_DEFAULT_USERNAME=admin
-ROUTEROS_DEFAULT_PASSWORD=password
-
-# Email Settings
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USE_TLS=True
-EMAIL_HOST_USER=your-email@gmail.com
-EMAIL_HOST_PASSWORD=your-app-password
+# Network Configuration
+ROUTER_API_TIMEOUT=30
+ROUTER_CONNECTION_RETRIES=3
+ROUTER_HEALTH_CHECK_INTERVAL=300
 ```
-
-#### Frontend (.env)
-```env
-VITE_API_BASE_URL=http://localhost:8000/api
-VITE_APP_NAME=ISP Admin Panel
-```
-
-## 📊 Core Features
-
-### Customer Management
-- **Customer Profiles**: Complete customer information management
-- **Search & Filter**: Advanced customer search and filtering
-- **Bulk Operations**: Mass customer operations
-- **Status Tracking**: Active, inactive, suspended statuses
-
-### Plan Management
-- **Internet Plans**: Speed, pricing, and feature management
-- **Plan Comparison**: Side-by-side plan comparison
-- **Feature Lists**: Detailed plan features and benefits
-- **Pricing Tiers**: Multiple pricing options
-
-### Subscription Management
-- **Customer Subscriptions**: Link customers to plans
-- **Status Management**: Active, suspended, expired, cancelled
-- **Data Usage Tracking**: Monitor customer data consumption
-- **Automatic Updates**: Status updates based on billing
-
-### Billing & Payments
-- **Invoice Generation**: Automatic monthly invoice generation
-- **Payment Tracking**: Multiple payment method support
-- **Overdue Management**: Automatic subscription suspension
-- **Payment Integrations**: Stripe, bKash, SSLCommerz
-
-### Network Management
-- **Router Management**: MikroTik router configuration
-- **PPPoE Users**: User management on routers
-- **Connection Monitoring**: Real-time connection status
-- **Bandwidth Control**: Queue management for bandwidth
-
-### Network Monitoring
-- **SNMP Polling**: System resource monitoring
-- **Performance Metrics**: CPU, memory, disk usage
-- **Interface Statistics**: Network interface monitoring
-- **Health Checks**: Router and service health monitoring
-
-### User Management
-- **Role-Based Access**: Admin, Support, Accountant roles
-- **Permission Control**: Feature-level access control
-- **JWT Authentication**: Secure token-based authentication
-- **Session Management**: Automatic session handling
-
-## 🔐 Authentication & Authorization
-
-### User Roles
-
-#### Admin
-- Full system access
-- User management
-- System configuration
-- All CRUD operations
-
-#### Support
-- Customer management
-- Subscription management
-- Network monitoring
-- Limited billing access
-
-#### Accountant
-- Billing management
-- Payment processing
-- Financial reports
-- Limited customer access
-
-### JWT Authentication
-- **Access Token**: 5 minutes lifetime
-- **Refresh Token**: 1 day lifetime
-- **Automatic Refresh**: Built-in token refresh mechanism
-
-## 📡 API Documentation
-
-### Interactive Documentation
-- **Swagger UI**: http://localhost:8000/api/schema/swagger-ui/
-- **ReDoc**: http://localhost:8000/api/schema/redoc/
-- **OpenAPI Schema**: http://localhost:8000/api/schema/
-
-### Key Endpoints
-
-#### Authentication
-- `POST /api/auth/login/` - User login
-- `POST /api/auth/token/refresh/` - Refresh JWT token
-- `GET /api/auth/me/` - Current user info
-
-#### Customers
-- `GET /api/customers/` - List customers
-- `POST /api/customers/` - Create customer
-- `GET /api/customers/{id}/` - Customer details
-
-#### Plans
-- `GET /api/plans/` - List plans
-- `POST /api/plans/` - Create plan
-- `GET /api/plans/{id}/` - Plan details
-
-#### Subscriptions
-- `GET /api/subscriptions/` - List subscriptions
-- `POST /api/subscriptions/` - Create subscription
-- `PATCH /api/subscriptions/{id}/status/` - Update status
-
-## 🔄 Background Tasks
-
-### Automated Tasks
-- **Monthly Invoice Generation**: Automatic invoice creation
-- **Overdue Enforcement**: Suspend overdue subscriptions
-- **Payment Processing**: Reactivate paid subscriptions
-- **SNMP Monitoring**: Network device polling
-- **Data Cleanup**: Old data maintenance
-
-### Task Scheduling
-```python
-CELERY_BEAT_SCHEDULE = {
-    'generate-monthly-invoices': {
-        'task': 'billing.tasks.generate_monthly_invoices',
-        'schedule': crontab(day=1, hour=0, minute=0),  # Monthly
-    },
-    'enforce-overdue-invoices': {
-        'task': 'billing.tasks.enforce_overdue_invoices',
-        'schedule': crontab(minute=0),  # Hourly
-    },
-    'poll-snmp-usage': {
-        'task': 'monitoring.tasks.poll_snmp_usage',
-        'schedule': crontab(minute='*/5'),  # Every 5 minutes
-    },
-}
-```
-
-## 🎨 Design System
-
-The frontend uses the **Atomix Design System** for consistent UI components:
-
-### Color Palette
-- **Primary**: `#7AFFD7` (Cyan)
-- **Secondary**: `#1AFFD2` (Light Cyan)
-- **Success**: `#4DFF9F` (Green)
-- **Error**: `#DD6061` (Red)
-- **Background**: `#000000` (Black)
-- **Surface**: `#212121` (Dark Gray)
-
-### Components
-- **40+ Components** - Comprehensive UI library
-- **Design Tokens** - Consistent spacing and typography
-- **Accessibility First** - WCAG 2.1 AA compliant
-- **Dark Mode** - Built-in theme switching
-- **Responsive** - Mobile-first design approach
 
 ## 🚀 Deployment
 
 ### Production Deployment
+```bash
+# Full deployment with backup
+./deploy.sh
 
-1. **Set production environment variables:**
-   ```env
-   DEBUG=False
-   SECRET_KEY=your-production-secret-key
-   ALLOWED_HOSTS=your-domain.com
-   DATABASE_URL=postgresql://user:password@host:5432/database
-   ```
+# Or step by step
+./build-all.sh
+docker-compose up -d
+```
 
-2. **Build and deploy:**
-   ```bash
-   docker-compose -f docker-compose.prod.yml up --build -d
-   ```
+### Docker Commands
+```bash
+# Build images
+docker-compose build
 
-3. **Setup SSL certificates**
-4. **Configure backup strategy**
-5. **Set up monitoring and logging**
+# Start services
+docker-compose up -d
 
-### Docker Services
+# View logs
+docker-compose logs -f
 
-- **backend**: Django application (port 8000)
-- **frontend**: React application (port 3000)
-- **db**: PostgreSQL database (port 5432)
-- **redis**: Redis cache and message broker (port 6379)
-- **celery_worker**: Background task worker
-- **celery_beat**: Task scheduler
-- **nginx**: Reverse proxy (port 80)
+# Stop services
+docker-compose down
+
+# Clean up
+docker-compose down -v --rmi all
+```
+
+## 📊 API Documentation
+
+### Authentication
+- **Login**: `POST /api/auth/login/`
+- **Logout**: `POST /api/auth/logout/`
+- **Refresh Token**: `POST /api/auth/token/refresh/`
+
+### Core Endpoints
+- **Customers**: `/api/customers/`
+- **Subscriptions**: `/api/subscriptions/`
+- **Plans**: `/api/plans/`
+- **Billing**: `/api/billing/`
+- **Network**: `/api/network/`
+- **Reports**: `/api/reports/`
+
+### API Documentation
+Access the interactive API documentation at:
+- **Browsable API**: http://localhost:8000/api/
+- **Swagger UI**: http://localhost:8000/api/docs/
 
 ## 🧪 Testing
 
-### Backend Testing
+### Backend Tests
 ```bash
 cd backend
-pytest
-pytest --cov=.
+python manage.py test
 ```
 
-### Frontend Testing
+### Frontend Tests
 ```bash
 cd frontend
 npm test
-npm run test:coverage
 ```
 
-## 🔍 Monitoring & Health Checks
+### Integration Tests
+```bash
+# Run with Docker
+docker-compose -f docker-compose.test.yml up --abort-on-container-exit
+```
+
+## 📈 Monitoring & Health Checks
 
 ### Health Endpoints
-- **Application Health**: `GET /health/`
-- **Database Health**: Automatic connectivity checks
-- **Redis Health**: Celery worker monitoring
+- **Frontend**: `GET /health`
+- **Backend**: `GET /api/health/`
+- **Database**: Built-in PostgreSQL health checks
+- **Redis**: Built-in Redis health checks
 
-### Performance Monitoring
-- **Database Queries**: Query optimization
-- **API Response Times**: Endpoint performance
-- **Background Tasks**: Celery task monitoring
-- **System Resources**: CPU, memory, disk usage
+### Monitoring
+- **Logs**: `docker-compose logs -f`
+- **Metrics**: Built-in performance monitoring
+- **Alerts**: Automated alerting system
+
+## 🔒 Security
+
+### Security Features
+- **Authentication**: JWT-based authentication
+- **Authorization**: Role-based access control
+- **HTTPS**: SSL/TLS encryption
+- **CORS**: Cross-origin resource sharing
+- **CSRF**: Cross-site request forgery protection
+- **Input Validation**: Comprehensive input sanitization
+- **Rate Limiting**: API rate limiting
+- **Security Headers**: Security-focused HTTP headers
+
+### Security Best Practices
+- Regular security updates
+- Environment variable protection
+- Database connection encryption
+- Secure cookie handling
+- Input validation and sanitization
 
 ## 🤝 Contributing
 
+### Development Workflow
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
-4. Add tests for new functionality
-5. Ensure all tests pass
-6. Submit a pull request
+4. Add tests
+5. Submit a pull request
 
 ### Code Standards
+- **Backend**: Follow Django best practices and PEP 8
+- **Frontend**: Follow React best practices and ESLint rules
+- **Commits**: Use conventional commit messages
+- **Documentation**: Update documentation for new features
 
-#### Backend
-- **PEP 8** - Python code style
-- **Django Best Practices** - Django conventions
-- **Type Hints** - Type annotations
-- **Docstrings** - Comprehensive documentation
+## 📝 License
 
-#### Frontend
-- **ESLint** - Code linting
-- **TypeScript** - Type safety
-- **Prettier** - Code formatting
-- **React Best Practices** - React conventions
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 📄 License
+## 🆘 Support
 
-This project is licensed under the MIT License.
+### Getting Help
+1. Check the [documentation](BUILD_INSTRUCTIONS.md)
+2. Review [GitHub issues](https://github.com/your-repo/issues)
+3. Contact the development team
 
-## 🔗 Links
+### Troubleshooting
+- **Common Issues**: See [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md#troubleshooting)
+- **Logs**: Check `docker-compose logs`
+- **Health Checks**: Verify all services are running
 
-- [Backend Documentation](./backend/README.md)
-- [Frontend Documentation](./frontend/README.md)
-- [Django Documentation](https://docs.djangoproject.com/)
-- [React Documentation](https://react.dev/)
-- [Atomix Design System](https://github.com/Shohojdhara/atomix)
-- [Docker Documentation](https://docs.docker.com/)
+## 🗺️ Roadmap
 
-## 📞 Support
+### Upcoming Features
+- [ ] Mobile application
+- [ ] Advanced analytics dashboard
+- [ ] Automated network provisioning
+- [ ] Integration with external billing systems
+- [ ] Multi-tenant support
+- [ ] Advanced reporting features
 
-For support and questions:
-- Create an issue in the repository
-- Check the documentation in the respective directories
-- Review the API documentation at `/api/schema/swagger-ui/`
+### Version History
+- **v1.0.0**: Initial release with core functionality
+- **v1.1.0**: Enhanced dashboard and reporting
+- **v1.2.0**: Mobile responsiveness improvements
+- **v2.0.0**: Planned major UI/UX overhaul
+
+---
+
+**Last Updated**: $(date)
+**Version**: 1.0.0
+**Maintainer**: Development Team

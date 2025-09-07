@@ -133,3 +133,15 @@ class Plan(models.Model):
         """Calculate total monthly revenue from this plan."""
         active_subs = self.subscriptions.filter(status='active')
         return self.price * active_subs.count()
+    
+    def get_subscribers_count(self):
+        """Get total number of subscribers for this plan."""
+        return self.subscriptions.count()
+    
+    def get_active_subscribers_count(self):
+        """Get count of active subscribers for this plan."""
+        return self.subscriptions.filter(status='active').count()
+    
+    def get_monthly_revenue(self):
+        """Get monthly revenue from this plan."""
+        return float(self.get_total_revenue())

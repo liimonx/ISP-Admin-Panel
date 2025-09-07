@@ -100,7 +100,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   <option value={0}>Select Customer</option>
                   {customers.map((customer) => (
                     <option key={customer.id} value={customer.id}>
-                      {customer.name} - {customer.email}
+                      {customer.name} ({customer.email}) - {customer.phone}
                     </option>
                   ))}
                 </select>
@@ -119,7 +119,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   <option value={0}>Select Plan</option>
                   {plans.map((plan) => (
                     <option key={plan.id} value={plan.id}>
-                      {plan.name} - ${plan.price}/month
+                      {plan.name} - {plan.download_speed}/{plan.upload_speed} {plan.speed_unit} - ${plan.price}/month
                     </option>
                   ))}
                 </select>
@@ -174,7 +174,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   <option value={0}>Select Router</option>
                   {routers.map((router) => (
                     <option key={router.id} value={router.id}>
-                      {router.name} - {router.host}
+                      {router.name} ({router.location}) - {router.host} - {router.status}
                     </option>
                   ))}
                 </select>

@@ -103,6 +103,9 @@ class PlanDetailSerializer(serializers.ModelSerializer):
     is_unlimited = serializers.BooleanField(read_only=True)
     active_subscriptions_count = serializers.SerializerMethodField()
     total_revenue = serializers.SerializerMethodField()
+    subscribers_count = serializers.SerializerMethodField()
+    active_subscribers_count = serializers.SerializerMethodField()
+    monthly_revenue = serializers.SerializerMethodField()
     
     class Meta:
         model = Plan
@@ -112,6 +115,7 @@ class PlanDetailSerializer(serializers.ModelSerializer):
             'billing_cycle', 'is_active', 'is_featured', 'is_popular',
             'features', 'formatted_speed', 'formatted_quota', 'formatted_price',
             'is_unlimited', 'active_subscriptions_count', 'total_revenue',
+            'subscribers_count', 'active_subscribers_count', 'monthly_revenue',
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
@@ -123,6 +127,18 @@ class PlanDetailSerializer(serializers.ModelSerializer):
     def get_total_revenue(self, obj):
         """Get total monthly revenue from this plan."""
         return float(obj.get_total_revenue())
+    
+    def get_subscribers_count(self, obj):
+        """Get total number of subscribers for this plan."""
+        return obj.get_subscribers_count()
+    
+    def get_active_subscribers_count(self, obj):
+        """Get count of active subscribers for this plan."""
+        return obj.get_active_subscribers_count()
+    
+    def get_monthly_revenue(self, obj):
+        """Get monthly revenue from this plan."""
+        return obj.get_monthly_revenue()
 
 
 class PlanComparisonSerializer(serializers.ModelSerializer):

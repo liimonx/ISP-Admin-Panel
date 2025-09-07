@@ -84,6 +84,8 @@ class RouterDetailSerializer(serializers.ModelSerializer):
     api_url = serializers.CharField(read_only=True)
     active_subscriptions_count = serializers.SerializerMethodField()
     total_bandwidth_usage = serializers.SerializerMethodField()
+    subscriptions_count = serializers.SerializerMethodField()
+    total_bandwidth_usage_float = serializers.SerializerMethodField()
     
     class Meta:
         model = Router
@@ -93,6 +95,7 @@ class RouterDetailSerializer(serializers.ModelSerializer):
             'last_seen', 'location', 'coordinates', 'snmp_community',
             'snmp_port', 'notes', 'is_online', 'is_mikrotik', 'api_url',
             'active_subscriptions_count', 'total_bandwidth_usage',
+            'subscriptions_count', 'total_bandwidth_usage_float',
             'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
@@ -107,6 +110,14 @@ class RouterDetailSerializer(serializers.ModelSerializer):
     def get_total_bandwidth_usage(self, obj):
         """Get total bandwidth usage for this router."""
         return float(obj.get_total_bandwidth_usage())
+    
+    def get_subscriptions_count(self, obj):
+        """Get total number of subscriptions on this router."""
+        return obj.get_subscriptions_count()
+    
+    def get_total_bandwidth_usage_float(self, obj):
+        """Get total bandwidth usage as float for API responses."""
+        return obj.get_total_bandwidth_usage_float()
 
 
 class RouterSessionSerializer(serializers.ModelSerializer):

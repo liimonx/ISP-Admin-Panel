@@ -186,6 +186,30 @@ class Invoice(models.Model):
         if not self.total_amount:
             self.calculate_total()
         super().save(*args, **kwargs)
+    
+    def get_subtotal_float(self):
+        """Get subtotal as float for API responses."""
+        return float(self.subtotal)
+    
+    def get_tax_amount_float(self):
+        """Get tax amount as float for API responses."""
+        return float(self.tax_amount)
+    
+    def get_discount_amount_float(self):
+        """Get discount amount as float for API responses."""
+        return float(self.discount_amount)
+    
+    def get_total_amount_float(self):
+        """Get total amount as float for API responses."""
+        return float(self.total_amount)
+    
+    def get_paid_amount_float(self):
+        """Get paid amount as float for API responses."""
+        return float(self.paid_amount)
+    
+    def get_balance_due_float(self):
+        """Get balance due as float for API responses."""
+        return float(self.balance_due)
 
 
 class Payment(models.Model):
@@ -321,6 +345,10 @@ class Payment(models.Model):
         """Mark payment as refunded."""
         self.status = self.Status.REFUNDED
         self.save()
+    
+    def get_amount_float(self):
+        """Get payment amount as float for API responses."""
+        return float(self.amount)
 
 
 class BillingCycle(models.Model):
@@ -418,3 +446,11 @@ class BillingCycle(models.Model):
         if not self.total_amount:
             self.calculate_total()
         super().save(*args, **kwargs)
+    
+    def get_base_amount_float(self):
+        """Get base amount as float for API responses."""
+        return float(self.base_amount)
+    
+    def get_total_amount_float(self):
+        """Get total amount as float for API responses."""
+        return float(self.total_amount)

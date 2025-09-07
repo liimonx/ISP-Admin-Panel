@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
   const [selectedChart, setSelectedChart] = useState("revenue");
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
-  const [refreshInterval, setRefreshInterval] = useState(30000); // 30 seconds
+  const [refreshInterval] = useState(30000); // 30 seconds
 
   // Auto-refresh data
   useEffect(() => {
@@ -84,7 +84,7 @@ const Dashboard: React.FC = () => {
   });
 
   // Monitoring stats
-  const { data: monitoringStats, isLoading: monitoringLoading } = useQuery({
+  const { data: monitoringStats } = useQuery({
     queryKey: ["monitoring-stats"],
     queryFn: () => apiService.getMonitoringStats(),
     refetchInterval: refreshInterval,
@@ -305,12 +305,14 @@ const Dashboard: React.FC = () => {
         </div>
         
         {/* Quick Stats Summary */}
-        <div className="u-d-flex u-gap-4 u-text-sm u-text-secondary">
+        <div className="u-d-flex u-gap-4 u-text-sm u-text-secondary u-align-items-center">
           <span>Last updated: {new Date().toLocaleTimeString()}</span>
           <span>•</span>
           <span>Auto-refresh: 30s</span>
           <span>•</span>
           <span>Status: All systems operational</span>
+          <span>•</span>
+          <Badge variant="success" size="sm" label="Live Data" />
         </div>
       </div>
 
@@ -319,59 +321,71 @@ const Dashboard: React.FC = () => {
         <GridCol xs={12} md={6} lg={3}>
           <StatCard
             title="Total Customers"
-            value={stats?.total_customers ?? 'N/A'}
+            value={customersData?.count ?? stats?.total_customers ?? 'N/A'}
             icon="Users"
             iconColor="#7AFFD7"
             trend={{
               value: 12,
               isPositive: true,
             }}
-            description="vs last month"
+            description={`${customersData?.results?.filter(c => c.status === 'active').length || 0} active`}
           />
         </GridCol>
         <GridCol xs={12} md={6} lg={3}>
           <StatCard
             title="Active Subscriptions"
-            value={stats?.total_subscriptions ?? 'N/A'}
+            value={subscriptionsData?.filter((s: any) => s.status === 'active').length ?? stats?.total_subscriptions ?? 'N/A'}
             icon="Link"
             iconColor="#1AFFD2"
             trend={{
               value: 8,
               isPositive: true,
             }}
-            description="currently active"
+            description={`${subscriptionsData?.filter((s: any) => s.status === 'suspended').length || 0} suspended`}
           />
         </GridCol>
         <GridCol xs={12} md={6} lg={3}>
           <StatCard
             title="Network Uptime"
-            value={stats?.total_routers && stats?.online_routers 
-              ? `${((stats.online_routers / stats.total_routers) * 100).toFixed(1)}%`
-              : 'N/A'
-            }
+            value={(() => {
+              const onlineRouters = routersData?.results?.filter(r => r.status === 'online').length || 0;
+              const totalRouters = routersData?.results?.length || 0;
+              if (totalRouters > 0) {
+                return `${((onlineRouters / totalRouters) * 100).toFixed(1)}%`;
+              }
+              return stats?.total_routers && stats?.online_routers 
+                ? `${((stats.online_routers / stats.total_routers) * 100).toFixed(1)}%`
+                : 'N/A';
+            })()}
             icon="Globe"
             iconColor="#00E6C3"
             trend={{
               value: 0.2,
               isPositive: true,
             }}
-            description="last 30 days"
+            description={`${routersData?.results?.filter(r => r.status === 'online').length || 0}/${routersData?.results?.length || 0} routers online`}
           />
         </GridCol>
         <GridCol xs={12} md={6} lg={3}>
           <StatCard
             title="Monthly Revenue"
-            value={stats?.total_monthly_revenue 
-              ? `$${stats.total_monthly_revenue.toLocaleString()}`
-              : 'N/A'
-            }
+            value={(() => {
+              const activeSubs = subscriptionsData?.filter((s: any) => s.status === 'active') || [];
+              const revenue = activeSubs.reduce((sum: number, sub: any) => sum + (sub.monthly_fee || 0), 0);
+              if (revenue > 0) {
+                return `$${revenue.toLocaleString()}`;
+              }
+              return stats?.total_monthly_revenue 
+                ? `$${stats.total_monthly_revenue.toLocaleString()}`
+                : 'N/A';
+            })()}
             icon="CurrencyDollar"
             iconColor="#00D9FF"
             trend={{
               value: 15,
               isPositive: true,
             }}
-            description="this month"
+            description="from active subscriptions"
           />
         </GridCol>
       </Grid>
@@ -520,7 +534,7 @@ const Dashboard: React.FC = () => {
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
                   <div className="u-text-2xl u-font-weight-bold u-text-success u-mb-1">
-                    {((stats?.online_routers / stats?.total_routers) * 100 || 0).toFixed(1)}%
+                    {(((stats?.online_routers || 0) / (stats?.total_routers || 1)) * 100 || 0).toFixed(1)}%
                   </div>
                   <div className="u-text-sm u-text-secondary">Uptime</div>
                 </div>

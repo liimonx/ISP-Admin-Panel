@@ -1,53 +1,49 @@
-import React from "react";
-import { Card, Icon, Avatar, Badge } from "@shohojdhara/atomix";
+import React from 'react';
+import { Card, Badge, Avatar } from '@shohojdhara/atomix';
 
-interface TopUser {
+export interface TopUser {
   id: number;
   name: string;
   email: string;
   usage: number;
-  plan: string;
-  status: "active" | "suspended" | "inactive";
+  usage_unit: string;
+  plan_name?: string;
+  status: 'active' | 'inactive' | 'suspended';
 }
 
-interface TopUsersWidgetProps {
+export interface TopUsersWidgetProps {
   users: TopUser[];
   isLoading?: boolean;
+  className?: string;
+  title?: string;
+  limit?: number;
 }
 
-const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
+/**
+ * TopUsersWidget Component
+ * 
+ * A widget component for displaying top users by usage.
+ * Built using Atomix Card, Badge, and Avatar components.
+ */
+export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
   users,
-  isLoading,
+  isLoading = false,
+  className = '',
+  title = 'Top Users',
+  limit = 10,
 }) => {
-  if (isLoading) {
-    return (
-      <Card className="u-border-0 u-shadow-sm">
-        <div className="u-p-4 u-border-b u-border-secondary-subtle">
-          <h3 className="u-fs-4 u-fw-semibold u-mb-0">Top Users</h3>
-        </div>
-        <div className="u-p-4">
-          <div className="u-d-flex u-flex-column u-gap-3">
-            {[1, 2, 3, 4, 5].map((i) => (
-              <div key={i} className="u-d-flex u-align-items-center u-gap-3">
-                <div className="u-bg-secondary u-rounded-circle" style={{ width: "32px", height: "32px" }}></div>
-                <div className="u-flex-grow-1">
-                  <div className="u-bg-secondary u-rounded u-h-4 u-mb-1" style={{ width: "60%" }}></div>
-                  <div className="u-bg-secondary u-rounded u-h-3" style={{ width: "40%" }}></div>
-                </div>
-                <div className="u-bg-secondary u-rounded u-h-4" style={{ width: "60px" }}></div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </Card>
-    );
-  }
+  const formatUsage = (usage: number, unit: string) => {
+    if (usage >= 1024 && unit === 'MB') {
+      return `${(usage / 1024).toFixed(1)} GB`;
+    }
+    return `${usage.toFixed(1)} ${unit}`;
+  };
 
-  const getStatusBadge = (status: TopUser["status"]) => {
+  const getStatusBadge = (status: TopUser['status']) => {
     const variants = {
-      active: "success",
-      suspended: "warning",
-      inactive: "secondary",
+      active: 'success',
+      inactive: 'secondary',
+      suspended: 'warning',
     } as const;
 
     return (
@@ -59,48 +55,75 @@ const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
     );
   };
 
-  return (
-    <Card className="u-border-0 u-shadow-sm">
-      <div className="u-p-4 u-border-b u-border-secondary-subtle">
-        <div className="u-d-flex u-align-items-center u-gap-2">
-          <Icon name="Users" size={20} className="u-text-primary-emphasis" />
-          <h3 className="u-fs-4 u-fw-semibold u-mb-0">Top Users</h3>
+  if (isLoading) {
+    return (
+      <Card className={`u-height-100 ${className}`}>
+        <div className="u-p-4">
+          <h3 className="u-text-lg u-font-semibold u-mb-4">{title}</h3>
+          <div className="u-space-y-3">
+            {Array.from({ length: 5 }).map((_, index) => (
+              <div key={index} className="u-d-flex u-align-items-center u-gap-3">
+                <div className="u-bg-light u-width-8 u-height-8 u-border-radius-circle"></div>
+                <div className="u-flex-1">
+                  <div className="u-bg-light u-height-4 u-width-75 u-border-radius-1 u-mb-1"></div>
+                  <div className="u-bg-light u-height-3 u-width-50 u-border-radius-1"></div>
+                </div>
+                <div className="u-bg-light u-height-4 u-width-20 u-border-radius-1"></div>
+              </div>
+            ))}
+          </div>
         </div>
-      </div>
+      </Card>
+    );
+  }
+
+  const displayUsers = users.slice(0, limit);
+
+  return (
+    <Card className={`u-height-100 ${className}`}>
       <div className="u-p-4">
-        {users.length === 0 ? (
-          <div className="u-text-center u-py-6">
-            <Icon name="Users" size={32} className="u-text-secondary u-mb-2" />
-            <p className="u-text-secondary-emphasis u-fs-sm">No usage data available</p>
+        <h3 className="u-text-lg u-font-semibold u-mb-4">{title}</h3>
+        
+        {displayUsers.length === 0 ? (
+          <div className="u-text-center u-py-8">
+            <p className="u-text-muted">No usage data available</p>
           </div>
         ) : (
-          <div className="u-d-flex u-flex-column u-gap-3">
-            {users.map((user, index) => (
-              <div key={user.id} className="u-d-flex u-align-items-center u-gap-3 u-p-2 u-rounded u-bg-secondary-subtle">
+          <div className="u-space-y-3">
+            {displayUsers.map((user, index) => (
+              <div key={user.id} className="u-d-flex u-align-items-center u-gap-3">
                 <div className="u-d-flex u-align-items-center u-gap-2">
-                  <span className="u-fs-sm u-fw-bold u-text-primary-emphasis u-w-6 u-text-center">
-                    #{index + 1}
+                  <span className="u-text-sm u-font-weight-bold u-text-muted u-min-width-6">
+                    {index + 1}
                   </span>
-                  <Avatar
-                    initials={user.name.charAt(0)}
-                    size="sm"
+                  <Avatar 
+                    initials={user.name.split(' ').map(n => n[0]).join('').toUpperCase()} 
+                    size="sm" 
                   />
                 </div>
-                <div className="u-flex-grow-1">
-                  <div className="u-fw-medium u-text-primary-emphasis u-fs-sm">
+                
+                <div className="u-flex-1 u-min-width-0">
+                  <div className="u-text-sm u-font-weight-medium u-truncate">
                     {user.name}
                   </div>
-                  <div className="u-text-secondary-emphasis u-fs-xs">
-                    {user.email} • {user.plan}
+                  <div className="u-text-xs u-text-muted u-truncate">
+                    {user.email}
                   </div>
+                  {user.plan_name && (
+                    <div className="u-text-xs u-text-muted">
+                      {user.plan_name}
+                    </div>
+                  )}
                 </div>
-                <div className="u-text-end">
-                  <div className="u-fw-bold u-text-primary-emphasis u-fs-sm">
-                    {user.usage.toFixed(1)} GB
+                
+                <div className="u-d-flex u-align-items-center u-gap-2">
+                  <div className="u-text-right">
+                    <div className="u-text-sm u-font-weight-medium">
+                      {formatUsage(user.usage, user.usage_unit)}
+                    </div>
+                    <div className="u-text-xs u-text-muted">usage</div>
                   </div>
-                  <div className="u-mt-1">
-                    {getStatusBadge(user.status)}
-                  </div>
+                  {getStatusBadge(user.status)}
                 </div>
               </div>
             ))}

@@ -173,9 +173,9 @@ class Subscription(models.Model):
     def data_remaining(self):
         """Get remaining data quota."""
         if self.plan.is_unlimited:
-            return float('inf')
+            return -1  # Use -1 to indicate unlimited instead of None/inf
         if not self.plan.data_quota:
-            return float('inf')
+            return -1
         remaining = float(self.plan.data_quota) - float(self.data_used)
         return max(0, remaining)
     
@@ -216,3 +216,20 @@ class Subscription(models.Model):
         gb_used = bytes_used / (1024 ** 3)
         self.data_used += gb_used
         self.save()
+    
+    def get_monthly_fee_float(self):
+        """Get monthly fee as float for API responses."""
+        return float(self.monthly_fee)
+    
+    def get_setup_fee_float(self):
+        """Get setup fee as float for API responses."""
+        return float(self.setup_fee)
+    
+    def get_data_used_float(self):
+        """Get data used as float for API responses."""
+        return float(self.data_used)
+    
+    def get_data_remaining_float(self):
+        """Get data remaining as float for API responses."""
+        remaining = self.data_remaining
+        return float(remaining) if remaining is not None else None

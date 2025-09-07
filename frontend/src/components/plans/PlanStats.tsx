@@ -1,140 +1,82 @@
-import React from "react";
-import { Card, Icon } from "@shohojdhara/atomix";
-import { Plan } from "@/types";
-import { Grid, GridCol } from "@shohojdhara/atomix";
+import React from 'react';
+import { Card, Grid, GridCol, Icon } from '@shohojdhara/atomix';
+import { StatCard } from '@/components/molecules/StatCard';
 
-interface PlanStatsProps {
-  plans: Plan[];
+export interface PlanStatsProps {
+  totalPlans: number;
+  activePlans: number;
+  totalSubscriptions: number;
+  totalRevenue: number;
+  isLoading?: boolean;
+  className?: string;
 }
 
-const PlanStats: React.FC<PlanStatsProps> = ({ plans }) => {
-  const stats = React.useMemo(() => {
-    const totalPlans = plans.length;
-    const activePlans = plans.filter((plan) => plan.is_active).length;
-    const featuredPlans = plans.filter((plan) => plan.is_featured).length;
-    const popularPlans = plans.filter((plan) => plan.is_popular).length;
-
-    const totalRevenue = plans.reduce(
-      (sum, plan) => sum + (plan.price || 0),
-      0
-    );
-    const avgPrice = totalPlans > 0 ? totalRevenue / totalPlans : 0;
-
-    const speedRanges = {
-      low: plans.filter((plan) => (plan.download_speed || 0) < 50).length,
-      medium: plans.filter(
-        (plan) =>
-          (plan.download_speed || 0) >= 50 && (plan.download_speed || 0) < 200
-      ).length,
-      high: plans.filter((plan) => (plan.download_speed || 0) >= 200).length,
-    };
-
-    return {
-      totalPlans,
-      activePlans,
-      featuredPlans,
-      popularPlans,
-      totalRevenue,
-      avgPrice,
-      speedRanges,
-    };
-  }, [plans]);
-
+/**
+ * PlanStats Component
+ * 
+ * A component for displaying plan-related statistics.
+ * Built using Atomix Card, Grid, and StatCard components.
+ */
+export const PlanStats: React.FC<PlanStatsProps> = ({
+  totalPlans,
+  activePlans,
+  totalSubscriptions,
+  totalRevenue,
+  isLoading = false,
+  className = '',
+}) => {
   const formatCurrency = (amount: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 0,
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
     }).format(amount);
   };
 
-  const getActivePercentage = () => {
-    return stats.totalPlans > 0
-      ? Math.round((stats.activePlans / stats.totalPlans) * 100)
-      : 0;
-  };
-
   return (
-    <Grid>
-      {/* Total Plans */}
-      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
-        <Card className="u-h-100">
-          <div className="u-d-flex u-align-items-center u-justify-content-between">
-            <div>
-              <div className="u-text-sm u-text-secondary u-mb-1">
-                Total Plans
-              </div>
-              <div className="u-text-2xl u-font-weight-bold">
-                {stats.totalPlans}
-              </div>
-            </div>
-            <div className="u-bg-primary u-p-3 u-border-radius-full">
-              <Icon name="Globe" size={20} className="u-text-white" />
-            </div>
-          </div>
-        </Card>
-      </GridCol>
-
-      {/* Active Plans */}
-      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
-        <Card className="u-h-100">
-          <div className="u-d-flex u-align-items-center u-justify-content-between">
-            <div>
-              <div className="u-text-sm u-text-secondary u-mb-1">
-                Active Plans
-              </div>
-              <div className="u-text-2xl u-font-weight-bold">
-                {stats.activePlans}
-              </div>
-              <div className="u-text-sm u-text-success">
-                {getActivePercentage()}% active
-              </div>
-            </div>
-            <div className="u-bg-success u-p-3 u-border-radius-full">
-              <Icon name="CheckCircle" size={20} className="u-text-white" />
-            </div>
-          </div>
-        </Card>
-      </GridCol>
-      {/* Featured Plans */}
-      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
-        <Card className="u-h-100">
-          <div className="u-d-flex u-align-items-center u-justify-content-between">
-            <div>
-              <div className="u-text-sm u-text-secondary u-mb-1">
-                Featured Plans
-              </div>
-              <div className="u-text-2xl u-font-weight-bold">
-                {stats.featuredPlans}
-              </div>
-            </div>
-            <div className="u-bg-warning u-p-3 u-border-radius-full">
-              <Icon name="Star" size={20} className="u-text-white" />
-            </div>
-          </div>
-        </Card>
-      </GridCol>
-      {/* Average Price */}
-      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
-        <Card className="u-h-100 ">
-          <div className="u-d-flex u-align-items-center u-justify-content-between">
-            <div>
-              <div className="u-text-sm u-text-secondary u-mb-1">
-                Avg. Price
-              </div>
-              <div className="u-text-2xl u-font-weight-bold">
-                {formatCurrency(stats.avgPrice)}
-              </div>
-              <div className="u-text-sm u-text-secondary">per month</div>
-            </div>
-            <div className="u-bg-info u-p-3 u-border-radius-full">
-              <Icon name="CurrencyDollar" size={20} className="u-text-white" />
-            </div>
-          </div>
-        </Card>
-      </GridCol>
-    </Grid>
+    <div className={className}>
+      <Grid>
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Total Plans"
+            value={totalPlans}
+            icon="Lightning"
+            iconColor="#7AFFD7"
+            description="Internet plans available"
+            loading={isLoading}
+          />
+        </GridCol>
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Active Plans"
+            value={activePlans}
+            icon="CheckCircle"
+            iconColor="#10B981"
+            description="Currently active"
+            loading={isLoading}
+          />
+        </GridCol>
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Total Subscriptions"
+            value={totalSubscriptions}
+            icon="Users"
+            iconColor="#3B82F6"
+            description="Active subscriptions"
+            loading={isLoading}
+          />
+        </GridCol>
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Total Revenue"
+            value={formatCurrency(totalRevenue)}
+            icon="CurrencyDollar"
+            iconColor="#F59E0B"
+            description="Monthly recurring revenue"
+            loading={isLoading}
+          />
+        </GridCol>
+      </Grid>
+    </div>
   );
 };
 

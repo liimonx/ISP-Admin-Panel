@@ -1,195 +1,174 @@
-import React, { useState } from 'react';
-import {
-  Card,
-  Button,
-  Input,
-  Select,
-  Checkbox,
-  Icon,
-} from '@shohojdhara/atomix';
+import React from 'react';
+import { Card, Input, Button, Icon } from '@shohojdhara/atomix';
 
-interface PlanFiltersProps {
-  filters: {
-    search: string;
-    status: string;
-    billing_cycle: string;
-    speed_range: string;
-    price_range: string;
-    featured_only: boolean;
-    popular_only: boolean;
-  };
-  onFiltersChange: (filters: any) => void;
+export interface PlanFiltersProps {
+  searchQuery: string;
+  onSearchChange: (query: string) => void;
+  statusFilter: string;
+  onStatusChange: (status: string) => void;
+  billingCycleFilter: string;
+  onBillingCycleChange: (cycle: string) => void;
+  speedRangeFilter: string;
+  onSpeedRangeChange: (range: string) => void;
+  priceRangeFilter: string;
+  onPriceRangeChange: (range: string) => void;
+  featuredOnly: boolean;
+  onFeaturedOnlyChange: (featured: boolean) => void;
+  popularOnly: boolean;
+  onPopularOnlyChange: (popular: boolean) => void;
   onReset: () => void;
+  className?: string;
 }
 
-const PlanFilters: React.FC<PlanFiltersProps> = ({
-  filters,
-  onFiltersChange,
+/**
+ * PlanFilters Component
+ * 
+ * A component for filtering plans with various criteria.
+ * Built using Atomix Card, Input, Button, and Icon components.
+ */
+export const PlanFilters: React.FC<PlanFiltersProps> = ({
+  searchQuery,
+  onSearchChange,
+  statusFilter,
+  onStatusChange,
+  billingCycleFilter,
+  onBillingCycleChange,
+  speedRangeFilter,
+  onSpeedRangeChange,
+  priceRangeFilter,
+  onPriceRangeChange,
+  featuredOnly,
+  onFeaturedOnlyChange,
+  popularOnly,
+  onPopularOnlyChange,
   onReset,
+  className = '',
 }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const handleFilterChange = (key: string, value: any) => {
-    onFiltersChange({
-      ...filters,
-      [key]: value,
-    });
-  };
-
-  const hasActiveFilters = () => {
-    return (
-      filters.search ||
-      filters.status ||
-      filters.billing_cycle ||
-      filters.speed_range ||
-      filters.price_range ||
-      filters.featured_only ||
-      filters.popular_only
-    );
-  };
-
-  const getActiveFiltersCount = () => {
-    let count = 0;
-    if (filters.search) count++;
-    if (filters.status) count++;
-    if (filters.billing_cycle) count++;
-    if (filters.speed_range) count++;
-    if (filters.price_range) count++;
-    if (filters.featured_only) count++;
-    if (filters.popular_only) count++;
-    return count;
-  };
-
   return (
-    <Card className="u-mb-6">
-      <div className="u-space-y-4">
-        {/* Basic Search */}
-        <div className="u-d-flex u-gap-4 u-align-items-end">
-          <div className="u-flex-1">
-            <label className="u-block u-mb-2 u-font-weight-medium">Search Plans</label>
-            <Input
-              type="text"
-              placeholder="Search by name, description, or features..."
-              value={filters.search}
-              onChange={(e) => handleFilterChange('search', e.target.value)}
-            />
-          </div>
+    <Card className={`u-mb-6 ${className}`}>
+      <div className="u-p-4">
+        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+          <h3 className="u-text-lg u-font-semibold">Filter Plans</h3>
           <Button
             variant="outline"
-            size="md"
-            onClick={() => setIsExpanded(!isExpanded)}
+            size="sm"
+            onClick={onReset}
           >
-            <Icon name={isExpanded ? "ChevronUp" : "ChevronDown"} size={16} />
-            {isExpanded ? "Hide" : "Advanced"} Filters
-            {hasActiveFilters() && (
-              <span className="u-bg-primary u-text-white u-px-2 u-py-1 u-border-radius-full u-text-xs u-ml-2">
-                {getActiveFiltersCount()}
-              </span>
-            )}
+            <Icon name="X" size={16} />
+            Clear Filters
           </Button>
         </div>
 
-        {/* Advanced Filters */}
-        {isExpanded && (
-          <div className="u-space-y-4 u-pt-4 u-border-top">
-            <div className="u-grid u-grid-cols-2 u-md:grid-cols-4 u-gap-4">
-              {/* Status Filter */}
-              <div>
-                <label className="u-block u-mb-2 u-font-weight-medium">Status</label>
-                <Select
-                  value={filters.status}
-                  onChange={(value) => handleFilterChange('status', value)}
-                  options={[
-                    { value: '', label: 'All Status' },
-                    { value: 'active', label: 'Active' },
-                    { value: 'inactive', label: 'Inactive' },
-                  ]}
+        <div className="u-grid u-grid-cols-1 u-gap-4 md:u-grid-cols-2 lg:u-grid-cols-3">
+          {/* Search */}
+          <div>
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
+              Search Plans
+            </label>
+            <Input
+              type="text"
+              placeholder="Search by name or description..."
+              value={searchQuery}
+              onChange={(e) => onSearchChange(e.target.value)}
+            />
+          </div>
+
+          {/* Status Filter */}
+          <div>
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
+              Status
+            </label>
+            <select
+              value={statusFilter}
+              onChange={(e) => onStatusChange(e.target.value)}
+              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+            >
+              <option value="">All Status</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+
+          {/* Billing Cycle Filter */}
+          <div>
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
+              Billing Cycle
+            </label>
+            <select
+              value={billingCycleFilter}
+              onChange={(e) => onBillingCycleChange(e.target.value)}
+              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+            >
+              <option value="">All Cycles</option>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="yearly">Yearly</option>
+            </select>
+          </div>
+
+          {/* Speed Range Filter */}
+          <div>
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
+              Speed Range
+            </label>
+            <select
+              value={speedRangeFilter}
+              onChange={(e) => onSpeedRangeChange(e.target.value)}
+              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+            >
+              <option value="">All Speeds</option>
+              <option value="0-10">0-10 Mbps</option>
+              <option value="10-50">10-50 Mbps</option>
+              <option value="50-100">50-100 Mbps</option>
+              <option value="100-500">100-500 Mbps</option>
+              <option value="500+">500+ Mbps</option>
+            </select>
+          </div>
+
+          {/* Price Range Filter */}
+          <div>
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
+              Price Range
+            </label>
+            <select
+              value={priceRangeFilter}
+              onChange={(e) => onPriceRangeChange(e.target.value)}
+              className="u-w-full u-p-2 u-border u-rounded u-bg-white"
+            >
+              <option value="">All Prices</option>
+              <option value="0-25">$0 - $25</option>
+              <option value="25-50">$25 - $50</option>
+              <option value="50-100">$50 - $100</option>
+              <option value="100-200">$100 - $200</option>
+              <option value="200+">$200+</option>
+            </select>
+          </div>
+
+          {/* Special Filters */}
+          <div>
+            <label className="u-block u-text-sm u-font-medium u-mb-2">
+              Special Filters
+            </label>
+            <div className="u-space-y-2">
+              <label className="u-d-flex u-align-items-center u-gap-2">
+                <input
+                  type="checkbox"
+                  checked={featuredOnly}
+                  onChange={(e) => onFeaturedOnlyChange(e.target.checked)}
                 />
-              </div>
-
-              {/* Billing Cycle Filter */}
-              <div>
-                <label className="u-block u-mb-2 u-font-weight-medium">Billing Cycle</label>
-                <Select
-                  value={filters.billing_cycle}
-                  onChange={(value) => handleFilterChange('billing_cycle', value)}
-                  options={[
-                    { value: '', label: 'All Cycles' },
-                    { value: 'monthly', label: 'Monthly' },
-                    { value: 'quarterly', label: 'Quarterly' },
-                    { value: 'yearly', label: 'Yearly' },
-                  ]}
+                <span className="u-text-sm">Featured Only</span>
+              </label>
+              <label className="u-d-flex u-align-items-center u-gap-2">
+                <input
+                  type="checkbox"
+                  checked={popularOnly}
+                  onChange={(e) => onPopularOnlyChange(e.target.checked)}
                 />
-              </div>
-
-              {/* Speed Range Filter */}
-              <div>
-                <label className="u-block u-mb-2 u-font-weight-medium">Speed Range</label>
-                <Select
-                  value={filters.speed_range}
-                  onChange={(value) => handleFilterChange('speed_range', value)}
-                  options={[
-                    { value: '', label: 'All Speeds' },
-                    { value: 'low', label: 'Low (< 50 Mbps)' },
-                    { value: 'medium', label: 'Medium (50-200 Mbps)' },
-                    { value: 'high', label: 'High (> 200 Mbps)' },
-                  ]}
-                />
-              </div>
-
-              {/* Price Range Filter */}
-              <div>
-                <label className="u-block u-mb-2 u-font-weight-medium">Price Range</label>
-                <Select
-                  value={filters.price_range}
-                  onChange={(value) => handleFilterChange('price_range', value)}
-                  options={[
-                    { value: '', label: 'All Prices' },
-                    { value: 'low', label: 'Low (< $50)' },
-                    { value: 'medium', label: 'Medium ($50-$100)' },
-                    { value: 'high', label: 'High (> $100)' },
-                  ]}
-                />
-              </div>
-            </div>
-
-            {/* Checkbox Filters */}
-            <div className="u-d-flex u-gap-6 u-flex-wrap">
-              <Checkbox
-                checked={filters.featured_only}
-                onChange={(checked) => handleFilterChange('featured_only', checked)}
-                label="Featured Plans Only"
-              />
-              <Checkbox
-                checked={filters.popular_only}
-                onChange={(checked) => handleFilterChange('popular_only', checked)}
-                label="Popular Plans Only"
-              />
-            </div>
-
-            {/* Filter Actions */}
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-pt-4 u-border-top">
-              <div className="u-text-sm u-text-secondary">
-                {hasActiveFilters() ? (
-                  `${getActiveFiltersCount()} filter${getActiveFiltersCount() !== 1 ? 's' : ''} active`
-                ) : (
-                  'No filters applied'
-                )}
-              </div>
-              <div className="u-d-flex u-gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={onReset}
-                  disabled={!hasActiveFilters()}
-                >
-                  <Icon name="X" size={16} />
-                  Clear Filters
-                </Button>
-              </div>
+                <span className="u-text-sm">Popular Only</span>
+              </label>
             </div>
           </div>
-        )}
+        </div>
       </div>
     </Card>
   );

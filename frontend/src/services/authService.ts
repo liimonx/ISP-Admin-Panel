@@ -144,6 +144,31 @@ class AuthService {
     }
   }
 
+  async getTokenPair(username: string, password: string): Promise<AuthTokens> {
+    try {
+      const response = await axios.post(`${API_BASE_URL}/auth/token/`, {
+        username,
+        password,
+      });
+
+      // Handle both old and new response formats
+      let tokens: AuthTokens;
+      if (response.data.success !== undefined) {
+        // New standardized format
+        const data = this.handleResponse<AuthTokens>(response);
+        tokens = data;
+      } else {
+        // Legacy format
+        tokens = this.handleLegacyResponse<AuthTokens>(response);
+      }
+
+      this.saveTokensToStorage(tokens);
+      return tokens;
+    } catch (error: any) {
+      throw this.handleApiError(error);
+    }
+  }
+
   async refreshAccessToken(): Promise<void> {
     if (!this.refreshToken) {
       throw new Error("No refresh token available");

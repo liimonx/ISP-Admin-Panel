@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { authService } from './authService';
 
 const API_BASE_URL = "/api";
 
@@ -10,9 +11,7 @@ class DownloadService {
         `${API_BASE_URL}/billing/invoices/${invoiceId}/download/`,
         {
           responseType: 'blob',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-          },
+          withCredentials: true, // Use httpOnly cookies instead of localStorage
         }
       );
 
@@ -36,12 +35,10 @@ class DownloadService {
   async downloadPaymentReceipt(paymentId: number): Promise<void> {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/billing/payments/${paymentId}/receipt/`,
+        `${API_BASE_URL}/payments/payments/${paymentId}/receipt/`,
         {
           responseType: 'blob',
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-          },
+          withCredentials: true, // Use httpOnly cookies instead of localStorage
         }
       );
 
@@ -69,9 +66,7 @@ class DownloadService {
         {
           responseType: 'blob',
           params: { ...filters, format },
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-          },
+          withCredentials: true, // Use httpOnly cookies instead of localStorage
         }
       );
 
@@ -95,13 +90,11 @@ class DownloadService {
   async exportPayments(filters: any = {}, format: 'csv' | 'excel' = 'csv'): Promise<void> {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/billing/payments/export/`,
+        `${API_BASE_URL}/payments/payments/export/`,
         {
           responseType: 'blob',
           params: { ...filters, format },
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-          },
+          withCredentials: true, // Use httpOnly cookies instead of localStorage
         }
       );
 
@@ -125,13 +118,11 @@ class DownloadService {
   async downloadBillingReport(dateFrom: string, dateTo: string, format: 'pdf' | 'csv' | 'excel' = 'pdf'): Promise<void> {
     try {
       const response = await axios.get(
-        `${API_BASE_URL}/billing/reports/`,
+        `${API_BASE_URL}/reports/revenue/`,
         {
           responseType: 'blob',
           params: { date_from: dateFrom, date_to: dateTo, format },
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
-          },
+          withCredentials: true, // Use httpOnly cookies instead of localStorage
         }
       );
 

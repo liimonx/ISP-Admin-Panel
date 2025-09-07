@@ -5,21 +5,27 @@ from plans.serializers import PlanListSerializer
 from network.serializers import RouterListSerializer
 
 
-class SubscriptionSerializer(serializers.ModelSerializer):
+class SubscriptionSerializer(serializers.Serializer):
     """Serializer for Subscription model."""
     
-    class Meta:
-        model = Subscription
-        fields = [
-            'id', 'customer', 'plan', 'router', 'username', 'password',
-            'access_method', 'static_ip', 'mac_address', 'status',
-            'start_date', 'end_date', 'monthly_fee', 'setup_fee',
-            'data_used', 'data_reset_date', 'notes', 'created_at', 'updated_at'
-        ]
-        read_only_fields = ['id', 'created_at', 'updated_at']
-        extra_kwargs = {
-            'password': {'write_only': True}
-        }
+    id = serializers.IntegerField(read_only=True)
+    customer = serializers.IntegerField(read_only=True)
+    plan = serializers.IntegerField(read_only=True)
+    router = serializers.IntegerField(read_only=True)
+    username = serializers.CharField(read_only=True)
+    access_method = serializers.CharField(read_only=True)
+    static_ip = serializers.IPAddressField(read_only=True, allow_null=True)
+    mac_address = serializers.CharField(read_only=True, allow_null=True)
+    status = serializers.CharField(read_only=True)
+    start_date = serializers.DateField(read_only=True)
+    end_date = serializers.DateField(read_only=True, allow_null=True)
+    monthly_fee = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    setup_fee = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    data_used = serializers.DecimalField(max_digits=15, decimal_places=2, read_only=True)
+    data_reset_date = serializers.DateField(read_only=True, allow_null=True)
+    notes = serializers.CharField(read_only=True, allow_null=True)
+    created_at = serializers.DateTimeField(read_only=True)
+    updated_at = serializers.DateTimeField(read_only=True)
 
 
 class SubscriptionCreateSerializer(serializers.ModelSerializer):
@@ -76,30 +82,22 @@ class SubscriptionUpdateSerializer(serializers.ModelSerializer):
         return value
 
 
-class SubscriptionListSerializer(serializers.ModelSerializer):
+class SubscriptionListSerializer(serializers.Serializer):
     """Serializer for subscription list view with summary information."""
     
-    customer_name = serializers.CharField(source='customer.name', read_only=True)
-    plan_name = serializers.CharField(source='plan.name', read_only=True)
-    router_name = serializers.CharField(source='router.name', read_only=True)
-    is_active = serializers.BooleanField(read_only=True)
-    is_suspended = serializers.BooleanField(read_only=True)
-    is_expired = serializers.BooleanField(read_only=True)
-    days_remaining = serializers.IntegerField(read_only=True)
-    data_remaining = serializers.FloatField(read_only=True)
-    data_usage_percentage = serializers.FloatField(read_only=True)
+    id = serializers.IntegerField(read_only=True)
+    customer = serializers.IntegerField(read_only=True)
+    plan = serializers.IntegerField(read_only=True)
+    router = serializers.IntegerField(read_only=True)
+    username = serializers.CharField(read_only=True)
+    access_method = serializers.CharField(read_only=True)
+    status = serializers.CharField(read_only=True)
+    start_date = serializers.DateField(read_only=True)
+    end_date = serializers.DateField(read_only=True, allow_null=True)
+    monthly_fee = serializers.DecimalField(max_digits=10, decimal_places=2, read_only=True)
+    data_used = serializers.DecimalField(max_digits=15, decimal_places=2, read_only=True)
+    created_at = serializers.DateTimeField(read_only=True)
     
-    class Meta:
-        model = Subscription
-        fields = [
-            'id', 'customer', 'customer_name', 'plan', 'plan_name',
-            'router', 'router_name', 'username', 'access_method',
-            'status', 'start_date', 'end_date', 'monthly_fee',
-            'data_used', 'is_active', 'is_suspended', 'is_expired',
-            'days_remaining', 'data_remaining', 'data_usage_percentage',
-            'created_at'
-        ]
-        read_only_fields = ['id', 'created_at']
 
 
 class SubscriptionDetailSerializer(serializers.ModelSerializer):
@@ -111,9 +109,9 @@ class SubscriptionDetailSerializer(serializers.ModelSerializer):
     is_active = serializers.BooleanField(read_only=True)
     is_suspended = serializers.BooleanField(read_only=True)
     is_expired = serializers.BooleanField(read_only=True)
-    days_remaining = serializers.IntegerField(read_only=True)
-    data_remaining = serializers.FloatField(read_only=True)
-    data_usage_percentage = serializers.FloatField(read_only=True)
+    monthly_fee_float = serializers.SerializerMethodField()
+    setup_fee_float = serializers.SerializerMethodField()
+    data_used_float = serializers.SerializerMethodField()
     
     class Meta:
         model = Subscription
@@ -122,13 +120,26 @@ class SubscriptionDetailSerializer(serializers.ModelSerializer):
             'access_method', 'static_ip', 'mac_address', 'status',
             'start_date', 'end_date', 'monthly_fee', 'setup_fee',
             'data_used', 'data_reset_date', 'notes', 'is_active',
-            'is_suspended', 'is_expired', 'days_remaining',
-            'data_remaining', 'data_usage_percentage', 'created_at', 'updated_at'
+            'is_suspended', 'is_expired', 'monthly_fee_float',
+            'setup_fee_float', 'data_used_float', 'created_at', 'updated_at'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
         extra_kwargs = {
             'password': {'write_only': True}
         }
+    
+    def get_monthly_fee_float(self, obj):
+        """Get monthly fee as float."""
+        return obj.get_monthly_fee_float()
+    
+    def get_setup_fee_float(self, obj):
+        """Get setup fee as float."""
+        return obj.get_setup_fee_float()
+    
+    def get_data_used_float(self, obj):
+        """Get data used as float."""
+        return obj.get_data_used_float()
+    
 
 
 class SubscriptionStatusUpdateSerializer(serializers.Serializer):

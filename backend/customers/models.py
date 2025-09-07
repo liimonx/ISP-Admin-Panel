@@ -91,3 +91,11 @@ class Customer(models.Model):
         """Calculate total monthly bill from active subscriptions."""
         active_subs = self.get_active_subscriptions()
         return sum(sub.plan.price for sub in active_subs)
+    
+    def get_subscriptions_count(self):
+        """Get total number of subscriptions for this customer."""
+        return self.subscriptions.count()
+    
+    def get_active_subscriptions_count(self):
+        """Get count of active subscriptions for this customer."""
+        return self.subscriptions.filter(status='active').count()

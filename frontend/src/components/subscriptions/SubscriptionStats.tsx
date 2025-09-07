@@ -1,118 +1,97 @@
-import React from "react";
-import { Card, Icon } from "@shohojdhara/atomix";
-import { Subscription } from "../../types";
+import React from 'react';
+import { Card, Grid, GridCol } from '@shohojdhara/atomix';
+import { StatCard } from '@/components/molecules/StatCard';
 
-interface SubscriptionStatsProps {
-  subscriptions: Subscription[];
+export interface SubscriptionStatsProps {
+  totalSubscriptions: number;
+  activeSubscriptions: number;
+  pendingSubscriptions: number;
+  suspendedSubscriptions: number;
+  totalRevenue: number;
   isLoading?: boolean;
+  className?: string;
 }
 
-const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
-  subscriptions,
-  isLoading,
+/**
+ * SubscriptionStats Component
+ * 
+ * A component for displaying subscription-related statistics.
+ * Built using Atomix Card, Grid, and StatCard components.
+ */
+export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
+  totalSubscriptions,
+  activeSubscriptions,
+  pendingSubscriptions,
+  suspendedSubscriptions,
+  totalRevenue,
+  isLoading = false,
+  className = '',
 }) => {
-  const stats = React.useMemo(() => {
-    if (!subscriptions.length) {
-      return {
-        total: 0,
-        active: 0,
-        suspended: 0,
-        cancelled: 0,
-        pending: 0,
-        totalRevenue: 0,
-      };
-    }
-
-    return subscriptions.reduce(
-      (acc, sub) => {
-        acc.total++;
-        acc[sub.status]++;
-        if (sub.status === "active") {
-          acc.totalRevenue += Number(sub.monthly_fee) || 0;
-        }
-        return acc;
-      },
-      {
-        total: 0,
-        active: 0,
-        suspended: 0,
-        cancelled: 0,
-        pending: 0,
-        totalRevenue: 0,
-      }
-    );
-  }, [subscriptions]);
-
-  const statCards = [
-    {
-      title: "Total Subscriptions",
-      value: stats.total,
-      icon: "Users",
-      color: "primary",
-      bgClass: "u-bg-primary-subtle",
-      textClass: "u-text-primary-emphasis",
-    },
-    {
-      title: "Active",
-      value: stats.active,
-      icon: "CheckCircle",
-      color: "success",
-      bgClass: "u-bg-success-subtle",
-      textClass: "u-text-success-emphasis",
-    },
-    {
-      title: "Suspended",
-      value: stats.suspended,
-      icon: "Pause",
-      color: "warning",
-      bgClass: "u-bg-warning-subtle",
-      textClass: "u-text-warning-emphasis",
-    },
-    {
-      title: "Monthly Revenue",
-      value: `$${stats.totalRevenue.toFixed(2)}`,
-      icon: "CurrencyDollar",
-      color: "info",
-      bgClass: "u-bg-info-subtle",
-      textClass: "u-text-info-emphasis",
-    },
-  ];
-
-  if (isLoading) {
-    return (
-      <div className="u-d-grid u-gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
-        {[1, 2, 3, 4].map((i) => (
-          <Card key={i} className="u-p-4">
-            <div className="u-d-flex u-align-items-center u-gap-3">
-              <div className="u-bg-secondary-subtle u-rounded-circle u-p-3">
-                <div className="u-w-6 u-h-6 u-bg-secondary u-rounded"></div>
-              </div>
-              <div className="u-flex-grow-1">
-                <div className="u-bg-secondary u-rounded u-h-4 u-mb-2" style={{ width: "60%" }}></div>
-                <div className="u-bg-secondary u-rounded u-h-6" style={{ width: "40%" }}></div>
-              </div>
-            </div>
-          </Card>
-        ))}
-      </div>
-    );
-  }
+  const formatCurrency = (amount: number) => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'USD',
+    }).format(amount);
+  };
 
   return (
-    <div className="u-d-grid u-gap-4" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
-      {statCards.map((stat, index) => (
-        <Card key={index} className="u-p-4 u-border-0 u-shadow-sm">
-          <div className="u-d-flex u-align-items-center u-gap-3">
-            <div className={`${stat.bgClass} u-rounded-circle u-p-3 u-d-flex u-align-items-center u-justify-content-center`}>
-              <Icon name={stat.icon as any} size={24} className={stat.textClass} />
-            </div>
-            <div className="u-flex-grow-1">
-              <p className="u-text-secondary-emphasis u-fs-sm u-mb-1">{stat.title}</p>
-              <h3 className="u-fs-2 u-fw-bold u-mb-0 u-text-primary-emphasis">{stat.value}</h3>
-            </div>
-          </div>
-        </Card>
-      ))}
+    <div className={className}>
+      <Grid>
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Total Subscriptions"
+            value={totalSubscriptions}
+            icon="CreditCard"
+            iconColor="#7AFFD7"
+            description="All subscriptions"
+            loading={isLoading}
+          />
+        </GridCol>
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Active Subscriptions"
+            value={activeSubscriptions}
+            icon="CheckCircle"
+            iconColor="#10B981"
+            description="Currently active"
+            loading={isLoading}
+          />
+        </GridCol>
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Pending Subscriptions"
+            value={pendingSubscriptions}
+            icon="Clock"
+            iconColor="#F59E0B"
+            description="Awaiting activation"
+            loading={isLoading}
+          />
+        </GridCol>
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Suspended Subscriptions"
+            value={suspendedSubscriptions}
+            icon="XCircle"
+            iconColor="#EF4444"
+            description="Temporarily suspended"
+            loading={isLoading}
+          />
+        </GridCol>
+      </Grid>
+
+      {/* Revenue Card */}
+      <Grid className="u-mt-4">
+        <GridCol xs={12} md={6} lg={3}>
+          <StatCard
+            title="Monthly Revenue"
+            value={formatCurrency(totalRevenue)}
+            icon="CurrencyDollar"
+            iconColor="#8B5CF6"
+            description="From active subscriptions"
+            loading={isLoading}
+          />
+        </GridCol>
+      </Grid>
     </div>
   );
 };

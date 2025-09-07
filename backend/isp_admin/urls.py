@@ -41,6 +41,7 @@ urlpatterns = [
     path('api/monitoring/', include('monitoring.urls')),
     path('api/payments/', include('payments.urls')),
     path('api/reports/', include('reports.urls')),
+    path('api/core/', include('core.urls')),
 ]
 
 # Serve static and media files in development
