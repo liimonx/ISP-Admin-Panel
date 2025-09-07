@@ -6,6 +6,7 @@ import {
   Textarea,
   Callout,
   Spinner,
+  Select,
 } from '@shohojdhara/atomix';
 import { Customer, Subscription } from '../../types';
 import { apiService } from '../../services/apiService';
@@ -190,7 +191,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
           <label htmlFor="customer_id" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
             Customer *
           </label>
-          <select
+          <Select
             id="customer_id"
             value={formData.customer_id}
             onChange={(e) => {
@@ -204,17 +205,17 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
                 setErrors(prev => ({ ...prev, customer_id: '' }));
               }
             }}
-            className="u-w-100 u-p-3 u-border u-rounded"
+            className="u-w-100"
             required
             disabled={loadingCustomers}
-          >
-            <option value={0}>Select Customer</option>
-            {customers.map(customer => (
-              <option key={customer.id} value={customer.id}>
-                {customer.name} - {customer.email}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: 0, label: "Select Customer" },
+              ...customers.map(customer => ({
+                value: customer.id,
+                label: `${customer.name} - ${customer.email}`
+              }))
+            ]}
+          />
           {loadingCustomers && <Spinner size="sm" className="u-mt-2" />}
           {errors.customer_id && (
             <p className="u-fs-xs u-text-error u-mt-1">{errors.customer_id}</p>
@@ -225,23 +226,23 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
           <label htmlFor="subscription_id" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
             Subscription (Optional)
           </label>
-          <select
+          <Select
             id="subscription_id"
             value={formData.subscription_id}
             onChange={(e) => {
               const subscriptionId = parseInt(e.target.value);
               setFormData(prev => ({ ...prev, subscription_id: subscriptionId }));
             }}
-            className="u-w-100 u-p-3 u-border u-rounded"
+            className="u-w-100"
             disabled={!formData.customer_id || loadingSubscriptions}
-          >
-            <option value={0}>No Subscription</option>
-            {subscriptions.map(subscription => (
-              <option key={subscription.id} value={subscription.id}>
-                {subscription.plan.name} - {formatCurrency(subscription.monthly_fee)}
-              </option>
-            ))}
-          </select>
+            options={[
+              { value: 0, label: "No Subscription" },
+              ...subscriptions.map(subscription => ({
+                value: subscription.id,
+                label: `${subscription.plan.name} - ${formatCurrency(subscription.monthly_fee)}`
+              }))
+            ]}
+          />
           {loadingSubscriptions && <Spinner size="sm" className="u-mt-2" />}
         </div>
 
@@ -249,7 +250,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
           <label htmlFor="invoice_type" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
             Invoice Type *
           </label>
-          <select
+          <Select
             id="invoice_type"
             value={formData.invoice_type}
             onChange={(e) => {
@@ -261,15 +262,10 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
                 setErrors(prev => ({ ...prev, invoice_type: '' }));
               }
             }}
-            className="u-w-100 u-p-3 u-border u-rounded"
+            className="u-w-100"
             required
-          >
-            {invoiceTypes.map(type => (
-              <option key={type.value} value={type.value}>
-                {type.label}
-              </option>
-            ))}
-          </select>
+            options={invoiceTypes}
+          />
           {errors.invoice_type && (
             <p className="u-fs-xs u-text-error u-mt-1">{errors.invoice_type}</p>
           )}

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, Button, Icon, Callout } from "@shohojdhara/atomix";
+import { Card, Button, Icon, Callout, Select } from "@shohojdhara/atomix";
 import { apiService } from "../services/apiService";
 import { UsageWidget, UsageChart, TopUsersWidget } from "../components/reports";
 
@@ -100,35 +100,35 @@ const Reports: React.FC = () => {
               <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
                 Report Type
               </label>
-              <select
+              <Select
                 value={reportType}
                 onChange={(e) => setReportType(e.target.value)}
-                className="form-select"
-                style={{ minWidth: "160px" }}
-              >
-                <option value="usage">Usage Reports</option>
-                <option value="revenue">Revenue Reports</option>
-                <option value="customers">Customer Reports</option>
-                <option value="network">Network Reports</option>
-              </select>
+                className="u-min-w-40"
+                options={[
+                  { value: "usage", label: "Usage Reports" },
+                  { value: "revenue", label: "Revenue Reports" },
+                  { value: "customers", label: "Customer Reports" },
+                  { value: "network", label: "Network Reports" }
+                ]}
+              />
             </div>
 
             <div>
               <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
                 Time Range
               </label>
-              <select
+              <Select
                 value={timeRange}
                 onChange={(e) => setTimeRange(e.target.value)}
-                className="form-select"
-                style={{ minWidth: "140px" }}
-              >
-                <option value="daily">Daily</option>
-                <option value="weekly">Weekly</option>
-                <option value="monthly">Monthly</option>
-                <option value="quarterly">Quarterly</option>
-                <option value="yearly">Yearly</option>
-              </select>
+                className="u-min-w-36"
+                options={[
+                  { value: "daily", label: "Daily" },
+                  { value: "weekly", label: "Weekly" },
+                  { value: "monthly", label: "Monthly" },
+                  { value: "quarterly", label: "Quarterly" },
+                  { value: "yearly", label: "Yearly" }
+                ]}
+              />
             </div>
 
             <div>

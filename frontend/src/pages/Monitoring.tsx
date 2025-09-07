@@ -13,6 +13,7 @@ import {
   DonutChart,
   Modal,
   Callout,
+  Select,
   Spinner,
 } from "@shohojdhara/atomix";
 import { Router } from "@/types";
@@ -198,16 +199,17 @@ const Monitoring: React.FC = () => {
               {autoRefresh ? "Pause" : "Resume"}
             </Button>
           </div>
-          <select
+          <Select
             value={selectedTimeRange}
             onChange={(e) => setSelectedTimeRange(e.target.value)}
-            className="u-p-2 u-border u-rounded"
-          >
-            <option value="1h">Last Hour</option>
-            <option value="24h">Last 24 Hours</option>
-            <option value="7d">Last 7 Days</option>
-            <option value="30d">Last 30 Days</option>
-          </select>
+            className="u-p-2"
+            options={[
+              { value: "1h", label: "Last Hour" },
+              { value: "24h", label: "Last 24 Hours" },
+              { value: "7d", label: "Last 7 Days" },
+              { value: "30d", label: "Last 30 Days" }
+            ]}
+          />
           <Button
             variant="outline"
             size="md"

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   SideMenu,
   SideMenuList,
@@ -8,6 +8,7 @@ import {
   Button,
   Avatar,
   IconProps,
+  Tooltip,
 } from "@shohojdhara/atomix";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -33,6 +34,9 @@ interface MenuItem {
     variant: "primary" | "secondary" | "success" | "warning" | "error";
   };
   children?: MenuItem[];
+  disabled?: boolean;
+  tooltip?: string;
+  category?: string;
 }
 
 const menuItems: MenuItem[] = [
@@ -41,33 +45,48 @@ const menuItems: MenuItem[] = [
     label: "Dashboard",
     icon: "ChartBar",
     path: "/",
+    category: "main",
+    tooltip: "Overview and analytics",
   },
   {
     id: "customers",
     label: "Customers",
     icon: "Users",
     path: "/customers",
+    category: "main",
     badge: {
       text: "245",
       variant: "primary",
     },
+    tooltip: "Customer management",
   },
   {
     id: "services",
     label: "Services",
     icon: "Globe",
+    category: "services",
+    tooltip: "Service management",
     children: [
       {
         id: "plans",
         label: "Internet Plans",
         icon: "Lightning",
         path: "/plans",
+        tooltip: "Manage internet plans",
       },
       {
         id: "subscriptions",
         label: "Subscriptions",
         icon: "CreditCard",
         path: "/subscriptions",
+        tooltip: "Active subscriptions",
+      },
+      {
+        id: "router-management",
+        label: "Router Management",
+        icon: "Router",
+        path: "/routers",
+        tooltip: "Manage network routers",
       },
     ],
   },
@@ -75,6 +94,8 @@ const menuItems: MenuItem[] = [
     id: "network",
     label: "Network",
     icon: "Share",
+    category: "network",
+    tooltip: "Network operations",
     children: [
       {
         id: "monitoring",
@@ -85,12 +106,21 @@ const menuItems: MenuItem[] = [
           text: "3",
           variant: "warning",
         },
+        tooltip: "Network monitoring",
       },
       {
         id: "devices",
         label: "Network Devices",
         icon: "DeviceMobile",
         path: "/network",
+        tooltip: "Network device management",
+      },
+      {
+        id: "main-router",
+        label: "Main Router",
+        icon: "Router",
+        path: "/main-router",
+        tooltip: "Main router dashboard",
       },
     ],
   },
@@ -99,23 +129,29 @@ const menuItems: MenuItem[] = [
     label: "Billing",
     icon: "Receipt",
     path: "/billing",
+    category: "financial",
+    tooltip: "Billing and payments",
   },
   {
     id: "reports",
     label: "Reports",
     icon: "ChartPie",
+    category: "analytics",
+    tooltip: "Reports and analytics",
     children: [
       {
         id: "usage",
         label: "Usage Reports",
         icon: "ChartLine",
         path: "/reports/usage",
+        tooltip: "Usage analytics",
       },
       {
         id: "revenue",
         label: "Revenue Reports",
         icon: "CurrencyDollar",
         path: "/reports/revenue",
+        tooltip: "Revenue analytics",
       },
     ],
   },
@@ -123,18 +159,22 @@ const menuItems: MenuItem[] = [
     id: "settings",
     label: "Settings",
     icon: "Gear",
+    category: "system",
+    tooltip: "System configuration",
     children: [
       {
         id: "users",
         label: "User Management",
         icon: "PersonPlus",
         path: "/users",
+        tooltip: "Manage system users",
       },
       {
         id: "system",
         label: "System Settings",
         icon: "Wrench",
         path: "/settings/system",
+        tooltip: "System configuration",
       },
     ],
   },
@@ -160,6 +200,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
     "services",
     "network",
   ]);
+
+  // Auto-expand sections based on current route
+  useEffect(() => {
+    const currentPath = location.pathname;
+    const newExpandedSections: string[] = [];
+    
+    menuItems.forEach((item) => {
+      if (item.children) {
+        const hasActiveChild = item.children.some(
+          (child) => child.path === currentPath
+        );
+        if (hasActiveChild) {
+          newExpandedSections.push(item.id);
+        }
+      }
+    });
+    
+    if (newExpandedSections.length > 0) {
+      setExpandedSections(newExpandedSections);
+    }
+  }, [location.pathname]);
 
   const isActive = (path: string) => {
     return location.pathname === path;
@@ -192,24 +253,42 @@ export const Sidebar: React.FC<SidebarProps> = ({
       ? isActive(item.path)
       : hasChildren && isParentActive(item.children!);
 
+    const menuItemContent = (
+      <SideMenuItem
+        icon={<Icon name={item.icon as any} size={20} />}
+        active={active}
+        onClick={() => handleMenuClick(item)}
+        disabled={item.disabled}
+        className={`${level > 0 ? "u-ps-8" : ""} ${collapsed ? "u-justify-content-center" : ""} u-mb-1`}
+      >
+        {!collapsed && item.label}
+        {!collapsed && hasChildren && (
+          <Icon
+            name={isExpanded ? "CaretDown" : "CaretRight"}
+            size={16}
+            className="u-text-muted"
+          />
+        )}
+        {!collapsed && item.badge && (
+          <Badge
+            variant={item.badge.variant}
+            size="sm"
+            label={item.badge.text}
+          />
+        )}
+      </SideMenuItem>
+    );
+
     if (hasChildren) {
       return (
-        <div key={item.id} className="u-mb-1">
-          <SideMenuItem
-            icon={<Icon name={item.icon as any} size={20} />}
-            active={active}
-            onClick={() => handleMenuClick(item)}
-            className={`${level > 0 ? "u-ps-8" : ""} ${collapsed ? "u-justify-content-center" : ""}`}
-          >
-            {!collapsed && item.label}
-            {!collapsed && (
-              <Icon
-                name={isExpanded ? "CaretDown" : "CaretRight"}
-                size={16}
-                className="u-text-muted"
-              />
-            )}
-          </SideMenuItem>
+        <div key={item.id}>
+          {collapsed && item.tooltip ? (
+            <Tooltip content={item.tooltip}>
+              {menuItemContent}
+            </Tooltip>
+          ) : (
+            menuItemContent
+          )}
 
           {!collapsed && isExpanded && (
             <SideMenuList className="u-ps-4 u-mt-1">
@@ -221,22 +300,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
     }
 
     return (
-      <SideMenuItem
-        key={item.id}
-        icon={<Icon name={item.icon as any} size={20} />}
-        active={active}
-        onClick={() => handleMenuClick(item)}
-        className={`${level > 0 ? "u-ps-8" : ""} ${collapsed ? "u-justify-content-center" : ""} u-mb-1`}
-      >
-        {!collapsed && item.label}
-        {!collapsed && item.badge && (
-          <Badge
-            variant={item.badge.variant}
-            size="sm"
-            label={item.badge.text}
-          />
+      <div key={item.id}>
+        {collapsed && item.tooltip ? (
+          <Tooltip content={item.tooltip}>
+            {menuItemContent}
+          </Tooltip>
+        ) : (
+          menuItemContent
         )}
-      </SideMenuItem>
+      </div>
     );
   };
 
@@ -279,15 +351,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {user && (
         <div className={`u-p-4 u-border-bottom ${collapsed ? 'u-text-center' : ''}`}>
           {collapsed ? (
-            <Avatar
-              src={user.avatar}
-              alt={user.name}
-              size="sm"
-              initials={user.name?.charAt(0)?.toUpperCase() || '?'}
-              className="u-mx-auto"
-            />
+            <Tooltip content={`${user.name} (${user.role || 'User'})`}>
+              <Avatar
+                src={user.avatar}
+                alt={user.name}
+                size="sm"
+                initials={user.name?.charAt(0)?.toUpperCase() || '?'}
+                className="u-mx-auto u-cursor-pointer"
+              />
+            </Tooltip>
           ) : (
-            <div className="u-d-flex u-align-items-center u-gap-3">
+            <div className="u-d-flex u-align-items-center u-gap-3 u-cursor-pointer u-p-2 u-rounded u-hover-bg-light u-w-100 u-justify-content-start">
               <Avatar
                 src={user.avatar}
                 alt={user.name}
@@ -304,6 +378,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   </div>
                 )}
               </div>
+              <Icon name="CaretDown" size={12} className="u-text-muted" />
             </div>
           )}
         </div>
@@ -311,9 +386,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Navigation Menu */}
       <div className="u-flex-1 u-overflow-y-auto u-py-2">
-        <SideMenu >
+        <SideMenu>
           <SideMenuList>
-            {menuItems.map((item) => renderMenuItem(item))}
+            {menuItems.map((item, index) => {
+              const showDivider = index > 0 && 
+                item.category !== menuItems[index - 1].category &&
+                !collapsed;
+              
+              return (
+                <React.Fragment key={item.id}>
+                  {showDivider && (
+                    <div className="u-my-2 u-border-top u-border-light" />
+                  )}
+                  {renderMenuItem(item)}
+                </React.Fragment>
+              );
+            })}
           </SideMenuList>
         </SideMenu>
       </div>
@@ -321,13 +409,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Footer */}
       <div className="u-p-4 u-border-top u-mt-auto">
         {!collapsed ? (
-          <div className="u-d-flex u-align-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
-            <Icon name="Info" size={14} />
-            <span>BCN ISP v1.0.0</span>
+          <div className="u-d-flex u-flex-column u-gap-2">
+            <div className="u-d-flex u-align-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
+              <Icon name="Info" size={14} />
+              <span>BCN ISP v1.0.0</span>
+            </div>
+            <div className="u-d-flex u-align-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
+              <Icon name="Globe" size={12} />
+              <span>System Online</span>
+            </div>
           </div>
         ) : (
           <div className="u-d-flex u-justify-content-center">
-            <Icon name="Info" size={16} className="u-text-secondary-emphasis" />
+            <Tooltip content="BCN ISP v1.0.0 - System Online">
+              <Icon name="Info" size={16} className="u-text-secondary-emphasis" />
+            </Tooltip>
           </div>
         )}
       </div>

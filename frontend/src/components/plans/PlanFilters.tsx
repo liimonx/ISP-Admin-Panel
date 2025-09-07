@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Input, Button, Icon } from '@shohojdhara/atomix';
+import { Card, Input, Button, Icon, Select } from '@shohojdhara/atomix';
 
 export interface PlanFiltersProps {
   searchQuery: string;
@@ -78,15 +78,16 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Status
             </label>
-            <select
+            <Select
               value={statusFilter}
               onChange={(e) => onStatusChange(e.target.value)}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="">All Status</option>
-              <option value="active">Active</option>
-              <option value="inactive">Inactive</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "", label: "All Status" },
+                { value: "active", label: "Active" },
+                { value: "inactive", label: "Inactive" }
+              ]}
+            />
           </div>
 
           {/* Billing Cycle Filter */}
@@ -94,16 +95,17 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Billing Cycle
             </label>
-            <select
+            <Select
               value={billingCycleFilter}
               onChange={(e) => onBillingCycleChange(e.target.value)}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="">All Cycles</option>
-              <option value="monthly">Monthly</option>
-              <option value="quarterly">Quarterly</option>
-              <option value="yearly">Yearly</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "", label: "All Cycles" },
+                { value: "monthly", label: "Monthly" },
+                { value: "quarterly", label: "Quarterly" },
+                { value: "yearly", label: "Yearly" }
+              ]}
+            />
           </div>
 
           {/* Speed Range Filter */}
@@ -111,18 +113,19 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Speed Range
             </label>
-            <select
+            <Select
               value={speedRangeFilter}
               onChange={(e) => onSpeedRangeChange(e.target.value)}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="">All Speeds</option>
-              <option value="0-10">0-10 Mbps</option>
-              <option value="10-50">10-50 Mbps</option>
-              <option value="50-100">50-100 Mbps</option>
-              <option value="100-500">100-500 Mbps</option>
-              <option value="500+">500+ Mbps</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "", label: "All Speeds" },
+                { value: "0-10", label: "0-10 Mbps" },
+                { value: "10-50", label: "10-50 Mbps" },
+                { value: "50-100", label: "50-100 Mbps" },
+                { value: "100-500", label: "100-500 Mbps" },
+                { value: "500+", label: "500+ Mbps" }
+              ]}
+            />
           </div>
 
           {/* Price Range Filter */}
@@ -130,18 +133,19 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Price Range
             </label>
-            <select
+            <Select
               value={priceRangeFilter}
               onChange={(e) => onPriceRangeChange(e.target.value)}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="">All Prices</option>
-              <option value="0-25">$0 - $25</option>
-              <option value="25-50">$25 - $50</option>
-              <option value="50-100">$50 - $100</option>
-              <option value="100-200">$100 - $200</option>
-              <option value="200+">$200+</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "", label: "All Prices" },
+                { value: "0-25", label: "$0 - $25" },
+                { value: "25-50", label: "$25 - $50" },
+                { value: "50-100", label: "$50 - $100" },
+                { value: "100-200", label: "$100 - $200" },
+                { value: "200+", label: "$200+" }
+              ]}
+            />
           </div>
 
           {/* Special Filters */}

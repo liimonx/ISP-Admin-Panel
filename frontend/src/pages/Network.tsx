@@ -13,6 +13,7 @@ import {
   Grid,
   GridCol,
   Callout,
+  Select,
   Dropdown,
   Progress,
 } from "@shohojdhara/atomix";
@@ -339,16 +340,16 @@ const Network: React.FC = () => {
             />
           </GridCol>
           <GridCol xs={12} md={6} lg={3}>
-            <select
-              className="form-select"
+            <Select
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value)}
-            >
-              <option value="all">All Status</option>
-              <option value="online">Online</option>
-              <option value="offline">Offline</option>
-              <option value="maintenance">Maintenance</option>
-            </select>
+              options={[
+                { value: "all", label: "All Status" },
+                { value: "online", label: "Online" },
+                { value: "offline", label: "Offline" },
+                { value: "maintenance", label: "Maintenance" }
+              ]}
+            />
           </GridCol>
           <GridCol xs={12} md={12} lg={5}>
             <div className="u-d-flex u-justify-content-end u-gap-2">
@@ -543,8 +544,7 @@ const Network: React.FC = () => {
             <GridCol xs={12} md={6}>
               <div className="form-field">
                 <label className="form-label">Router Type</label>
-                <select
-                  className="form-select"
+                <Select
                   value={formData.router_type}
                   onChange={(e) =>
                     setFormData({
@@ -552,11 +552,12 @@ const Network: React.FC = () => {
                       router_type: e.target.value as any,
                     })
                   }
-                >
-                  <option value="mikrotik">MikroTik</option>
-                  <option value="cisco">Cisco</option>
-                  <option value="other">Other</option>
-                </select>
+                  options={[
+                    { value: "mikrotik", label: "MikroTik" },
+                    { value: "cisco", label: "Cisco" },
+                    { value: "other", label: "Other" }
+                  ]}
+                />
               </div>
             </GridCol>
             <GridCol xs={12}>

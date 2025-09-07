@@ -8,6 +8,7 @@ import {
   Icon,
   Modal,
   Grid,
+  Select,
   GridCol,
 } from "@shohojdhara/atomix";
 import { Router } from "@/types";
@@ -275,16 +276,17 @@ const RouterManagement: React.FC = () => {
               />
             </div>
             <div>
-              <select
+              <Select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="u-p-2 u-border u-rounded u-bg-white"
-              >
-                <option value="all">All Status</option>
-                <option value="online">Online</option>
-                <option value="offline">Offline</option>
-                <option value="maintenance">Maintenance</option>
-              </select>
+                className="u-p-2"
+                options={[
+                  { value: "all", label: "All Status" },
+                  { value: "online", label: "Online" },
+                  { value: "offline", label: "Offline" },
+                  { value: "maintenance", label: "Maintenance" }
+                ]}
+              />
             </div>
             <Button variant="primary" onClick={handleCreate}>
               <Icon name="Plus" size={16} className="u-me-2" />
@@ -357,15 +359,16 @@ const RouterManagement: React.FC = () => {
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Router Type
             </label>
-            <select
+            <Select
               value={formData.router_type}
               onChange={(e) => setFormData({ ...formData, router_type: e.target.value as Router["router_type"] })}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="mikrotik">MikroTik</option>
-              <option value="cisco">Cisco</option>
-              <option value="other">Other</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "mikrotik", label: "MikroTik" },
+                { value: "cisco", label: "Cisco" },
+                { value: "other", label: "Other" }
+              ]}
+            />
           </div>
 
           <div>
@@ -498,15 +501,16 @@ const RouterManagement: React.FC = () => {
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Router Type
             </label>
-            <select
+            <Select
               value={formData.router_type}
               onChange={(e) => setFormData({ ...formData, router_type: e.target.value as Router["router_type"] })}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="mikrotik">MikroTik</option>
-              <option value="cisco">Cisco</option>
-              <option value="other">Other</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "mikrotik", label: "MikroTik" },
+                { value: "cisco", label: "Cisco" },
+                { value: "other", label: "Other" }
+              ]}
+            />
           </div>
 
           <div>

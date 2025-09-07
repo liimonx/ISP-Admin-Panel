@@ -11,7 +11,7 @@ import {
   Callout,
   Spinner,
   Input,
-  Tab,
+  Select,
 } from "@shohojdhara/atomix";
 import { Invoice, Payment } from "../types";
 import { apiService } from "../services/apiService";
@@ -537,18 +537,19 @@ Generated on: ${new Date().toLocaleString()}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              <select
+              <Select
                 value={statusFilter}
                 onChange={(e) => setStatusFilter(e.target.value)}
-                className="u-p-3 u-border u-rounded"
-              >
-                <option value="all">All Status</option>
-                <option value="draft">Draft</option>
-                <option value="pending">Pending</option>
-                <option value="paid">Paid</option>
-                <option value="overdue">Overdue</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
+                className="u-p-3"
+                options={[
+                  { value: "all", label: "All Status" },
+                  { value: "draft", label: "Draft" },
+                  { value: "pending", label: "Pending" },
+                  { value: "paid", label: "Paid" },
+                  { value: "overdue", label: "Overdue" },
+                  { value: "cancelled", label: "Cancelled" }
+                ]}
+              />
             </div>
           </Card>
 

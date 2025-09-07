@@ -202,16 +202,17 @@ const Users: React.FC = () => {
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
-          <select
+          <Select
             value={roleFilter}
             onChange={(e) => setRoleFilter(e.target.value)}
-            className="u-p-3 u-border u-rounded u-min-w-150"
-          >
-            <option value="all">All Roles</option>
-            <option value="admin">Admin</option>
-            <option value="support">Support</option>
-            <option value="accountant">Accountant</option>
-          </select>
+            className="u-min-w-150"
+            options={[
+              { value: "all", label: "All Roles" },
+              { value: "admin", label: "Admin" },
+              { value: "support", label: "Support" },
+              { value: "accountant", label: "Accountant" }
+            ]}
+          />
           <Button variant="outline" size="md">
             <Icon name="Funnel" size={16} />
             Filter
@@ -410,7 +411,7 @@ const Users: React.FC = () => {
           <Grid>
             <GridCol xs={12} md={6}>
               <label htmlFor="role" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Role *</label>
-              <select
+              <Select
                 id="role"
                 value={formData.role}
                 onChange={(e) =>
@@ -420,12 +421,13 @@ const Users: React.FC = () => {
                   })
                 }
                 required
-                className="u-w-100 u-p-3 u-border u-rounded"
-              >
-                <option value="support">Support</option>
-                <option value="accountant">Accountant</option>
-                <option value="admin">Admin</option>
-              </select>
+                className="u-w-100"
+                options={[
+                  { value: "support", label: "Support" },
+                  { value: "accountant", label: "Accountant" },
+                  { value: "admin", label: "Admin" }
+                ]}
+              />
             </GridCol>
             <GridCol xs={12} md={6}>
               <label htmlFor="phone" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Phone</label>

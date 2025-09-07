@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal, Button, Icon, Grid, GridCol, Badge } from "@shohojdhara/atomix";
+import { Modal, Button, Icon, Grid, GridCol, Badge, Select } from "@shohojdhara/atomix";
 import { Subscription, Customer, Plan, Router } from "../../types";
 
 interface SubscriptionModalProps {

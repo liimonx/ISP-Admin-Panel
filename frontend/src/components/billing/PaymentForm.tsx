@@ -6,6 +6,7 @@ import {
   Textarea,
   Callout,
   Spinner,
+  Select,
 } from '@shohojdhara/atomix';
 import { Invoice, Payment } from '../../types';
 import { formatCurrency, toNumber } from '../../utils/formatters';
@@ -170,7 +171,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
           <label htmlFor="payment_method" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
             Payment Method *
           </label>
-          <select
+          <Select
             id="payment_method"
             value={formData.payment_method}
             onChange={(e) => {
@@ -184,15 +185,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
                 setErrors(prev => ({ ...prev, payment_method: '' }));
               }
             }}
-            className="u-w-100 u-p-3 u-border u-rounded"
+            className="u-w-100"
             required
-          >
-            {paymentMethods.map(method => (
-              <option key={method.value} value={method.value}>
-                {method.label}
-              </option>
-            ))}
-          </select>
+            options={paymentMethods}
+          />
           {errors.payment_method && (
             <p className="u-fs-xs u-text-error u-mt-1">{errors.payment_method}</p>
           )}

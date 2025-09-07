@@ -248,17 +248,18 @@ const Customers: React.FC = () => {
               />
             </div>
           </div>
-          <select
+          <Select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="u-p-3 u-border u-rounded u-min-w-150 u-bg-surface"
-          >
-            <option value="all">All Status</option>
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="suspended">Suspended</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
+            className="u-min-w-150"
+            options={[
+              { value: "all", label: "All Status" },
+              { value: "active", label: "Active" },
+              { value: "inactive", label: "Inactive" },
+              { value: "suspended", label: "Suspended" },
+              { value: "cancelled", label: "Cancelled" }
+            ]}
+          />
           <Button variant="outline" size="md">
             <Icon name="Funnel" size={16} />
             <span className="u-d-none u-d-md-inline">Advanced Filters</span>
@@ -671,7 +672,7 @@ const Customers: React.FC = () => {
           <Grid>
             <GridCol xs={12} md={6}>
               <label htmlFor="status" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Status *</label>
-              <select
+              <Select
                 id="status"
                 value={formData.status}
                 onChange={(e) =>
@@ -681,13 +682,14 @@ const Customers: React.FC = () => {
                   })
                 }
                 required
-                className="u-w-100 u-p-3 u-border u-rounded"
-              >
-                <option value="active">Active</option>
-                <option value="inactive">Inactive</option>
-                <option value="suspended">Suspended</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
+                className="u-w-100"
+                options={[
+                  { value: "active", label: "Active" },
+                  { value: "inactive", label: "Inactive" },
+                  { value: "suspended", label: "Suspended" },
+                  { value: "cancelled", label: "Cancelled" }
+                ]}
+              />
             </GridCol>
           </Grid>
 

@@ -7,6 +7,7 @@ import {
   Icon,
   Callout,
   Textarea,
+  Select,
 } from "@shohojdhara/atomix";
 
 interface SystemSettings {
@@ -178,33 +179,35 @@ const Settings: React.FC = () => {
               <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Timezone
               </label>
-              <select
+              <Select
                 value={settings.timezone}
                 onChange={(e) => handleInputChange("timezone", e.target.value)}
-                className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-              >
-                <option value="UTC">UTC</option>
-                <option value="America/New_York">Eastern Time</option>
-                <option value="America/Chicago">Central Time</option>
-                <option value="America/Denver">Mountain Time</option>
-                <option value="America/Los_Angeles">Pacific Time</option>
-              </select>
+                className="u-w-100"
+                options={[
+                  { value: "UTC", label: "UTC" },
+                  { value: "America/New_York", label: "Eastern Time" },
+                  { value: "America/Chicago", label: "Central Time" },
+                  { value: "America/Denver", label: "Mountain Time" },
+                  { value: "America/Los_Angeles", label: "Pacific Time" }
+                ]}
+              />
             </div>
 
             <div>
               <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 Currency
               </label>
-              <select
+              <Select
                 value={settings.currency}
                 onChange={(e) => handleInputChange("currency", e.target.value)}
-                className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-              >
-                <option value="USD">USD ($)</option>
-                <option value="EUR">EUR (€)</option>
-                <option value="GBP">GBP (£)</option>
-                <option value="JPY">JPY (¥)</option>
-              </select>
+                className="u-w-100"
+                options={[
+                  { value: "USD", label: "USD ($)" },
+                  { value: "EUR", label: "EUR (€)" },
+                  { value: "GBP", label: "GBP (£)" },
+                  { value: "JPY", label: "JPY (¥)" }
+                ]}
+              />
             </div>
           </div>
         </Card>
@@ -356,16 +359,17 @@ const Settings: React.FC = () => {
                 <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                   Backup Frequency
                 </label>
-                <select
+                <Select
                   value={settings.backupFrequency}
                   onChange={(e) => handleInputChange("backupFrequency", e.target.value)}
-                  className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-                >
-                  <option value="hourly">Hourly</option>
-                  <option value="daily">Daily</option>
-                  <option value="weekly">Weekly</option>
-                  <option value="monthly">Monthly</option>
-                </select>
+                  className="u-w-100"
+                  options={[
+                    { value: "hourly", label: "Hourly" },
+                    { value: "daily", label: "Daily" },
+                    { value: "weekly", label: "Weekly" },
+                    { value: "monthly", label: "Monthly" }
+                  ]}
+                />
               </div>
             )}
 
@@ -412,15 +416,16 @@ const Settings: React.FC = () => {
               <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
                 System Log Level
               </label>
-              <select
+              <Select
                 defaultValue="info"
-                className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-              >
-                <option value="debug">Debug</option>
-                <option value="info">Info</option>
-                <option value="warning">Warning</option>
-                <option value="error">Error</option>
-              </select>
+                className="u-w-100"
+                options={[
+                  { value: "debug", label: "Debug" },
+                  { value: "info", label: "Info" },
+                  { value: "warning", label: "Warning" },
+                  { value: "error", label: "Error" }
+                ]}
+              />
             </div>
 
             <div>

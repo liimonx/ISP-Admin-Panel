@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Input, Button, Icon } from '@shohojdhara/atomix';
+import { Card, Input, Button, Icon, Select } from '@shohojdhara/atomix';
 
 export interface SubscriptionFiltersProps {
   searchQuery: string;
@@ -66,17 +66,18 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Status
             </label>
-            <select
+            <Select
               value={statusFilter}
               onChange={(e) => onStatusChange(e.target.value)}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="all">All Status</option>
-              <option value="active">Active</option>
-              <option value="pending">Pending</option>
-              <option value="suspended">Suspended</option>
-              <option value="cancelled">Cancelled</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "all", label: "All Status" },
+                { value: "active", label: "Active" },
+                { value: "pending", label: "Pending" },
+                { value: "suspended", label: "Suspended" },
+                { value: "cancelled", label: "Cancelled" }
+              ]}
+            />
           </div>
 
           {/* Plan Filter */}
@@ -84,17 +85,18 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Plan
             </label>
-            <select
+            <Select
               value={planFilter}
               onChange={(e) => onPlanChange(e.target.value)}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="all">All Plans</option>
-              <option value="basic">Basic Plan</option>
-              <option value="standard">Standard Plan</option>
-              <option value="premium">Premium Plan</option>
-              <option value="enterprise">Enterprise Plan</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "all", label: "All Plans" },
+                { value: "basic", label: "Basic Plan" },
+                { value: "standard", label: "Standard Plan" },
+                { value: "premium", label: "Premium Plan" },
+                { value: "enterprise", label: "Enterprise Plan" }
+              ]}
+            />
           </div>
 
           {/* Router Filter */}
@@ -102,16 +104,17 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
             <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
               Router
             </label>
-            <select
+            <Select
               value={routerFilter}
               onChange={(e) => onRouterChange(e.target.value)}
-              className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
-            >
-              <option value="all">All Routers</option>
-              <option value="router-1">Router 1</option>
-              <option value="router-2">Router 2</option>
-              <option value="router-3">Router 3</option>
-            </select>
+              className="u-w-100"
+              options={[
+                { value: "all", label: "All Routers" },
+                { value: "router-1", label: "Router 1" },
+                { value: "router-2", label: "Router 2" },
+                { value: "router-3", label: "Router 3" }
+              ]}
+            />
           </div>
         </div>
       </div>
