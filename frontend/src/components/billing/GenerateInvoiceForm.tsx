@@ -1,16 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Button,
   Input,
   Textarea,
-  Callout,
   Spinner,
   Select,
-} from '@shohojdhara/atomix';
-import { Customer, Subscription } from '../../types';
-import { apiService } from '../../services/apiService';
-import { formatCurrency } from '../../utils/formatters';
+} from "@shohojdhara/atomix";
+import { Customer, Subscription } from "../../types";
+import { apiService } from "../../services/apiService";
+import { formatCurrency } from "../../utils/formatters";
 
 interface GenerateInvoiceFormProps {
   isOpen: boolean;
@@ -18,7 +17,7 @@ interface GenerateInvoiceFormProps {
   onSubmit: (data: {
     customer_id: number;
     subscription_id?: number;
-    invoice_type: 'monthly' | 'setup' | 'adjustment' | 'other';
+    invoice_type: "monthly" | "setup" | "adjustment" | "other";
     billing_period_start: string;
     billing_period_end: string;
     subtotal: number;
@@ -38,13 +37,13 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
   const [formData, setFormData] = useState({
     customer_id: 0,
     subscription_id: 0,
-    invoice_type: 'monthly' as const,
-    billing_period_start: '',
-    billing_period_end: '',
+    invoice_type: "monthly" as const,
+    billing_period_start: "",
+    billing_period_end: "",
     subtotal: 0,
     tax_amount: 0,
     discount_amount: 0,
-    notes: '',
+    notes: "",
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [customers, setCustomers] = useState<Customer[]>([]);
@@ -71,7 +70,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
       const response = await apiService.getCustomers({ limit: 100 });
       setCustomers(response.results || []);
     } catch (error) {
-      console.error('Failed to load customers:', error);
+      console.error("Failed to load customers:", error);
     } finally {
       setLoadingCustomers(false);
     }
@@ -80,14 +79,14 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
   const loadSubscriptions = async (customerId: number) => {
     setLoadingSubscriptions(true);
     try {
-      const response = await apiService.getSubscriptions({ 
+      const response = await apiService.getSubscriptions({
         customer_id: customerId,
-        status: 'active',
-        limit: 50 
+        status: "active",
+        limit: 50,
       });
       setSubscriptions(response.results || []);
     } catch (error) {
-      console.error('Failed to load subscriptions:', error);
+      console.error("Failed to load subscriptions:", error);
     } finally {
       setLoadingSubscriptions(false);
     }
@@ -97,30 +96,30 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
     const newErrors: Record<string, string> = {};
 
     if (!formData.customer_id) {
-      newErrors.customer_id = 'Customer is required';
+      newErrors.customer_id = "Customer is required";
     }
 
     if (!formData.invoice_type) {
-      newErrors.invoice_type = 'Invoice type is required';
+      newErrors.invoice_type = "Invoice type is required";
     }
 
     if (!formData.billing_period_start) {
-      newErrors.billing_period_start = 'Billing period start is required';
+      newErrors.billing_period_start = "Billing period start is required";
     }
 
     if (!formData.billing_period_end) {
-      newErrors.billing_period_end = 'Billing period end is required';
+      newErrors.billing_period_end = "Billing period end is required";
     }
 
     if (formData.subtotal <= 0) {
-      newErrors.subtotal = 'Subtotal must be greater than 0';
+      newErrors.subtotal = "Subtotal must be greater than 0";
     }
 
     if (formData.billing_period_start && formData.billing_period_end) {
       const startDate = new Date(formData.billing_period_start);
       const endDate = new Date(formData.billing_period_end);
       if (startDate >= endDate) {
-        newErrors.billing_period_end = 'End date must be after start date';
+        newErrors.billing_period_end = "End date must be after start date";
       }
     }
 
@@ -130,7 +129,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     const invoiceData = {
@@ -152,13 +151,13 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
     setFormData({
       customer_id: 0,
       subscription_id: 0,
-      invoice_type: 'monthly',
-      billing_period_start: '',
-      billing_period_end: '',
+      invoice_type: "monthly",
+      billing_period_start: "",
+      billing_period_end: "",
       subtotal: 0,
       tax_amount: 0,
       discount_amount: 0,
-      notes: '',
+      notes: "",
     });
     setErrors({});
     setSubscriptions([]);
@@ -173,10 +172,10 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
   };
 
   const invoiceTypes = [
-    { value: 'monthly', label: 'Monthly Subscription' },
-    { value: 'setup', label: 'Setup Fee' },
-    { value: 'adjustment', label: 'Adjustment' },
-    { value: 'other', label: 'Other' },
+    { value: "monthly", label: "Monthly Subscription" },
+    { value: "setup", label: "Setup Fee" },
+    { value: "adjustment", label: "Adjustment" },
+    { value: "other", label: "Other" },
   ];
 
   return (
@@ -188,32 +187,35 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
     >
       <form onSubmit={handleSubmit}>
         <div className="u-mb-4">
-          <label htmlFor="customer_id" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+          <label
+            htmlFor="customer_id"
+            className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+          >
             Customer *
           </label>
           <Select
             id="customer_id"
-            value={formData.customer_id}
+            value={formData.customer_id.toString()}
             onChange={(e) => {
               const customerId = parseInt(e.target.value);
-              setFormData(prev => ({ 
-                ...prev, 
+              setFormData((prev) => ({
+                ...prev,
                 customer_id: customerId,
-                subscription_id: 0 // Reset subscription when customer changes
+                subscription_id: 0, // Reset subscription when customer changes
               }));
               if (errors.customer_id) {
-                setErrors(prev => ({ ...prev, customer_id: '' }));
+                setErrors((prev) => ({ ...prev, customer_id: "" }));
               }
             }}
             className="u-w-100"
             required
             disabled={loadingCustomers}
             options={[
-              { value: 0, label: "Select Customer" },
-              ...customers.map(customer => ({
-                value: customer.id,
-                label: `${customer.name} - ${customer.email}`
-              }))
+              { value: "0", label: "Select Customer" },
+              ...customers.map((customer) => ({
+                value: customer.id.toString(),
+                label: `${customer.name} - ${customer.email}`,
+              })),
             ]}
           />
           {loadingCustomers && <Spinner size="sm" className="u-mt-2" />}
@@ -223,43 +225,52 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
         </div>
 
         <div className="u-mb-4">
-          <label htmlFor="subscription_id" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+          <label
+            htmlFor="subscription_id"
+            className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+          >
             Subscription (Optional)
           </label>
           <Select
             id="subscription_id"
-            value={formData.subscription_id}
+            value={formData.subscription_id.toString()}
             onChange={(e) => {
               const subscriptionId = parseInt(e.target.value);
-              setFormData(prev => ({ ...prev, subscription_id: subscriptionId }));
+              setFormData((prev) => ({
+                ...prev,
+                subscription_id: subscriptionId,
+              }));
             }}
             className="u-w-100"
             disabled={!formData.customer_id || loadingSubscriptions}
             options={[
-              { value: 0, label: "No Subscription" },
-              ...subscriptions.map(subscription => ({
-                value: subscription.id,
-                label: `${subscription.plan.name} - ${formatCurrency(subscription.monthly_fee)}`
-              }))
+              { value: "0", label: "No Subscription" },
+              ...subscriptions.map((subscription) => ({
+                value: subscription.id.toString(),
+                label: `${subscription.plan.name} - ${formatCurrency(subscription.monthly_fee)}`,
+              })),
             ]}
           />
           {loadingSubscriptions && <Spinner size="sm" className="u-mt-2" />}
         </div>
 
         <div className="u-mb-4">
-          <label htmlFor="invoice_type" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+          <label
+            htmlFor="invoice_type"
+            className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+          >
             Invoice Type *
           </label>
           <Select
             id="invoice_type"
             value={formData.invoice_type}
             onChange={(e) => {
-              setFormData(prev => ({ 
-                ...prev, 
-                invoice_type: e.target.value as any 
+              setFormData((prev) => ({
+                ...prev,
+                invoice_type: e.target.value as any,
               }));
               if (errors.invoice_type) {
-                setErrors(prev => ({ ...prev, invoice_type: '' }));
+                setErrors((prev) => ({ ...prev, invoice_type: "" }));
               }
             }}
             className="u-w-100"
@@ -273,7 +284,10 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
 
         <div className="u-d-flex u-gap-4 u-mb-4">
           <div className="u-flex-fill">
-            <label htmlFor="billing_period_start" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+            <label
+              htmlFor="billing_period_start"
+              className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+            >
               Billing Period Start *
             </label>
             <Input
@@ -281,20 +295,27 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
               type="date"
               value={formData.billing_period_start}
               onChange={(e) => {
-                setFormData(prev => ({ ...prev, billing_period_start: e.target.value }));
+                setFormData((prev) => ({
+                  ...prev,
+                  billing_period_start: e.target.value,
+                }));
                 if (errors.billing_period_start) {
-                  setErrors(prev => ({ ...prev, billing_period_start: '' }));
+                  setErrors((prev) => ({ ...prev, billing_period_start: "" }));
                 }
               }}
-              error={errors.billing_period_start}
               required
             />
             {errors.billing_period_start && (
-              <p className="u-fs-xs u-text-error u-mt-1">{errors.billing_period_start}</p>
+              <p className="u-fs-xs u-text-error u-mt-1">
+                {errors.billing_period_start}
+              </p>
             )}
           </div>
           <div className="u-flex-fill">
-            <label htmlFor="billing_period_end" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+            <label
+              htmlFor="billing_period_end"
+              className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+            >
               Billing Period End *
             </label>
             <Input
@@ -302,16 +323,20 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
               type="date"
               value={formData.billing_period_end}
               onChange={(e) => {
-                setFormData(prev => ({ ...prev, billing_period_end: e.target.value }));
+                setFormData((prev) => ({
+                  ...prev,
+                  billing_period_end: e.target.value,
+                }));
                 if (errors.billing_period_end) {
-                  setErrors(prev => ({ ...prev, billing_period_end: '' }));
+                  setErrors((prev) => ({ ...prev, billing_period_end: "" }));
                 }
               }}
-              error={errors.billing_period_end}
               required
             />
             {errors.billing_period_end && (
-              <p className="u-fs-xs u-text-error u-mt-1">{errors.billing_period_end}</p>
+              <p className="u-fs-xs u-text-error u-mt-1">
+                {errors.billing_period_end}
+              </p>
             )}
           </div>
         </div>
@@ -320,7 +345,10 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
           <h4 className="u-mb-3">Invoice Amounts</h4>
           <div className="u-space-y-3">
             <div>
-              <label htmlFor="subtotal" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label
+                htmlFor="subtotal"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
                 Subtotal *
               </label>
               <Input
@@ -331,12 +359,11 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
                 value={formData.subtotal}
                 onChange={(e) => {
                   const value = parseFloat(e.target.value) || 0;
-                  setFormData(prev => ({ ...prev, subtotal: value }));
+                  setFormData((prev) => ({ ...prev, subtotal: value }));
                   if (errors.subtotal) {
-                    setErrors(prev => ({ ...prev, subtotal: '' }));
+                    setErrors((prev) => ({ ...prev, subtotal: "" }));
                   }
                 }}
-                error={errors.subtotal}
                 required
               />
               {errors.subtotal && (
@@ -345,7 +372,10 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
             </div>
 
             <div>
-              <label htmlFor="tax_amount" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label
+                htmlFor="tax_amount"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
                 Tax Amount
               </label>
               <Input
@@ -356,13 +386,16 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
                 value={formData.tax_amount}
                 onChange={(e) => {
                   const value = parseFloat(e.target.value) || 0;
-                  setFormData(prev => ({ ...prev, tax_amount: value }));
+                  setFormData((prev) => ({ ...prev, tax_amount: value }));
                 }}
               />
             </div>
 
             <div>
-              <label htmlFor="discount_amount" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label
+                htmlFor="discount_amount"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
                 Discount Amount
               </label>
               <Input
@@ -373,7 +406,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
                 value={formData.discount_amount}
                 onChange={(e) => {
                   const value = parseFloat(e.target.value) || 0;
-                  setFormData(prev => ({ ...prev, discount_amount: value }));
+                  setFormData((prev) => ({ ...prev, discount_amount: value }));
                 }}
               />
             </div>
@@ -386,13 +419,18 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
         </div>
 
         <div className="u-mb-4">
-          <label htmlFor="notes" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+          <label
+            htmlFor="notes"
+            className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+          >
             Notes
           </label>
           <Textarea
             id="notes"
             value={formData.notes}
-            onChange={(e) => setFormData(prev => ({ ...prev, notes: e.target.value }))}
+            onChange={(e) =>
+              setFormData((prev) => ({ ...prev, notes: e.target.value }))
+            }
             rows={3}
             placeholder="Optional invoice notes..."
           />
@@ -407,11 +445,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-                          disabled={isLoading}
-          >
+          <Button type="submit" variant="primary" disabled={isLoading}>
             Generate Invoice
           </Button>
         </div>

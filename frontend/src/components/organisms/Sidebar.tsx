@@ -5,21 +5,14 @@ import {
   SideMenuItem,
   Icon,
   Badge,
-  Button,
-  Avatar,
   IconProps,
   Tooltip,
 } from "@shohojdhara/atomix";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useSidebarBadges } from "../../hooks/useSidebarBadges";
 
 export interface SidebarProps {
   collapsed?: boolean;
-  onToggle?: () => void;
-  user?: {
-    name: string;
-    avatar?: string;
-    role?: string;
-  };
   className?: string;
   "data-testid"?: string;
 }
@@ -39,7 +32,8 @@ interface MenuItem {
   category?: string;
 }
 
-const menuItems: MenuItem[] = [
+// Function to create menu items with dynamic badges
+const createMenuItems = (badgeData: any): MenuItem[] => [
   {
     id: "dashboard",
     label: "Dashboard",
@@ -55,7 +49,7 @@ const menuItems: MenuItem[] = [
     path: "/customers",
     category: "main",
     badge: {
-      text: "245",
+      text: badgeData?.customers?.total?.toString() || "0",
       variant: "primary",
     },
     tooltip: "Customer management",
@@ -79,6 +73,10 @@ const menuItems: MenuItem[] = [
         label: "Subscriptions",
         icon: "CreditCard",
         path: "/subscriptions",
+        badge: {
+          text: badgeData?.subscriptions?.active?.toString() || "0",
+          variant: badgeData?.subscriptions?.pending > 0 ? "warning" : "success",
+        },
         tooltip: "Active subscriptions",
       },
       {
@@ -103,8 +101,8 @@ const menuItems: MenuItem[] = [
         icon: "Monitor",
         path: "/monitoring",
         badge: {
-          text: "3",
-          variant: "warning",
+          text: badgeData?.monitoring?.alerts?.toString() || "0",
+          variant: badgeData?.monitoring?.alerts > 0 ? "error" : "secondary",
         },
         tooltip: "Network monitoring",
       },
@@ -189,17 +187,19 @@ const menuItems: MenuItem[] = [
  */
 export const Sidebar: React.FC<SidebarProps> = ({
   collapsed = false,
-  onToggle,
-  user,
   className = "",
   "data-testid": testId,
 }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { badgeData, isLoading, hasError } = useSidebarBadges();
   const [expandedSections, setExpandedSections] = useState<string[]>([
     "services",
     "network",
   ]);
+
+  // Create menu items with dynamic badge data
+  const menuItems = createMenuItems(badgeData);
 
   // Auto-expand sections based on current route
   useEffect(() => {
@@ -271,9 +271,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
         )}
         {!collapsed && item.badge && (
           <Badge
-            variant={item.badge.variant}
+            variant={hasError ? "error" : item.badge.variant}
             size="sm"
-            label={item.badge.text}
+            label={isLoading ? "..." : hasError ? "!" : item.badge.text}
           />
         )}
       </SideMenuItem>
@@ -320,72 +320,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       data-testid={testId}
       style={{ height: '100vh' }}
     >
-      {/* Header */}
-      <div className="u-p-4 u-border-bottom">
-        <div className="u-d-flex u-align-items-center u-justify-content-between">
-          {!collapsed && (
-            <div className="u-d-flex u-align-items-center u-gap-2">
-              <Icon name="Globe" size={24} className="u-text-primary" />
-              <span className="u-fw-bold u-text-lg u-text-primary">BCN ISP</span>
-            </div>
-          )}
-          {collapsed && (
-            <div className="u-d-flex u-justify-content-center u-w-100">
-              <Icon name="Globe" size={24} className="u-text-primary" />
-            </div>
-          )}
-          {!collapsed && (
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={onToggle}
-              aria-label="Collapse sidebar"
-            >
-              <Icon name="CaretLeft" size={16} />
-            </Button>
-          )}
-        </div>
-      </div>
 
-      {/* User Profile */}
-      {user && (
-        <div className={`u-p-4 u-border-bottom ${collapsed ? 'u-text-center' : ''}`}>
-          {collapsed ? (
-            <Tooltip content={`${user.name} (${user.role || 'User'})`}>
-              <Avatar
-                src={user.avatar}
-                alt={user.name}
-                size="sm"
-                initials={user.name?.charAt(0)?.toUpperCase() || '?'}
-                className="u-mx-auto u-cursor-pointer"
-              />
-            </Tooltip>
-          ) : (
-            <div className="u-d-flex u-align-items-center u-gap-3 u-cursor-pointer u-p-2 u-rounded u-hover-bg-light u-w-100 u-justify-content-start">
-              <Avatar
-                src={user.avatar}
-                alt={user.name}
-                size="sm"
-                initials={user.name?.charAt(0)?.toUpperCase() || '?'}
-              />
-              <div className="u-flex-1 u-min-w-0">
-                <div className="u-fw-medium u-text-sm u-truncate">
-                  {user.name}
-                </div>
-                {user.role && (
-                  <div className="u-text-xs u-text-secondary-emphasis u-truncate">
-                    {user.role}
-                  </div>
-                )}
-              </div>
-              <Icon name="CaretDown" size={12} className="u-text-muted" />
-            </div>
-          )}
-        </div>
-      )}
 
       {/* Navigation Menu */}
-      <div className="u-flex-1 u-overflow-y-auto u-py-2">
+      <div className="u-flex-1 u-overflow-y-auto u-py-4">
         <SideMenu>
           <SideMenuList>
             {menuItems.map((item, index) => {

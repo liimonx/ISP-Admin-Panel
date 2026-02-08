@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Navigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import {
@@ -11,6 +11,7 @@ import {
   Grid,
   GridCol,
   Callout,
+  Spinner,
 } from '@shohojdhara/atomix';
 
 type LoginFormData = {
@@ -20,6 +21,7 @@ type LoginFormData = {
 
 const Login: React.FC = () => {
   const { login, isAuthenticated, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [formData, setFormData] = useState<LoginFormData>({
@@ -28,10 +30,20 @@ const Login: React.FC = () => {
   });
   const [errors, setErrors] = useState<Partial<LoginFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
-  if (isAuthenticated) {
-    return <Navigate to="/" replace />;
-  }
+  // Check if we have a redirect URL in localStorage
+  useEffect(() => {
+    if (isAuthenticated) {
+      const redirectUrl = localStorage.getItem('redirect_after_login');
+      if (redirectUrl) {
+        localStorage.removeItem('redirect_after_login');
+        navigate(redirectUrl, { replace: true });
+      } else {
+        navigate('/', { replace: true });
+      }
+    }
+  }, [isAuthenticated, navigate]);
 
   const validateForm = () => {
     const newErrors: Partial<LoginFormData> = {};
@@ -76,8 +88,31 @@ const Login: React.FC = () => {
     try {
       await login(formData.username, formData.password);
       toast.success('Login successful!');
-    } catch (error) {
-      setLoginError('Invalid username or password');
+    } catch (error: any) {
+      let errorMessage = 'Login failed. Please try again.';
+      
+      if (error.response) {
+        switch (error.response.status) {
+          case 400:
+            errorMessage = 'Invalid request. Please check your credentials.';
+            break;
+          case 401:
+            errorMessage = 'Invalid username or password.';
+            break;
+          case 429:
+            errorMessage = 'Too many login attempts. Please try again later.';
+            break;
+          case 500:
+            errorMessage = 'Server error. Please try again later.';
+            break;
+          default:
+            errorMessage = error.response.data?.message || errorMessage;
+        }
+      } else if (error.request) {
+        errorMessage = 'Network error. Please check your connection.';
+      }
+      
+      setLoginError(errorMessage);
       toast.error('Login failed');
     } finally {
       setIsSubmitting(false);
@@ -88,10 +123,31 @@ const Login: React.FC = () => {
     setShowPassword(!showPassword);
   };
 
+  const handleDemoLogin = async (username: string, password: string) => {
+    setFormData({ username, password });
+    setIsSubmitting(true);
+    setLoginError(null);
+    
+    try {
+      await login(username, password);
+      toast.success('Demo login successful!');
+    } catch (error) {
+      setLoginError('Demo login failed. Please try again.');
+      toast.error('Demo login failed');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // If already authenticated, redirect to home
+  if (isAuthenticated && !isLoading) {
+    return <Navigate to="/" replace />;
+  }
+
   return (
     <Container className="u-h-100vh u-d-flex u-align-items-center u-justify-content-center">
       <Grid>
-        <GridCol xs={12}>
+        <GridCol xs={12} sm={10} md={8} lg={6} xl={5}>
           <Card className="u-p-6">
             {/* Logo and Title */}
             <div className="u-text-center u-mb-6">
@@ -121,13 +177,14 @@ const Login: React.FC = () => {
                   value={formData.username}
                   onChange={(e) => handleInputChange('username', e.target.value)}
                   name="username"
+                  disabled={isSubmitting}
                 />
                 {errors.username && (
                   <div className="u-text-error u-text-sm u-mt-1">{errors.username}</div>
                 )}
               </div>
 
-              <div className="u-mb-6">
+              <div className="u-mb-4">
                 <label htmlFor="password" className="u-d-block u-mb-2 u-fw-medium">Password</label>
                 <div className="u-relative">
                   <Input
@@ -138,13 +195,16 @@ const Login: React.FC = () => {
                     value={formData.password}
                     onChange={(e) => handleInputChange('password', e.target.value)}
                     name="password"
+                    disabled={isSubmitting}
                   />
                   <Button
                     variant="ghost"
                     size="sm"
+                    type="button"
                     onClick={togglePasswordVisibility}
                     aria-label="Toggle password visibility"
                     className="u-position-absolute u-right-2 u-top-50 u-transform-translate-y-50"
+                    disabled={isSubmitting}
                   >
                     <Icon name={showPassword ? 'EyeSlash' : 'Eye'} size={16} />
                   </Button>
@@ -154,43 +214,94 @@ const Login: React.FC = () => {
                 )}
               </div>
 
+              <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-4">
+                <div className="u-form-check">
+                  <input
+                    type="checkbox"
+                    id="rememberMe"
+                    className="u-form-check-input"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                  />
+                  <label htmlFor="rememberMe" className="u-form-check-label u-text-sm">
+                    Remember me
+                  </label>
+                </div>
+                
+                <Button 
+                  variant="link" 
+                  size="sm"
+                  type="button"
+                  className="u-p-0"
+                  onClick={() => navigate('/forgot-password')}
+                  disabled={isSubmitting}
+                >
+                  Forgot password?
+                </Button>
+              </div>
+
               <Button
                 type="submit"
                 variant="primary"
                 size="lg"
-                className="u-w-100"
+                className="u-w-100 u-mb-4"
                 disabled={isSubmitting || isLoading}
               >
-                {isSubmitting || isLoading ? 'Signing In...' : 'Sign In'}
+                {isSubmitting || isLoading ? (
+                  <>
+                    <Spinner size="sm" className="u-me-2" />
+                    Signing In...
+                  </>
+                ) : 'Sign In'}
               </Button>
             </form>
 
             {/* Demo Credentials */}
             <div className="u-mt-6 u-pt-6 u-border-top">
               <h3 className="u-mb-3">Demo Credentials:</h3>
-              <div className="u-space-y-2">
-                <div className="u-d-flex u-justify-content-between u-text-sm">
-                  <span><strong>Admin:</strong></span>
-                  <span>admin /  changeme123!</span>
+              <div className="u-space-y-3">
+                <div className="u-d-flex u-flex-wrap u-gap-2">
+                  <Button 
+                    size="sm" 
+                    variant="outline-primary"
+                    onClick={() => handleDemoLogin('admin', 'changeme123!')}
+                    disabled={isSubmitting}
+                  >
+                    Admin Login
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline-secondary"
+                    onClick={() => handleDemoLogin('support', 'changeme123!')}
+                    disabled={isSubmitting}
+                  >
+                    Support Login
+                  </Button>
+                  <Button 
+                    size="sm" 
+                    variant="outline-success"
+                    onClick={() => handleDemoLogin('accountant', 'changeme123!')}
+                    disabled={isSubmitting}
+                  >
+                    Accountant Login
+                  </Button>
                 </div>
-                <div className="u-d-flex u-justify-content-between u-text-sm">
-                  <span><strong>Support:</strong></span>
-                  <span>support /  changeme123!</span>
-                </div>
-                <div className="u-d-flex u-justify-content-between u-text-sm">
-                  <span><strong>Accountant:</strong></span>
-                  <span>accountant /  changeme123!</span>
+                
+                <div className="u-text-sm u-text-secondary">
+                  <p className="u-mb-1"><strong>Admin:</strong> admin / changeme123!</p>
+                  <p className="u-mb-1"><strong>Support:</strong> support / changeme123!</p>
+                  <p className="u-mb-0"><strong>Accountant:</strong> accountant / changeme123!</p>
                 </div>
               </div>
             </div>
           </Card>
+          
+          {/* Footer */}
+          <div className="u-text-center u-mt-4 u-text-sm u-text-secondary-emphasis">
+            <p>© {new Date().getFullYear()} ISP Admin Panel. All rights reserved.</p>
+          </div>
         </GridCol>
       </Grid>
-
-      {/* Footer */}
-      <div className="u-position-absolute u-bottom-4 u-left-50 u-transform-translate-x-neg-50 u-text-center u-text-sm u-text-secondary-emphasis">
-        <p>© 2024 ISP Admin Panel. All rights reserved.</p>
-      </div>
     </Container>
   );
 };

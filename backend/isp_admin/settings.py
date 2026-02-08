@@ -212,9 +212,45 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'billing.tasks.enforce_overdue_invoices',
         'schedule': timedelta(hours=1),
     },
-    'poll-snmp-usage': {
-        'task': 'monitoring.tasks.poll_snmp_usage',
+    'poll-router-metrics': {
+        'task': 'monitoring.tasks.poll_router_metrics',
         'schedule': timedelta(minutes=5),
+    },
+    'check-router-status': {
+        'task': 'monitoring.tasks.check_router_status',
+        'schedule': timedelta(minutes=5),
+    },
+    'sync-pppoe-users': {
+        'task': 'network.tasks.sync_pppoe_users',
+        'schedule': timedelta(minutes=15),
+    },
+    'collect-router-metrics': {
+        'task': 'network.tasks.collect_router_metrics',
+        'schedule': timedelta(minutes=10),
+    },
+    'monitor-router-health': {
+        'task': 'network.tasks.monitor_router_health',
+        'schedule': timedelta(minutes=5),
+    },
+    'cleanup-old-router-sessions': {
+        'task': 'network.tasks.cleanup_old_router_sessions',
+        'schedule': timedelta(hours=6),
+    },
+    'update-router-sessions': {
+        'task': 'network.tasks.update_router_sessions',
+        'schedule': timedelta(minutes=2),
+    },
+    'check-main-router-health': {
+        'task': 'network.tasks.check_main_router_health',
+        'schedule': timedelta(minutes=3),
+    },
+    'sync-main-router-data': {
+        'task': 'network.tasks.sync_main_router_data',
+        'schedule': timedelta(minutes=15),
+    },
+    'backup-main-router-config': {
+        'task': 'network.tasks.backup_main_router_config',
+        'schedule': timedelta(days=1),
     },
 }
 
@@ -332,3 +368,9 @@ MAIN_ROUTER_USE_TLS = env.bool('MAIN_ROUTER_USE_TLS', default=True)
 ROUTER_API_TIMEOUT = env.int('ROUTER_API_TIMEOUT', default=30)
 ROUTER_CONNECTION_RETRIES = env.int('ROUTER_CONNECTION_RETRIES', default=3)
 ROUTER_HEALTH_CHECK_INTERVAL = env.int('ROUTER_HEALTH_CHECK_INTERVAL', default=300)
+
+# MikroTik Configuration
+MIKROTIK_MOCK_MODE = env.bool('MIKROTIK_MOCK_MODE', default=DEBUG)
+MIKROTIK_CONNECTION_TIMEOUT = env.int('MIKROTIK_CONNECTION_TIMEOUT', default=30)
+MIKROTIK_MAX_RETRIES = env.int('MIKROTIK_MAX_RETRIES', default=3)
+MIKROTIK_RETRY_DELAY = env.int('MIKROTIK_RETRY_DELAY', default=5)

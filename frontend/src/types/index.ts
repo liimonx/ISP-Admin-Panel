@@ -55,6 +55,7 @@ export interface Subscription {
   plan: Plan;
   router: Router;
   username: string;
+  password?: string; // write-only field for create/update
   access_method: "pppoe" | "static_ip" | "dhcp";
   static_ip?: string;
   mac_address?: string;
@@ -68,6 +69,19 @@ export interface Subscription {
   notes?: string;
   created_at: string;
   updated_at: string;
+
+  // Computed properties from backend
+  is_active?: boolean;
+  is_suspended?: boolean;
+  is_expired?: boolean;
+  days_remaining?: number;
+  data_remaining?: number;
+  data_usage_percentage?: number;
+
+  // Helper properties for forms
+  customer_id?: number;
+  plan_id?: number;
+  router_id?: number;
 }
 
 export interface Router {
@@ -89,6 +103,8 @@ export interface Router {
   notes?: string;
   created_at: string;
   updated_at: string;
+  get_active_subscriptions_count?: number;
+  get_total_bandwidth_usage?: number;
 }
 
 export interface Invoice {
@@ -99,11 +115,11 @@ export interface Invoice {
   invoice_type: "monthly" | "setup" | "adjustment" | "other";
   billing_period_start: string;
   billing_period_end: string;
-      subtotal: number | string;
-    tax_amount: number | string;
-    discount_amount: number | string;
-    total_amount: number | string;
-    paid_amount: number | string;
+  subtotal: number | string;
+  tax_amount: number | string;
+  discount_amount: number | string;
+  total_amount: number | string;
+  paid_amount: number | string;
   status: "draft" | "pending" | "paid" | "overdue" | "cancelled";
   issue_date: string;
   due_date: string;
@@ -118,7 +134,7 @@ export interface Payment {
   invoice: Invoice;
   customer: Customer;
   payment_number: string;
-      amount: number | string;
+  amount: number | string;
   payment_method:
     | "cash"
     | "bank_transfer"
@@ -185,6 +201,47 @@ export interface AppError extends Error {
   timestamp: string;
 }
 
+// Subscription-specific types
+export interface SubscriptionStats {
+  total_subscriptions: number;
+  active_subscriptions: number;
+  suspended_subscriptions: number;
+  pending_subscriptions: number;
+  cancelled_subscriptions: number;
+  total_monthly_revenue: number;
+  total_data_used_gb: number;
+  active_percentage: number;
+}
+
+export interface SubscriptionFilters {
+  status?: string;
+  plan?: string;
+  router?: string;
+  customer?: string;
+  access_method?: string;
+  search?: string;
+  start_date?: string;
+  end_date?: string;
+}
+
+export interface SubscriptionFormData {
+  customer_id: number;
+  plan_id: number;
+  router_id: number;
+  username: string;
+  password: string;
+  access_method: "pppoe" | "static_ip" | "dhcp";
+  static_ip: string;
+  mac_address: string;
+  status: "pending" | "active" | "inactive" | "suspended" | "cancelled";
+  start_date: string;
+  end_date: string;
+  monthly_fee: number;
+  setup_fee: number;
+  data_used: number;
+  notes: string;
+}
+
 // Request metadata for tracking
 export interface RequestMetadata {
   startTime: number;
@@ -227,4 +284,112 @@ export interface Stats {
   total_monthly_revenue: number;
   total_routers: number;
   online_routers: number;
+}
+
+// Monitoring types
+export interface RouterMetric {
+  id: number;
+  router: number;
+  cpu_usage: number;
+  memory_usage: number;
+  disk_usage: number;
+  temperature?: number;
+  total_download: number;
+  total_upload: number;
+  download_speed: number;
+  upload_speed: number;
+  timestamp: string;
+}
+
+export interface MonitoringStats {
+  total_routers: number;
+  online_routers: number;
+  offline_routers: number;
+  maintenance_routers: number;
+  total_metrics: number;
+  latest_metric?: RouterMetric;
+}
+
+export interface RouterMonitoringData {
+  router: {
+    id: number;
+    name: string;
+    status: string;
+    host: string;
+  };
+  metrics: RouterMetric[];
+}
+
+export interface MainRouterStatus {
+  status: string;
+  uptime: string;
+  version: string;
+  last_seen: string;
+  cpu_usage: number;
+  memory_usage: number;
+  disk_usage: number;
+  temperature: number;
+}
+
+export interface BandwidthData {
+  total_download: number;
+  total_upload: number;
+  download_speed: number;
+  upload_speed: number;
+  interfaces?: Record<
+    string,
+    {
+      download: number;
+      upload: number;
+    }
+  >;
+}
+
+export interface NetworkInterface {
+  name: string;
+  type: string;
+  status: string;
+  ip_address: string;
+  mac_address: string;
+  speed: string;
+}
+
+export interface RouterConnection {
+  protocol: string;
+  source: string;
+  destination: string;
+  state: string;
+  duration: string;
+}
+
+export interface DHCPLease {
+  ip_address: string;
+  mac_address: string;
+  hostname: string;
+  status: string;
+  expires: string;
+}
+
+export interface SystemResources {
+  cpu_usage: number;
+  memory_usage: number;
+  disk_usage: number;
+  temperature: number;
+  uptime: string;
+  load_average: number[];
+}
+
+export interface RouterLog {
+  timestamp: string;
+  level: string;
+  message: string;
+}
+
+export interface RouterAlert {
+  id: string;
+  title: string;
+  message: string;
+  severity: string;
+  timestamp: string;
+  acknowledged: boolean;
 }

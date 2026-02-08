@@ -14,13 +14,114 @@ const MAIN_ROUTER_CONFIG = {
 class RouterService {
   private baseUrl = "/api/network";
 
+  // Get all routers
+  async getRouters(): Promise<any> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/routers/`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get routers:", error);
+      throw error;
+    }
+  }
+
+  // Get router by ID
+  async getRouter(routerId: number): Promise<any> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/routers/${routerId}/`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get router:", error);
+      throw error;
+    }
+  }
+
   // Test connection to a specific router
   async testRouterConnection(routerId: number): Promise<any> {
     try {
-      const response = await axios.post(`${this.baseUrl}/routers/${routerId}/test-connection/`);
+      const response = await axios.post(`${this.baseUrl}/routers/${routerId}/test_connection/`);
       return response.data;
     } catch (error) {
       console.error("Router connection test failed:", error);
+      throw error;
+    }
+  }
+
+  // Get router interfaces
+  async getRouterInterfaces(routerId: number): Promise<any> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/routers/${routerId}/interfaces/`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get router interfaces:", error);
+      throw error;
+    }
+  }
+
+  // Get router bandwidth
+  async getRouterBandwidth(routerId: number): Promise<any> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/routers/${routerId}/bandwidth/`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get router bandwidth:", error);
+      throw error;
+    }
+  }
+
+  // Get router PPPoE users
+  async getRouterPPPoEUsers(routerId: number): Promise<any> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/routers/${routerId}/pppoe_users/`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get PPPoE users:", error);
+      throw error;
+    }
+  }
+
+  // Create PPPoE user
+  async createPPPoEUser(routerId: number, userData: any): Promise<any> {
+    try {
+      const response = await axios.post(`${this.baseUrl}/routers/${routerId}/create_pppoe_user/`, userData);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to create PPPoE user:", error);
+      throw error;
+    }
+  }
+
+  // Get router resources
+  async getRouterResources(routerId: number): Promise<any> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/routers/${routerId}/resources/`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get router resources:", error);
+      throw error;
+    }
+  }
+
+  // Get router logs
+  async getRouterLogs(routerId: number, limit: number = 50): Promise<any> {
+    try {
+      const response = await axios.get(`${this.baseUrl}/routers/${routerId}/logs/`, {
+        params: { limit }
+      });
+      return response.data;
+    } catch (error) {
+      console.error("Failed to get router logs:", error);
+      throw error;
+    }
+  }
+
+  // Restart router
+  async restartRouter(routerId: number): Promise<any> {
+    try {
+      const response = await axios.post(`${this.baseUrl}/routers/${routerId}/restart/`);
+      return response.data;
+    } catch (error) {
+      console.error("Failed to restart router:", error);
       throw error;
     }
   }
@@ -438,7 +539,11 @@ class RouterService {
   }
 
   // Utility method to get connection status color
-  getConnectionStatusColor(status: string): string {
+  getConnectionStatusColor(status: string | undefined | null): string {
+    if (!status) {
+      return 'secondary';
+    }
+    
     switch (status.toLowerCase()) {
       case 'online':
         return 'success';
@@ -446,13 +551,29 @@ class RouterService {
         return 'error';
       case 'maintenance':
         return 'warning';
+      case 'up':
+        return 'success';
+      case 'down':
+        return 'error';
+      case 'established':
+        return 'success';
+      case 'active':
+        return 'success';
+      case 'inactive':
+        return 'error';
+      case 'loading':
+        return 'secondary';
       default:
         return 'secondary';
     }
   }
 
   // Utility method to get router type icon
-  getRouterTypeIcon(type: string): string {
+  getRouterTypeIcon(type: string | undefined | null): string {
+    if (!type) {
+      return 'Globe';
+    }
+    
     switch (type.toLowerCase()) {
       case 'mikrotik':
         return 'Router';

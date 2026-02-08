@@ -14,14 +14,51 @@ from billing.models import Invoice, Payment
 @permission_classes([IsAuthenticated])
 def usage_reports(request):
     """Get usage reports data"""
-    # Mock usage data - replace with actual monitoring data when available
-    data = {
-        'total_usage': 1250.5,
-        'average_usage': 45.2,
-        'peak_usage': 89.7,
-        'bandwidth_utilization': 72.3,
-        'usage_trend': 12.5
-    }
+    from monitoring.models import RouterMetric
+    from network.models import Router
+    
+    # Get actual usage data from monitoring metrics
+    latest_metrics = RouterMetric.objects.filter(
+        timestamp__gte=timezone.now() - timedelta(hours=24)
+    )
+    
+    if latest_metrics.exists():
+        # Calculate actual bandwidth utilization from metrics
+        total_download = latest_metrics.aggregate(total=Sum('download_speed'))['total'] or 0
+        total_upload = latest_metrics.aggregate(total=Sum('upload_speed'))['total'] or 0
+        total_bandwidth = total_download + total_upload
+        
+        # Assume total capacity (this should be configurable)
+        total_capacity = 1000000000  # 1 Gbps in bytes/s
+        bandwidth_utilization = (total_bandwidth / total_capacity * 100) if total_capacity > 0 else 0
+        
+        # Calculate averages
+        avg_download = latest_metrics.aggregate(avg=Avg('download_speed'))['avg'] or 0
+        avg_upload = latest_metrics.aggregate(avg=Avg('upload_speed'))['avg'] or 0
+        average_usage = (avg_download + avg_upload) / 1000000  # Convert to Mbps
+        
+        # Calculate peak usage
+        max_download = latest_metrics.aggregate(max=Max('download_speed'))['max'] or 0
+        max_upload = latest_metrics.aggregate(max=Max('upload_speed'))['max'] or 0
+        peak_usage = (max_download + max_upload) / 1000000  # Convert to Mbps
+        
+        data = {
+            'total_usage': total_bandwidth / 1000000,  # Convert to Mbps
+            'average_usage': average_usage,
+            'peak_usage': peak_usage,
+            'bandwidth_utilization': min(100, bandwidth_utilization),  # Cap at 100%
+            'usage_trend': 12.5  # This would need historical comparison
+        }
+    else:
+        # Fallback to minimal data if no metrics available
+        data = {
+            'total_usage': 0,
+            'average_usage': 0,
+            'peak_usage': 0,
+            'bandwidth_utilization': 0,
+            'usage_trend': 0
+        }
+    
     return APIResponse.success(data, "Usage reports retrieved successfully")
 
 

@@ -14,12 +14,12 @@ import {
   Callout,
   Spinner,
   Textarea,
+  DataTable,
+  Pagination,
 } from "@shohojdhara/atomix";
 import { Customer } from "@/types";
 import { apiService } from "@/services/apiService";
 import { sanitizeText, sanitizeEmail, sanitizePhone } from "@/utils/sanitizer";
-
-
 
 const Customers: React.FC = () => {
   const queryClient = useQueryClient();
@@ -29,7 +29,9 @@ const Customers: React.FC = () => {
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
-  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<Customer | null>(
+    null,
+  );
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -47,53 +49,92 @@ const Customers: React.FC = () => {
 
   const itemsPerPage = 12;
 
-  // Real-time customers connection
+  // Build query parameters
+  const buildQueryParams = () => {
+    const params: any = {
+      page: currentPage,
+      limit: itemsPerPage,
+    };
 
+    if (searchQuery.trim()) {
+      params.search = searchQuery.trim();
+    }
+
+    if (statusFilter !== "all") {
+      params.status = statusFilter;
+    }
+
+    return params;
+  };
 
   // Fetch customers
   const {
     data: customersData,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["customers", currentPage, searchQuery, statusFilter],
-    queryFn: () =>
-      apiService.getCustomers({
-        page: currentPage,
-        limit: itemsPerPage,
-        search: searchQuery,
-        status: statusFilter !== "all" ? statusFilter : undefined,
-      }),
+    queryFn: () => apiService.customers.getCustomers(buildQueryParams()),
+    keepPreviousData: true,
+    staleTime: 30000, // 30 seconds
+    retry: (failureCount, error: any) => {
+      // Don't retry on authentication errors
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        return false;
+      }
+      return failureCount < 2;
+    },
+  });
+
+  // Fetch customer statistics
+  const { data: customerStats } = useQuery({
+    queryKey: ["customer-stats"],
+    queryFn: () => apiService.customers.getCustomerStats(),
+    staleTime: 60000, // 1 minute
+    retry: 1,
   });
 
   // Create customer mutation
   const createMutation = useMutation({
     mutationFn: (data: Omit<Customer, "id" | "created_at" | "updated_at">) =>
-      apiService.createCustomer(data),
+      apiService.customers.createCustomer(data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
+      queryClient.invalidateQueries({ queryKey: ["customer-stats"] });
       setIsCreateModalOpen(false);
       resetForm();
+    },
+    onError: (error: any) => {
+      console.error("Failed to create customer:", error);
     },
   });
 
   // Update customer mutation
   const updateMutation = useMutation({
     mutationFn: ({ id, data }: { id: number; data: Partial<Customer> }) =>
-      apiService.updateCustomer(id, data),
+      apiService.customers.updateCustomer(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
+      queryClient.invalidateQueries({ queryKey: ["customer-stats"] });
       setIsEditModalOpen(false);
       setSelectedCustomer(null);
       resetForm();
+    },
+    onError: (error: any) => {
+      console.error("Failed to update customer:", error);
     },
   });
 
   // Delete customer mutation
   const deleteMutation = useMutation({
-    mutationFn: (id: number) => apiService.deleteCustomer(id),
+    mutationFn: (id: number) => apiService.customers.deleteCustomer(id),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["customers"] });
+      queryClient.invalidateQueries({ queryKey: ["customer-stats"] });
+    },
+    onError: (error: any) => {
+      console.error("Failed to delete customer:", error);
     },
   });
 
@@ -151,10 +192,60 @@ const Customers: React.FC = () => {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
     if (selectedCustomer) {
       updateMutation.mutate({ id: selectedCustomer.id, data: formData });
     } else {
       createMutation.mutate(formData);
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      // Create CSV content from current customers data
+      const customers = customersData?.results || [];
+      const headers = [
+        "ID",
+        "Name",
+        "Email",
+        "Phone",
+        "Company",
+        "Status",
+        "City",
+        "State",
+        "Country",
+        "Created",
+      ];
+
+      const csvContent = [
+        headers.join(","),
+        ...customers.map((customer) =>
+          [
+            customer.id,
+            `"${customer.name}"`,
+            customer.email,
+            customer.phone,
+            `"${customer.company_name || ""}"`,
+            customer.status,
+            `"${customer.city}"`,
+            `"${customer.state}"`,
+            `"${customer.country}"`,
+            new Date(customer.created_at).toLocaleDateString(),
+          ].join(","),
+        ),
+      ].join("\n");
+
+      const blob = new Blob([csvContent], { type: "text/csv" });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `customers-${new Date().toISOString().split("T")[0]}.csv`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (error) {
+      console.error("Export failed:", error);
     }
   };
 
@@ -175,17 +266,26 @@ const Customers: React.FC = () => {
     );
   };
 
-  const totalPages = customersData?.count 
-    ? Math.ceil(customersData.count / itemsPerPage) 
-    : 0;
-
   if (error) {
-    console.error('Customers loading error:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Please try again.';
+    console.error("Customers loading error:", error);
+    const errorMessage =
+      error instanceof Error ? error.message : "Please try again.";
     return (
-      <Callout variant="error">
-        Error loading customers: {errorMessage}
-      </Callout>
+      <div className="u-p-6">
+        <Callout variant="error" className="u-mb-4">
+          <div className="u-d-flex u-align-items-center u-gap-3">
+            <Icon name="Warning" size={20} />
+            <div>
+              <h3 className="u-mb-2">Failed to Load Customers</h3>
+              <p className="u-mb-3">Error: {errorMessage}</p>
+              <Button variant="outline" size="sm" onClick={() => refetch()}>
+                <Icon name="ArrowClockwise" size={16} />
+                Retry
+              </Button>
+            </div>
+          </div>
+        </Callout>
+      </div>
     );
   }
 
@@ -195,13 +295,16 @@ const Customers: React.FC = () => {
       <div className="u-mb-8">
         <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
           <div>
-            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">Customer Management</h1>
+            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">
+              Customer Management
+            </h1>
             <p className="u-text-secondary-emphasis u-text-lg">
-              Manage your customer accounts, subscriptions, and billing information
+              Manage your customer accounts, subscriptions, and billing
+              information
             </p>
           </div>
           <div className="u-d-flex u-gap-3">
-            <Button variant="outline" size="md">
+            <Button variant="outline" size="md" onClick={handleExport}>
               <Icon name="Download" size={16} />
               <span className="u-d-none u-d-sm-inline">Export</span>
             </Button>
@@ -211,20 +314,34 @@ const Customers: React.FC = () => {
             </Button>
           </div>
         </div>
-        
+
         {/* Quick Stats */}
         <div className="u-d-flex u-gap-6 u-text-sm">
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-success u-rounded-circle"></div>
-            <span className="u-text-secondary-emphasis">Total: {customersData?.count || 0} customers</span>
+            <span className="u-text-secondary-emphasis">
+              Total:{" "}
+              {customersData?.count || customerStats?.total_customers || 0}{" "}
+              customers
+            </span>
           </div>
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-primary u-rounded-circle"></div>
-            <span className="u-text-secondary-emphasis">Active: {customersData?.results?.filter(c => c.status === 'active').length || 0}</span>
+            <span className="u-text-secondary-emphasis">
+              Active:{" "}
+              {customersData?.results?.filter((c) => c.status === "active")
+                .length ||
+                customerStats?.active_customers ||
+                0}
+            </span>
           </div>
           <div className="u-d-flex u-align-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-warning u-rounded-circle"></div>
-            <span className="u-text-secondary-emphasis">Suspended: {customersData?.results?.filter(c => c.status === 'suspended').length || 0}</span>
+            <span className="u-text-secondary-emphasis">
+              Suspended:{" "}
+              {customersData?.results?.filter((c) => c.status === "suspended")
+                .length || 0}
+            </span>
           </div>
         </div>
       </div>
@@ -234,10 +351,10 @@ const Customers: React.FC = () => {
         <div className="u-d-flex u-gap-4 u-align-items-center u-flex-wrap">
           <div className="u-flex-1 u-min-w-300">
             <div className="u-position-relative">
-              <Icon 
-                name="MagnifyingGlass" 
-                size={16} 
-                className="u-position-absolute u-left-3 u-top-50 u-transform-translate-y-neg-50 u-text-secondary-emphasis" 
+              <Icon
+                name="MagnifyingGlass"
+                size={16}
+                className="u-position-absolute u-left-3 u-top-50 u-transform-translate-y-neg-50 u-text-secondary-emphasis"
               />
               <Input
                 type="text"
@@ -257,7 +374,7 @@ const Customers: React.FC = () => {
               { value: "active", label: "Active" },
               { value: "inactive", label: "Inactive" },
               { value: "suspended", label: "Suspended" },
-              { value: "cancelled", label: "Cancelled" }
+              { value: "cancelled", label: "Cancelled" },
             ]}
           />
           <Button variant="outline" size="md">
@@ -267,151 +384,145 @@ const Customers: React.FC = () => {
         </div>
       </Card>
 
-      {/* Customers Grid */}
-      {isLoading ? (
-        <div className="u-d-flex u-justify-content-center u-align-items-center u-py-8">
-          <div className="u-text-center">
+      {/* Customers DataTable */}
+      <Card>
+        {isLoading ? (
+          <div className="u-text-center u-p-6">
             <Spinner size="lg" />
-            <p>Loading customers...</p>
+            <p className="u-mt-3 u-text-secondary">Loading customers...</p>
           </div>
-        </div>
-      ) : (
-        <Grid>
-          {customersData?.results?.map((customer) => (
-            <GridCol key={customer.id} xs={12} md={6} lg={4} className="u-mb-4">
-              <Card className="u-h-100">
-                <div className="u-d-flex u-align-items-center u-gap-3 u-mb-4">
-                  <Avatar initials={customer.name?.charAt(0) || '?'} size="md" />
-                  <div className="u-flex-fill">
-                    <h3 className="u-mb-1">{sanitizeText(customer.name)}</h3>
-                    {customer.company_name && (
-                      <p className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                        {sanitizeText(customer.company_name)}
-                      </p>
-                    )}
-                    <div className="u-d-flex u-align-items-center u-gap-2">
-                      {getStatusBadge(customer.status)}
+        ) : (
+          <>
+            <DataTable
+              data={
+                customersData?.results?.map((customer) => ({
+                  id: customer.id,
+                  customer: (
+                    <div className="u-d-flex u-align-items-center">
+                      <Avatar
+                        size="sm"
+                        initials={customer.name?.charAt(0) || "?"}
+                        className="u-me-3"
+                      />
+                      <div>
+                        <div className="u-fw-medium">
+                          {sanitizeText(customer.name)}
+                        </div>
+                        {customer.company_name && (
+                          <div className="u-text-secondary u-text-sm">
+                            {sanitizeText(customer.company_name)}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
+                  ),
+                  contact: (
+                    <div>
+                      <div className="u-text-sm u-mb-1">
+                        <Icon
+                          name="Envelope"
+                          size={14}
+                          className="u-me-2 u-text-secondary"
+                        />
+                        {sanitizeEmail(customer.email)}
+                      </div>
+                      <div className="u-text-sm">
+                        <Icon
+                          name="Phone"
+                          size={14}
+                          className="u-me-2 u-text-secondary"
+                        />
+                        {sanitizePhone(customer.phone)}
+                      </div>
+                    </div>
+                  ),
+                  location: (
+                    <div>
+                      <div className="u-text-sm">
+                        {sanitizeText(customer.city)},{" "}
+                        {sanitizeText(customer.state)}
+                      </div>
+                      <div className="u-text-secondary u-text-sm">
+                        {sanitizeText(customer.country)}
+                      </div>
+                    </div>
+                  ),
+                  status: getStatusBadge(customer.status),
+                  joined: new Date(customer.created_at).toLocaleDateString(),
+                  actions: (
+                    <div className="u-d-flex u-gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleViewCustomer(customer)}
+                      >
+                        <Icon name="Eye" size={14} />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEditCustomer(customer)}
+                      >
+                        <Icon name="Pencil" size={14} />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleDeleteCustomer(customer)}
+                        disabled={deleteMutation.isPending}
+                      >
+                        <Icon name="Trash" size={14} />
+                      </Button>
+                    </div>
+                  ),
+                })) || []
+              }
+              columns={[
+                { key: "customer", title: "Customer" },
+                { key: "contact", title: "Contact Info" },
+                { key: "location", title: "Location" },
+                { key: "status", title: "Status" },
+                { key: "joined", title: "Joined" },
+                { key: "actions", title: "Actions" },
+              ]}
+            />
+
+            {/* Pagination */}
+            {customersData &&
+              Math.ceil((customersData.count || 0) / itemsPerPage) > 1 && (
+                <div className="u-p-4 u-border-top">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(
+                      (customersData.count || 0) / itemsPerPage,
+                    )}
+                    onPageChange={setCurrentPage}
+                  />
                 </div>
+              )}
 
-                <div className="u-mb-4">
-                  <div className="u-d-flex u-align-items-center u-gap-2 u-mb-2">
-                    <Icon
-                      name="Envelope"
-                      size={16}
-                      className="u-text-brand-emphasis"
-                    />
-                    <span className="u-fs-sm">{sanitizeEmail(customer.email)}</span>
-                  </div>
-                  <div className="u-d-flex u-align-items-center u-gap-2 u-mb-2">
-                    <Icon name="Phone" size={16} className="u-text-brand-emphasis" />
-                    <span className="u-fs-sm">{sanitizePhone(customer.phone)}</span>
-                  </div>
-                  <div className="u-d-flex u-align-items-center u-gap-2 u-mb-2">
-                    <Icon
-                      name="MapPin"
-                      size={16}
-                      className="u-text-brand-emphasis"
-                    />
-                    <span className="u-fs-sm">
-                      {sanitizeText(customer.city)}, {sanitizeText(customer.state)}
-                    </span>
-                  </div>
-                  <div className="u-d-flex u-align-items-center u-gap-2">
-                    <Icon
-                      name="Calendar"
-                      size={16}
-                      className="u-text-brand-emphasis"
-                    />
-                    <span className="u-fs-sm">
-                      Joined{" "}
-                      {new Date(customer.created_at).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
-
-                <div className="u-d-flex u-gap-2 u-mt-auto">
-                  <Button 
-                    variant="primary" 
-                    size="sm" 
-                    className="u-flex-fill"
-                    onClick={() => handleViewCustomer(customer)}
-                  >
-                    <Icon name="Eye" size={16} />
-                    View
-                  </Button>
-                  <Button 
-                    variant="info" 
-                    size="sm" 
-                    className="u-flex-fill"
-                    onClick={() => handleEditCustomer(customer)}
-                  >
-                    <Icon name="Pencil" size={16} />
-                    Edit
-                  </Button>
-                  <Button
-                    variant="error"
-                    size="sm"
-                    onClick={() => handleDeleteCustomer(customer)}
-                    className="u-text-error"
-                  >
-                    <Icon name="Trash" size={16} />
-                  </Button>
-                </div>
-              </Card>
-            </GridCol>
-          ))}
-        </Grid>
-      )}
-
-      {/* Show message if no customers */}
-      {!isLoading && (!customersData?.results || customersData.results.length === 0) && (
-        <Card>
-          <div className="u-text-center u-py-8">
-            <Icon name="Users" size={48} className="u-text-secondary-emphasis u-mb-4" />
-            <h3 className="u-mb-2">No customers found</h3>
-            <p className="u-text-secondary-emphasis u-mb-4">
-              {searchQuery
-                ? "No customers match your search criteria."
-                : "You haven't created any customers yet."}
-            </p>
-            <Button variant="primary" onClick={handleCreateCustomer}>
-              <Icon name="Plus" size={16} />
-              Add First Customer
-            </Button>
-          </div>
-        </Card>
-      )}
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <div className="u-d-flex u-justify-content-center u-mt-6">
-          <div className="u-d-flex u-gap-2">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              <Icon name="CaretLeft" size={16} />
-              Previous
-            </Button>
-            <span className="u-d-flex u-align-items-center u-px-3">
-              Page {currentPage} of {totalPages}
-            </span>
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-              <Icon name="CaretRight" size={16} />
-            </Button>
-          </div>
-        </div>
-      )}
+            {customersData?.results?.length === 0 && (
+              <div className="u-text-center u-p-6">
+                <Icon
+                  name="Users"
+                  size={48}
+                  className="u-text-secondary u-mb-3"
+                />
+                <h3 className="u-h5 u-mb-2">No customers found</h3>
+                <p className="u-text-secondary u-mb-4">
+                  {searchQuery || statusFilter !== "all"
+                    ? "Try adjusting your filters"
+                    : "Get started by creating your first customer"}
+                </p>
+                <Button variant="primary" onClick={handleCreateCustomer}>
+                  <Icon name="Plus" size={16} className="u-me-2" />
+                  Add Customer
+                </Button>
+              </div>
+            )}
+          </>
+        )}
+      </Card>
 
       {/* View Customer Modal */}
       <Modal
@@ -425,12 +536,24 @@ const Customers: React.FC = () => {
       >
         {selectedCustomer && (
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
-              <Avatar initials={selectedCustomer.name?.charAt(0) || '?'} size="lg" />
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "0.75rem",
+                marginBottom: "1rem",
+              }}
+            >
+              <Avatar
+                initials={selectedCustomer.name?.charAt(0) || "?"}
+                size="lg"
+              />
               <div>
                 <h2 className="u-mb-1">{selectedCustomer.name}</h2>
                 {selectedCustomer.company_name && (
-                  <p className="u-text-secondary-emphasis u-mb-1">{selectedCustomer.company_name}</p>
+                  <p className="u-text-secondary-emphasis u-mb-1">
+                    {selectedCustomer.company_name}
+                  </p>
                 )}
                 {getStatusBadge(selectedCustomer.status)}
               </div>
@@ -439,39 +562,51 @@ const Customers: React.FC = () => {
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Email</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Email
+                  </label>
                   <p>{selectedCustomer.email}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Phone</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Phone
+                  </label>
                   <p>{selectedCustomer.phone}</p>
                 </div>
               </GridCol>
             </Grid>
 
             <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Address</label>
+              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                Address
+              </label>
               <p>{selectedCustomer.address}</p>
             </div>
 
             <Grid>
               <GridCol xs={12} md={4}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">City</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    City
+                  </label>
                   <p>{selectedCustomer.city}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={4}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">State</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    State
+                  </label>
                   <p>{selectedCustomer.state}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={4}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Postal Code</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Postal Code
+                  </label>
                   <p>{selectedCustomer.postal_code}</p>
                 </div>
               </GridCol>
@@ -480,13 +615,17 @@ const Customers: React.FC = () => {
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Country</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Country
+                  </label>
                   <p>{selectedCustomer.country}</p>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Tax ID</label>
+                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Tax ID
+                  </label>
                   <p>{selectedCustomer.tax_id || "N/A"}</p>
                 </div>
               </GridCol>
@@ -494,13 +633,17 @@ const Customers: React.FC = () => {
 
             {selectedCustomer.notes && (
               <div className="u-mb-3">
-                <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Notes</label>
+                <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                  Notes
+                </label>
                 <p>{selectedCustomer.notes}</p>
               </div>
             )}
 
             <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Created</label>
+              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                Created
+              </label>
               <p>{new Date(selectedCustomer.created_at).toLocaleString()}</p>
             </div>
 
@@ -540,7 +683,12 @@ const Customers: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <Grid>
             <GridCol xs={12} md={6}>
-              <label htmlFor="name" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Full Name *</label>
+              <label
+                htmlFor="name"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                Full Name *
+              </label>
               <Input
                 id="name"
                 type="text"
@@ -552,7 +700,12 @@ const Customers: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label htmlFor="email" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Email *</label>
+              <label
+                htmlFor="email"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                Email *
+              </label>
               <Input
                 id="email"
                 type="email"
@@ -567,7 +720,12 @@ const Customers: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label htmlFor="phone" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Phone *</label>
+              <label
+                htmlFor="phone"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                Phone *
+              </label>
               <Input
                 id="phone"
                 type="tel"
@@ -579,7 +737,12 @@ const Customers: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label htmlFor="company_name" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Company Name</label>
+              <label
+                htmlFor="company_name"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                Company Name
+              </label>
               <Input
                 id="company_name"
                 type="text"
@@ -592,7 +755,12 @@ const Customers: React.FC = () => {
           </Grid>
 
           <div className="u-mb-4">
-            <label htmlFor="address" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Address *</label>
+            <label
+              htmlFor="address"
+              className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+            >
+              Address *
+            </label>
             <Textarea
               id="address"
               value={formData.address}
@@ -606,7 +774,12 @@ const Customers: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={4}>
-              <label htmlFor="city" className="u-d-block u-fs-sm u-fw-medium u-mb-1">City *</label>
+              <label
+                htmlFor="city"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                City *
+              </label>
               <Input
                 id="city"
                 type="text"
@@ -618,7 +791,12 @@ const Customers: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={4}>
-              <label htmlFor="state" className="u-d-block u-fs-sm u-fw-medium u-mb-1">State *</label>
+              <label
+                htmlFor="state"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                State *
+              </label>
               <Input
                 id="state"
                 type="text"
@@ -630,7 +808,12 @@ const Customers: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={4}>
-              <label htmlFor="postal_code" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Postal Code *</label>
+              <label
+                htmlFor="postal_code"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                Postal Code *
+              </label>
               <Input
                 id="postal_code"
                 type="text"
@@ -645,7 +828,12 @@ const Customers: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label htmlFor="country" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Country *</label>
+              <label
+                htmlFor="country"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                Country *
+              </label>
               <Input
                 id="country"
                 type="text"
@@ -657,7 +845,12 @@ const Customers: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label htmlFor="tax_id" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Tax ID</label>
+              <label
+                htmlFor="tax_id"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                Tax ID
+              </label>
               <Input
                 id="tax_id"
                 type="text"
@@ -671,7 +864,12 @@ const Customers: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label htmlFor="status" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Status *</label>
+              <label
+                htmlFor="status"
+                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              >
+                Status *
+              </label>
               <Select
                 id="status"
                 value={formData.status}
@@ -687,14 +885,19 @@ const Customers: React.FC = () => {
                   { value: "active", label: "Active" },
                   { value: "inactive", label: "Inactive" },
                   { value: "suspended", label: "Suspended" },
-                  { value: "cancelled", label: "Cancelled" }
+                  { value: "cancelled", label: "Cancelled" },
                 ]}
               />
             </GridCol>
           </Grid>
 
           <div className="u-mb-4">
-            <label htmlFor="notes" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Notes</label>
+            <label
+              htmlFor="notes"
+              className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+            >
+              Notes
+            </label>
             <Textarea
               id="notes"
               value={formData.notes}
@@ -723,7 +926,16 @@ const Customers: React.FC = () => {
               variant="primary"
               disabled={createMutation.isPending || updateMutation.isPending}
             >
-              {selectedCustomer ? "Update Customer" : "Create Customer"}
+              {createMutation.isPending || updateMutation.isPending ? (
+                <>
+                  <Spinner size="sm" className="u-me-2" />
+                  {selectedCustomer ? "Updating..." : "Creating..."}
+                </>
+              ) : selectedCustomer ? (
+                "Update Customer"
+              ) : (
+                "Create Customer"
+              )}
             </Button>
           </div>
         </form>

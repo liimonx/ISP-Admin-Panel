@@ -1,4 +1,4 @@
-from rest_framework import status, generics, permissions
+from rest_framework import status, generics, permissions, serializers
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
@@ -30,8 +30,33 @@ class LoginView(generics.GenericAPIView):
     permission_classes = [permissions.AllowAny]
     
     def post(self, request):
-        serializer = self.get_serializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
+        # Debug logging
+        print(f"Request type: {type(request)}")
+        print(f"Request method: {request.method}")
+        print(f"Request content type: {request.content_type}")
+        print(f"Request body: {request.body}")
+        print(f"Has data attr: {hasattr(request, 'data')}")
+        
+        # Handle both DRF request and WSGIRequest
+        if hasattr(request, 'data'):
+            data = request.data
+            print(f"Using request.data: {data}")
+        else:
+            # Parse JSON from request body
+            import json
+            try:
+                data = json.loads(request.body.decode('utf-8'))
+                print(f"Parsed JSON from body: {data}")
+            except (json.JSONDecodeError, UnicodeDecodeError) as e:
+                print(f"JSON decode error: {e}")
+                data = request.POST
+                print(f"Using request.POST: {data}")
+        
+        # Use serializer directly instead of through the view
+        serializer = LoginSerializer(data=data)
+        if not serializer.is_valid():
+            print(f"Serializer errors: {serializer.errors}")
+            raise serializers.ValidationError(serializer.errors)
         
         user = serializer.validated_data['user']
         refresh = RefreshToken.for_user(user)

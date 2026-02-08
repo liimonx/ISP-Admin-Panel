@@ -52,7 +52,7 @@ const Layout: React.FC = () => {
       };
 
   return (
-    <div className="u-min-vh-100 u-d-flex u-flex-column">
+    <div className="u-min-vh-100 u-d-flex u-flex-column u-pb-10">
       {/* Header */}
       <Header
         user={mockUser}
@@ -63,37 +63,16 @@ const Layout: React.FC = () => {
         showSearch={true}
         showNotifications={true}
         showUserMenu={true}
+        showSidebarToggle={true}
+        sidebarCollapsed={sidebarCollapsed}
       />
       <Container type="fluid" className="u-pt-24">
         <Grid>
           <GridCol sm={!sidebarCollapsed ? 2 : 0}>
             {/* Sidebar */}
-            {!isMobile && (
-              <div className={`${sidebarCollapsed  && 'u-position-fixed'}`}>
-                <Sidebar
-                  collapsed={sidebarCollapsed}
-                  onToggle={handleSidebarToggle}
-                  user={mockUser}
-                />
-              </div>
-            )}
-
-            {/* Mobile Sidebar Overlay */}
-            {isMobile && !sidebarCollapsed && (
-              <>
-                <div
-                  className="u-position-fixed u-top-0 u-start-0 u-w-100 u-h-100 u-body-bg u-z-4"
-                  onClick={handleSidebarToggle}
-                />
-                <div className="u-position-fixed u-top-0 u-left-0 u-z-50">
-                  <Sidebar
-                    collapsed={false}
-                    onToggle={handleSidebarToggle}
-                    user={mockUser}
-                  />
-                </div>
-              </>
-            )}
+            <div className={`${"u-position-fixed"}`}>
+              <Sidebar collapsed={sidebarCollapsed} />
+            </div>
           </GridCol>
           <GridCol sm={!sidebarCollapsed ? 10 : 11}>
             <main>

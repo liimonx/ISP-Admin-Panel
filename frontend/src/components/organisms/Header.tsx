@@ -24,6 +24,8 @@ export interface HeaderProps {
   showSearch?: boolean;
   showNotifications?: boolean;
   showUserMenu?: boolean;
+  showSidebarToggle?: boolean;
+  sidebarCollapsed?: boolean;
   className?: string;
   "data-testid"?: string;
 }
@@ -37,6 +39,8 @@ export const Header: React.FC<HeaderProps> = ({
   showSearch = true,
   showNotifications = true,
   showUserMenu = true,
+  showSidebarToggle = true,
+  sidebarCollapsed = false,
   className = "",
   "data-testid": testId,
 }) => {
@@ -77,22 +81,30 @@ export const Header: React.FC<HeaderProps> = ({
       data-testid={testId}
       position="fixed"
       containerWidth="100%"
+      glass={
+        {
+          displacementScale: 300
+        }
+      }
     >
       <div className="u-d-flex u-align-items-center u-justify-content-between u-w-100 u-px-4 u-py-3">
         <div className="u-d-flex u-align-items-center u-gap-4">
-          <Button
-            variant="ghost"
-            size="md"
-            onClick={onMenuToggle}
-            aria-label="Toggle navigation menu"
-          >
-            <Icon name="List" size={20} />
-          </Button>
+          {showSidebarToggle && (
+            <Button
+              variant="ghost"
+              size="md"
+              glass
+              onClick={onMenuToggle}
+              aria-label="Toggle navigation menu"
+            >
+              <Icon name="List" size={20} />
+            </Button>
+          )}
 
-          <div className="u-d-flex u-align-items-center u-gap-2 u-d-none u-d-lg-flex">
+          <div className="u-d-flex u-align-items-center u-gap-2">
             <Icon name="Globe" size={24} className="u-text-primary" />
-            <span className="u-text-lg u-fw-semibold u-text-primary">
-              BCN ISP Admin
+            <span className="u-text-lg u-fw-bold u-text-primary">
+              BCN ISP
             </span>
           </div>
         </div>

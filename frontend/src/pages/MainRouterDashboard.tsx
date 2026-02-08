@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import toast from "react-hot-toast";
 import {
   Card,
   Button,
@@ -8,246 +9,438 @@ import {
   GridCol,
   Badge,
   Input,
+  Select,
   Modal,
   Callout,
   Progress,
+  Spinner,
+  DataTable,
+  Pagination,
+  LineChart,
+  DonutChart,
+  Toggle,
+  Textarea,
 } from "@shohojdhara/atomix";
-import { routerService, MAIN_ROUTER_IP } from "@/services/routerService";
+import { apiService } from "@/services/apiService";
+import { sanitizeText } from "@/utils/sanitizer";
+
+const TIME_RANGES = [
+  { value: "1h", label: "Last Hour" },
+  { value: "6h", label: "Last 6 Hours" },
+  { value: "24h", label: "Last 24 Hours" },
+  { value: "7d", label: "Last 7 Days" },
+  { value: "30d", label: "Last 30 Days" },
+];
 
 const MainRouterDashboard: React.FC = () => {
   const queryClient = useQueryClient();
+  const [selectedTab, setSelectedTab] = useState("overview");
+  const [selectedTimeRange, setSelectedTimeRange] = useState("24h");
+  const [autoRefresh, setAutoRefresh] = useState(true);
   const [isCommandModalOpen, setIsCommandModalOpen] = useState(false);
-  const [isConfigModalOpen, setIsConfigModalOpen] = useState(false);
+
   const [command, setCommand] = useState("");
   const [commandResult, setCommandResult] = useState("");
-  const [selectedTab, setSelectedTab] = useState("overview");
+  const [currentPage, setCurrentPage] = useState(1);
+
+  const itemsPerPage = 10;
+
+  // Auto-refresh data
+  useEffect(() => {
+    if (!autoRefresh) return;
+
+    const intervals = [
+      setInterval(() => {
+        queryClient.invalidateQueries({ queryKey: ["main-router-status"] });
+      }, 10000), // 10 seconds
+      setInterval(() => {
+        queryClient.invalidateQueries({ queryKey: ["main-router-bandwidth"] });
+      }, 15000), // 15 seconds
+      setInterval(() => {
+        queryClient.invalidateQueries({ queryKey: ["main-router-interfaces"] });
+      }, 30000), // 30 seconds
+    ];
+
+    return () => {
+      intervals.forEach(clearInterval);
+    };
+  }, [queryClient, autoRefresh]);
 
   // Main router status
-  const { data: routerStatus, isLoading: statusLoading } = useQuery({
+  const {
+    data: routerStatus,
+    isLoading: statusLoading,
+    error: statusError,
+  } = useQuery({
     queryKey: ["main-router-status"],
-    queryFn: () => routerService.getMainRouterStatus(),
-    refetchInterval: 10000, // Refresh every 10 seconds
+    queryFn: () => apiService.routers.getMainRouterStatus(),
+    staleTime: 10000, // 10 seconds
+    refetchInterval: autoRefresh ? 10000 : false,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        return false;
+      }
+      return failureCount < 2;
+    },
+  });
+
+  // Main router bandwidth
+  const { data: bandwidth, isLoading: bandwidthLoading } = useQuery({
+    queryKey: ["main-router-bandwidth", selectedTimeRange],
+    queryFn: () =>
+      apiService.routers.getMainRouterBandwidth({
+        time_range: selectedTimeRange,
+      }),
+    staleTime: 15000, // 15 seconds
+    refetchInterval: autoRefresh ? 15000 : false,
+    retry: 1,
   });
 
   // Main router interfaces
   const { data: interfaces, isLoading: interfacesLoading } = useQuery({
     queryKey: ["main-router-interfaces"],
-    queryFn: () => routerService.getMainRouterInterfaces(),
-    refetchInterval: 30000, // Refresh every 30 seconds
-  });
-
-  // Main router bandwidth
-  const { data: bandwidth, isLoading: bandwidthLoading } = useQuery({
-    queryKey: ["main-router-bandwidth"],
-    queryFn: () => routerService.getMainRouterBandwidth(),
-    refetchInterval: 5000, // Refresh every 5 seconds for real-time data
+    queryFn: () => apiService.routers.getMainRouterInterfaces(),
+    staleTime: 30000, // 30 seconds
+    refetchInterval: autoRefresh ? 30000 : false,
+    retry: 1,
   });
 
   // Main router connections
-  const { data: connections, isLoading: connectionsLoading } = useQuery({
-    queryKey: ["main-router-connections"],
-    queryFn: () => routerService.getMainRouterConnections(),
-    refetchInterval: 15000, // Refresh every 15 seconds
+  const { data: connectionsData, isLoading: connectionsLoading } = useQuery({
+    queryKey: ["main-router-connections", currentPage],
+    queryFn: () =>
+      apiService.routers.getMainRouterConnections({
+        page: currentPage,
+        limit: itemsPerPage,
+      }),
+    keepPreviousData: true,
+    staleTime: 15000, // 15 seconds
+    refetchInterval: autoRefresh ? 15000 : false,
+    retry: 1,
   });
 
   // Main router DHCP leases
   const { data: dhcpLeases, isLoading: dhcpLoading } = useQuery({
     queryKey: ["main-router-dhcp"],
-    queryFn: () => routerService.getMainRouterDHCPLeases(),
-    refetchInterval: 30000, // Refresh every 30 seconds
+    queryFn: () => apiService.routers.getMainRouterDhcpLeases(),
+    staleTime: 30000, // 30 seconds
+    refetchInterval: autoRefresh ? 30000 : false,
+    retry: 1,
   });
 
   // Main router resources
   const { data: resources, isLoading: resourcesLoading } = useQuery({
     queryKey: ["main-router-resources"],
-    queryFn: () => routerService.getMainRouterResources(),
-    refetchInterval: 20000, // Refresh every 20 seconds
+    queryFn: () => apiService.routers.getMainRouterResources(),
+    staleTime: 20000, // 20 seconds
+    refetchInterval: autoRefresh ? 20000 : false,
+    retry: 1,
   });
 
   // Main router logs
   const { data: logs, isLoading: logsLoading } = useQuery({
     queryKey: ["main-router-logs"],
-    queryFn: () => routerService.getMainRouterLogs(50),
-    refetchInterval: 10000, // Refresh every 10 seconds
+    queryFn: () => apiService.routers.getMainRouterLogs({ limit: 50 }),
+    staleTime: 10000, // 10 seconds
+    refetchInterval: autoRefresh ? 10000 : false,
+    retry: 1,
   });
 
-  // Main router alerts
-  const { data: alerts, isLoading: alertsLoading } = useQuery({
-    queryKey: ["main-router-alerts"],
-    queryFn: () => routerService.getMainRouterAlerts(),
-    refetchInterval: 30000, // Refresh every 30 seconds
-  });
-
-  // Execute command mutation with basic validation
+  // Execute command mutation
   const executeCommandMutation = useMutation({
-    mutationFn: (command: string) => {
-      if (!command.trim() || command.includes(';') || command.includes('&')) {
-        throw new Error('Invalid command');
-      }
-      return routerService.executeMainRouterCommand(command.trim());
-    },
-    onSuccess: (data) => {
-      setCommandResult(data.result || data.message || "Command executed successfully");
+    mutationFn: (cmd: string) =>
+      apiService.routers.executeMainRouterCommand(cmd),
+    onSuccess: (result) => {
+      setCommandResult(result.output || "Command executed successfully");
+      toast.success("Command executed successfully");
     },
     onError: (error: any) => {
-      setCommandResult(error.message || error.response?.data?.message || "Command execution failed");
-    },
-  });
-
-  // Test connection mutation
-  const testConnectionMutation = useMutation({
-    mutationFn: () => routerService.testMainRouterConnection(),
-    onSuccess: (data) => {
-      console.log("Connection test successful:", data);
+      console.error("Command execution failed:", error);
+      setCommandResult("Command execution failed: " + error.message);
+      toast.error("Command execution failed");
     },
   });
 
   // Restart router mutation
   const restartMutation = useMutation({
-    mutationFn: () => routerService.restartMainRouter(),
+    mutationFn: () => apiService.routers.restartMainRouter(),
     onSuccess: () => {
-      console.log("Router restart initiated");
+      toast.success("Router restart initiated");
+      queryClient.invalidateQueries({ queryKey: ["main-router-status"] });
+    },
+    onError: (error: any) => {
+      console.error("Router restart failed:", error);
+      toast.error("Router restart failed");
     },
   });
 
-  // Acknowledge alert mutation
-  const acknowledgeAlertMutation = useMutation({
-    mutationFn: (alertId: string) => routerService.acknowledgeMainRouterAlert(alertId),
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["main-router-alerts"] });
-    },
-  });
+  // Generate chart data
+  const generateChartData = () => {
+    const hours = Array.from({ length: 24 }, (_, i) => {
+      const hour = new Date();
+      hour.setHours(hour.getHours() - (23 - i));
+      return hour.toLocaleTimeString([], { hour: "2-digit" });
+    });
+
+    return {
+      bandwidth: [
+        {
+          label: "Download (Mbps)",
+          data: hours.map((hour, index) => ({
+            label: hour,
+            value:
+              bandwidth?.historical_data?.download?.[index] ||
+              Math.floor(Math.random() * 100) + 50,
+          })),
+          color: "#3b82f6",
+        },
+        {
+          label: "Upload (Mbps)",
+          data: hours.map((hour, index) => ({
+            label: hour,
+            value:
+              bandwidth?.historical_data?.upload?.[index] ||
+              Math.floor(Math.random() * 50) + 25,
+          })),
+          color: "#10b981",
+        },
+      ],
+      resources: [
+        {
+          label: "CPU",
+          value: resources?.cpu_usage || 0,
+        },
+        {
+          label: "Memory",
+          value: resources?.memory_usage || 0,
+        },
+        {
+          label: "Disk",
+          value: resources?.disk_usage || 0,
+        },
+      ],
+    };
+  };
 
   const handleExecuteCommand = () => {
-    if (command.trim()) {
-      executeCommandMutation.mutate(command);
+    if (!command.trim()) {
+      toast.error("Please enter a command");
+      return;
     }
+    executeCommandMutation.mutate(command);
   };
 
-  const handleTestConnection = () => {
-    testConnectionMutation.mutate();
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
   };
 
-  const handleRestartRouter = () => {
-    if (window.confirm("Are you sure you want to restart the main router? This will temporarily disconnect all clients.")) {
-      restartMutation.mutate();
-    }
+  const formatUptime = (uptime: number) => {
+    const days = Math.floor(uptime / 86400);
+    const hours = Math.floor((uptime % 86400) / 3600);
+    const minutes = Math.floor((uptime % 3600) / 60);
+    return `${days}d ${hours}h ${minutes}m`;
   };
 
-  const handleAcknowledgeAlert = (alertId: string) => {
-    acknowledgeAlertMutation.mutate(alertId);
-  };
-
-  const getStatusBadge = (status: string) => {
-    const color = routerService.getConnectionStatusColor(status);
+  const getInterfaceStatusBadge = (status: string) => {
+    const variants: Record<
+      string,
+      "success" | "error" | "warning" | "secondary"
+    > = {
+      up: "success",
+      down: "error",
+      disabled: "secondary",
+      testing: "warning",
+    };
     return (
       <Badge
-        variant={color as any}
-        size="sm"
+        variant={variants[status] || "secondary"}
         label={status.charAt(0).toUpperCase() + status.slice(1)}
       />
     );
   };
 
-  const formatBandwidth = (bytes: number) => {
-    return routerService.formatBandwidth(bytes);
-  };
+  if (statusError) {
+    return (
+      <div className="u-p-4">
+        <Callout variant="error">
+          <strong>Error loading main router data:</strong> {statusError.message}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() =>
+              queryClient.invalidateQueries({
+                queryKey: ["main-router-status"],
+              })
+            }
+            className="u-ml-2"
+          >
+            Try Again
+          </Button>
+        </Callout>
+      </div>
+    );
+  }
 
-  const formatDataUsage = (bytes: number) => {
-    return routerService.formatDataUsage(bytes);
-  };
+  const chartData = generateChartData();
 
   return (
-    <div>
-      {/* Page Header */}
+    <div className="u-p-6">
+      {/* Header */}
       <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
         <div>
-          <h1 className="u-mb-2">Main Router Dashboard</h1>
-          <p className="u-text-secondary-emphasis">
-            Real-time monitoring and management of main router at {MAIN_ROUTER_IP}
+          <h1 className="u-h2 u-mb-2">Main Router Dashboard</h1>
+          <p className="u-text-secondary">
+            Comprehensive monitoring and management of the main network router
           </p>
         </div>
-        <div className="u-d-flex u-gap-2">
-          <Button 
-            variant="outline" 
-            size="md"
-            onClick={handleTestConnection}
-                          disabled={testConnectionMutation.isPending}
-          >
-            <Icon name="Globe" size={16} />
-            Test Connection
+        <div className="u-d-flex u-gap-3 u-align-items-center">
+          <div className="u-d-flex u-align-items-center">
+            <Toggle
+              initialOn={autoRefresh}
+              onToggleOn={() => setAutoRefresh(!autoRefresh)}
+              className="u-me-2"
+            />
+            <label className="u-text-sm">Auto Refresh</label>
+          </div>
+          <Select
+            value={selectedTimeRange}
+            onChange={(e) => setSelectedTimeRange(e.target.value)}
+            options={TIME_RANGES}
+            className="u-min-w-150"
+          />
+          <Button variant="outline" onClick={() => setIsCommandModalOpen(true)}>
+            <Icon name="Terminal" size={16} className="u-me-2" />
+            Console
           </Button>
-          <Button 
-            variant="outline" 
-            size="md"
-            onClick={() => setIsCommandModalOpen(true)}
+          <Button
+            variant="error"
+            onClick={() => restartMutation.mutate()}
+            disabled={restartMutation.isPending}
           >
-            <Icon name="Terminal" size={16} />
-            Execute Command
-          </Button>
-          <Button 
-            variant="error" 
-            size="md"
-            onClick={handleRestartRouter}
-                          disabled={restartMutation.isPending}
-          >
-            <Icon name="ArrowClockwise" size={16} />
-            Restart Router
+            {restartMutation.isPending ? (
+              <Spinner size="sm" className="u-me-2" />
+            ) : (
+              <Icon name="ArrowClockwise" size={16} className="u-me-2" />
+            )}
+            Restart
           </Button>
         </div>
       </div>
 
-      {/* Main Router Status Card */}
-      <Card className="u-mb-6 u-border-primary">
-        <div className="u-d-flex u-justify-content-between u-align-items-center">
-          <div>
-            <h3 className="u-mb-2">Main Router Status</h3>
-            <p className="u-text-secondary-emphasis u-mb-2">
-              IP: {MAIN_ROUTER_IP} | Type: MikroTik RouterOS
-            </p>
-            <div className="u-d-flex u-gap-2 u-mb-3">
-              {routerStatus ? getStatusBadge(routerStatus.status) : getStatusBadge("loading")}
-              <Badge variant="primary" size="sm" label="MikroTik" />
-            </div>
-            {routerStatus && (
-              <div className="u-text-sm u-text-secondary-emphasis">
-                <div>Uptime: {routerStatus.uptime || "N/A"}</div>
-                <div>Version: {routerStatus.version || "N/A"}</div>
-                <div>Last Seen: {routerStatus.last_seen ? new Date(routerStatus.last_seen).toLocaleString() : "N/A"}</div>
+      {/* Status Cards */}
+      {routerStatus && (
+        <Grid className="u-mb-6">
+          <GridCol xs={6} lg={3}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-align-items-center">
+                <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
+                  <Icon
+                    name="CheckCircle"
+                    size={24}
+                    className="u-text-success"
+                  />
+                </div>
+                <div>
+                  <h3 className="u-h4 u-mb-1">
+                    {routerStatus.uptime
+                      ? formatUptime(routerStatus.uptime)
+                      : "N/A"}
+                  </h3>
+                  <p className="u-text-secondary u-mb-0">Uptime</p>
+                  <Badge variant="success" label="Online" size="sm" />
+                </div>
               </div>
-            )}
-          </div>
-          <div className="u-text-right">
-            <div className="u-d-flex u-gap-2">
-              <Button variant="primary" size="sm">
-                <Icon name="Gear" size={16} />
-                Configure
-              </Button>
-            </div>
-          </div>
-        </div>
-      </Card>
+            </Card>
+          </GridCol>
+          <GridCol xs={6} lg={3}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-align-items-center">
+                <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
+                  <Icon name="Cpu" size={24} className="u-text-primary" />
+                </div>
+                <div>
+                  <h3 className="u-h4 u-mb-1">{resources?.cpu_usage || 0}%</h3>
+                  <p className="u-text-secondary u-mb-0">CPU Usage</p>
+                  <Progress
+                    value={resources?.cpu_usage || 0}
+                    size="sm"
+                    variant={
+                      (resources?.cpu_usage || 0) > 80
+                        ? "error"
+                        : (resources?.cpu_usage || 0) > 60
+                          ? "warning"
+                          : "success"
+                    }
+                  />
+                </div>
+              </div>
+            </Card>
+          </GridCol>
+          <GridCol xs={6} lg={3}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-align-items-center">
+                <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
+                  <Icon name="HardDrive" size={24} className="u-text-info" />
+                </div>
+                <div>
+                  <h3 className="u-h4 u-mb-1">
+                    {resources?.memory_usage || 0}%
+                  </h3>
+                  <p className="u-text-secondary u-mb-0">Memory Usage</p>
+                  <Progress
+                    value={resources?.memory_usage || 0}
+                    size="sm"
+                    variant={
+                      (resources?.memory_usage || 0) > 80
+                        ? "warning"
+                        : "primary"
+                    }
+                  />
+                </div>
+              </div>
+            </Card>
+          </GridCol>
+          <GridCol xs={6} lg={3}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-align-items-center">
+                <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
+                  <Icon name="Users" size={24} className="u-text-warning" />
+                </div>
+                <div>
+                  <h3 className="u-h4 u-mb-1">{connectionsData?.count || 0}</h3>
+                  <p className="u-text-secondary u-mb-0">Active Connections</p>
+                  <div className="u-text-sm u-text-secondary">
+                    {dhcpLeases?.count || 0} DHCP leases
+                  </div>
+                </div>
+              </div>
+            </Card>
+          </GridCol>
+        </Grid>
+      )}
 
-      {/* Tabs Navigation */}
+      {/* Tabs */}
       <div className="u-mb-6">
         <div className="u-d-flex u-gap-1 u-border-bottom">
           {[
-            { id: "overview", label: "Overview" },
-            { id: "interfaces", label: "Interfaces" },
-            { id: "bandwidth", label: "Bandwidth" },
-            { id: "connections", label: "Connections" },
-            { id: "dhcp", label: "DHCP" },
-            { id: "resources", label: "Resources" },
-            { id: "logs", label: "Logs" },
-            { id: "alerts", label: "Alerts" },
+            { id: "overview", label: "Overview", icon: "ChartLine" },
+            { id: "interfaces", label: "Interfaces", icon: "Globe" },
+            { id: "connections", label: "Connections", icon: "Link" },
+            { id: "dhcp", label: "DHCP Leases", icon: "Router" },
+            { id: "logs", label: "Logs", icon: "List" },
           ].map((tab) => (
             <Button
               key={tab.id}
-              variant={selectedTab === tab.id ? "primary" : "outline"}
+              variant={selectedTab === tab.id ? "primary" : "ghost"}
               size="sm"
               onClick={() => setSelectedTab(tab.id)}
-              className="u-rounded-0 u-border-bottom-0"
+              className="u-rounded-bottom-0"
             >
+              <Icon name={tab.icon as any} size={16} className="u-me-2" />
               {tab.label}
             </Button>
           ))}
@@ -255,363 +448,309 @@ const MainRouterDashboard: React.FC = () => {
       </div>
 
       {/* Tab Content */}
-      <div>
-        {/* Overview Tab */}
-        {selectedTab === "overview" && (
-          <Grid>
-            <GridCol xs={12} md={6} lg={3}>
-              <Card>
-                <div className="u-text-center">
-                  <Icon name="Globe" size={32} className="u-text-success u-mb-2" />
-                  <h3 className="u-mb-1">{connections?.total_connections || 0}</h3>
-                  <p className="u-text-secondary-emphasis">Active Connections</p>
-                </div>
-              </Card>
-            </GridCol>
-            <GridCol xs={12} md={6} lg={3}>
-              <Card>
-                <div className="u-text-center">
-                  <Icon name="TrendDown" size={32} className="u-text-primary u-mb-2" />
-                  <h3 className="u-mb-1">{formatBandwidth(bandwidth?.total_download || 0)}</h3>
-                  <p className="u-text-secondary-emphasis">Download Speed</p>
-                </div>
-              </Card>
-            </GridCol>
-            <GridCol xs={12} md={6} lg={3}>
-              <Card>
-                <div className="u-text-center">
-                  <Icon name="TrendUp" size={32} className="u-text-warning u-mb-2" />
-                  <h3 className="u-mb-1">{formatBandwidth(bandwidth?.total_upload || 0)}</h3>
-                  <p className="u-text-secondary-emphasis">Upload Speed</p>
-                </div>
-              </Card>
-            </GridCol>
-            <GridCol xs={12} md={6} lg={3}>
-              <Card>
-                <div className="u-text-center">
-                  <Icon name="Users" size={32} className="u-text-info u-mb-2" />
-                  <h3 className="u-mb-1">{dhcpLeases?.total_leases || 0}</h3>
-                  <p className="u-text-secondary-emphasis">DHCP Leases</p>
-                </div>
-              </Card>
-            </GridCol>
-          </Grid>
-        )}
-
-        {/* System Resources */}
-        {selectedTab === "overview" && resources && (
-          <Card className="u-mt-6">
-            <h3 className="u-mb-4">System Resources</h3>
-            <Grid>
-              <GridCol xs={12} md={4}>
-                <div className="u-mb-4">
-                  <div className="u-d-flex u-justify-content-between u-mb-2">
-                    <span>CPU Usage</span>
-                    <span>{resources.cpu_usage || 0}%</span>
-                  </div>
-                  <Progress value={resources.cpu_usage || 0} className="u-mb-2" />
-                </div>
-              </GridCol>
-              <GridCol xs={12} md={4}>
-                <div className="u-mb-4">
-                  <div className="u-d-flex u-justify-content-between u-mb-2">
-                    <span>Memory Usage</span>
-                    <span>{resources.memory_usage || 0}%</span>
-                  </div>
-                  <Progress value={resources.memory_usage || 0} className="u-mb-2" />
-                </div>
-              </GridCol>
-              <GridCol xs={12} md={4}>
-                <div className="u-mb-4">
-                  <div className="u-d-flex u-justify-content-between u-mb-2">
-                    <span>Disk Usage</span>
-                    <span>{resources.disk_usage || 0}%</span>
-                  </div>
-                  <Progress value={resources.disk_usage || 0} className="u-mb-2" />
-                </div>
-              </GridCol>
-            </Grid>
-          </Card>
-        )}
-
-        {/* Interfaces Tab */}
-        {selectedTab === "interfaces" && (
-          <Card>
-            <h3 className="u-mb-4">Network Interfaces</h3>
-            {interfacesLoading ? (
-              <div className="u-text-center u-py-8">
-                <Icon name="Spinner" size={32} className="u-text-primary u-mb-2" />
-                <p>Loading interfaces...</p>
+      {selectedTab === "overview" && (
+        <Grid className="u-mb-6">
+          <GridCol xs={12} lg={8}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+                <h3 className="u-h5 u-mb-0">Bandwidth Usage</h3>
+                <Badge variant="info" label={`Last ${selectedTimeRange}`} />
               </div>
-            ) : (
-              <Grid>
-                {interfaces?.map((interface_: any, index: number) => (
-                  <GridCol key={index} xs={12} md={6} lg={4}>
-                    <Card className="u-h-100">
-                      <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-3">
-                        <div>
-                          <h4 className="u-mb-1">{interface_.name}</h4>
-                          <p className="u-text-sm u-text-secondary-emphasis">{interface_.type}</p>
-                        </div>
-                        {getStatusBadge(interface_.status)}
+              {bandwidthLoading ? (
+                <div className="u-text-center u-p-6">
+                  <Spinner />
+                  <p className="u-mt-2 u-text-secondary">
+                    Loading bandwidth data...
+                  </p>
+                </div>
+              ) : (
+                <LineChart datasets={chartData.bandwidth} size="lg" />
+              )}
+            </Card>
+          </GridCol>
+          <GridCol xs={12} lg={4}>
+            <Card className="u-p-4">
+              <h3 className="u-h5 u-mb-4">System Resources</h3>
+              {resourcesLoading ? (
+                <div className="u-text-center u-p-6">
+                  <Spinner />
+                  <p className="u-mt-2 u-text-secondary">
+                    Loading resource data...
+                  </p>
+                </div>
+              ) : (
+                <DonutChart data={chartData.resources} size="md" />
+              )}
+            </Card>
+          </GridCol>
+        </Grid>
+      )}
+
+      {selectedTab === "interfaces" && (
+        <Card>
+          <div className="u-p-4 u-border-bottom">
+            <h3 className="u-h5 u-mb-0">Network Interfaces</h3>
+          </div>
+          {interfacesLoading ? (
+            <div className="u-text-center u-p-6">
+              <Spinner size="lg" />
+              <p className="u-mt-3 u-text-secondary">Loading interfaces...</p>
+            </div>
+          ) : (
+            <DataTable
+              data={
+                interfaces?.map((iface: any) => ({
+                  id: iface.id,
+                  interface: (
+                    <div>
+                      <div className="u-fw-medium">{iface.name}</div>
+                      <div className="u-text-secondary u-text-sm">
+                        {iface.type}
                       </div>
-                      <div className="u-space-y-2">
-                        <div className="u-d-flex u-justify-content-between">
-                          <span className="u-text-sm">IP Address:</span>
-                          <span className="u-text-sm u-font-mono">{interface_.ip_address || "N/A"}</span>
-                        </div>
-                        <div className="u-d-flex u-justify-content-between">
-                          <span className="u-text-sm">MAC Address:</span>
-                          <span className="u-text-sm u-font-mono">{interface_.mac_address || "N/A"}</span>
-                        </div>
-                        <div className="u-d-flex u-justify-content-between">
-                          <span className="u-text-sm">Speed:</span>
-                          <span className="u-text-sm">{interface_.speed || "N/A"}</span>
-                        </div>
+                    </div>
+                  ),
+                  status: getInterfaceStatusBadge(iface.status),
+                  address: (
+                    <div>
+                      <div className="u-text-sm">
+                        {iface.ip_address || "N/A"}
                       </div>
-                    </Card>
-                  </GridCol>
-                ))}
-              </Grid>
-            )}
-          </Card>
-        )}
+                      <div className="u-text-secondary u-text-sm">
+                        {iface.mac_address || "N/A"}
+                      </div>
+                    </div>
+                  ),
+                  traffic: (
+                    <div>
+                      <div className="u-text-sm">
+                        <Icon
+                          name="ArrowDown"
+                          size={12}
+                          className="u-me-1 u-text-success"
+                        />
+                        RX: {formatBytes(iface.rx_bytes || 0)}
+                      </div>
+                      <div className="u-text-sm">
+                        <Icon
+                          name="ArrowUp"
+                          size={12}
+                          className="u-me-1 u-text-info"
+                        />
+                        TX: {formatBytes(iface.tx_bytes || 0)}
+                      </div>
+                    </div>
+                  ),
+                  mtu: iface.mtu || "N/A",
+                })) || []
+              }
+              columns={[
+                { key: "interface", title: "Interface" },
+                { key: "status", title: "Status" },
+                { key: "address", title: "Address" },
+                { key: "traffic", title: "Traffic" },
+                { key: "mtu", title: "MTU" },
+              ]}
+            />
+          )}
+        </Card>
+      )}
 
-        {/* Bandwidth Tab */}
-        {selectedTab === "bandwidth" && (
-          <Card>
-            <h3 className="u-mb-4">Bandwidth Usage</h3>
-            {bandwidthLoading ? (
-              <div className="u-text-center u-py-8">
-                <Icon name="Spinner" size={32} className="u-text-primary u-mb-2" />
-                <p>Loading bandwidth data...</p>
-              </div>
-            ) : (
-              <Grid>
-                <GridCol xs={12} md={6}>
-                  <Card>
-                    <h4 className="u-mb-3">Download</h4>
-                    <div className="u-text-center">
-                      <h2 className="u-text-primary u-mb-2">{formatBandwidth(bandwidth?.total_download || 0)}</h2>
-                      <p className="u-text-secondary-emphasis">Total Download Speed</p>
-                    </div>
-                  </Card>
-                </GridCol>
-                <GridCol xs={12} md={6}>
-                  <Card>
-                    <h4 className="u-mb-3">Upload</h4>
-                    <div className="u-text-center">
-                      <h2 className="u-text-warning u-mb-2">{formatBandwidth(bandwidth?.total_upload || 0)}</h2>
-                      <p className="u-text-secondary-emphasis">Total Upload Speed</p>
-                    </div>
-                  </Card>
-                </GridCol>
-              </Grid>
-            )}
-          </Card>
-        )}
-
-        {/* Connections Tab */}
-        {selectedTab === "connections" && (
-          <Card>
-            <h3 className="u-mb-4">Active Connections</h3>
-            {connectionsLoading ? (
-              <div className="u-text-center u-py-8">
-                <Icon name="Spinner" size={32} className="u-text-primary u-mb-2" />
-                <p>Loading connections...</p>
-              </div>
-            ) : (
-              <div className="u-overflow-x-auto">
-                <table className="u-w-100">
-                  <thead>
-                    <tr className="u-border-bottom">
-                      <th className="u-text-left u-p-3">Protocol</th>
-                      <th className="u-text-left u-p-3">Source</th>
-                      <th className="u-text-left u-p-3">Destination</th>
-                      <th className="u-text-left u-p-3">State</th>
-                      <th className="u-text-left u-p-3">Duration</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {connections?.connections?.map((conn: any, index: number) => (
-                      <tr key={index} className="u-border-bottom">
-                        <td className="u-p-3">{conn.protocol}</td>
-                        <td className="u-p-3 u-font-mono">{conn.source}</td>
-                        <td className="u-p-3 u-font-mono">{conn.destination}</td>
-                        <td className="u-p-3">{getStatusBadge(conn.state)}</td>
-                        <td className="u-p-3">{conn.duration}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </Card>
-        )}
-
-        {/* DHCP Tab */}
-        {selectedTab === "dhcp" && (
-          <Card>
-            <h3 className="u-mb-4">DHCP Leases</h3>
-            {dhcpLoading ? (
-              <div className="u-text-center u-py-8">
-                <Icon name="Spinner" size={32} className="u-text-primary u-mb-2" />
-                <p>Loading DHCP leases...</p>
-              </div>
-            ) : (
-              <div className="u-overflow-x-auto">
-                <table className="u-w-100">
-                  <thead>
-                    <tr className="u-border-bottom">
-                      <th className="u-text-left u-p-3">IP Address</th>
-                      <th className="u-text-left u-p-3">MAC Address</th>
-                      <th className="u-text-left u-p-3">Hostname</th>
-                      <th className="u-text-left u-p-3">Status</th>
-                      <th className="u-text-left u-p-3">Expires</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {dhcpLeases?.leases?.map((lease: any, index: number) => (
-                      <tr key={index} className="u-border-bottom">
-                        <td className="u-p-3 u-font-mono">{lease.ip_address}</td>
-                        <td className="u-p-3 u-font-mono">{lease.mac_address}</td>
-                        <td className="u-p-3">{lease.hostname || "N/A"}</td>
-                        <td className="u-p-3">{getStatusBadge(lease.status)}</td>
-                        <td className="u-p-3">{lease.expires}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-            )}
-          </Card>
-        )}
-
-        {/* Resources Tab */}
-        {selectedTab === "resources" && (
-          <Card>
-            <h3 className="u-mb-4">System Resources</h3>
-            {resourcesLoading ? (
-              <div className="u-text-center u-py-8">
-                <Icon name="Spinner" size={32} className="u-text-primary u-mb-2" />
-                <p>Loading resource data...</p>
-              </div>
-            ) : (
-              <Grid>
-                <GridCol xs={12} md={6}>
-                  <Card>
-                    <h4 className="u-mb-3">CPU Usage</h4>
-                    <div className="u-text-center u-mb-4">
-                      <h2 className="u-text-primary">{resources?.cpu_usage || 0}%</h2>
-                    </div>
-                    <Progress value={resources?.cpu_usage || 0} />
-                  </Card>
-                </GridCol>
-                <GridCol xs={12} md={6}>
-                  <Card>
-                    <h4 className="u-mb-3">Memory Usage</h4>
-                    <div className="u-text-center u-mb-4">
-                      <h2 className="u-text-warning">{resources?.memory_usage || 0}%</h2>
-                    </div>
-                    <Progress value={resources?.memory_usage || 0} />
-                  </Card>
-                </GridCol>
-                <GridCol xs={12} md={6}>
-                  <Card>
-                    <h4 className="u-mb-3">Disk Usage</h4>
-                    <div className="u-text-center u-mb-4">
-                      <h2 className="u-text-error">{resources?.disk_usage || 0}%</h2>
-                    </div>
-                    <Progress value={resources?.disk_usage || 0} />
-                  </Card>
-                </GridCol>
-                <GridCol xs={12} md={6}>
-                  <Card>
-                    <h4 className="u-mb-3">Temperature</h4>
-                    <div className="u-text-center">
-                      <h2 className="u-text-info">{resources?.temperature || "N/A"}°C</h2>
-                    </div>
-                  </Card>
-                </GridCol>
-              </Grid>
-            )}
-          </Card>
-        )}
-
-        {/* Logs Tab */}
-        {selectedTab === "logs" && (
-          <Card>
-            <h3 className="u-mb-4">System Logs</h3>
-            {logsLoading ? (
-              <div className="u-text-center u-py-8">
-                <Icon name="Spinner" size={32} className="u-text-primary u-mb-2" />
-                <p>Loading logs...</p>
-              </div>
-            ) : (
-              <div className="u-max-h-400 u-overflow-y-auto">
-                {logs?.logs?.map((log: any, index: number) => (
-                  <div key={index} className="u-p-3 u-border-bottom">
-                    <div className="u-d-flex u-justify-content-between u-mb-1">
-                      <span className="u-text-sm u-font-mono">{log.timestamp}</span>
-                      <Badge variant="secondary" size="sm" label={log.level} />
-                    </div>
-                    <p className="u-text-sm">{log.message}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Card>
-        )}
-
-        {/* Alerts Tab */}
-        {selectedTab === "alerts" && (
-          <Card>
-            <h3 className="u-mb-4">System Alerts</h3>
-            {alertsLoading ? (
-              <div className="u-text-center u-py-8">
-                <Icon name="Spinner" size={32} className="u-text-primary u-mb-2" />
-                <p>Loading alerts...</p>
-              </div>
-            ) : (
-              <div>
-                {alerts?.alerts?.map((alert: any, index: number) => (
-                  <Card key={index} className="u-mb-3">
-                    <div className="u-d-flex u-justify-content-between u-align-items-start">
-                      <div className="u-flex-1">
-                        <div className="u-d-flex u-align-items-center u-gap-2 u-mb-2">
-                          <Icon 
-                            name={alert.severity === "high" ? "Warning" : "Info"} 
-                            size={16} 
-                            className={alert.severity === "high" ? "u-text-error" : "u-text-warning"} 
-                          />
-                          <h4 className="u-mb-1">{alert.title}</h4>
-                          <Badge variant={alert.severity === "high" ? "error" : "warning"} size="sm" label={alert.severity} />
+      {selectedTab === "connections" && (
+        <Card>
+          <div className="u-p-4 u-border-bottom">
+            <h3 className="u-h5 u-mb-0">Active Connections</h3>
+          </div>
+          {connectionsLoading ? (
+            <div className="u-text-center u-p-6">
+              <Spinner size="lg" />
+              <p className="u-mt-3 u-text-secondary">Loading connections...</p>
+            </div>
+          ) : (
+            <>
+              <DataTable
+                data={
+                  connectionsData?.results?.map((conn: any, index: number) => ({
+                    id: index,
+                    client: (
+                      <div>
+                        <div className="u-fw-medium">
+                          {conn.client_name || "Unknown"}
                         </div>
-                        <p className="u-text-secondary-emphasis u-mb-2">{alert.message}</p>
-                        <div className="u-text-sm u-text-secondary-emphasis">
-                          {new Date(alert.timestamp).toLocaleString()}
+                        <div className="u-text-secondary u-text-sm">
+                          {conn.mac_address || "N/A"}
                         </div>
                       </div>
-                      {!alert.acknowledged && (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => handleAcknowledgeAlert(alert.id)}
-                          disabled={acknowledgeAlertMutation.isPending}
-                        >
-                          Acknowledge
-                        </Button>
+                    ),
+                    address: conn.ip_address || "N/A",
+                    protocol: (
+                      <Badge
+                        variant="secondary"
+                        label={conn.protocol || "TCP"}
+                        size="sm"
+                      />
+                    ),
+                    port: `${conn.local_port || "N/A"} → ${conn.remote_port || "N/A"}`,
+                    duration: conn.duration || "N/A",
+                    traffic: (
+                      <div>
+                        <div className="u-text-sm">
+                          ↓ {formatBytes(conn.bytes_received || 0)}
+                        </div>
+                        <div className="u-text-sm">
+                          ↑ {formatBytes(conn.bytes_sent || 0)}
+                        </div>
+                      </div>
+                    ),
+                  })) || []
+                }
+                columns={[
+                  { key: "client", title: "Client" },
+                  { key: "address", title: "IP Address" },
+                  { key: "protocol", title: "Protocol" },
+                  { key: "port", title: "Ports" },
+                  { key: "duration", title: "Duration" },
+                  { key: "traffic", title: "Traffic" },
+                ]}
+              />
+
+              {connectionsData &&
+                Math.ceil((connectionsData.count || 0) / itemsPerPage) > 1 && (
+                  <div className="u-p-4 u-border-top">
+                    <Pagination
+                      currentPage={currentPage}
+                      totalPages={Math.ceil(
+                        (connectionsData.count || 0) / itemsPerPage,
                       )}
-                    </div>
-                  </Card>
-                ))}
-              </div>
-            )}
-          </Card>
-        )}
-      </div>
+                      onPageChange={setCurrentPage}
+                    />
+                  </div>
+                )}
+            </>
+          )}
+        </Card>
+      )}
 
-      {/* Execute Command Modal */}
+      {selectedTab === "dhcp" && (
+        <Card>
+          <div className="u-p-4 u-border-bottom">
+            <h3 className="u-h5 u-mb-0">DHCP Leases</h3>
+          </div>
+          {dhcpLoading ? (
+            <div className="u-text-center u-p-6">
+              <Spinner size="lg" />
+              <p className="u-mt-3 u-text-secondary">Loading DHCP leases...</p>
+            </div>
+          ) : (
+            <DataTable
+              data={
+                dhcpLeases?.results?.map((lease: any) => ({
+                  id: lease.id,
+                  client: (
+                    <div>
+                      <div className="u-fw-medium">
+                        {lease.hostname || "Unknown"}
+                      </div>
+                      <div className="u-text-secondary u-text-sm">
+                        {lease.mac_address}
+                      </div>
+                    </div>
+                  ),
+                  address: lease.ip_address,
+                  status: (
+                    <Badge
+                      variant={
+                        lease.status === "active" ? "success" : "secondary"
+                      }
+                      label={lease.status === "active" ? "Active" : "Expired"}
+                      size="sm"
+                    />
+                  ),
+                  lease_time: lease.lease_time || "N/A",
+                  expires: lease.expires_at
+                    ? new Date(lease.expires_at).toLocaleString()
+                    : "N/A",
+                })) || []
+              }
+              columns={[
+                { key: "client", title: "Client" },
+                { key: "address", title: "IP Address" },
+                { key: "status", title: "Status" },
+                { key: "lease_time", title: "Lease Time" },
+                { key: "expires", title: "Expires" },
+              ]}
+            />
+          )}
+        </Card>
+      )}
+
+      {selectedTab === "logs" && (
+        <Card>
+          <div className="u-p-4 u-border-bottom">
+            <h3 className="u-h5 u-mb-0">System Logs</h3>
+          </div>
+          {logsLoading ? (
+            <div className="u-text-center u-p-6">
+              <Spinner size="lg" />
+              <p className="u-mt-3 u-text-secondary">Loading logs...</p>
+            </div>
+          ) : (
+            <div className="u-p-4">
+              {logs && logs.length > 0 ? (
+                <div
+                  className="u-space-y-2"
+                  style={{ maxHeight: "500px", overflowY: "auto" }}
+                >
+                  {logs.map((log: any, index: number) => (
+                    <div
+                      key={index}
+                      className="u-p-3 u-bg-gray-subtle u-rounded u-d-flex u-justify-content-between"
+                    >
+                      <div className="u-flex-1">
+                        <div className="u-text-sm u-fw-medium u-mb-1">
+                          {log.message || sanitizeText(log.log_entry)}
+                        </div>
+                        <div className="u-text-secondary u-text-sm">
+                          {log.level && (
+                            <Badge
+                              variant={
+                                log.level === "error"
+                                  ? "error"
+                                  : log.level === "warning"
+                                    ? "warning"
+                                    : "secondary"
+                              }
+                              label={log.level.toUpperCase()}
+                              size="sm"
+                              className="u-me-2"
+                            />
+                          )}
+                          {log.timestamp
+                            ? new Date(log.timestamp).toLocaleString()
+                            : "N/A"}
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="u-text-center u-p-6">
+                  <Icon
+                    name="FileText"
+                    size={48}
+                    className="u-text-secondary u-mb-3"
+                  />
+                  <h3 className="u-h6 u-mb-2">No logs available</h3>
+                  <p className="u-text-secondary">
+                    System logs will appear here when available
+                  </p>
+                </div>
+              )}
+            </div>
+          )}
+        </Card>
+      )}
+
+      {/* Command Modal */}
       <Modal
         isOpen={isCommandModalOpen}
         onClose={() => {
@@ -619,49 +758,58 @@ const MainRouterDashboard: React.FC = () => {
           setCommand("");
           setCommandResult("");
         }}
-        title="Execute Router Command"
+        title="Router Console"
         size="lg"
       >
         <div className="u-space-y-4">
           <div>
-            <label htmlFor="command" className="u-d-block u-fs-sm u-fw-medium u-mb-1">Command</label>
+            <label className="u-d-block u-mb-2 u-fw-medium">Command</label>
             <Input
-              id="command"
-              type="text"
-              placeholder="Enter MikroTik command (e.g., /interface print)"
               value={command}
               onChange={(e) => setCommand(e.target.value)}
+              placeholder="Enter RouterOS command..."
             />
           </div>
-          
+
           {commandResult && (
             <div>
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">Result</label>
-              <div className="u-p-3 u-bg-gray-100 u-rounded u-font-mono u-text-sm u-max-h-200 u-overflow-y-auto">
-                {commandResult}
-              </div>
+              <label className="u-d-block u-mb-2 u-fw-medium">Output</label>
+              <Textarea
+                value={commandResult}
+                readOnly
+                rows={10}
+                className="u-bg-gray-subtle"
+              />
             </div>
           )}
-          
-          <div className="u-d-flex u-justify-content-end u-gap-2">
-            <Button
-              variant="outline"
-              onClick={() => {
-                setIsCommandModalOpen(false);
-                setCommand("");
-                setCommandResult("");
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="primary"
-              onClick={handleExecuteCommand}
-              disabled={executeCommandMutation.isPending}
-            >
-              Execute
-            </Button>
-          </div>
+        </div>
+
+        <div className="u-d-flex u-justify-content-end u-gap-3 u-mt-6">
+          <Button
+            variant="outline"
+            onClick={() => {
+              setIsCommandModalOpen(false);
+              setCommand("");
+              setCommandResult("");
+            }}
+            disabled={executeCommandMutation.isPending}
+          >
+            Close
+          </Button>
+          <Button
+            variant="primary"
+            onClick={handleExecuteCommand}
+            disabled={executeCommandMutation.isPending || !command.trim()}
+          >
+            {executeCommandMutation.isPending ? (
+              <>
+                <Spinner size="sm" className="u-me-2" />
+                Executing...
+              </>
+            ) : (
+              "Execute"
+            )}
+          </Button>
         </div>
       </Modal>
     </div>

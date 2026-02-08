@@ -5,47 +5,92 @@ import logging
 from celery import shared_task
 from django.utils import timezone
 from network.models import Router
-from network.services import RouterOSService
-from .models import SNMPSnapshot, UsageSnapshot
+from network.services import RouterOSService, MikroTikService
+from .models import RouterMetric, SNMPSnapshot, UsageSnapshot
 
 logger = logging.getLogger(__name__)
 
 
 @shared_task
-def poll_snmp_usage():
+def poll_router_metrics():
     """
-    Poll SNMP data from all routers and store snapshots.
+    Poll metrics from all routers and store in database.
     """
-    logger.info("Starting SNMP usage polling...")
+    logger.info("Starting router metrics polling...")
     
     try:
-        # Get all online routers
-        online_routers = Router.objects.filter(status='online')
+        # Get all routers
+        routers = Router.objects.all()
+        metrics_created = 0
         
-        snapshots_created = 0
-        
-        for router in online_routers:
+        for router in routers:
             try:
+                # Create router metric
+                metric = create_router_metric(router)
+                if metric:
+                    metrics_created += 1
+                    
                 # Create SNMP snapshot
                 snmp_snapshot = create_snmp_snapshot(router)
                 if snmp_snapshot:
-                    snapshots_created += 1
+                    metrics_created += 1
                 
                 # Create usage snapshot
                 usage_snapshot = create_usage_snapshot(router)
                 if usage_snapshot:
-                    snapshots_created += 1
+                    metrics_created += 1
                     
             except Exception as e:
                 logger.error(f"Failed to poll data from router {router.name}: {e}")
                 continue
         
-        logger.info(f"SNMP usage polling completed. Created {snapshots_created} snapshots.")
-        return f"Created {snapshots_created} snapshots"
+        logger.info(f"Router metrics polling completed. Created {metrics_created} records.")
+        return f"Created {metrics_created} records"
         
     except Exception as e:
-        logger.error(f"SNMP usage polling failed: {e}")
+        logger.error(f"Router metrics polling failed: {e}")
         raise
+
+
+@shared_task
+def poll_snmp_usage():
+    """
+    Legacy task - redirects to poll_router_metrics.
+    """
+    return poll_router_metrics()
+
+
+def create_router_metric(router):
+    """
+    Create router metric record.
+    """
+    try:
+        service = MikroTikService(router)
+        
+        # Get system resources
+        resources = service.get_system_resources()
+        bandwidth = service.get_bandwidth_usage()
+        
+        if resources:
+            # Create metric
+            metric = RouterMetric.objects.create(
+                router=router,
+                cpu_usage=int(resources.get('cpu_usage', 0)),
+                memory_usage=int(resources.get('memory_usage', 0)),
+                disk_usage=int(resources.get('disk_usage', 0)),
+                temperature=resources.get('temperature'),
+                total_download=bandwidth.get('total_download', 0),
+                total_upload=bandwidth.get('total_upload', 0),
+                download_speed=bandwidth.get('download_speed', 0),
+                upload_speed=bandwidth.get('upload_speed', 0),
+            )
+            
+            logger.info(f"Created router metric for {router.name}")
+            return metric
+                
+    except Exception as e:
+        logger.error(f"Failed to create router metric for {router.name}: {e}")
+        return None
 
 
 def create_snmp_snapshot(router):
@@ -53,24 +98,24 @@ def create_snmp_snapshot(router):
     Create SNMP snapshot for a router.
     """
     try:
-        # For now, we'll use RouterOS API instead of SNMP
-        # In a real implementation, you would use pysnmp to poll SNMP data
-        with RouterOSService(router) as service:
-            # Get system resources
-            resources = service.get_system_resources()
+        service = MikroTikService(router)
+        
+        # Get system resources
+        resources = service.get_system_resources()
+        interfaces = service.get_interfaces()
+        
+        if resources:
+            # Create snapshot
+            snapshot = SNMPSnapshot.objects.create(
+                router=router,
+                cpu_usage=float(resources.get('cpu_usage', 0)),
+                memory_usage=float(resources.get('memory_usage', 0)),
+                uptime=0,  # TODO: Parse uptime from resources
+                interface_data={'interfaces': interfaces}
+            )
             
-            if resources:
-                # Create snapshot
-                snapshot = SNMPSnapshot.objects.create(
-                    router=router,
-                    cpu_usage=float(resources.get('cpu-load', 0)),
-                    memory_usage=float(resources.get('free-memory', 0)) / float(resources.get('total-memory', 1)) * 100,
-                    uptime=int(resources.get('uptime', 0)),
-                    interface_data={}  # TODO: Get interface data
-                )
-                
-                logger.info(f"Created SNMP snapshot for router {router.name}")
-                return snapshot
+            logger.info(f"Created SNMP snapshot for router {router.name}")
+            return snapshot
                 
     except Exception as e:
         logger.error(f"Failed to create SNMP snapshot for router {router.name}: {e}")
@@ -82,29 +127,25 @@ def create_usage_snapshot(router):
     Create usage snapshot for a router.
     """
     try:
-        with RouterOSService(router) as service:
-            # Get active sessions
-            sessions = service.get_active_sessions()
-            
-            # Get PPPoE users
-            users = service.get_pppoe_users()
-            
-            # Calculate totals
-            total_bytes_in = sum(int(session.get('bytes-in', 0)) for session in sessions)
-            total_bytes_out = sum(int(session.get('bytes-out', 0)) for session in sessions)
-            
-            # Create snapshot
-            snapshot = UsageSnapshot.objects.create(
-                router=router,
-                total_bytes_in=total_bytes_in,
-                total_bytes_out=total_bytes_out,
-                active_connections=len(sessions),
-                pppoe_users_count=len(users),
-                pppoe_active_sessions=len(sessions)
-            )
-            
-            logger.info(f"Created usage snapshot for router {router.name}")
-            return snapshot
+        service = MikroTikService(router)
+        
+        # Get connections and users
+        connections = service.get_connections()
+        users = service.get_pppoe_users()
+        bandwidth = service.get_bandwidth_usage()
+        
+        # Create snapshot
+        snapshot = UsageSnapshot.objects.create(
+            router=router,
+            total_bytes_in=bandwidth.get('total_download', 0),
+            total_bytes_out=bandwidth.get('total_upload', 0),
+            active_connections=len(connections),
+            pppoe_users_count=len(users),
+            pppoe_active_sessions=len([u for u in users if u.get('uptime')])
+        )
+        
+        logger.info(f"Created usage snapshot for router {router.name}")
+        return snapshot
             
     except Exception as e:
         logger.error(f"Failed to create usage snapshot for router {router.name}: {e}")
@@ -155,20 +196,23 @@ def check_router_status():
         
         for router in routers:
             try:
-                # Test connection
-                with RouterOSService(router) as service:
-                    if service.connect():
-                        if router.status != 'online':
-                            router.status = 'online'
-                            router.save()
-                            status_updates += 1
-                            logger.info(f"Router {router.name} is now online")
-                    else:
-                        if router.status != 'offline':
-                            router.status = 'offline'
-                            router.save()
-                            status_updates += 1
-                            logger.info(f"Router {router.name} is now offline")
+                # Test connection using MikroTikService
+                service = MikroTikService(router)
+                result = service.test_connection()
+                
+                if result.get('success'):
+                    if router.status != 'online':
+                        router.status = 'online'
+                        router.last_seen = timezone.now()
+                        router.save()
+                        status_updates += 1
+                        logger.info(f"Router {router.name} is now online")
+                else:
+                    if router.status != 'offline':
+                        router.status = 'offline'
+                        router.save()
+                        status_updates += 1
+                        logger.info(f"Router {router.name} is now offline")
                             
             except Exception as e:
                 logger.error(f"Failed to check status for router {router.name}: {e}")

@@ -73,26 +73,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [state, dispatch] = useReducer(authReducer, initialState);
 
   useEffect(() => {
+    let isMounted = true;
+    let fetchingUser = false;
+
     const initAuth = async () => {
+      if (fetchingUser) return;
+      fetchingUser = true;
+
       const tokens = authService.getStoredTokens();
-      if (tokens) {
+      if (tokens && isMounted) {
         try {
-          // Check if we have cached user data
           const cachedUser = localStorage.getItem('cached_user');
           if (cachedUser) {
             try {
               const user = JSON.parse(cachedUser);
-              dispatch({ type: 'LOGIN_SUCCESS', payload: { ...tokens, user } });
-              // Fetch fresh user data in background
-              setTimeout(async () => {
-                try {
-                  const freshUser = await authService.getCurrentUser();
-                  localStorage.setItem('cached_user', JSON.stringify(freshUser));
-                  dispatch({ type: 'UPDATE_USER', payload: freshUser });
-                } catch (error) {
-                  console.warn('Failed to fetch fresh user data:', error);
-                }
-              }, 100);
+              if (isMounted) {
+                dispatch({ type: 'LOGIN_SUCCESS', payload: { ...tokens, user } });
+              }
               return;
             } catch (error) {
               console.warn('Failed to parse cached user data:', error);
@@ -100,19 +97,28 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           }
           
           const user = await authService.getCurrentUser();
-          localStorage.setItem('cached_user', JSON.stringify(user));
-          dispatch({ type: 'LOGIN_SUCCESS', payload: { ...tokens, user } });
+          if (isMounted) {
+            localStorage.setItem('cached_user', JSON.stringify(user));
+            dispatch({ type: 'LOGIN_SUCCESS', payload: { ...tokens, user } });
+          }
         } catch (error) {
-          authService.clearTokens();
-          localStorage.removeItem('cached_user');
-          dispatch({ type: 'LOGIN_FAILURE' });
+          if (isMounted) {
+            authService.clearTokens();
+            localStorage.removeItem('cached_user');
+            dispatch({ type: 'LOGIN_FAILURE' });
+          }
         }
-      } else {
+      } else if (isMounted) {
         dispatch({ type: 'LOGIN_FAILURE' });
       }
+      fetchingUser = false;
     };
 
     initAuth();
+
+    return () => {
+      isMounted = false;
+    };
   }, []);
 
   const login = async (username: string, password: string) => {

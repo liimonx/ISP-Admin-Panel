@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import React, { useState, useEffect } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
 import {
   Card,
   Button,
@@ -7,480 +8,607 @@ import {
   Grid,
   GridCol,
   Badge,
-  Progress,
-  LineChart,
-  BarChart,
-  DonutChart,
+  Input,
+  Select,
   Modal,
   Callout,
-  Select,
   Spinner,
+  Progress,
+  DataTable,
+  Pagination,
+  LineChart,
+  DonutChart,
+  Toggle,
 } from "@shohojdhara/atomix";
-import { Router } from "@/types";
 import { apiService } from "@/services/apiService";
-import { StatCard } from "../components/molecules/StatCard";
+import { sanitizeText } from "@/utils/sanitizer";
 
+const TIME_RANGES = [
+  { value: "1h", label: "Last Hour" },
+  { value: "6h", label: "Last 6 Hours" },
+  { value: "24h", label: "Last 24 Hours" },
+  { value: "7d", label: "Last 7 Days" },
+  { value: "30d", label: "Last 30 Days" },
+];
 
+const ROUTER_STATUSES = [
+  { value: "all", label: "All Statuses" },
+  { value: "online", label: "Online" },
+  { value: "offline", label: "Offline" },
+  { value: "maintenance", label: "Maintenance" },
+  { value: "error", label: "Error" },
+];
 
 const Monitoring: React.FC = () => {
+  const queryClient = useQueryClient();
   const [selectedTimeRange, setSelectedTimeRange] = useState("24h");
   const [autoRefresh, setAutoRefresh] = useState(true);
-  const [selectedRouter, setSelectedRouter] = useState<Router | null>(null);
+  const [selectedRouter, setSelectedRouter] = useState<any>(null);
+  const [routerStatusFilter, setRouterStatusFilter] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
   const [isRouterModalOpen, setIsRouterModalOpen] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
 
-  // Real-time monitoring connection
+  const itemsPerPage = 10;
 
+  // Auto-refresh data with staggered intervals
+  useEffect(() => {
+    if (!autoRefresh) return;
 
-  // Fetch monitoring stats
+    const intervals = [
+      setInterval(() => {
+        queryClient.invalidateQueries({ queryKey: ["monitoring-stats"] });
+      }, 30000), // 30 seconds for stats
+      setInterval(() => {
+        queryClient.invalidateQueries({ queryKey: ["routers-monitoring"] });
+      }, 60000), // 1 minute for router data
+    ];
+
+    return () => {
+      intervals.forEach(clearInterval);
+    };
+  }, [queryClient, autoRefresh]);
+
+  // Build query parameters for routers
+  const buildRouterQueryParams = () => {
+    const params: any = {
+      page: currentPage,
+      limit: itemsPerPage,
+    };
+
+    if (searchQuery.trim()) {
+      params.search = searchQuery.trim();
+    }
+
+    if (routerStatusFilter !== "all") {
+      params.status = routerStatusFilter;
+    }
+
+    return params;
+  };
+
+  // Fetch monitoring statistics
   const {
+    data: monitoringStats,
     isLoading: statsLoading,
     error: statsError,
-    refetch: refetchStats,
   } = useQuery({
-    queryKey: ["monitoring-stats", selectedTimeRange],
-    queryFn: () => apiService.getMonitoringStats(),
+    queryKey: ["monitoring-stats"],
+    queryFn: () => apiService.monitoring.getMonitoringStats(),
+    staleTime: 30000, // 30 seconds
     refetchInterval: autoRefresh ? 30000 : false,
-    staleTime: 10000,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        return false;
+      }
+      return failureCount < 2;
+    },
   });
 
   // Fetch routers for monitoring
-  const { 
+  const {
     data: routersData,
+    isLoading: routersLoading,
     error: routersError,
     refetch: refetchRouters,
   } = useQuery({
-    queryKey: ["routers-monitoring"],
-    queryFn: () => apiService.getRouters({ limit: 1000 }),
-    refetchInterval: autoRefresh ? 30000 : false,
-    staleTime: 10000,
+    queryKey: [
+      "routers-monitoring",
+      currentPage,
+      searchQuery,
+      routerStatusFilter,
+    ],
+    queryFn: () => apiService.routers.getRouters(buildRouterQueryParams()),
+    keepPreviousData: true,
+    staleTime: 60000, // 1 minute
+    refetchInterval: autoRefresh ? 60000 : false,
+    retry: (failureCount, error: any) => {
+      if (error?.response?.status === 401 || error?.response?.status === 403) {
+        return false;
+      }
+      return failureCount < 2;
+    },
   });
 
-  // Fetch router stats
-  const { 
-    data: routerStats,
-    error: routerStatsError,
-  } = useQuery({
+  // Fetch router statistics
+  const { data: routerStats } = useQuery({
     queryKey: ["router-stats"],
-    queryFn: () => apiService.getRouterStats(),
-    refetchInterval: autoRefresh ? 30000 : false,
-    staleTime: 10000,
+    queryFn: () => apiService.routers.getRouterStats(),
+    staleTime: 60000, // 1 minute
+    refetchInterval: autoRefresh ? 60000 : false,
+    retry: 1,
   });
 
-  // Mock network performance data
-  const networkPerformanceData = [
-    {
-      label: "Network Latency",
-      data: [
-        { label: "00:00", value: 12 },
-        { label: "04:00", value: 15 },
-        { label: "08:00", value: 18 },
-        { label: "12:00", value: 22 },
-        { label: "16:00", value: 19 },
-        { label: "20:00", value: 16 },
-      ],
-      color: "#7AFFD7",
-    },
-  ];
+  // Handle router details modal
+  const handleRouterDetails = (router: any) => {
+    setSelectedRouter(router);
+    setIsRouterModalOpen(true);
+  };
 
-  const bandwidthUsageData = [
-    {
-      label: "Bandwidth Usage",
-      data: [
-        { label: "00:00", value: 450 },
-        { label: "04:00", value: 320 },
-        { label: "08:00", value: 680 },
-        { label: "12:00", value: 890 },
-        { label: "16:00", value: 750 },
-        { label: "20:00", value: 920 },
-      ],
-      color: "#1AFFD2",
-    },
-  ];
+  // Generate chart data
+  const generateChartData = () => {
+    // Mock data for charts - replace with real API data
+    const hours = Array.from({ length: 24 }, (_, i) => {
+      const hour = new Date();
+      hour.setHours(hour.getHours() - (23 - i));
+      return hour.toLocaleTimeString([], { hour: "2-digit" });
+    });
 
-  const protocolDistribution = [
-    {
-      label: "Protocol Distribution",
-      data: [
-        { label: "HTTP/HTTPS", value: 45 },
-        { label: "Video Streaming", value: 30 },
-        { label: "Gaming", value: 15 },
-        { label: "File Transfer", value: 10 },
+    return {
+      bandwidth: [
+        {
+          label: "Download (Mbps)",
+          data: hours.map((hour) => ({
+            label: hour,
+            value: Math.floor(Math.random() * 100) + 50,
+          })),
+          color: "#3b82f6",
+        },
+        {
+          label: "Upload (Mbps)",
+          data: hours.map((hour) => ({
+            label: hour,
+            value: Math.floor(Math.random() * 50) + 25,
+          })),
+          color: "#10b981",
+        },
       ],
-      color: "#00E6C3",
-    },
-  ];
+      connections: [
+        {
+          label: "Active Connections",
+          data: hours.slice(-12).map((hour) => ({
+            label: hour,
+            value: Math.floor(Math.random() * 500) + 1000,
+          })),
+          color: "#8b5cf6",
+        },
+      ],
+      routerStatus: [
+        {
+          label: "Online",
+          value: routerStats?.online_routers || 0,
+        },
+        {
+          label: "Offline",
+          value: routerStats?.offline_routers || 0,
+        },
+        {
+          label: "Maintenance",
+          value: routerStats?.maintenance_routers || 0,
+        },
+        {
+          label: "Error",
+          value:
+            (routerStats?.total_routers || 0) -
+            (routerStats?.online_routers || 0) -
+            (routerStats?.offline_routers || 0) -
+            (routerStats?.maintenance_routers || 0),
+        },
+      ],
+    };
+  };
 
-  const getRouterStatusBadge = (status: Router["status"]) => {
-    const variants = {
+  const getStatusBadge = (status: string) => {
+    const variants: Record<
+      string,
+      "success" | "error" | "warning" | "secondary"
+    > = {
       online: "success",
       offline: "error",
       maintenance: "warning",
-    } as const;
-
+      error: "error",
+    };
     return (
       <Badge
-        variant={variants[status]}
-        size="sm"
+        variant={variants[status] || "secondary"}
         label={status.charAt(0).toUpperCase() + status.slice(1)}
       />
     );
   };
 
   const formatUptime = (uptime: number) => {
-    const days = Math.floor(uptime / (24 * 60 * 60));
-    const hours = Math.floor((uptime % (24 * 60 * 60)) / (60 * 60));
-    const minutes = Math.floor((uptime % (60 * 60)) / 60);
-
-    if (days > 0) {
-      return `${days}d ${hours}h ${minutes}m`;
-    } else if (hours > 0) {
-      return `${hours}h ${minutes}m`;
-    } else {
-      return `${minutes}m`;
-    }
+    const days = Math.floor(uptime / 86400);
+    const hours = Math.floor((uptime % 86400) / 3600);
+    const minutes = Math.floor((uptime % 3600) / 60);
+    return `${days}d ${hours}h ${minutes}m`;
   };
 
-  const formatBytes = (bytes: number) => {
-    if (bytes === 0) return "0 Bytes";
-    const k = 1024;
-    const sizes = ["Bytes", "KB", "MB", "GB", "TB"];
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  const formatBandwidth = (bytes: number) => {
+    const mbps = (bytes * 8) / (1024 * 1024);
+    return `${mbps.toFixed(2)} Mbps`;
   };
 
-  const handleViewRouterDetails = (router: Router) => {
-    setSelectedRouter(router);
-    setIsRouterModalOpen(true);
-  };
-
-  const handleRefreshAll = () => {
-    refetchStats();
-    refetchRouters();
-  };
-
-  if (statsError || routersError || routerStatsError) {
-    const errorMessage = 
-      (statsError as Error)?.message || 
-      (routersError as Error)?.message || 
-      (routerStatsError as Error)?.message || 
-      'Please try again.';
+  if (statsError || routersError) {
     return (
-      <Callout variant="error" className="u-mb-4">
-        Error loading monitoring data: {errorMessage}
-      </Callout>
+      <div className="u-p-4">
+        <Callout variant="error">
+          <strong>Error loading monitoring data:</strong>{" "}
+          {statsError?.message || routersError?.message}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => {
+              queryClient.invalidateQueries({ queryKey: ["monitoring-stats"] });
+              refetchRouters();
+            }}
+            className="u-ml-2"
+          >
+            Try Again
+          </Button>
+        </Callout>
+      </div>
     );
   }
 
+  const chartData = generateChartData();
+
   return (
-    <div>
-      {/* Page Header */}
+    <div className="u-p-6">
+      {/* Header */}
       <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
         <div>
-          <h1 className="u-mb-2">Network Monitoring</h1>
-          <p className="u-text-secondary-emphasis">
-            Real-time monitoring of network performance and router status
+          <h1 className="u-h2 u-mb-2">Network Monitoring</h1>
+          <p className="u-text-secondary">
+            Real-time monitoring of network infrastructure and performance
           </p>
         </div>
-        <div className="u-d-flex u-gap-2 u-align-items-center">
-          <div className="u-d-flex u-align-items-center u-gap-2">
-            <Icon
-              name={autoRefresh ? "Play" : "Pause"}
-              size={16}
-              className={autoRefresh ? "u-text-success" : "u-text-secondary-emphasis"}
+        <div className="u-d-flex u-gap-3 u-align-items-center">
+          <div className="u-d-flex u-align-items-center">
+            <Toggle
+              initialOn={autoRefresh}
+              onToggleOn={() => setAutoRefresh(!autoRefresh)}
+              className="u-me-2"
             />
-            <span className="u-fs-sm u-text-secondary-emphasis">
-              {autoRefresh ? "Auto-refresh ON" : "Auto-refresh OFF"}
-            </span>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setAutoRefresh(!autoRefresh)}
-            >
-              {autoRefresh ? "Pause" : "Resume"}
-            </Button>
+            <label className="u-text-sm">Auto Refresh</label>
           </div>
           <Select
             value={selectedTimeRange}
             onChange={(e) => setSelectedTimeRange(e.target.value)}
-            className="u-p-2"
-            options={[
-              { value: "1h", label: "Last Hour" },
-              { value: "24h", label: "Last 24 Hours" },
-              { value: "7d", label: "Last 7 Days" },
-              { value: "30d", label: "Last 30 Days" }
-            ]}
+            options={TIME_RANGES}
+            className="u-min-w-150"
           />
-          <Button
-            variant="outline"
-            size="md"
-            onClick={handleRefreshAll}
-                          disabled={statsLoading}
-          >
-            <Icon name="ArrowClockwise" size={16} />
-            Refresh
-          </Button>
         </div>
       </div>
 
-      {/* Network Overview Stats */}
-      <Grid className="u-mb-6">
-        <GridCol xs={12} md={6} lg={3}>
-          <StatCard
-            title="Network Uptime"
-            value="99.8%"
-            icon="CheckCircle"
-            iconColor="#10B981"
-            trend={{
-              value: 0.1,
-              isPositive: true,
-            }}
-            description="last 30 days"
-          />
-        </GridCol>
-        <GridCol xs={12} md={6} lg={3}>
-          <StatCard
-            title="Total Bandwidth"
-            value={`${routerStats?.total_bandwidth ? (routerStats.total_bandwidth / 1000).toFixed(1) : '2.4'} Gbps`}
-            icon="Lightning"
-            iconColor="#7AFFD7"
-            trend={{
-              value: 5,
-              isPositive: true,
-            }}
-            description="current usage"
-          />
-        </GridCol>
-        <GridCol xs={12} md={6} lg={3}>
-          <StatCard
-            title="Active Connections"
-            value={routerStats?.active_connections?.toLocaleString() || "1,247"}
-            icon="Link"
-            iconColor="#1AFFD2"
-            trend={{
-              value: 12,
-              isPositive: true,
-            }}
-            description="concurrent users"
-          />
-        </GridCol>
-        <GridCol xs={12} md={6} lg={3}>
-          <StatCard
-            title="Average Latency"
-            value="18ms"
-            icon="Timer"
-            iconColor="#00D9FF"
-            trend={{
-              value: 2,
-              isPositive: false,
-            }}
-            description="response time"
-          />
-        </GridCol>
-      </Grid>
-
-      {/* Charts Section */}
-      <Grid className="u-mb-6">
-        <GridCol xs={12} lg={8}>
-          <Card>
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
-              <h3>Network Performance</h3>
-              <div className="u-d-flex u-gap-2">
-                <Button variant="outline" size="sm">
-                  Latency
-                </Button>
-                <Button variant="primary" size="sm">
-                  Bandwidth
-                </Button>
-                <Button variant="outline" size="sm">
-                  Packet Loss
-                </Button>
+      {/* Statistics Cards */}
+      {monitoringStats && (
+        <Grid className="u-mb-6">
+          <GridCol xs={6} lg={3}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-align-items-center">
+                <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
+                  <Icon name="Desktop" size={20} className="u-text-primary" />
+                </div>
+                <div>
+                  <h3 className="u-h4 u-mb-1">
+                    {monitoringStats.total_routers || 0}
+                  </h3>
+                  <p className="u-text-secondary u-mb-0">Total Routers</p>
+                </div>
               </div>
-            </div>
-            <LineChart datasets={networkPerformanceData} size="lg" />
-          </Card>
-        </GridCol>
-        <GridCol xs={12} lg={4}>
-          <Card>
-            <h3 className="u-mb-4">Traffic Distribution</h3>
-            <DonutChart datasets={protocolDistribution} size="lg" />
-            <div className="u-mt-4 u-space-y-2">
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <div className="u-w-3 u-h-3 u-bg-primary u-rounded-full"></div>
-                  <span className="u-fs-sm">HTTP/HTTPS</span>
+            </Card>
+          </GridCol>
+          <GridCol xs={6} lg={3}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-align-items-center">
+                <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
+                  <Icon
+                    name="CheckCircle"
+                    size={24}
+                    className="u-text-success"
+                  />
                 </div>
-                <span className="u-fs-sm u-fw-medium">45%</span>
+                <div>
+                  <h3 className="u-h4 u-mb-1">
+                    {monitoringStats.online_routers || 0}
+                  </h3>
+                  <p className="u-text-secondary u-mb-0">Online</p>
+                  <div className="u-text-sm u-text-success">
+                    {monitoringStats.total_routers > 0
+                      ? `${((monitoringStats.online_routers / monitoringStats.total_routers) * 100).toFixed(1)}%`
+                      : "0%"}{" "}
+                    uptime
+                  </div>
+                </div>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <div className="u-w-3 u-h-3 u-bg-success u-rounded-full"></div>
-                  <span className="u-fs-sm">Video Streaming</span>
+            </Card>
+          </GridCol>
+          <GridCol xs={6} lg={3}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-align-items-center">
+                <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
+                  <Icon name="Warning" size={24} className="u-text-warning" />
                 </div>
-                <span className="u-fs-sm u-fw-medium">30%</span>
+                <div>
+                  <h3 className="u-h4 u-mb-1">
+                    {monitoringStats.alerts_count || 0}
+                  </h3>
+                  <p className="u-text-secondary u-mb-0">Active Alerts</p>
+                  <div className="u-text-sm u-text-warning">
+                    {monitoringStats.critical_alerts || 0} critical
+                  </div>
+                </div>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <div className="u-w-3 u-h-3 u-bg-warning u-rounded-full"></div>
-                  <span className="u-fs-sm">Gaming</span>
+            </Card>
+          </GridCol>
+          <GridCol xs={6} lg={3}>
+            <Card className="u-p-4">
+              <div className="u-d-flex u-align-items-center">
+                <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
+                  <Icon name="Cpu" size={20} className="u-text-success" />
                 </div>
-                <span className="u-fs-sm u-fw-medium">15%</span>
+                <div>
+                  <h3 className="u-h4 u-mb-1">
+                    {monitoringStats.total_bandwidth_usage || 0} GB
+                  </h3>
+                  <p className="u-text-secondary u-mb-0">Bandwidth Usage</p>
+                  <div className="u-text-sm u-text-info">
+                    Peak: {monitoringStats.peak_bandwidth_usage || 0} Mbps
+                  </div>
+                </div>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <div className="u-d-flex u-align-items-center u-gap-2">
-                  <div className="u-w-3 u-h-3 u-bg-error u-rounded-full"></div>
-                  <span className="u-fs-sm">File Transfer</span>
-                </div>
-                <span className="u-fs-sm u-fw-medium">10%</span>
-              </div>
-            </div>
-          </Card>
-        </GridCol>
-      </Grid>
-
-      <Grid className="u-mb-6">
-        <GridCol xs={12}>
-          <Card>
-            <h3 className="u-mb-4">Bandwidth Usage Over Time</h3>
-            <BarChart datasets={bandwidthUsageData} size="md" />
-          </Card>
-        </GridCol>
-      </Grid>
-
-      {/* Router Status Cards */}
-      <div className="u-mb-4">
-        <div className="u-d-flex u-justify-content-between u-align-items-center">
-          <h3>Router Status</h3>
-          <div className="u-d-flex u-gap-2">
-            <Button variant="outline" size="sm">
-              <Icon name="Download" size={16} />
-              Export
-            </Button>
-            <Button variant="outline" size="sm">
-              <Icon name="Plus" size={16} />
-              Add Router
-            </Button>
-          </div>
-        </div>
-      </div>
-
-      {statsLoading ? (
-        <div className="u-d-flex u-justify-content-center u-align-items-center u-py-8">
-          <div className="u-text-center">
-            <Spinner size="lg" />
-            <p>Loading monitoring data...</p>
-          </div>
-        </div>
-      ) : (
-        <Grid>
-          {routersData?.results?.map((router) => (
-            <GridCol key={router.id} xs={12} md={6} lg={4}>
-              <Card className="u-h-100">
-                <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
-                  <div>
-                    <h4 className="u-mb-1">{router.name}</h4>
-                    <p className="u-fs-sm u-text-secondary-emphasis">{router.host}</p>
-                  </div>
-                  {getRouterStatusBadge(router.status)}
-                </div>
-
-                <div className="u-space-y-3 u-mb-4">
-                  <div>
-                    <div className="u-d-flex u-justify-content-between u-mb-1">
-                      <span className="u-fs-sm">CPU Usage</span>
-                      <span className="u-fs-sm u-text-secondary-emphasis">
-                        {Math.floor(Math.random() * 100)}%
-                      </span>
-                    </div>
-                    <Progress
-                      value={Math.floor(Math.random() * 100)}
-                      variant={
-                        Math.random() > 0.8
-                          ? "error"
-                          : Math.random() > 0.6
-                            ? "warning"
-                            : "success"
-                      }
-                    />
-                  </div>
-
-                  <div>
-                    <div className="u-d-flex u-justify-content-between u-mb-1">
-                      <span className="u-fs-sm">Memory Usage</span>
-                      <span className="u-fs-sm u-text-secondary-emphasis">
-                        {formatBytes(
-                          Math.floor(Math.random() * 1024 * 1024 * 1024),
-                        )}
-                      </span>
-                    </div>
-                    <Progress
-                      value={Math.floor(Math.random() * 100)}
-                      variant="primary"
-                    />
-                  </div>
-
-                  <div>
-                    <div className="u-d-flex u-justify-content-between u-mb-1">
-                      <span className="u-fs-sm">Network Load</span>
-                      <span className="u-fs-sm u-text-secondary-emphasis">
-                        {Math.floor(Math.random() * 1000)} Mbps
-                      </span>
-                    </div>
-                    <Progress
-                      value={Math.floor(Math.random() * 100)}
-                      variant="primary"
-                    />
-                  </div>
-                </div>
-
-                <div className="u-d-flex u-justify-content-between u-align-items-center u-pt-3 u-border-top">
-                  <div>
-                    <div className="u-fs-sm u-fw-medium">
-                      {Math.floor(Math.random() * 200)} users
-                    </div>
-                    <div className="u-fs-xs u-text-secondary-emphasis">connected</div>
-                  </div>
-                  <div>
-                    <div className="u-fs-sm u-fw-medium">
-                      {formatUptime(Math.floor(Math.random() * 86400 * 30))}
-                    </div>
-                    <div className="u-fs-xs u-text-secondary-emphasis">uptime</div>
-                  </div>
-                  <Button 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => handleViewRouterDetails(router)}
-                  >
-                    <Icon name="ChartLine" size={16} />
-                    Details
-                  </Button>
-                </div>
-              </Card>
-            </GridCol>
-          ))}
+            </Card>
+          </GridCol>
         </Grid>
       )}
 
-      {/* Show message if no routers */}
-      {!statsLoading &&
-        (!routersData?.results || routersData.results.length === 0) && (
-          <Card>
-            <div className="u-text-center u-py-8">
-              <Icon
-                name="Globe"
-                size={48}
-                className="u-text-secondary-emphasis u-mb-4"
-              />
-              <h3 className="u-mb-2">No routers found</h3>
-              <p className="u-text-secondary-emphasis u-mb-4">
-                You need to add routers to monitor network performance.
-              </p>
-              <Button variant="primary">
-                <Icon name="Plus" size={16} />
-                Add Router
-              </Button>
+      {/* Charts */}
+      <Grid className="u-mb-6">
+        <GridCol xs={12} lg={8}>
+          <Card className="u-p-4">
+            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+              <h3 className="u-h5 u-mb-0">Bandwidth Usage</h3>
+              <Badge variant="info" label={`Last ${selectedTimeRange}`} />
             </div>
+            {statsLoading ? (
+              <div className="u-text-center u-p-6">
+                <Spinner />
+                <p className="u-mt-2 u-text-secondary">
+                  Loading bandwidth data...
+                </p>
+              </div>
+            ) : (
+              <LineChart datasets={chartData.bandwidth} size="lg" />
+            )}
           </Card>
+        </GridCol>
+        <GridCol xs={12} lg={4}>
+          <Card className="u-p-4">
+            <h3 className="u-h5 u-mb-4">Router Status Distribution</h3>
+            {statsLoading ? (
+              <div className="u-text-center u-p-6">
+                <Spinner />
+                <p className="u-mt-2 u-text-secondary">
+                  Loading status data...
+                </p>
+              </div>
+            ) : (
+              <DonutChart data={chartData.routerStatus} size="md" />
+            )}
+          </Card>
+        </GridCol>
+      </Grid>
+
+      {/* Router Management */}
+      <Card>
+        <div className="u-p-4 u-border-bottom">
+          <div className="u-d-flex u-justify-content-between u-align-items-center">
+            <h3 className="u-h5 u-mb-0">Router Status</h3>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => refetchRouters()}
+              disabled={routersLoading}
+            >
+              <Icon name="ArrowClockwise" size={16} className="u-me-2" />
+              Refresh
+            </Button>
+          </div>
+        </div>
+
+        {/* Filters */}
+        <div className="u-p-4 u-border-bottom">
+          <Grid>
+            <GridCol xs={12} md={6}>
+              <Input
+                placeholder="Search routers..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="u-w-100"
+              />
+            </GridCol>
+            <GridCol xs={12} md={6}>
+              <Select
+                value={routerStatusFilter}
+                onChange={(e) => setRouterStatusFilter(e.target.value)}
+                options={ROUTER_STATUSES}
+                className="u-w-100"
+              />
+            </GridCol>
+          </Grid>
+        </div>
+
+        {/* Router Table */}
+        {routersLoading ? (
+          <div className="u-text-center u-p-6">
+            <Spinner size="lg" />
+            <p className="u-mt-3 u-text-secondary">Loading routers...</p>
+          </div>
+        ) : (
+          <>
+            <DataTable
+              data={
+                routersData?.results?.map((router: any) => ({
+                  id: router.id,
+                  router: (
+                    <div className="u-d-flex u-align-items-center">
+                      <div
+                        className={`u-w-3 u-h-3 u-rounded-circle u-me-3 ${
+                          router.status === "online"
+                            ? "u-bg-success"
+                            : router.status === "offline"
+                              ? "u-bg-error"
+                              : router.status === "maintenance"
+                                ? "u-bg-warning"
+                                : "u-bg-secondary"
+                        }`}
+                      ></div>
+                      <div>
+                        <div className="u-fw-medium">
+                          {sanitizeText(router.name)}
+                        </div>
+                        {router.description && (
+                          <div className="u-text-secondary u-text-sm">
+                            {sanitizeText(router.description)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ),
+                  connection: (
+                    <div>
+                      <div className="u-text-sm u-mb-1">
+                        <Icon
+                          name="Globe"
+                          size={14}
+                          className="u-me-2 u-text-secondary"
+                        />
+                        {router.host}
+                      </div>
+                      <div className="u-text-sm u-text-secondary">
+                        API: {router.api_port} | SSH: {router.ssh_port}
+                      </div>
+                    </div>
+                  ),
+                  status: getStatusBadge(router.status),
+                  uptime: (
+                    <div>
+                      <Progress
+                        value={router.uptime_percentage || 0}
+                        size="sm"
+                        className="u-mb-1"
+                      />
+                      <div className="u-text-sm u-text-secondary">
+                        {router.uptime ? formatUptime(router.uptime) : "N/A"}
+                      </div>
+                    </div>
+                  ),
+                  traffic: (
+                    <div>
+                      <div className="u-text-sm">
+                        <Icon
+                          name="ArrowDown"
+                          size={12}
+                          className="u-me-1 u-text-success"
+                        />
+                        {router.rx_bytes
+                          ? formatBandwidth(router.rx_bytes)
+                          : "0 Mbps"}
+                      </div>
+                      <div className="u-text-sm">
+                        <Icon
+                          name="ArrowUp"
+                          size={12}
+                          className="u-me-1 u-text-info"
+                        />
+                        {router.tx_bytes
+                          ? formatBandwidth(router.tx_bytes)
+                          : "0 Mbps"}
+                      </div>
+                    </div>
+                  ),
+                  actions: (
+                    <div className="u-d-flex u-gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleRouterDetails(router)}
+                      >
+                        <Icon name="Gear" size={14} />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => {
+                          // Navigate to router management
+                          window.location.href = `/router-management?id=${router.id}`;
+                        }}
+                      >
+                        <Icon name="Eye" size={14} />
+                      </Button>
+                    </div>
+                  ),
+                })) || []
+              }
+              columns={[
+                { key: "router", title: "Router" },
+                { key: "connection", title: "Connection" },
+                { key: "status", title: "Status" },
+                { key: "uptime", title: "Uptime" },
+                { key: "traffic", title: "Traffic" },
+                { key: "actions", title: "Actions" },
+              ]}
+            />
+
+            {/* Pagination */}
+            {routersData &&
+              Math.ceil((routersData.count || 0) / itemsPerPage) > 1 && (
+                <div className="u-p-4 u-border-top">
+                  <Pagination
+                    currentPage={currentPage}
+                    totalPages={Math.ceil(
+                      (routersData.count || 0) / itemsPerPage,
+                    )}
+                    onPageChange={setCurrentPage}
+                  />
+                </div>
+              )}
+
+            {routersData?.results?.length === 0 && (
+              <div className="u-text-center u-p-6">
+                <Icon
+                  name="Desktop"
+                  size={48}
+                  className="u-text-secondary u-mb-3"
+                />
+                <h3 className="u-h5 u-mb-2">No routers found</h3>
+                <p className="u-text-secondary u-mb-4">
+                  {searchQuery || routerStatusFilter !== "all"
+                    ? "Try adjusting your filters"
+                    : "No routers are currently configured for monitoring"}
+                </p>
+                <Button
+                  variant="primary"
+                  onClick={() => (window.location.href = "/network")}
+                >
+                  <Icon name="Plus" size={16} className="u-me-2" />
+                  Add Router
+                </Button>
+              </div>
+            )}
+          </>
         )}
+      </Card>
 
       {/* Router Details Modal */}
       <Modal
@@ -489,139 +617,100 @@ const Monitoring: React.FC = () => {
           setIsRouterModalOpen(false);
           setSelectedRouter(null);
         }}
-        title="Router Details"
+        title={`Router Details: ${selectedRouter?.name || "N/A"}`}
         size="lg"
       >
         {selectedRouter && (
-          <div>
-            <div className="u-mb-4">
-              <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-3">
-                <div>
-                  <h2 className="u-mb-1">{selectedRouter.name}</h2>
-                  <p className="u-text-secondary-emphasis u-mb-2">{selectedRouter.description}</p>
-                  <p className="u-fs-sm u-text-secondary-emphasis">{selectedRouter.host}:{selectedRouter.api_port}</p>
-                </div>
-                {getRouterStatusBadge(selectedRouter.status)}
-              </div>
-            </div>
-
+          <div className="u-space-y-4">
             <Grid>
               <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Router Type</label>
-                  <p className="u-fw-medium">{selectedRouter.router_type}</p>
+                <div className="u-p-4 u-bg-gray-subtle u-rounded">
+                  <h4 className="u-h6 u-mb-3">Connection Info</h4>
+                  <div className="u-space-y-2">
+                    <div className="u-d-flex u-justify-content-between">
+                      <span>Host:</span>
+                      <span className="u-fw-medium">{selectedRouter.host}</span>
+                    </div>
+                    <div className="u-d-flex u-justify-content-between">
+                      <span>API Port:</span>
+                      <span className="u-fw-medium">
+                        {selectedRouter.api_port}
+                      </span>
+                    </div>
+                    <div className="u-d-flex u-justify-content-between">
+                      <span>SSH Port:</span>
+                      <span className="u-fw-medium">
+                        {selectedRouter.ssh_port}
+                      </span>
+                    </div>
+                    <div className="u-d-flex u-justify-content-between">
+                      <span>Status:</span>
+                      {getStatusBadge(selectedRouter.status)}
+                    </div>
+                  </div>
                 </div>
               </GridCol>
               <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Location</label>
-                  <p className="u-fw-medium">{selectedRouter.location || "Not specified"}</p>
+                <div className="u-p-4 u-bg-gray-subtle u-rounded">
+                  <h4 className="u-h6 u-mb-3">Performance</h4>
+                  <div className="u-space-y-2">
+                    <div className="u-d-flex u-justify-content-between">
+                      <span>Uptime:</span>
+                      <span className="u-fw-medium">
+                        {selectedRouter.uptime
+                          ? formatUptime(selectedRouter.uptime)
+                          : "N/A"}
+                      </span>
+                    </div>
+                    <div className="u-d-flex u-justify-content-between">
+                      <span>CPU Usage:</span>
+                      <span className="u-fw-medium">
+                        {selectedRouter.cpu_usage || 0}%
+                      </span>
+                    </div>
+                    <div className="u-d-flex u-justify-content-between">
+                      <span>Memory Usage:</span>
+                      <span className="u-fw-medium">
+                        {selectedRouter.memory_usage || 0}%
+                      </span>
+                    </div>
+                    <div className="u-d-flex u-justify-content-between">
+                      <span>Active Connections:</span>
+                      <span className="u-fw-medium">
+                        {selectedRouter.active_connections || 0}
+                      </span>
+                    </div>
+                  </div>
                 </div>
               </GridCol>
             </Grid>
 
-            <Grid>
-              <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">API Port</label>
-                  <p>{selectedRouter.api_port}</p>
-                </div>
-              </GridCol>
-              <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">SSH Port</label>
-                  <p>{selectedRouter.ssh_port}</p>
-                </div>
-              </GridCol>
-            </Grid>
-
-            <Grid>
-              <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">SNMP Community</label>
-                  <p>{selectedRouter.snmp_community}</p>
-                </div>
-              </GridCol>
-              <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">SNMP Port</label>
-                  <p>{selectedRouter.snmp_port}</p>
-                </div>
-              </GridCol>
-            </Grid>
-
-            <div className="u-mb-4">
-              <h4 className="u-mb-3">Real-time Performance</h4>
-              <div className="u-space-y-3">
-                <div>
-                  <div className="u-d-flex u-justify-content-between u-mb-1">
-                    <span className="u-fs-sm">CPU Usage</span>
-                    <span className="u-fs-sm u-text-secondary-emphasis">67%</span>
-                  </div>
-                  <Progress value={67} variant="warning" />
-                </div>
-                <div>
-                  <div className="u-d-flex u-justify-content-between u-mb-1">
-                    <span className="u-fs-sm">Memory Usage</span>
-                    <span className="u-fs-sm u-text-secondary-emphasis">1.2 GB / 4 GB</span>
-                  </div>
-                  <Progress value={30} variant="success" />
-                </div>
-                <div>
-                  <div className="u-d-flex u-justify-content-between u-mb-1">
-                    <span className="u-fs-sm">Network Load</span>
-                    <span className="u-fs-sm u-text-secondary-emphasis">450 Mbps</span>
-                  </div>
-                  <Progress value={45} variant="primary" />
-                </div>
-                <div>
-                  <div className="u-d-flex u-justify-content-between u-mb-1">
-                    <span className="u-fs-sm">Active Connections</span>
-                    <span className="u-fs-sm u-text-secondary-emphasis">156 users</span>
-                  </div>
-                  <Progress value={78} variant="success" />
-                </div>
-              </div>
-            </div>
-
-            {selectedRouter.notes && (
-              <div className="u-mb-4">
-                <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Notes</label>
-                <p>{selectedRouter.notes}</p>
+            {selectedRouter.description && (
+              <div>
+                <h4 className="u-h6 u-mb-2">Description</h4>
+                <p className="u-text-secondary">
+                  {sanitizeText(selectedRouter.description)}
+                </p>
               </div>
             )}
 
-            <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">Last Seen</label>
-              <p>{selectedRouter.last_seen ? new Date(selectedRouter.last_seen).toLocaleString() : "Never"}</p>
-            </div>
-
-            <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+            <div className="u-d-flex u-justify-content-end u-gap-3">
               <Button
                 variant="outline"
                 onClick={() => {
-                  // Handle router restart
-                  console.log("Restarting router:", selectedRouter.id);
+                  setIsRouterModalOpen(false);
+                  setSelectedRouter(null);
                 }}
               >
-                <Icon name="ArrowClockwise" size={16} />
-                Restart Router
-              </Button>
-              <Button
-                variant="outline"
-                onClick={() => {
-                  // Handle router configuration
-                  console.log("Configuring router:", selectedRouter.id);
-                }}
-              >
-                <Icon name="Gear" size={16} />
-                Configure
+                Close
               </Button>
               <Button
                 variant="primary"
-                onClick={() => setIsRouterModalOpen(false)}
+                onClick={() => {
+                  window.location.href = `/router-management?id=${selectedRouter.id}`;
+                }}
               >
-                Close
+                Manage Router
               </Button>
             </div>
           </div>

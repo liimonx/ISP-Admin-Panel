@@ -1,255 +1,176 @@
 """
-Core serializers for common data structures and statistics.
+Core serializers for system settings and dashboard data.
 """
 from rest_framework import serializers
-from django.db.models import Sum, Count, Avg
-from customers.models import Customer
-from subscriptions.models import Subscription
-from plans.models import Plan
-from network.models import Router
-from billing.models import Invoice, Payment
+from .models import SystemSettings
 
 
+class SystemSettingsSerializer(serializers.ModelSerializer):
+    """Serializer for system settings."""
+    password_policy = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = SystemSettings
+        fields = [
+            'id', 'company_name', 'contact_email', 'support_phone',
+            'timezone', 'date_format', 'currency', 'language',
+            'maintenance_mode', 'auto_backup', 'backup_frequency',
+            'email_notifications', 'sms_notifications',
+            'api_rate_limit', 'session_timeout', 'max_login_attempts',
+            'password_policy', 'log_level', 'database_pool_size',
+            'cache_ttl', 'custom_css', 'created_at', 'updated_at'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']
+    
+    def get_password_policy(self, obj):
+        """Get password policy as nested object."""
+        return obj.get_password_policy()
+    
+    def update(self, instance, validated_data):
+        """Update system settings with password policy handling."""
+        password_policy = validated_data.pop('password_policy', None)
+        
+        # Update main fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        # Update password policy if provided
+        if password_policy:
+            instance.set_password_policy(password_policy)
+        
+        instance.save()
+        return instance
+
+
+class SystemSettingsUpdateSerializer(serializers.ModelSerializer):
+    """Serializer for updating system settings with password policy."""
+    password_policy = serializers.DictField(required=False)
+    
+    class Meta:
+        model = SystemSettings
+        fields = [
+            'company_name', 'contact_email', 'support_phone',
+            'timezone', 'date_format', 'currency', 'language',
+            'maintenance_mode', 'auto_backup', 'backup_frequency',
+            'email_notifications', 'sms_notifications',
+            'api_rate_limit', 'session_timeout', 'max_login_attempts',
+            'password_policy', 'log_level', 'database_pool_size',
+            'cache_ttl', 'custom_css'
+        ]
+    
+    def update(self, instance, validated_data):
+        """Update system settings with password policy handling."""
+        password_policy = validated_data.pop('password_policy', None)
+        
+        # Update main fields
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        
+        # Update password policy if provided
+        if password_policy:
+            instance.set_password_policy(password_policy)
+        
+        instance.save()
+        return instance
+
+
+# Dashboard Statistics Serializers
 class DashboardStatsSerializer(serializers.Serializer):
     """Serializer for dashboard statistics."""
-    
-    # Customer Statistics
     total_customers = serializers.IntegerField()
-    active_customers = serializers.IntegerField()
-    
-    # Subscription Statistics
-    total_subscriptions = serializers.IntegerField()
     active_subscriptions = serializers.IntegerField()
-    
-    # Revenue Statistics
-    total_monthly_revenue = serializers.DecimalField(max_digits=12, decimal_places=2)
-    total_monthly_revenue_float = serializers.SerializerMethodField()
-    
-    # Router Statistics
     total_routers = serializers.IntegerField()
     online_routers = serializers.IntegerField()
-    
-    # Invoice Statistics
-    total_invoices = serializers.IntegerField()
     pending_invoices = serializers.IntegerField()
-    overdue_invoices = serializers.IntegerField()
+    total_monthly_revenue = serializers.DecimalField(max_digits=10, decimal_places=2)
     
-    # Payment Statistics
-    total_payments = serializers.IntegerField()
-    successful_payments = serializers.IntegerField()
-    
-    def get_total_monthly_revenue_float(self, obj):
-        """Get total monthly revenue as float."""
-        return float(obj.get('total_monthly_revenue', 0))
+    def to_representation(self, instance):
+        """Convert total_monthly_revenue to float for JSON serialization."""
+        data = super().to_representation(instance)
+        if 'total_monthly_revenue' in data:
+            data['total_monthly_revenue'] = float(data['total_monthly_revenue'])
+        return data
 
 
 class CustomerStatsSerializer(serializers.Serializer):
     """Serializer for customer statistics."""
-    
     total_customers = serializers.IntegerField()
     active_customers = serializers.IntegerField()
     inactive_customers = serializers.IntegerField()
     suspended_customers = serializers.IntegerField()
-    cancelled_customers = serializers.IntegerField()
     new_customers_this_month = serializers.IntegerField()
-    customers_with_active_subscriptions = serializers.IntegerField()
 
 
 class SubscriptionStatsSerializer(serializers.Serializer):
     """Serializer for subscription statistics."""
-    
     total_subscriptions = serializers.IntegerField()
     active_subscriptions = serializers.IntegerField()
-    inactive_subscriptions = serializers.IntegerField()
     suspended_subscriptions = serializers.IntegerField()
-    cancelled_subscriptions = serializers.IntegerField()
-    pending_subscriptions = serializers.IntegerField()
+    expired_subscriptions = serializers.IntegerField()
     new_subscriptions_this_month = serializers.IntegerField()
-    total_monthly_revenue = serializers.DecimalField(max_digits=12, decimal_places=2)
-    total_monthly_revenue_float = serializers.SerializerMethodField()
-    
-    def get_total_monthly_revenue_float(self, obj):
-        """Get total monthly revenue as float."""
-        return float(obj.get('total_monthly_revenue', 0))
 
 
 class PlanStatsSerializer(serializers.Serializer):
     """Serializer for plan statistics."""
-    
     total_plans = serializers.IntegerField()
     active_plans = serializers.IntegerField()
-    featured_plans = serializers.IntegerField()
-    popular_plans = serializers.IntegerField()
     most_popular_plan = serializers.CharField()
-    highest_revenue_plan = serializers.CharField()
-    total_monthly_revenue = serializers.DecimalField(max_digits=12, decimal_places=2)
-    total_monthly_revenue_float = serializers.SerializerMethodField()
-    
-    def get_total_monthly_revenue_float(self, obj):
-        """Get total monthly revenue as float."""
-        return float(obj.get('total_monthly_revenue', 0))
+    average_plan_price = serializers.DecimalField(max_digits=10, decimal_places=2)
 
 
 class RouterStatsSerializer(serializers.Serializer):
     """Serializer for router statistics."""
-    
     total_routers = serializers.IntegerField()
     online_routers = serializers.IntegerField()
     offline_routers = serializers.IntegerField()
     maintenance_routers = serializers.IntegerField()
-    mikrotik_routers = serializers.IntegerField()
-    cisco_routers = serializers.IntegerField()
-    other_routers = serializers.IntegerField()
-    total_bandwidth_usage = serializers.DecimalField(max_digits=15, decimal_places=2)
-    total_bandwidth_usage_float = serializers.SerializerMethodField()
-    
-    def get_total_bandwidth_usage_float(self, obj):
-        """Get total bandwidth usage as float."""
-        return float(obj.get('total_bandwidth_usage', 0))
 
 
 class InvoiceStatsSerializer(serializers.Serializer):
     """Serializer for invoice statistics."""
-    
     total_invoices = serializers.IntegerField()
     pending_invoices = serializers.IntegerField()
     paid_invoices = serializers.IntegerField()
     overdue_invoices = serializers.IntegerField()
-    cancelled_invoices = serializers.IntegerField()
-    total_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    paid_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    pending_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    overdue_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    avg_invoice_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    collection_rate = serializers.FloatField()
-    
-    # Float versions for frontend compatibility
-    total_amount_float = serializers.SerializerMethodField()
-    paid_amount_float = serializers.SerializerMethodField()
-    pending_amount_float = serializers.SerializerMethodField()
-    overdue_amount_float = serializers.SerializerMethodField()
-    avg_invoice_amount_float = serializers.SerializerMethodField()
-    
-    def get_total_amount_float(self, obj):
-        """Get total amount as float."""
-        return float(obj.get('total_amount', 0))
-    
-    def get_paid_amount_float(self, obj):
-        """Get paid amount as float."""
-        return float(obj.get('paid_amount', 0))
-    
-    def get_pending_amount_float(self, obj):
-        """Get pending amount as float."""
-        return float(obj.get('pending_amount', 0))
-    
-    def get_overdue_amount_float(self, obj):
-        """Get overdue amount as float."""
-        return float(obj.get('overdue_amount', 0))
-    
-    def get_avg_invoice_amount_float(self, obj):
-        """Get average invoice amount as float."""
-        return float(obj.get('avg_invoice_amount', 0))
+    total_amount_due = serializers.DecimalField(max_digits=10, decimal_places=2)
 
 
 class PaymentStatsSerializer(serializers.Serializer):
     """Serializer for payment statistics."""
-    
     total_payments = serializers.IntegerField()
     successful_payments = serializers.IntegerField()
     failed_payments = serializers.IntegerField()
-    pending_payments = serializers.IntegerField()
-    total_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    successful_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    avg_payment_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    success_rate = serializers.FloatField()
-    
-    # Float versions for frontend compatibility
-    total_amount_float = serializers.SerializerMethodField()
-    successful_amount_float = serializers.SerializerMethodField()
-    avg_payment_amount_float = serializers.SerializerMethodField()
-    
-    def get_total_amount_float(self, obj):
-        """Get total amount as float."""
-        return float(obj.get('total_amount', 0))
-    
-    def get_successful_amount_float(self, obj):
-        """Get successful amount as float."""
-        return float(obj.get('successful_amount', 0))
-    
-    def get_avg_payment_amount_float(self, obj):
-        """Get average payment amount as float."""
-        return float(obj.get('avg_payment_amount', 0))
+    total_amount_collected = serializers.DecimalField(max_digits=10, decimal_places=2)
 
 
 class MonthlyTrendSerializer(serializers.Serializer):
     """Serializer for monthly trend data."""
-    
     month = serializers.CharField()
     year = serializers.IntegerField()
-    invoice_count = serializers.IntegerField()
-    total_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    paid_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    payment_count = serializers.IntegerField()
-    successful_payment_count = serializers.IntegerField()
-    
-    # Float versions for frontend compatibility
-    total_amount_float = serializers.SerializerMethodField()
-    paid_amount_float = serializers.SerializerMethodField()
-    
-    def get_total_amount_float(self, obj):
-        """Get total amount as float."""
-        return float(obj.get('total_amount', 0))
-    
-    def get_paid_amount_float(self, obj):
-        """Get paid amount as float."""
-        return float(obj.get('paid_amount', 0))
+    revenue = serializers.DecimalField(max_digits=10, decimal_places=2)
+    new_customers = serializers.IntegerField()
+    new_subscriptions = serializers.IntegerField()
 
 
 class DailyTrendSerializer(serializers.Serializer):
     """Serializer for daily trend data."""
-    
     date = serializers.DateField()
-    payment_count = serializers.IntegerField()
-    total_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    successful_count = serializers.IntegerField()
-    invoice_count = serializers.IntegerField()
-    
-    # Float versions for frontend compatibility
-    total_amount_float = serializers.SerializerMethodField()
-    
-    def get_total_amount_float(self, obj):
-        """Get total amount as float."""
-        return float(obj.get('total_amount', 0))
+    revenue = serializers.DecimalField(max_digits=10, decimal_places=2)
+    new_customers = serializers.IntegerField()
+    new_subscriptions = serializers.IntegerField()
 
 
 class PaymentMethodStatsSerializer(serializers.Serializer):
     """Serializer for payment method statistics."""
-    
-    method = serializers.CharField()
+    payment_method = serializers.CharField()
     count = serializers.IntegerField()
-    total_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    success_rate = serializers.FloatField()
-    
-    # Float versions for frontend compatibility
-    total_amount_float = serializers.SerializerMethodField()
-    
-    def get_total_amount_float(self, obj):
-        """Get total amount as float."""
-        return float(obj.get('total_amount', 0))
+    total_amount = serializers.DecimalField(max_digits=10, decimal_places=2)
+    percentage = serializers.FloatField()
 
 
 class TopCustomerSerializer(serializers.Serializer):
     """Serializer for top customer data."""
-    
     customer_id = serializers.IntegerField()
     customer_name = serializers.CharField()
-    total_amount = serializers.DecimalField(max_digits=12, decimal_places=2)
-    invoice_count = serializers.IntegerField()
+    total_revenue = serializers.DecimalField(max_digits=10, decimal_places=2)
     subscription_count = serializers.IntegerField()
-    
-    # Float versions for frontend compatibility
-    total_amount_float = serializers.SerializerMethodField()
-    
-    def get_total_amount_float(self, obj):
-        """Get total amount as float."""
-        return float(obj.get('total_amount', 0))

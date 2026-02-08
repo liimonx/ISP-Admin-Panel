@@ -10,8 +10,8 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework import status as drf_status
 from core.responses import APIResponse
-from .models import SNMPSnapshot, UsageSnapshot
-from .serializers import SNMPSnapshotSerializer, UsageSnapshotSerializer
+from .models import RouterMetric, SNMPSnapshot, UsageSnapshot
+from .serializers import RouterMetricSerializer, SNMPSnapshotSerializer, UsageSnapshotSerializer
 import redis
 import logging
 
@@ -79,6 +79,19 @@ def health_check(request):
     return JsonResponse(health_status, status=http_status)
 
 
+class RouterMetricListView(generics.ListCreateAPIView):
+    """List and create router metrics."""
+    queryset = RouterMetric.objects.all().order_by('-timestamp')
+    serializer_class = RouterMetricSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    
+    def get_queryset(self):
+        router_id = self.request.query_params.get('router_id')
+        if router_id:
+            return self.queryset.filter(router_id=router_id)
+        return self.queryset
+
+
 class SNMPSnapshotListView(generics.ListCreateAPIView):
     """List and create SNMP snapshots."""
     queryset = SNMPSnapshot.objects.all().order_by('-timestamp')
@@ -113,27 +126,45 @@ def monitoring_stats_view(request):
     """
     try:
         from network.models import Router
+        from django.db.models import Avg, Max
+        
+        # Get router counts
+        total_routers = Router.objects.count()
+        online_routers = Router.objects.filter(status='online').count()
+        offline_routers = Router.objects.filter(status='offline').count()
+        maintenance_routers = Router.objects.filter(status='maintenance').count()
+        
+        # Get metrics statistics
+        total_metrics = RouterMetric.objects.count()
+        
+        # Get latest metrics for each router
+        latest_metrics = []
+        for router in Router.objects.all():
+            latest_metric = RouterMetric.objects.filter(router=router).first()
+            if latest_metric:
+                latest_metrics.append(latest_metric)
+        
+        # Calculate averages from latest metrics
+        avg_cpu = sum(m.cpu_usage for m in latest_metrics) / len(latest_metrics) if latest_metrics else 0
+        avg_memory = sum(m.memory_usage for m in latest_metrics) / len(latest_metrics) if latest_metrics else 0
+        total_bandwidth = sum(m.download_speed + m.upload_speed for m in latest_metrics) if latest_metrics else 0
+        
+        # Get connection counts from usage snapshots
+        latest_usage = UsageSnapshot.objects.first()
+        active_connections = latest_usage.active_connections if latest_usage else 0
         
         stats = {
-            'total_routers': Router.objects.count(),
-            'online_routers': Router.objects.filter(status='online').count(),
-            'offline_routers': Router.objects.filter(status='offline').count(),
-            'maintenance_routers': Router.objects.filter(status='maintenance').count(),
-            'total_snapshots': SNMPSnapshot.objects.count(),
-            'total_usage_snapshots': UsageSnapshot.objects.count(),
-            'latest_snapshot': None,
-            'latest_usage_snapshot': None
+            'total_routers': total_routers,
+            'online_routers': online_routers,
+            'offline_routers': offline_routers,
+            'maintenance_routers': maintenance_routers,
+            'total_metrics': total_metrics,
+            'average_cpu_usage': round(avg_cpu, 1),
+            'average_memory_usage': round(avg_memory, 1),
+            'total_bandwidth': total_bandwidth,
+            'active_connections': active_connections,
+            'latest_metric': RouterMetricSerializer(latest_metrics[0]).data if latest_metrics else None
         }
-        
-        # Get latest snapshots
-        latest_snmp = SNMPSnapshot.objects.first()
-        latest_usage = UsageSnapshot.objects.first()
-        
-        if latest_snmp:
-            stats['latest_snapshot'] = SNMPSnapshotSerializer(latest_snmp).data
-        
-        if latest_usage:
-            stats['latest_usage_snapshot'] = UsageSnapshotSerializer(latest_usage).data
         
         return APIResponse.success(
             data=stats,
@@ -161,15 +192,7 @@ def router_monitoring_view(request, router_id):
             status=drf_status.HTTP_404_NOT_FOUND
         )
     
-    # Get recent snapshots
-    snmp_snapshots = SNMPSnapshot.objects.filter(
-        router=router
-    ).order_by('-timestamp')[:50]
-    
-    usage_snapshots = UsageSnapshot.objects.filter(
-        router=router
-    ).order_by('-timestamp')[:50]
-    
+    # Get recent metrics
     data = {
         'router': {
             'id': router.id,
@@ -177,8 +200,12 @@ def router_monitoring_view(request, router_id):
             'status': router.status,
             'host': router.host
         },
-        'snmp_snapshots': SNMPSnapshotSerializer(snmp_snapshots, many=True).data,
-        'usage_snapshots': UsageSnapshotSerializer(usage_snapshots, many=True).data
+        'metrics': []
     }
+    
+    metrics = RouterMetric.objects.filter(
+        router=router
+    ).order_by('-timestamp')[:50]
+    data['metrics'] = RouterMetricSerializer(metrics, many=True).data
     
     return Response(data)

@@ -10,6 +10,9 @@ from .serializers import (
     SubscriptionDetailSerializer,
     SubscriptionStatusUpdateSerializer, DataUsageUpdateSerializer, DataUsageResetSerializer
 )
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 @extend_schema(
@@ -28,48 +31,71 @@ class SubscriptionListView(generics.ListCreateAPIView):
     # search_fields = ['username', 'customer__name', 'plan__name']
     # ordering_fields = ['username', 'start_date', 'monthly_fee', 'created_at']
     ordering = ['-created_at']
-    
+
+    def create(self, request, *args, **kwargs):
+        """Create a new subscription with logging."""
+        logger.info(f"📝 Creating new subscription with data: {request.data}")
+
+        response = super().create(request, *args, **kwargs)
+
+        if response.status_code == 201:
+            logger.info(f"✅ Subscription created successfully: {response.data}")
+        else:
+            logger.error(f"❌ Failed to create subscription: {response.data}")
+
+        return response
+
     def get_serializer_class(self):
         if self.request.method == 'POST':
             return SubscriptionCreateSerializer
         return SubscriptionSerializer
-    
+
     def list(self, request, *args, **kwargs):
-        """Override list method to return simple data."""
+        """List subscriptions with proper serialization."""
         try:
-            # Get subscription count
-            total_count = Subscription.objects.count()
-            
-            # Return simple data structure
-            data = [
-                {
-                    'id': 1,
-                    'customer': 1,
-                    'plan': 1,
-                    'router': 1,
-                    'username': 'demo_user',
-                    'access_method': 'pppoe',
-                    'status': 'active',
-                    'start_date': '2025-01-01',
-                    'end_date': None,
-                    'monthly_fee': 1000.0,
-                    'setup_fee': 500.0,
-                    'data_used': 0.0,
-                    'created_at': '2025-01-01T00:00:00Z',
-                }
-            ]
-            
-            return Response({
+            logger.info("📋 Listing subscriptions...")
+
+            # Get queryset with related fields - ensure we select related data
+            queryset = self.get_queryset().select_related(
+                'customer', 'plan', 'router'
+            ).prefetch_related(
+                'customer', 'plan', 'router'
+            )
+
+            total_count = queryset.count()
+            logger.info(f"📊 Found {total_count} subscriptions in database")
+
+            # Get all subscriptions (disable pagination for debugging)
+            serializer = self.get_serializer(queryset, many=True)
+            serialized_data = serializer.data
+
+            logger.info(f"🔍 Serialized {len(serialized_data)} subscriptions")
+
+            # Log first item for debugging
+            if serialized_data:
+                logger.info(f"📋 First subscription data: {serialized_data[0]}")
+
+            response_data = {
                 'success': True,
                 'message': 'Subscriptions retrieved successfully',
-                'data': data,
-                'count': total_count
-            })
+                'count': total_count,
+                'results': serialized_data,
+                'next': None,
+                'previous': None,
+            }
+
+            logger.info(f"📤 Returning response with {len(serialized_data)} items")
+            return Response(response_data)
+
         except Exception as e:
+            logger.error(f"❌ Error retrieving subscriptions: {str(e)}", exc_info=True)
             return Response({
                 'success': False,
                 'message': f'Error retrieving subscriptions: {str(e)}',
-                'data': []
+                'count': 0,
+                'results': [],
+                'next': None,
+                'previous': None,
             }, status=500)
 
 
@@ -83,7 +109,7 @@ class SubscriptionDetailView(generics.RetrieveUpdateDestroyAPIView):
     queryset = Subscription.objects.all()
     serializer_class = SubscriptionDetailSerializer
     permission_classes = [permissions.IsAuthenticated]
-    
+
     def get_serializer_class(self):
         if self.request.method in ['PUT', 'PATCH']:
             return SubscriptionUpdateSerializer
@@ -103,14 +129,14 @@ def update_subscription_status_view(request, pk):
         subscription = Subscription.objects.get(pk=pk)
     except Subscription.DoesNotExist:
         return Response({'error': 'Subscription not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+
     serializer = SubscriptionStatusUpdateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    
+
     new_status = serializer.validated_data['status']
     subscription.status = new_status
     subscription.save()
-    
+
     return Response({
         'message': f'Subscription status updated to {new_status}',
         'subscription': SubscriptionDetailSerializer(subscription).data
@@ -130,13 +156,13 @@ def update_data_usage_view(request, pk):
         subscription = Subscription.objects.get(pk=pk)
     except Subscription.DoesNotExist:
         return Response({'error': 'Subscription not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+
     serializer = DataUsageUpdateSerializer(data=request.data)
     serializer.is_valid(raise_exception=True)
-    
+
     bytes_used = serializer.validated_data['bytes_used']
     subscription.add_data_usage(bytes_used)
-    
+
     return Response({
         'message': 'Data usage updated successfully',
         'subscription': SubscriptionDetailSerializer(subscription).data
@@ -156,9 +182,9 @@ def reset_data_usage_view(request, pk):
         subscription = Subscription.objects.get(pk=pk)
     except Subscription.DoesNotExist:
         return Response({'error': 'Subscription not found'}, status=status.HTTP_404_NOT_FOUND)
-    
+
     subscription.reset_data_usage()
-    
+
     return Response({
         'message': 'Data usage reset successfully',
         'subscription': SubscriptionDetailSerializer(subscription).data
@@ -176,7 +202,7 @@ def active_subscriptions_view(request):
     """Get active subscriptions."""
     try:
         subscriptions = Subscription.objects.filter(status='active')
-        serializer = SubscriptionSerializer(subscriptions, many=True)
+        serializer = SubscriptionListSerializer(subscriptions, many=True)
         return APIResponse.success(
             data=serializer.data,
             message="Active subscriptions retrieved successfully"
@@ -198,7 +224,7 @@ def suspended_subscriptions_view(request):
     """Get suspended subscriptions."""
     try:
         subscriptions = Subscription.objects.filter(status='suspended')
-        serializer = SubscriptionSerializer(subscriptions, many=True)
+        serializer = SubscriptionListSerializer(subscriptions, many=True)
         return APIResponse.success(
             data=serializer.data,
             message="Suspended subscriptions retrieved successfully"
@@ -242,13 +268,13 @@ def subscription_stats_view(request):
         suspended_subscriptions = Subscription.objects.filter(status='suspended').count()
         pending_subscriptions = Subscription.objects.filter(status='pending').count()
         cancelled_subscriptions = Subscription.objects.filter(status='cancelled').count()
-        
+
         # Revenue statistics
         total_monthly_revenue = sum(sub.monthly_fee for sub in Subscription.objects.filter(status='active'))
-        
+
         # Data usage statistics
         total_data_used = sum(float(sub.data_used) for sub in Subscription.objects.all())
-        
+
         stats = {
             'total_subscriptions': total_subscriptions,
             'active_subscriptions': active_subscriptions,
@@ -259,7 +285,7 @@ def subscription_stats_view(request):
             'total_data_used_gb': round(total_data_used, 2),
             'active_percentage': round((active_subscriptions / total_subscriptions * 100) if total_subscriptions > 0 else 0, 2)
         }
-        
+
         return APIResponse.success(
             data=stats,
             message="Subscription statistics retrieved successfully"
@@ -281,21 +307,21 @@ def bulk_update_subscription_status_view(request):
     """Bulk update subscription status."""
     subscription_ids = request.data.get('subscription_ids', [])
     new_status = request.data.get('status')
-    
+
     if not subscription_ids or not new_status:
         return Response(
-            {'error': 'Both subscription_ids and status are required'}, 
+            {'error': 'Both subscription_ids and status are required'},
             status=400
         )
-    
+
     if new_status not in dict(Subscription.Status.choices):
         return Response(
-            {'error': f'Invalid status. Must be one of: {list(dict(Subscription.Status.choices).keys())}'}, 
+            {'error': f'Invalid status. Must be one of: {list(dict(Subscription.Status.choices).keys())}'},
             status=400
         )
-    
+
     updated_count = Subscription.objects.filter(id__in=subscription_ids).update(status=new_status)
-    
+
     return Response({
         'message': f'Successfully updated {updated_count} subscriptions to {new_status}',
         'updated_count': updated_count

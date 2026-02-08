@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { RATE_LIMIT_CONFIG, REFRESH_INTERVALS } from '@/services/api/base/constants';
 
 // API Configuration
 export const API_CONFIG = {
@@ -23,8 +24,11 @@ export const API_CONFIG = {
   
   // Rate limiting
   rateLimitEnabled: true,
-  rateLimitRequests: 100,
+  rateLimitRequests: RATE_LIMIT_CONFIG.MAX_REQUESTS_PER_MINUTE - RATE_LIMIT_CONFIG.REQUEST_BUFFER,
   rateLimitWindow: 60000, // 1 minute
+  
+  // Refresh intervals
+  refreshIntervals: REFRESH_INTERVALS,
 };
 
 // Retry delay function with exponential backoff
@@ -95,7 +99,7 @@ apiClient.interceptors.response.use(
     
     // Handle rate limiting
     if (error.response?.status === 429) {
-      const retryAfter = error.response.headers['retry-after'];
+      const retryAfter = error.response.headers['retry-after'] || RATE_LIMIT_CONFIG.RETRY_AFTER_DEFAULT;
       if (retryAfter) {
         await new Promise(resolve => setTimeout(resolve, parseInt(retryAfter) * 1000));
         return apiClient(originalRequest);

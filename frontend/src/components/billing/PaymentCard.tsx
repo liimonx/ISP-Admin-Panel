@@ -73,7 +73,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
 
     return (
       <Badge 
-        variant={colors[method]} 
+        variant={colors[method] as any} 
         size="sm" 
         label={labels[method]} 
       />

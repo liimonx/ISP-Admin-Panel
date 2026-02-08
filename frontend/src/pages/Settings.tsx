@@ -3,11 +3,15 @@ import {
   Card,
   Button,
   Input,
-  Badge,
   Icon,
   Callout,
   Textarea,
   Select,
+  Toggle,
+  Container,
+  Grid,
+  GridCol,
+  Row,
 } from "@shohojdhara/atomix";
 
 interface SystemSettings {
@@ -33,6 +37,11 @@ interface SystemSettings {
     requireNumbers: boolean;
     requireSpecialChars: boolean;
   };
+  // Advanced settings
+  logLevel: string;
+  dbPoolSize: number;
+  cacheTTL: number;
+  customCSS: string;
 }
 
 const defaultSettings: SystemSettings = {
@@ -58,6 +67,11 @@ const defaultSettings: SystemSettings = {
     requireNumbers: true,
     requireSpecialChars: true,
   },
+  // Advanced settings defaults
+  logLevel: "info",
+  dbPoolSize: 10,
+  cacheTTL: 3600,
+  customCSS: "",
 };
 
 const Settings: React.FC = () => {
@@ -67,6 +81,18 @@ const Settings: React.FC = () => {
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
+
+  // Custom Toggle wrapper component
+  const CustomToggle: React.FC<{
+    isOn: boolean;
+    onToggle: (isOn: boolean) => void;
+  }> = ({ isOn, onToggle }) => (
+    <Toggle
+      initialOn={isOn}
+      onToggleOn={() => onToggle(true)}
+      onToggleOff={() => onToggle(false)}
+    />
+  );
 
   const handleInputChange = (field: keyof SystemSettings, value: any) => {
     setSettings((prev) => ({
@@ -113,9 +139,9 @@ const Settings: React.FC = () => {
   };
 
   return (
-    <div className="u-p-6 u-max-w-6xl u-mx-auto">
+    <Container className="u-p-6">
       <div className="u-mb-6">
-        <h1 className="u-text-2xl u-fw-bold u-mb-2">System Settings</h1>
+        <h1 className="u-fs-1 u-fw-bold u-mb-2">System Settings</h1>
         <p className="u-text-muted">
           Configure system-wide settings and preferences for your ISP admin panel.
         </p>
@@ -131,32 +157,34 @@ const Settings: React.FC = () => {
         </Callout>
       )}
 
-      <div className="u-grid u-grid-cols-1 u-gap-6 lg:u-grid-cols-2">
+      <Grid>
         {/* General Settings */}
-        <Card>
-          <div className="u-p-4 u-border-bottom">
-            <div className="u-d-flex u-align-items-center u-gap-2">
-              <Icon name="Building" size={20} />
-              <h2 className="u-text-lg u-fw-semibold">General Settings</h2>
+        <GridCol sm={6} className="u-mb-4">
+          <Card className="u-h-100">
+            <div className="u-border-b u-p-4 u-mb-4">
+              <div className="u-d-flex u-align-items-center u-gap-2">
+                <Icon name="Building" size={20} />
+                <h2 className="u-fs-lg u-fw-semibold">General Settings</h2>
+              </div>
             </div>
-          </div>
-          <div className="u-p-4 u-space-y-4">
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Company Name
               </label>
               <Input
+                className="c-input"
                 value={settings.companyName}
                 onChange={(e) => handleInputChange("companyName", e.target.value)}
                 placeholder="Enter company name"
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Contact Email
               </label>
               <Input
+                className="c-input"
                 type="email"
                 value={settings.contactEmail}
                 onChange={(e) => handleInputChange("contactEmail", e.target.value)}
@@ -164,25 +192,26 @@ const Settings: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Support Phone
               </label>
               <Input
+                className="c-input"
                 value={settings.supportPhone}
                 onChange={(e) => handleInputChange("supportPhone", e.target.value)}
                 placeholder="+1 (555) 123-4567"
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Timezone
               </label>
               <Select
+                className="c-input u-w-100"
                 value={settings.timezone}
                 onChange={(e) => handleInputChange("timezone", e.target.value)}
-                className="u-w-100"
                 options={[
                   { value: "UTC", label: "UTC" },
                   { value: "America/New_York", label: "Eastern Time" },
@@ -193,14 +222,14 @@ const Settings: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Currency
               </label>
               <Select
+                className="c-input u-w-100"
                 value={settings.currency}
                 onChange={(e) => handleInputChange("currency", e.target.value)}
-                className="u-w-100"
                 options={[
                   { value: "USD", label: "USD ($)" },
                   { value: "EUR", label: "EUR (€)" },
@@ -209,24 +238,26 @@ const Settings: React.FC = () => {
                 ]}
               />
             </div>
-          </div>
         </Card>
+        </GridCol>
 
         {/* Security Settings */}
-        <Card>
-          <div className="u-p-4 u-border-bottom">
+        <GridCol sm={6} className="u-mb-4">
+          <Card className="u-h-100">
+          <div className="u-border-b u-p-4 u-mb-4">
             <div className="u-d-flex u-align-items-center u-gap-2">
               <Icon name="Shield" size={20} />
-              <h2 className="u-text-lg u-fw-semibold">Security Settings</h2>
+              <h2 className="u-fs-lg u-fw-semibold">Security Settings</h2>
             </div>
           </div>
-          <div className="u-p-4 u-space-y-4">
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+          <div className="u-p-4">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 API Rate Limit (requests/hour)
               </label>
               <Input
                 type="number"
+                className="c-input"
                 value={settings.apiRateLimit}
                 onChange={(e) => handleInputChange("apiRateLimit", parseInt(e.target.value))}
                 min="100"
@@ -234,12 +265,13 @@ const Settings: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Session Timeout (minutes)
               </label>
               <Input
                 type="number"
+                className="c-input"
                 value={settings.sessionTimeout}
                 onChange={(e) => handleInputChange("sessionTimeout", parseInt(e.target.value))}
                 min="5"
@@ -247,12 +279,13 @@ const Settings: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Max Login Attempts
               </label>
               <Input
                 type="number"
+                className="c-input"
                 value={settings.maxLoginAttempts}
                 onChange={(e) => handleInputChange("maxLoginAttempts", parseInt(e.target.value))}
                 min="3"
@@ -260,103 +293,95 @@ const Settings: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Password Policy
               </label>
-              <div className="u-space-y-2 u-p-3 u-bg-light u-rounded">
-                <div className="u-d-flex u-align-items-center u-justify-content-between">
+              <div className="u-p-3 u-bg-light u-rounded">
+                <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-2">
                   <span className="u-text-sm">Minimum Length</span>
                   <Input
                     type="number"
                     value={settings.passwordPolicy.minLength}
                     onChange={(e) => handlePasswordPolicyChange("minLength", parseInt(e.target.value))}
-                    className="u-w-20"
+                    className="u-w-20 c-input"
                     min="6"
                     max="20"
                   />
                 </div>
-                <div className="u-d-flex u-align-items-center u-justify-content-between">
+                <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-2">
                   <span className="u-text-sm">Require Uppercase</span>
-                  <input
-                    type="checkbox"
-                    checked={settings.passwordPolicy.requireUppercase}
-                    onChange={(e) => handlePasswordPolicyChange("requireUppercase", e.target.checked)}
-                    className="u-ms-2"
+                  <CustomToggle
+                    isOn={settings.passwordPolicy.requireUppercase}
+                    onToggle={(isOn) => handlePasswordPolicyChange("requireUppercase", isOn)}
                   />
                 </div>
-                <div className="u-d-flex u-align-items-center u-justify-content-between">
+                <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-2">
                   <span className="u-text-sm">Require Lowercase</span>
-                  <input
-                    type="checkbox"
-                    checked={settings.passwordPolicy.requireLowercase}
-                    onChange={(e) => handlePasswordPolicyChange("requireLowercase", e.target.checked)}
-                    className="u-ms-2"
+                  <CustomToggle
+                    isOn={settings.passwordPolicy.requireLowercase}
+                    onToggle={(isOn) => handlePasswordPolicyChange("requireLowercase", isOn)}
                   />
                 </div>
-                <div className="u-d-flex u-align-items-center u-justify-content-between">
+                <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-2">
                   <span className="u-text-sm">Require Numbers</span>
-                  <input
-                    type="checkbox"
-                    checked={settings.passwordPolicy.requireNumbers}
-                    onChange={(e) => handlePasswordPolicyChange("requireNumbers", e.target.checked)}
-                    className="u-ms-2"
+                  <CustomToggle
+                    isOn={settings.passwordPolicy.requireNumbers}
+                    onToggle={(isOn) => handlePasswordPolicyChange("requireNumbers", isOn)}
                   />
                 </div>
                 <div className="u-d-flex u-align-items-center u-justify-content-between">
                   <span className="u-text-sm">Require Special Characters</span>
-                  <input
-                    type="checkbox"
-                    checked={settings.passwordPolicy.requireSpecialChars}
-                    onChange={(e) => handlePasswordPolicyChange("requireSpecialChars", e.target.checked)}
-                    className="u-ms-2"
+                  <CustomToggle
+                    isOn={settings.passwordPolicy.requireSpecialChars}
+                    onToggle={(isOn) => handlePasswordPolicyChange("requireSpecialChars", isOn)}
                   />
                 </div>
               </div>
             </div>
           </div>
         </Card>
+        </GridCol>
 
         {/* System Settings */}
-        <Card>
-          <div className="u-p-4 u-border-bottom">
+        <GridCol sm={6} className="u-mb-4">
+          <Card className="u-h-100">
+          <div className="u-border-b u-p-4 u-mb-4">
             <div className="u-d-flex u-align-items-center u-gap-2">
               <Icon name="Gear" size={20} />
-              <h2 className="u-text-lg u-fw-semibold">System Settings</h2>
+              <h2 className="u-fs-lg u-fw-semibold">System Settings</h2>
             </div>
           </div>
-          <div className="u-p-4 u-space-y-4">
-            <div className="u-d-flex u-align-items-center u-justify-content-between">
+          <div className="u-p-4">
+            <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-3">
               <div>
-                <label className="u-text-sm u-fw-medium">Maintenance Mode</label>
+                <label className="u-fs-sm u-fw-medium">Maintenance Mode</label>
                 <p className="u-text-xs u-text-muted">
                   Enable maintenance mode to restrict access
                 </p>
               </div>
-              <input
-                type="checkbox"
-                checked={settings.maintenanceMode}
-                onChange={(e) => handleInputChange("maintenanceMode", e.target.checked)}
+              <CustomToggle
+                isOn={settings.maintenanceMode}
+                onToggle={(isOn) => handleInputChange("maintenanceMode", isOn)}
               />
             </div>
 
-            <div className="u-d-flex u-align-items-center u-justify-content-between">
+            <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-3">
               <div>
-                <label className="u-text-sm u-fw-medium">Auto Backup</label>
+                <label className="u-fs-sm u-fw-medium">Auto Backup</label>
                 <p className="u-text-xs u-text-muted">
                   Automatically backup system data
                 </p>
               </div>
-              <input
-                type="checkbox"
-                checked={settings.autoBackup}
-                onChange={(e) => handleInputChange("autoBackup", e.target.checked)}
+              <CustomToggle
+                isOn={settings.autoBackup}
+                onToggle={(isOn) => handleInputChange("autoBackup", isOn)}
               />
             </div>
 
             {settings.autoBackup && (
-              <div>
-                <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+              <div className="u-mb-3">
+                <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                   Backup Frequency
                 </label>
                 <Select
@@ -373,51 +398,52 @@ const Settings: React.FC = () => {
               </div>
             )}
 
-            <div className="u-d-flex u-align-items-center u-justify-content-between">
+            <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-3">
               <div>
-                <label className="u-text-sm u-fw-medium">Email Notifications</label>
+                <label className="u-fs-sm u-fw-medium">Email Notifications</label>
                 <p className="u-text-xs u-text-muted">
                   Send email notifications for system events
                 </p>
               </div>
-              <input
-                type="checkbox"
-                checked={settings.emailNotifications}
-                onChange={(e) => handleInputChange("emailNotifications", e.target.checked)}
+              <CustomToggle
+                isOn={settings.emailNotifications}
+                onToggle={(isOn) => handleInputChange("emailNotifications", isOn)}
               />
             </div>
 
             <div className="u-d-flex u-align-items-center u-justify-content-between">
               <div>
-                <label className="u-text-sm u-fw-medium">SMS Notifications</label>
+                <label className="u-fs-sm u-fw-medium">SMS Notifications</label>
                 <p className="u-text-xs u-text-muted">
                   Send SMS notifications for critical alerts
                 </p>
               </div>
-              <input
-                type="checkbox"
-                checked={settings.smsNotifications}
-                onChange={(e) => handleInputChange("smsNotifications", e.target.checked)}
+              <CustomToggle
+                isOn={settings.smsNotifications}
+                onToggle={(isOn) => handleInputChange("smsNotifications", isOn)}
               />
             </div>
           </div>
         </Card>
+        </GridCol>
 
         {/* Advanced Settings */}
-        <Card>
-          <div className="u-p-4 u-border-bottom">
+        <GridCol sm={6} className="u-mb-4">
+          <Card className="u-h-100">
+          <div className="u-border-b u-p-4 u-mb-4">
             <div className="u-d-flex u-align-items-center u-gap-2">
               <Icon name="Gear" size={20} />
-              <h2 className="u-text-lg u-fw-semibold">Advanced Settings</h2>
+              <h2 className="u-fs-lg u-fw-semibold">Advanced Settings</h2>
             </div>
           </div>
-          <div className="u-p-4 u-space-y-4">
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+          <div className="u-p-4">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 System Log Level
               </label>
               <Select
-                defaultValue="info"
+                value={settings.logLevel}
+                onChange={(e) => handleInputChange("logLevel", e.target.value)}
                 className="u-w-100"
                 options={[
                   { value: "debug", label: "Debug" },
@@ -428,46 +454,54 @@ const Settings: React.FC = () => {
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Database Connection Pool Size
               </label>
               <Input
+                className="c-input"
                 type="number"
-                value="10"
+                value={settings.dbPoolSize}
+                onChange={(e) => handleInputChange("dbPoolSize", parseInt(e.target.value))}
                 min="5"
                 max="50"
               />
             </div>
 
-            <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <div className="u-mb-3">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Cache TTL (seconds)
               </label>
               <Input
+                className="c-input"
                 type="number"
-                value="3600"
+                value={settings.cacheTTL}
+                onChange={(e) => handleInputChange("cacheTTL", parseInt(e.target.value))}
                 min="60"
                 max="86400"
               />
             </div>
 
             <div>
-              <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
                 Custom CSS
               </label>
               <Textarea
+                value={settings.customCSS}
+                onChange={(e) => handleInputChange("customCSS", e.target.value)}
                 placeholder="Enter custom CSS styles..."
                 rows={4}
-                className="u-font-mono u-text-xs"
+                className="u-text-xs c-input c-input--textarea"
               />
             </div>
           </div>
         </Card>
-      </div>
+        </GridCol>
+      </Grid>
 
       {/* Action Buttons */}
-      <div className="u-d-flex u-gap-3 u-mt-8 u-justify-content-end">
+      <Row className="u-mt-8">
+        <div className="u-d-flex u-gap-3 u-justify-content-end u-w-100">
         <Button
           variant="secondary"
           onClick={handleReset}
@@ -478,12 +512,13 @@ const Settings: React.FC = () => {
         <Button
           variant="primary"
           onClick={handleSave}
-                        disabled={isLoading}
+          disabled={isLoading}
         >
           Save Settings
         </Button>
-      </div>
-    </div>
+        </div>
+      </Row>
+    </Container>
   );
 };
 

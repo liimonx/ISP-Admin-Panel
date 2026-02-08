@@ -55,33 +55,326 @@ class RouterViewSet(viewsets.ModelViewSet):
             mikrotik_service = MikroTikService(router)
             result = mikrotik_service.test_connection()
             
+            # Update router status based on connection test
+            if result.get('success'):
+                router.status = Router.Status.ONLINE
+                router.last_seen = timezone.now()
+            else:
+                router.status = Router.Status.OFFLINE
+            router.save(update_fields=['status', 'last_seen'])
+            
             return Response({
                 'success': True,
-                'message': 'Connection test successful',
+                'message': 'Connection test completed',
                 'data': result,
                 'timestamp': timezone.now().isoformat(),
             })
         except Exception as e:
             logger.error(f"Connection test failed for router {router.name}: {str(e)}")
+            router.status = Router.Status.OFFLINE
+            router.save(update_fields=['status'])
             return Response({
                 'success': False,
                 'message': f'Connection test failed: {str(e)}',
                 'timestamp': timezone.now().isoformat(),
             }, status=status.HTTP_400_BAD_REQUEST)
     
+    @action(detail=True, methods=['get'])
+    def interfaces(self, request, pk=None):
+        """Get router interfaces."""
+        router = self.get_object()
+        
+        try:
+            mikrotik_service = MikroTikService(router)
+            interfaces = mikrotik_service.get_interfaces()
+            
+            return Response({
+                'success': True,
+                'message': 'Router interfaces retrieved successfully',
+                'data': interfaces,
+                'timestamp': timezone.now().isoformat(),
+            })
+        except Exception as e:
+            logger.error(f"Failed to get interfaces for router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to get interfaces: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['get'])
+    def bandwidth(self, request, pk=None):
+        """Get router bandwidth usage."""
+        router = self.get_object()
+        
+        try:
+            mikrotik_service = MikroTikService(router)
+            bandwidth = mikrotik_service.get_bandwidth_usage()
+            
+            return Response({
+                'success': True,
+                'message': 'Router bandwidth retrieved successfully',
+                'data': bandwidth,
+                'timestamp': timezone.now().isoformat(),
+            })
+        except Exception as e:
+            logger.error(f"Failed to get bandwidth for router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to get bandwidth: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['get'])
+    def connections(self, request, pk=None):
+        """Get router active connections."""
+        router = self.get_object()
+        
+        try:
+            mikrotik_service = MikroTikService(router)
+            connections = mikrotik_service.get_connections()
+            
+            return Response({
+                'success': True,
+                'message': 'Router connections retrieved successfully',
+                'data': {
+                    'total_connections': len(connections),
+                    'connections': connections,
+                },
+                'timestamp': timezone.now().isoformat(),
+            })
+        except Exception as e:
+            logger.error(f"Failed to get connections for router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to get connections: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['get'])
+    def dhcp_leases(self, request, pk=None):
+        """Get router DHCP leases."""
+        router = self.get_object()
+        
+        try:
+            mikrotik_service = MikroTikService(router)
+            leases = mikrotik_service.get_dhcp_leases()
+            
+            return Response({
+                'success': True,
+                'message': 'Router DHCP leases retrieved successfully',
+                'data': {
+                    'total_leases': len(leases),
+                    'leases': leases,
+                },
+                'timestamp': timezone.now().isoformat(),
+            })
+        except Exception as e:
+            logger.error(f"Failed to get DHCP leases for router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to get DHCP leases: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['get'])
+    def resources(self, request, pk=None):
+        """Get router system resources."""
+        router = self.get_object()
+        
+        try:
+            mikrotik_service = MikroTikService(router)
+            resources = mikrotik_service.get_system_resources()
+            
+            return Response({
+                'success': True,
+                'message': 'Router resources retrieved successfully',
+                'data': resources,
+                'timestamp': timezone.now().isoformat(),
+            })
+        except Exception as e:
+            logger.error(f"Failed to get resources for router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to get resources: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['get'])
+    def logs(self, request, pk=None):
+        """Get router system logs."""
+        router = self.get_object()
+        
+        try:
+            limit = int(request.query_params.get('limit', 50))
+            mikrotik_service = MikroTikService(router)
+            logs = mikrotik_service.get_logs(limit)
+            
+            return Response({
+                'success': True,
+                'message': 'Router logs retrieved successfully',
+                'data': {
+                    'logs': logs,
+                },
+                'timestamp': timezone.now().isoformat(),
+            })
+        except Exception as e:
+            logger.error(f"Failed to get logs for router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to get logs: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['get'])
+    def pppoe_users(self, request, pk=None):
+        """Get router PPPoE users."""
+        router = self.get_object()
+        
+        try:
+            mikrotik_service = MikroTikService(router)
+            users = mikrotik_service.get_pppoe_users()
+            
+            return Response({
+                'success': True,
+                'message': 'PPPoE users retrieved successfully',
+                'data': {
+                    'total_users': len(users),
+                    'users': users,
+                },
+                'timestamp': timezone.now().isoformat(),
+            })
+        except Exception as e:
+            logger.error(f"Failed to get PPPoE users for router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to get PPPoE users: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['post'])
+    def create_pppoe_user(self, request, pk=None):
+        """Create a PPPoE user on the router."""
+        router = self.get_object()
+        
+        username = request.data.get('username')
+        password = request.data.get('password')
+        profile = request.data.get('profile')
+        limit_in = request.data.get('limit_bytes_in')
+        limit_out = request.data.get('limit_bytes_out')
+        
+        if not username or not password:
+            return Response({
+                'success': False,
+                'message': 'Username and password are required',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_400_BAD_REQUEST)
+        
+        try:
+            mikrotik_service = MikroTikService(router)
+            success = mikrotik_service.create_pppoe_user(
+                username=username,
+                password=password,
+                profile=profile,
+                limit_bytes_in=limit_in,
+                limit_bytes_out=limit_out
+            )
+            
+            if success:
+                return Response({
+                    'success': True,
+                    'message': f'PPPoE user {username} created successfully',
+                    'timestamp': timezone.now().isoformat(),
+                })
+            else:
+                return Response({
+                    'success': False,
+                    'message': f'Failed to create PPPoE user {username}',
+                    'timestamp': timezone.now().isoformat(),
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            logger.error(f"Failed to create PPPoE user {username} on router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to create PPPoE user: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+    @action(detail=True, methods=['post'])
+    def restart(self, request, pk=None):
+        """Restart the router."""
+        router = self.get_object()
+        
+        try:
+            mikrotik_service = MikroTikService(router)
+            success = mikrotik_service.restart_router()
+            
+            if success:
+                return Response({
+                    'success': True,
+                    'message': f'Router {router.name} restart initiated',
+                    'data': {
+                        'restart_time': timezone.now().isoformat(),
+                        'estimated_downtime': '2-3 minutes',
+                    },
+                    'timestamp': timezone.now().isoformat(),
+                })
+            else:
+                return Response({
+                    'success': False,
+                    'message': f'Failed to restart router {router.name}',
+                    'timestamp': timezone.now().isoformat(),
+                }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        except Exception as e:
+            logger.error(f"Failed to restart router {router.name}: {str(e)}")
+            return Response({
+                'success': False,
+                'message': f'Failed to restart router: {str(e)}',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
     @action(detail=False, methods=['get'])
     def stats(self, request):
         """Get router statistics."""
+        from monitoring.models import RouterMetric, UsageSnapshot
+        from django.db.models import Avg, Sum
+        
         total_routers = Router.objects.count()
         online_routers = Router.objects.filter(status='online').count()
         offline_routers = Router.objects.filter(status='offline').count()
         maintenance_routers = Router.objects.filter(status='maintenance').count()
         
-        # Calculate average response time (mock data for now)
-        average_response_time = 45
+        # Calculate real statistics from monitoring data
+        latest_metrics = RouterMetric.objects.filter(
+            timestamp__gte=timezone.now() - timedelta(hours=1)
+        )
         
-        # Get total interfaces and active sessions
-        total_interfaces = 45  # Mock data
+        average_response_time = 45  # This would need actual ping measurements
+        
+        # Get interface count from actual routers
+        total_interfaces = 0
+        active_interfaces = 0
+        for router in Router.objects.filter(status='online'):
+            try:
+                service = MikroTikService(router)
+                interfaces = service.get_interfaces()
+                total_interfaces += len(interfaces)
+                active_interfaces += len([i for i in interfaces if i.get('status') == 'up'])
+            except:
+                pass
+        
+        # Get connection data from usage snapshots
+        latest_usage = UsageSnapshot.objects.aggregate(
+            total_connections=Sum('active_connections'),
+            total_pppoe_users=Sum('pppoe_users_count')
+        )
+        
+        # Get bandwidth totals
+        total_bandwidth = latest_metrics.aggregate(
+            total_down=Sum('download_speed'),
+            total_up=Sum('upload_speed')
+        )
+        
         active_sessions = RouterSession.objects.filter(
             last_seen__gte=timezone.now() - timedelta(minutes=5)
         ).count()
@@ -93,9 +386,10 @@ class RouterViewSet(viewsets.ModelViewSet):
             'maintenance_routers': maintenance_routers,
             'average_response_time': average_response_time,
             'total_interfaces': total_interfaces,
-            'active_interfaces': total_interfaces - 3,  # Mock data
-            'dhcp_leases': active_sessions + 1000,  # Mock data
-            'active_connections': active_sessions + 1500,  # Mock data
+            'active_interfaces': active_interfaces,
+            'active_connections': latest_usage.get('total_connections', 0) or active_sessions,
+            'total_bandwidth': (total_bandwidth.get('total_down', 0) or 0) + (total_bandwidth.get('total_up', 0) or 0),
+            'pppoe_users': latest_usage.get('total_pppoe_users', 0),
         }
         
         return Response({
@@ -111,6 +405,9 @@ class RouterViewSet(viewsets.ModelViewSet):
 def main_router_status(request):
     """Get main router status."""
     try:
+        from network.services import MikroTikService
+        from monitoring.models import RouterMetric
+        
         # Get or create main router record
         main_router, created = Router.objects.get_or_create(
             host='103.115.252.60',
@@ -119,24 +416,32 @@ def main_router_status(request):
                 'router_type': 'mikrotik',
                 'api_port': 8728,
                 'ssh_port': 22,
-                'username': 'admin',  # Default, should be configured
-                'password': '',  # Should be configured securely
+                'username': 'admin',
+                'password': '',
                 'use_tls': True,
                 'status': 'online',
                 'location': 'Main Data Center',
             }
         )
         
-        # Mock status data (replace with actual MikroTik API call)
+        # Get real data from MikroTik service
+        service = MikroTikService(main_router)
+        resources = service.get_system_resources()
+        connection_test = service.test_connection()
+        
+        # Get latest metric from database
+        latest_metric = RouterMetric.objects.filter(router=main_router).first()
+        
+        # Combine real and stored data
         status_data = {
-            'status': 'online',
-            'uptime': '15 days, 3 hours, 45 minutes',
-            'version': 'RouterOS v6.49.7',
-            'last_seen': timezone.now().isoformat(),
-            'cpu_usage': 25,
-            'memory_usage': 45,
-            'disk_usage': 12,
-            'temperature': 45,
+            'status': main_router.status,
+            'uptime': resources.get('uptime', 'Unknown'),
+            'version': connection_test.get('api_version', 'Unknown'),
+            'last_seen': main_router.last_seen.isoformat() if main_router.last_seen else None,
+            'cpu_usage': latest_metric.cpu_usage if latest_metric else resources.get('cpu_usage', 0),
+            'memory_usage': latest_metric.memory_usage if latest_metric else resources.get('memory_usage', 0),
+            'disk_usage': latest_metric.disk_usage if latest_metric else resources.get('disk_usage', 0),
+            'temperature': latest_metric.temperature if latest_metric else resources.get('temperature'),
         }
         
         return Response({
@@ -158,33 +463,16 @@ def main_router_status(request):
 def main_router_interfaces(request):
     """Get main router interfaces."""
     try:
-        # Mock interface data (replace with actual MikroTik API call)
-        interfaces = [
-            {
-                'name': 'ether1',
-                'type': 'Ethernet',
-                'status': 'up',
-                'ip_address': '103.115.252.60/24',
-                'mac_address': '4C:5E:0C:12:34:56',
-                'speed': '1Gbps',
-            },
-            {
-                'name': 'ether2',
-                'type': 'Ethernet',
-                'status': 'up',
-                'ip_address': '192.168.1.1/24',
-                'mac_address': '4C:5E:0C:12:34:57',
-                'speed': '1Gbps',
-            },
-            {
-                'name': 'wlan1',
-                'type': 'Wireless',
-                'status': 'up',
-                'ip_address': '10.0.0.1/24',
-                'mac_address': '4C:5E:0C:12:34:58',
-                'speed': '300Mbps',
-            },
-        ]
+        from network.services import MikroTikService
+        
+        # Get main router
+        main_router = Router.objects.filter(host='103.115.252.60').first()
+        if not main_router:
+            raise Exception("Main router not found")
+        
+        # Get real interface data
+        service = MikroTikService(main_router)
+        interfaces = service.get_interfaces()
         
         return Response({
             'success': True,
@@ -205,28 +493,44 @@ def main_router_interfaces(request):
 def main_router_bandwidth(request):
     """Get main router bandwidth usage."""
     try:
-        # Mock bandwidth data (replace with actual MikroTik API call)
-        bandwidth_data = {
-            'total_download': 2500000000,  # 2.5 GB in bytes
-            'total_upload': 500000000,     # 500 MB in bytes
-            'download_speed': 15000000,    # 15 Mbps in bytes/s
-            'upload_speed': 3000000,       # 3 Mbps in bytes/s
-            'interfaces': {
-                'ether1': {
-                    'download': 10000000,
-                    'upload': 2000000,
-                },
-                'ether2': {
-                    'download': 5000000,
-                    'upload': 1000000,
-                },
+        from network.services import MikroTikService
+        from monitoring.models import RouterMetric
+        
+        # Get or create main router record
+        main_router, created = Router.objects.get_or_create(
+            host='103.115.252.60',
+            defaults={
+                'name': 'Main Router',
+                'router_type': 'mikrotik',
+                'api_port': 8728,
+                'ssh_port': 22,
+                'username': 'admin',
+                'password': '',
+                'use_tls': True,
+                'status': 'online',
+                'location': 'Main Data Center',
             }
+        )
+        
+        # Get bandwidth data from MikroTik service (includes database fallback)
+        service = MikroTikService(main_router)
+        bandwidth_data = service.get_bandwidth_usage()
+        
+        # Ensure all values are properly formatted and have consistent units
+        # All values should be in bytes (for totals) and bytes/s (for speeds)
+        bandwidth_response = {
+            'total_download': int(bandwidth_data.get('total_download', 0)),
+            'total_upload': int(bandwidth_data.get('total_upload', 0)),
+            'download_speed': int(bandwidth_data.get('download_speed', 0)),
+            'upload_speed': int(bandwidth_data.get('upload_speed', 0)),
+            'interfaces': bandwidth_data.get('interfaces', {}),
+            'timestamp': timezone.now().isoformat(),
         }
         
         return Response({
             'success': True,
             'message': 'Main router bandwidth retrieved successfully',
-            'data': bandwidth_data,
+            'data': bandwidth_response,
             'timestamp': timezone.now().isoformat(),
         })
     except Exception as e:

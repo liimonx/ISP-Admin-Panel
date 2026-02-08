@@ -103,8 +103,25 @@ class BillingService {
   }
 
   async refundPayment(id: number, reason?: string): Promise<Payment> {
-    // TODO: Implement refund payment API call
-    throw new Error('Refund payment not implemented yet');
+    try {
+      const response = await fetch(`/api/billing/payments/${id}/refund`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+        body: JSON.stringify({ reason }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to refund payment: ${response.statusText}`);
+      }
+
+      return await response.json();
+    } catch (error) {
+      console.error('Error refunding payment:', error);
+      throw error;
+    }
   }
 
   // Statistics
@@ -152,24 +169,100 @@ class BillingService {
 
   // Export functionality
   async exportInvoices(filters: BillingFilters = {}, format: 'pdf' | 'csv' | 'excel' = 'pdf'): Promise<Blob> {
-    // TODO: Implement export functionality
-    throw new Error('Export functionality not implemented yet');
+    try {
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          queryParams.append(key, value.toString());
+        }
+      });
+      queryParams.append('format', format);
+
+      const response = await fetch(`/api/billing/invoices/export?${queryParams}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to export invoices: ${response.statusText}`);
+      }
+
+      return await response.blob();
+    } catch (error) {
+      console.error('Error exporting invoices:', error);
+      throw error;
+    }
   }
 
   async exportPayments(filters: BillingFilters = {}, format: 'pdf' | 'csv' | 'excel' = 'pdf'): Promise<Blob> {
-    // TODO: Implement export functionality
-    throw new Error('Export functionality not implemented yet');
+    try {
+      const queryParams = new URLSearchParams();
+      Object.entries(filters).forEach(([key, value]) => {
+        if (value !== undefined && value !== null) {
+          queryParams.append(key, value.toString());
+        }
+      });
+      queryParams.append('format', format);
+
+      const response = await fetch(`/api/billing/payments/export?${queryParams}`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to export payments: ${response.statusText}`);
+      }
+
+      return await response.blob();
+    } catch (error) {
+      console.error('Error exporting payments:', error);
+      throw error;
+    }
   }
 
   // Download functionality
   async downloadInvoicePDF(id: number): Promise<Blob> {
-    // TODO: Implement PDF download
-    throw new Error('PDF download not implemented yet');
+    try {
+      const response = await fetch(`/api/billing/invoices/${id}/download`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to download invoice PDF: ${response.statusText}`);
+      }
+
+      return await response.blob();
+    } catch (error) {
+      console.error('Error downloading invoice PDF:', error);
+      throw error;
+    }
   }
 
   async downloadPaymentReceipt(id: number): Promise<Blob> {
-    // TODO: Implement receipt download
-    throw new Error('Receipt download not implemented yet');
+    try {
+      const response = await fetch(`/api/billing/payments/${id}/receipt`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to download payment receipt: ${response.statusText}`);
+      }
+
+      return await response.blob();
+    } catch (error) {
+      console.error('Error downloading payment receipt:', error);
+      throw error;
+    }
   }
 
   // Utility methods

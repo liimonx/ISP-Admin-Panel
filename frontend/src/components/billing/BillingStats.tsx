@@ -1,7 +1,7 @@
-import React from 'react';
-import { Grid, GridCol } from '@shohojdhara/atomix';
-import { StatCard } from '../molecules/StatCard';
-import { formatCurrency } from '../../utils/formatters';
+import React from "react";
+import { Grid, GridCol } from "@shohojdhara/atomix";
+import { StatCard } from "../molecules/StatCard";
+import { formatCurrency } from "../../utils/formatters";
 
 interface BillingStatsProps {
   invoiceStats: {
@@ -11,6 +11,8 @@ interface BillingStatsProps {
     overdue_invoices?: number;
     paid_invoices?: number;
     collection_rate?: number;
+    monthly_recurring_revenue?: number;
+    avg_payment_days?: number;
   };
   paymentStats: {
     total_payments?: number;
@@ -23,12 +25,16 @@ interface BillingStatsProps {
     overdueAmount: number;
     pendingAmount: number;
   };
+  isLoading?: boolean;
+  error?: string;
 }
 
 const BillingStats: React.FC<BillingStatsProps> = ({
   invoiceStats,
   paymentStats,
   calculatedStats,
+  isLoading = false,
+  error,
 }) => {
   const collectionRate = invoiceStats.collection_rate || 0;
   const totalRevenue = invoiceStats.total_revenue || 0;
@@ -42,9 +48,39 @@ const BillingStats: React.FC<BillingStatsProps> = ({
   const failedPayments = paymentStats.failed_payments || 0;
   const averagePaymentAmount = paymentStats.average_payment_amount || 0;
 
+  if (error) {
+    return (
+      <div className="u-p-4 u-text-center">
+        <p className="u-text-error">Failed to load billing statistics</p>
+        <p className="u-fs-sm u-text-secondary">{error}</p>
+      </div>
+    );
+  }
+
+  if (isLoading) {
+    return (
+      <Grid className="u-mb-6">
+        {Array.from({ length: 12 }).map((_, index) => (
+          <GridCol key={index} xs={12} md={6} lg={3} className="u-mb-4">
+            <div className="u-p-4 u-border u-rounded">
+              <div className="u-d-flex u-align-items-center u-mb-3">
+                <div className="u-bg-secondary-subtle u-w-8 u-h-8 u-rounded u-me-3"></div>
+                <div className="u-flex-fill">
+                  <div className="u-bg-secondary-subtle u-h-4 u-rounded u-mb-2"></div>
+                  <div className="u-bg-secondary-subtle u-h-3 u-rounded u-w-75"></div>
+                </div>
+              </div>
+              <div className="u-bg-secondary-subtle u-h-6 u-rounded"></div>
+            </div>
+          </GridCol>
+        ))}
+      </Grid>
+    );
+  }
+
   return (
     <Grid className="u-mb-6">
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Total Revenue"
           value={formatCurrency(totalRevenue)}
@@ -55,10 +91,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: true,
           }}
           description="this month"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Outstanding Amount"
           value={formatCurrency(calculatedStats.outstandingAmount)}
@@ -69,10 +106,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: false,
           }}
           description="pending invoices"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Overdue Amount"
           value={formatCurrency(calculatedStats.overdueAmount)}
@@ -83,10 +121,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: false,
           }}
           description="needs attention"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Collection Rate"
           value={`${collectionRate.toFixed(1)}%`}
@@ -97,11 +136,12 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: true,
           }}
           description="payment success"
+          className="u-h-100"
         />
       </GridCol>
 
       {/* Additional Stats Row */}
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Total Invoices"
           value={totalInvoices.toString()}
@@ -112,10 +152,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: true,
           }}
           description="this month"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Pending Invoices"
           value={pendingInvoices.toString()}
@@ -126,10 +167,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: false,
           }}
           description="awaiting payment"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Overdue Invoices"
           value={overdueInvoices.toString()}
@@ -140,10 +182,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: false,
           }}
           description="past due"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Paid Invoices"
           value={paidInvoices.toString()}
@@ -154,11 +197,12 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: true,
           }}
           description="completed"
+          className="u-h-100"
         />
       </GridCol>
 
       {/* Payment Stats Row */}
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Total Payments"
           value={totalPayments.toString()}
@@ -169,10 +213,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: true,
           }}
           description="this month"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Successful Payments"
           value={successfulPayments.toString()}
@@ -183,10 +228,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: true,
           }}
           description="completed"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Failed Payments"
           value={failedPayments.toString()}
@@ -197,10 +243,11 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: false,
           }}
           description="failed"
+          className="u-h-100"
         />
       </GridCol>
-      
-      <GridCol xs={12} md={6} lg={3} className='u-mb-4'>
+
+      <GridCol xs={12} md={6} lg={3} className="u-mb-4">
         <StatCard
           title="Average Payment"
           value={formatCurrency(averagePaymentAmount)}
@@ -211,6 +258,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
             isPositive: true,
           }}
           description="per transaction"
+          className="u-h-100"
         />
       </GridCol>
     </Grid>
