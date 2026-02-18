@@ -3,6 +3,7 @@ Network services for MikroTik RouterOS API integration.
 """
 import logging
 import time
+import re
 from typing import Dict, List, Optional, Any
 from datetime import datetime, timedelta
 from django.conf import settings
@@ -705,6 +706,65 @@ def update_router_status(router: Router) -> bool:
         router.status = Router.Status.OFFLINE
         router.save(update_fields=['status'])
         return False
+
+
+def parse_uptime(uptime_str: Any) -> int:
+    """
+    Parse MikroTik uptime string into seconds.
+    Supports formats like '15 days, 3 hours, 45 minutes', '3w4d12:34:56', '4d12:34:56', '12:34:56'.
+    """
+    if not uptime_str or uptime_str == 'Unknown':
+        return 0
+
+    if isinstance(uptime_str, (int, float)):
+        return int(uptime_str)
+
+    # If it's already a timedelta
+    if hasattr(uptime_str, 'total_seconds'):
+        return int(uptime_str.total_seconds())
+
+    if not isinstance(uptime_str, str):
+        return 0
+
+    total_seconds = 0
+
+    # Handle mock format: "15 days, 3 hours, 45 minutes"
+    if 'day' in uptime_str or 'hour' in uptime_str or 'minute' in uptime_str:
+        # Regex to find numbers and their units
+        parts = re.findall(r'(\d+)\s*(day|hour|minute|second)s?', uptime_str)
+        if parts:
+            for value, unit in parts:
+                value = int(value)
+                if unit == 'day':
+                    total_seconds += value * 86400
+                elif unit == 'hour':
+                    total_seconds += value * 3600
+                elif unit == 'minute':
+                    total_seconds += value * 60
+                elif unit == 'second':
+                    total_seconds += value
+            return total_seconds
+
+    # Handle RouterOS format: [w]d]hh:mm:ss or hh:mm:ss
+    # 2w1d12:34:56
+    # 1d12:34:56
+    # 12:34:56
+    pattern = r'(?:(\d+)w)?(?:(\d+)d)?(?:(\d+):(\d+):(\d+))'
+    match = re.search(pattern, uptime_str)
+    if match:
+        weeks, days, hours, minutes, seconds = match.groups()
+        if weeks:
+            total_seconds += int(weeks) * 604800
+        if days:
+            total_seconds += int(days) * 86400
+        if hours:
+            total_seconds += int(hours) * 3600
+        if minutes:
+            total_seconds += int(minutes) * 60
+        if seconds:
+            total_seconds += int(seconds)
+
+    return total_seconds
 
 
 class RouterOSService:
