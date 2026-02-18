@@ -15,9 +15,9 @@ if [ ! -f "docker-compose.yml" ]; then
 fi
 
 # Set environment variables for local development
-export DEBUG=True
-export SECRET_KEY=dev-secret-key-change-in-production
-export ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+export DEBUG=False
+export SECRET_KEY=change-this-to-a-secure-key-in-production
+export ALLOWED_HOSTS=localhost,127.0.0.1
 export DATABASE_URL=postgresql://isp_admin:isp_admin_password@localhost:5432/isp_admin
 export REDIS_URL=redis://127.0.0.1:6379/0
 
