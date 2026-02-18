@@ -69,11 +69,11 @@ class RouterListSerializer(serializers.ModelSerializer):
     
     def get_active_subscriptions_count(self, obj):
         """Get count of active subscriptions on this router."""
-        return obj.get_active_subscriptions_count()
+        return getattr(obj, 'annotated_active_subscriptions_count', obj.get_active_subscriptions_count())
     
     def get_total_bandwidth_usage(self, obj):
         """Get total bandwidth usage for this router."""
-        return float(obj.get_total_bandwidth_usage())
+        return float(getattr(obj, 'annotated_total_bandwidth_usage', obj.get_total_bandwidth_usage()))
 
 
 class RouterDetailSerializer(serializers.ModelSerializer):
@@ -105,19 +105,19 @@ class RouterDetailSerializer(serializers.ModelSerializer):
     
     def get_active_subscriptions_count(self, obj):
         """Get count of active subscriptions on this router."""
-        return obj.get_active_subscriptions_count()
+        return getattr(obj, 'annotated_active_subscriptions_count', obj.get_active_subscriptions_count())
     
     def get_total_bandwidth_usage(self, obj):
         """Get total bandwidth usage for this router."""
-        return float(obj.get_total_bandwidth_usage())
+        return float(getattr(obj, 'annotated_total_bandwidth_usage', obj.get_total_bandwidth_usage()))
     
     def get_subscriptions_count(self, obj):
         """Get total number of subscriptions on this router."""
-        return obj.get_subscriptions_count()
+        return getattr(obj, 'annotated_subscriptions_count', obj.get_subscriptions_count())
     
     def get_total_bandwidth_usage_float(self, obj):
         """Get total bandwidth usage as float for API responses."""
-        return obj.get_total_bandwidth_usage_float()
+        return float(getattr(obj, 'annotated_total_bandwidth_usage', obj.get_total_bandwidth_usage_float()))
 
 
 class RouterSessionSerializer(serializers.ModelSerializer):

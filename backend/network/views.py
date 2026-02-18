@@ -1,7 +1,8 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view, action
 from rest_framework.response import Response
-from django.db.models import Count, Avg, Sum
+from django.db.models import Count, Avg, Sum, Q
+from django.db.models.functions import Coalesce
 from django.db import models
 from django.utils import timezone
 from datetime import datetime, timedelta
@@ -9,7 +10,10 @@ import logging
 from core.responses import APIResponse
 
 from .models import Router, RouterSession
-from .serializers import RouterSerializer, RouterSessionSerializer
+from .serializers import (
+    RouterSerializer, RouterListSerializer, RouterDetailSerializer,
+    RouterCreateSerializer, RouterUpdateSerializer, RouterSessionSerializer
+)
 from .services import MikroTikService
 
 logger = logging.getLogger(__name__)
@@ -21,9 +25,30 @@ class RouterViewSet(viewsets.ModelViewSet):
     """
     queryset = Router.objects.all()
     serializer_class = RouterSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return RouterListSerializer
+        elif self.action == 'retrieve':
+            return RouterDetailSerializer
+        elif self.action == 'create':
+            return RouterCreateSerializer
+        elif self.action in ['update', 'partial_update']:
+            return RouterUpdateSerializer
+        return RouterSerializer
     
     def get_queryset(self):
-        queryset = Router.objects.all()
+        queryset = Router.objects.annotate(
+            annotated_active_subscriptions_count=Coalesce(
+                Count('subscriptions', filter=Q(subscriptions__status='active')),
+                0
+            ),
+            annotated_total_bandwidth_usage=Coalesce(
+                Sum('subscriptions__data_used', filter=Q(subscriptions__status='active')),
+                models.Value(0.0, output_field=models.FloatField())
+            ),
+            annotated_subscriptions_count=Count('subscriptions')
+        )
         
         # Filter by status
         status_filter = self.request.query_params.get('status')
