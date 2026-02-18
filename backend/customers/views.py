@@ -1,8 +1,7 @@
 from rest_framework import generics, permissions, filters
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
-from drf_spectacular.utils import extend_schema, OpenApiParameter
+from drf_spectacular.utils import extend_schema
 from core.responses import APIResponse, paginate_response
 from .models import Customer
 from .serializers import (
