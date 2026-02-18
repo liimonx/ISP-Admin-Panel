@@ -129,9 +129,9 @@ POSTGRES_USER=isp_admin
 POSTGRES_PASSWORD=dev_password_123
 
 # Django Configuration
-SECRET_KEY=dev-secret-key-change-in-production
-DEBUG=True
-ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+SECRET_KEY=change-this-to-a-secure-key-in-production
+DEBUG=False
+ALLOWED_HOSTS=localhost,127.0.0.1
 
 # Main Router Configuration (Development)
 MAIN_ROUTER_IP=103.115.252.60
