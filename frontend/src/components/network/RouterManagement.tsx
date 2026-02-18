@@ -54,61 +54,65 @@ const RouterManagement: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': return 'text-green-600 bg-green-100';
-      case 'offline': return 'text-red-600 bg-red-100';
-      case 'maintenance': return 'text-yellow-600 bg-yellow-100';
-      default: return 'text-gray-600 bg-gray-100';
+      case 'online': 
+        return 'u-bg-success-subtle u-text-success u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded'; 
+      case 'offline': 
+        return 'u-bg-error-subtle u-c-error u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded'; 
+      case 'maintenance': 
+        return 'u-bg-warning-subtle u-c-warning u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded'; 
+      default: 
+        return 'u-bg-secondary-subtle u-c-secondary u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded';
     }
   };
 
   if (loading) {
-    return <div className="p-6">Loading routers...</div>;
+    return <div className="u-p-6">Loading routers...</div>;
   }
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-6">Router Management</h2>
+    <div className="u-p-6">
+      <h2 className="u-text-2xl u-fw-bold u-mb-6">Router Management</h2>
       
-      <div className="bg-white rounded-lg shadow overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="u-bg-surface u-rounded u-shadow u-overflow-hidden">
+        <table className="u-w-100 uivide-y uivide-gray-200">
+          <thead className="u-bg-subtle">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="u-px-6 u-py-3 u-text-left u-text-xs u-fw-medium u-text-secondary-emphasis u-uppercase">
                 Router
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="u-px-6 u-py-3 u-text-left u-text-xs u-fw-medium u-text-secondary-emphasis u-uppercase">
                 Status
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="u-px-6 u-py-3 u-text-left u-text-xs u-fw-medium u-text-secondary-emphasis u-uppercase">
                 Type
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">
+              <th className="u-px-6 u-py-3 u-text-left u-text-xs u-fw-medium u-text-secondary-emphasis u-uppercase">
                 Actions
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="u-bg-surface uivide-y uivide-gray-200">
             {routers.map((router) => (
               <tr key={router.id}>
-                <td className="px-6 py-4 whitespace-nowrap">
+                <td className="u-px-6 u-py-4 u-whitespace-nowrap">
                   <div>
-                    <div className="text-sm font-medium text-gray-900">{router.name}</div>
-                    <div className="text-sm text-gray-500">{router.host}:{router.api_port}</div>
+                    <div className="u-text-sm u-fw-medium u-text-foreground">{router.name}</div>
+                    <div className="u-text-sm u-text-secondary-emphasis">{router.host}:{router.api_port}</div>
                   </div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap">
-                  <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${getStatusColor(router.status)}`}>
+                <td className="u-px-6 u-py-4 u-whitespace-nowrap">
+                  <span className={getStatusColor(router.status)}>
                     {router.status}
                   </span>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                <td className="u-px-6 u-py-4 u-whitespace-nowrap u-text-sm u-text-foreground">
                   {router.router_type}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                <td className="u-px-6 u-py-4 u-whitespace-nowrap u-text-sm u-fw-medium">
                   <button
                     onClick={() => testConnection(router)}
                     disabled={testingConnection === router.id}
-                    className="text-blue-600 hover:text-blue-900 disabled:opacity-50"
+                    className="u-text-primary hover:u-text-primary-focus u-opacity-60 hover:u-opacity-100 u-transition-opacity u-border-0 u-bg-transparent u-cursor-pointer"
                   >
                     {testingConnection === router.id ? 'Testing...' : 'Test Connection'}
                   </button>

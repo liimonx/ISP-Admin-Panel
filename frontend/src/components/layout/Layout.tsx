@@ -52,7 +52,7 @@ const Layout: React.FC = () => {
       };
 
   return (
-    <div className="u-min-vh-100 u-d-flex u-flex-column u-pb-10">
+    <div className="u-min-vh-100 u-flex u-flex-column">
       {/* Header */}
       <Header
         user={mockUser}
@@ -66,21 +66,21 @@ const Layout: React.FC = () => {
         showSidebarToggle={true}
         sidebarCollapsed={sidebarCollapsed}
       />
-      <Container type="fluid" className="u-pt-24">
-        <Grid>
-          <GridCol sm={!sidebarCollapsed ? 2 : 0}>
-            {/* Sidebar */}
-            <div className={`${"u-position-fixed"}`}>
-              <Sidebar collapsed={sidebarCollapsed} />
-            </div>
-          </GridCol>
-          <GridCol sm={!sidebarCollapsed ? 10 : 11}>
-            <main>
+      <main className="u-flex-fill u-pt-16">
+        <Container type="fluid" className="u-px-4">
+          <Grid>
+            <GridCol sm={!sidebarCollapsed ? 2 : 0} className="u-pos-relative">
+              {/* Sidebar */}
+              <div className={`${!sidebarCollapsed ? "u-pos-fixed u-top-16" : ""}`}>
+                <Sidebar collapsed={sidebarCollapsed} />
+              </div>
+            </GridCol>
+            <GridCol sm={!sidebarCollapsed ? 10 : 12}>
               <Outlet />
-            </main>
-          </GridCol>
-        </Grid>
-      </Container>
+            </GridCol>
+          </Grid>
+        </Container>
+      </main>
     </div>
   );
 };

@@ -87,11 +87,16 @@ const Settings: React.FC = () => {
     isOn: boolean;
     onToggle: (isOn: boolean) => void;
   }> = ({ isOn, onToggle }) => (
-    <Toggle
-      initialOn={isOn}
-      onToggleOn={() => onToggle(true)}
-      onToggleOff={() => onToggle(false)}
-    />
+    <div 
+      onClick={() => onToggle(!isOn)} 
+      className={`u-w-10 u-h-6 u-rounded-full u-relative u-cursor-pointer ${isOn ? 'u-bg-primary' : 'u-bg-gray-300'}`}
+    >
+      <div 
+        className={`u-absolute u-top-0.5 u-h-5 u-w-5 u-rounded-full u-transition-transform ${
+          isOn ? 'u-bg-white u-transform-translate-x-5' : 'u-bg-white u-transform-translate-x-0'
+        }`}
+      />
+    </div>
   );
 
   const handleInputChange = (field: keyof SystemSettings, value: any) => {
@@ -141,8 +146,8 @@ const Settings: React.FC = () => {
   return (
     <Container className="u-p-6">
       <div className="u-mb-6">
-        <h1 className="u-fs-1 u-fw-bold u-mb-2">System Settings</h1>
-        <p className="u-text-muted">
+        <h1 className="u-text-2xl u-fw-bold u-mb-2">System Settings</h1>
+        <p className="u-text-secondary-emphasis">
           Configure system-wide settings and preferences for your ISP admin panel.
         </p>
       </div>
@@ -162,17 +167,17 @@ const Settings: React.FC = () => {
         <GridCol sm={6} className="u-mb-4">
           <Card className="u-h-100">
             <div className="u-border-b u-p-4 u-mb-4">
-              <div className="u-d-flex u-align-items-center u-gap-2">
+              <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Building" size={20} />
-                <h2 className="u-fs-lg u-fw-semibold">General Settings</h2>
+                <h2 className="u-text-lg u-fw-semibold">General Settings</h2>
               </div>
             </div>
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Company Name
               </label>
               <Input
-                className="c-input"
+                className="u-w-100"
                 value={settings.companyName}
                 onChange={(e) => handleInputChange("companyName", e.target.value)}
                 placeholder="Enter company name"
@@ -180,11 +185,11 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Contact Email
               </label>
               <Input
-                className="c-input"
+                className="u-w-100"
                 type="email"
                 value={settings.contactEmail}
                 onChange={(e) => handleInputChange("contactEmail", e.target.value)}
@@ -193,11 +198,11 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Support Phone
               </label>
               <Input
-                className="c-input"
+                className="u-w-100"
                 value={settings.supportPhone}
                 onChange={(e) => handleInputChange("supportPhone", e.target.value)}
                 placeholder="+1 (555) 123-4567"
@@ -205,11 +210,11 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Timezone
               </label>
               <Select
-                className="c-input u-w-100"
+                className="u-w-100"
                 value={settings.timezone}
                 onChange={(e) => handleInputChange("timezone", e.target.value)}
                 options={[
@@ -223,11 +228,11 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Currency
               </label>
               <Select
-                className="c-input u-w-100"
+                className="u-w-100"
                 value={settings.currency}
                 onChange={(e) => handleInputChange("currency", e.target.value)}
                 options={[
@@ -245,19 +250,19 @@ const Settings: React.FC = () => {
         <GridCol sm={6} className="u-mb-4">
           <Card className="u-h-100">
           <div className="u-border-b u-p-4 u-mb-4">
-            <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-flex u-items-center u-gap-2">
               <Icon name="Shield" size={20} />
-              <h2 className="u-fs-lg u-fw-semibold">Security Settings</h2>
+              <h2 className="u-text-lg u-fw-semibold">Security Settings</h2>
             </div>
           </div>
           <div className="u-p-4">
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 API Rate Limit (requests/hour)
               </label>
               <Input
                 type="number"
-                className="c-input"
+                className="u-w-100"
                 value={settings.apiRateLimit}
                 onChange={(e) => handleInputChange("apiRateLimit", parseInt(e.target.value))}
                 min="100"
@@ -266,12 +271,12 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Session Timeout (minutes)
               </label>
               <Input
                 type="number"
-                className="c-input"
+                className="u-w-100"
                 value={settings.sessionTimeout}
                 onChange={(e) => handleInputChange("sessionTimeout", parseInt(e.target.value))}
                 min="5"
@@ -280,12 +285,12 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Max Login Attempts
               </label>
               <Input
                 type="number"
-                className="c-input"
+                className="u-w-100"
                 value={settings.maxLoginAttempts}
                 onChange={(e) => handleInputChange("maxLoginAttempts", parseInt(e.target.value))}
                 min="3"
@@ -294,43 +299,43 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Password Policy
               </label>
               <div className="u-p-3 u-bg-light u-rounded">
-                <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-2">
+                <div className="u-flex u-items-center u-justify-between u-mb-2">
                   <span className="u-text-sm">Minimum Length</span>
                   <Input
                     type="number"
                     value={settings.passwordPolicy.minLength}
                     onChange={(e) => handlePasswordPolicyChange("minLength", parseInt(e.target.value))}
-                    className="u-w-20 c-input"
+                    className="u-w-20"
                     min="6"
                     max="20"
                   />
                 </div>
-                <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-2">
+                <div className="u-flex u-items-center u-justify-between u-mb-2">
                   <span className="u-text-sm">Require Uppercase</span>
                   <CustomToggle
                     isOn={settings.passwordPolicy.requireUppercase}
                     onToggle={(isOn) => handlePasswordPolicyChange("requireUppercase", isOn)}
                   />
                 </div>
-                <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-2">
+                <div className="u-flex u-items-center u-justify-between u-mb-2">
                   <span className="u-text-sm">Require Lowercase</span>
                   <CustomToggle
                     isOn={settings.passwordPolicy.requireLowercase}
                     onToggle={(isOn) => handlePasswordPolicyChange("requireLowercase", isOn)}
                   />
                 </div>
-                <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-2">
+                <div className="u-flex u-items-center u-justify-between u-mb-2">
                   <span className="u-text-sm">Require Numbers</span>
                   <CustomToggle
                     isOn={settings.passwordPolicy.requireNumbers}
                     onToggle={(isOn) => handlePasswordPolicyChange("requireNumbers", isOn)}
                   />
                 </div>
-                <div className="u-d-flex u-align-items-center u-justify-content-between">
+                <div className="u-flex u-items-center u-justify-between">
                   <span className="u-text-sm">Require Special Characters</span>
                   <CustomToggle
                     isOn={settings.passwordPolicy.requireSpecialChars}
@@ -345,18 +350,18 @@ const Settings: React.FC = () => {
 
         {/* System Settings */}
         <GridCol sm={6} className="u-mb-4">
-          <Card className="u-h-100">
+          <Card className="u-h-full">
           <div className="u-border-b u-p-4 u-mb-4">
-            <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-flex u-items-center u-gap-2">
               <Icon name="Gear" size={20} />
-              <h2 className="u-fs-lg u-fw-semibold">System Settings</h2>
+              <h2 className="u-text-lg u-font-semibold">System Settings</h2>
             </div>
           </div>
           <div className="u-p-4">
-            <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-3">
+            <div className="u-flex u-items-center u-justify-between u-mb-3">
               <div>
-                <label className="u-fs-sm u-fw-medium">Maintenance Mode</label>
-                <p className="u-text-xs u-text-muted">
+                <label className="u-text-sm u-font-medium">Maintenance Mode</label>
+                <p className="u-text-xs u-text-secondary-emphasis">
                   Enable maintenance mode to restrict access
                 </p>
               </div>
@@ -366,10 +371,10 @@ const Settings: React.FC = () => {
               />
             </div>
 
-            <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-3">
+            <div className="u-flex u-items-center u-justify-between u-mb-3">
               <div>
-                <label className="u-fs-sm u-fw-medium">Auto Backup</label>
-                <p className="u-text-xs u-text-muted">
+                <label className="u-text-sm u-font-medium">Auto Backup</label>
+                <p className="u-text-xs u-text-secondary-emphasis">
                   Automatically backup system data
                 </p>
               </div>
@@ -381,13 +386,13 @@ const Settings: React.FC = () => {
 
             {settings.autoBackup && (
               <div className="u-mb-3">
-                <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-text-sm u-font-medium u-mb-1">
                   Backup Frequency
                 </label>
                 <Select
                   value={settings.backupFrequency}
                   onChange={(e) => handleInputChange("backupFrequency", e.target.value)}
-                  className="u-w-100"
+                  className="u-w-full"
                   options={[
                     { value: "hourly", label: "Hourly" },
                     { value: "daily", label: "Daily" },
@@ -398,10 +403,10 @@ const Settings: React.FC = () => {
               </div>
             )}
 
-            <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-3">
+            <div className="u-flex u-items-center u-justify-between u-mb-3">
               <div>
-                <label className="u-fs-sm u-fw-medium">Email Notifications</label>
-                <p className="u-text-xs u-text-muted">
+                <label className="u-text-sm u-font-medium">Email Notifications</label>
+                <p className="u-text-xs u-text-secondary-emphasis">
                   Send email notifications for system events
                 </p>
               </div>
@@ -411,10 +416,10 @@ const Settings: React.FC = () => {
               />
             </div>
 
-            <div className="u-d-flex u-align-items-center u-justify-content-between">
+            <div className="u-flex u-items-center u-justify-between">
               <div>
-                <label className="u-fs-sm u-fw-medium">SMS Notifications</label>
-                <p className="u-text-xs u-text-muted">
+                <label className="u-text-sm u-font-medium">SMS Notifications</label>
+                <p className="u-text-xs u-text-secondary-emphasis">
                   Send SMS notifications for critical alerts
                 </p>
               </div>
@@ -431,14 +436,14 @@ const Settings: React.FC = () => {
         <GridCol sm={6} className="u-mb-4">
           <Card className="u-h-100">
           <div className="u-border-b u-p-4 u-mb-4">
-            <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-flex u-items-center u-gap-2">
               <Icon name="Gear" size={20} />
-              <h2 className="u-fs-lg u-fw-semibold">Advanced Settings</h2>
+              <h2 className="u-text-lg u-fw-semibold">Advanced Settings</h2>
             </div>
           </div>
           <div className="u-p-4">
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 System Log Level
               </label>
               <Select
@@ -455,11 +460,11 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Database Connection Pool Size
               </label>
               <Input
-                className="c-input"
+                className="u-w-100"
                 type="number"
                 value={settings.dbPoolSize}
                 onChange={(e) => handleInputChange("dbPoolSize", parseInt(e.target.value))}
@@ -469,11 +474,11 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Cache TTL (seconds)
               </label>
               <Input
-                className="c-input"
+                className="u-w-100"
                 type="number"
                 value={settings.cacheTTL}
                 onChange={(e) => handleInputChange("cacheTTL", parseInt(e.target.value))}
@@ -483,7 +488,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
                 Custom CSS
               </label>
               <Textarea
@@ -491,7 +496,7 @@ const Settings: React.FC = () => {
                 onChange={(e) => handleInputChange("customCSS", e.target.value)}
                 placeholder="Enter custom CSS styles..."
                 rows={4}
-                className="u-text-xs c-input c-input--textarea"
+                className="u-text-xs u-w-100"
               />
             </div>
           </div>
@@ -501,7 +506,7 @@ const Settings: React.FC = () => {
 
       {/* Action Buttons */}
       <Row className="u-mt-8">
-        <div className="u-d-flex u-gap-3 u-justify-content-end u-w-100">
+        <div className="u-flex u-gap-3 u-justify-end u-w-100">
         <Button
           variant="secondary"
           onClick={handleReset}

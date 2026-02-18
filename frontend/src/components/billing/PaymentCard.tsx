@@ -84,7 +84,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
 
   return (
     <Card className="u-h-100">
-      <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
+      <div className="u-flex u-justify-between u-align-items-start u-mb-4">
         <div className="u-flex-fill">
           <h4 className="u-mb-1 u-fs-lg u-fw-semibold">{payment.payment_number}</h4>
           <p className="u-fs-sm u-text-secondary-emphasis">
@@ -96,7 +96,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
         {getStatusBadge(payment.status)}
       </div>
 
-      <div className="u-d-flex u-align-items-center u-gap-3 u-mb-4">
+      <div className="u-flex u-items-center u-gap-3 u-mb-4">
         <Avatar
           initials={payment.customer?.name?.charAt(0) || '?'}
           size="md"
@@ -115,18 +115,18 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
       </div>
 
       <div className="u-mb-4">
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+        <div className="u-flex u-justify-between u-items-center u-mb-2">
           <span className="u-fs-sm u-text-secondary-emphasis">Amount</span>
           <span className="u-fs-xl u-fw-bold u-text-primary">
             {formatCurrency(payment.amount)}
           </span>
         </div>
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+        <div className="u-flex u-justify-between u-items-center u-mb-2">
           <span className="u-fs-sm u-text-secondary-emphasis">Method</span>
           {getPaymentMethodBadge(payment.payment_method)}
         </div>
         {payment.transaction_id && (
-          <div className="u-d-flex u-justify-content-between u-align-items-center">
+          <div className="u-flex u-justify-between u-items-center">
             <span className="u-fs-sm u-text-secondary-emphasis">Transaction ID</span>
             <span className="u-fs-xs u-text-secondary-emphasis u-font-mono">
               {payment.transaction_id.slice(0, 8)}...
@@ -135,7 +135,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
         )}
       </div>
 
-      <div className="u-d-flex u-gap-2 u-mt-auto">
+      <div className="u-flex u-gap-2 u-mt-auto">
         <Button 
           variant="outline" 
           size="sm" 

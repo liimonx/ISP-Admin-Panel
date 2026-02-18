@@ -248,9 +248,9 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
     <div className={className}>
       {/* Report Controls */}
       <Card className="u-mb-6">
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+        <div className="u-flex u-justify-between u-items-center u-mb-4">
           <h3>Billing Reports & Analytics</h3>
-          <div className="u-d-flex u-gap-2">
+          <div className="u-flex u-gap-2">
             <Button variant="outline" size="sm">
               <Icon name="Download" size={14} />
               Export
@@ -262,9 +262,9 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
           </div>
         </div>
 
-        <div className="u-d-flex u-gap-4 u-align-items-end u-flex-wrap">
+        <div className="u-flex u-gap-4 u-align-items-end u-flex-wrap">
           <div>
-            <label className="u-fs-sm u-fw-medium u-mb-1 u-d-block">
+            <label className="u-fs-sm u-fw-medium u-mb-1 u-block">
               Report Type
             </label>
             <Select
@@ -274,7 +274,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
             />
           </div>
           <div>
-            <label className="u-fs-sm u-fw-medium u-mb-1 u-d-block">
+            <label className="u-fs-sm u-fw-medium u-mb-1 u-block">
               Period
             </label>
             <Select
@@ -286,7 +286,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
           {selectedPeriod === "custom" && (
             <>
               <div>
-                <label className="u-fs-sm u-fw-medium u-mb-1 u-d-block">
+                <label className="u-fs-sm u-fw-medium u-mb-1 u-block">
                   Start Date
                 </label>
                 <Input
@@ -298,7 +298,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                 />
               </div>
               <div>
-                <label className="u-fs-sm u-fw-medium u-mb-1 u-d-block">
+                <label className="u-fs-sm u-fw-medium u-mb-1 u-block">
                   End Date
                 </label>
                 <Input
@@ -330,7 +330,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                 <p className="u-fs-xl u-fw-bold u-text-primary">
                   {formatCurrency(calculateTotalRevenue())}
                 </p>
-                <div className="u-d-flex u-align-items-center u-justify-content-center u-gap-1 u-mt-2">
+                <div className="u-flex u-items-center u-justify-center u-gap-1 u-mt-2">
                   <Icon
                     name={calculateGrowthRate() >= 0 ? "ArrowUp" : "ArrowDown"}
                     size={14}
@@ -397,11 +397,11 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
           <Card className="u-mb-6">
             <h4 className="u-mb-4">Revenue Trends</h4>
             {revenueLoading ? (
-              <div className="u-d-flex u-justify-content-center u-py-8">
+              <div className="u-flex u-justify-center u-py-8">
                 <Spinner size="lg" />
               </div>
             ) : (
-              <div style={{ height: "400px" }}>
+              <div className="u-h-100">
                 <LineChart datasets={prepareRevenueChartData()} size="lg" />
               </div>
             )}
@@ -417,11 +417,11 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
               <Card>
                 <h4 className="u-mb-4">Payment Method Distribution</h4>
                 {paymentMethodLoading ? (
-                  <div className="u-d-flex u-justify-content-center u-py-8">
+                  <div className="u-flex u-justify-center u-py-8">
                     <Spinner size="lg" />
                   </div>
                 ) : (
-                  <div style={{ height: "300px" }}>
+                  <div className="u-h-75">
                     <DonutChart
                       data={preparePaymentMethodChartData()}
                       size="md"
@@ -434,7 +434,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
               <Card>
                 <h4 className="u-mb-4">Payment Method Details</h4>
                 {paymentMethodLoading ? (
-                  <div className="u-d-flex u-justify-content-center u-py-8">
+                  <div className="u-flex u-justify-center u-py-8">
                     <Spinner />
                   </div>
                 ) : (
@@ -443,7 +443,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                       (method: PaymentMethodData, index: number) => (
                         <div
                           key={index}
-                          className="u-d-flex u-justify-content-between u-align-items-center u-p-3 u-border u-rounded"
+                          className="u-flex u-justify-between u-items-center u-p-3 u-border u-rounded"
                         >
                           <div>
                             <div className="u-fw-medium">{method.method}</div>
@@ -476,7 +476,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
           <Card>
             <h4 className="u-mb-4">Top Paying Customers</h4>
             {topCustomersLoading ? (
-              <div className="u-d-flex u-justify-content-center u-py-8">
+              <div className="u-flex u-justify-center u-py-8">
                 <Spinner size="lg" />
               </div>
             ) : (
@@ -485,11 +485,10 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                   (customer: CustomerPaymentData, index: number) => (
                     <div
                       key={index}
-                      className="u-d-flex u-align-items-center u-p-4 u-border u-rounded u-bg-subtle"
+                      className="u-flex u-items-center u-p-4 u-border u-rounded u-bg-subtle"
                     >
                       <div
-                        className="u-d-flex u-align-items-center u-justify-content-center u-bg-primary u-text-white u-rounded-circle u-me-3"
-                        style={{ width: "40px", height: "40px" }}
+                        className="u-flex u-items-center u-justify-center u-bg-primary u-text-white u-rounded-circle u-me-3 u-w-10 u-h-10"
                       >
                         {index + 1}
                       </div>

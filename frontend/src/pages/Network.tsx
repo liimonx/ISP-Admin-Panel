@@ -230,14 +230,14 @@ const Network: React.FC = () => {
   return (
     <div>
       {/* Page Header */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+      <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-mb-2">Network Management</h1>
-          <p className="u-text-secondery">
+          <p className="u-text-secondary">
             Manage routers and network devices for your ISP infrastructure
           </p>
         </div>
-        <div className="u-d-flex u-gap-2">
+        <div className="u-flex u-gap-2">
           <Button variant="outline" size="md">
             <Icon name="ChartLine" size={16} />
             Network Stats
@@ -257,12 +257,12 @@ const Network: React.FC = () => {
       <Grid className="u-mb-6">
         <GridCol xs={12} md={3}>
           <Card>
-            <div className="u-d-flex u-align-items-center u-justify-content-between">
+            <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondery u-mb-1">
+                <div className="u-text-sm u-text-secondary u-mb-1">
                   Total Routers
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-text-xl u-font-bold">
                   {routersData?.count || 0}
                 </div>
               </div>
@@ -274,12 +274,12 @@ const Network: React.FC = () => {
         </GridCol>
         <GridCol xs={12} md={3}>
           <Card>
-            <div className="u-d-flex u-align-items-center u-justify-content-between">
+            <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondery u-mb-1">
+                <div className="u-text-sm u-text-secondary u-mb-1">
                   Online Routers
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-text-xl u-font-bold">
                   {routersData?.results?.filter((r) => r.status === "online")
                     .length || 0}
                 </div>
@@ -292,12 +292,12 @@ const Network: React.FC = () => {
         </GridCol>
         <GridCol xs={12} md={3}>
           <Card>
-            <div className="u-d-flex u-align-items-center u-justify-content-between">
+            <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondery u-mb-1">
+                <div className="u-text-sm u-text-secondary u-mb-1">
                   Offline Routers
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-text-xl u-font-bold">
                   {routersData?.results?.filter((r) => r.status === "offline")
                     .length || 0}
                 </div>
@@ -310,12 +310,12 @@ const Network: React.FC = () => {
         </GridCol>
         <GridCol xs={12} md={3}>
           <Card>
-            <div className="u-d-flex u-align-items-center u-justify-content-between">
+            <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondery u-mb-1">
+                <div className="u-text-sm u-text-secondary u-mb-1">
                   Maintenance
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-text-xl u-font-bold">
                   {routersData?.results?.filter(
                     (r) => r.status === "maintenance",
                   ).length || 0}
@@ -352,7 +352,7 @@ const Network: React.FC = () => {
             />
           </GridCol>
           <GridCol xs={12} md={12} lg={5}>
-            <div className="u-d-flex u-justify-content-end u-gap-2">
+            <div className="u-flex u-justify-end u-gap-2">
               <Button variant="outline" size="md">
                 <Icon name="Funnel" size={16} />
                 More Filters
@@ -368,7 +368,7 @@ const Network: React.FC = () => {
       {/* Routers Table */}
       <Card>
         {isLoading ? (
-          <div className="u-d-flex u-justify-content-center u-align-items-center u-py-8">
+          <div className="u-flex u-justify-center u-items-center u-py-8">
             <div className="u-text-center">
               <Icon
                 name="Spinner"
@@ -388,7 +388,7 @@ const Network: React.FC = () => {
                     <div>
                       <div className="u-fw-medium">{router.name}</div>
                       {router.description && (
-                        <div className="u-text-sm u-text-secondery">
+                        <div className="u-text-sm u-text-secondary">
                           {router.description}
                         </div>
                       )}
@@ -398,7 +398,7 @@ const Network: React.FC = () => {
                   host: (
                     <div>
                       <div className="u-text-sm">{router.host}</div>
-                      <div className="u-text-xs u-text-secondery">
+                      <div className="u-text-xs u-text-secondary">
                         API: {router.api_port} | SSH: {router.ssh_port}
                       </div>
                     </div>
@@ -411,7 +411,7 @@ const Network: React.FC = () => {
                         size="sm"
                         className="u-mb-1"
                       />
-                      <div className="u-text-xs u-text-secondery">
+                      <div className="u-text-xs u-text-secondary">
                         {Math.floor(Math.random() * 30)} days
                       </div>
                     </div>
@@ -422,7 +422,7 @@ const Network: React.FC = () => {
                     </div>
                   ),
                   actions: (
-                    <div className="u-d-flex u-gap-1">
+                    <div className="u-flex u-gap-1">
                       <Button
                         variant="ghost"
                         size="sm"
@@ -441,22 +441,22 @@ const Network: React.FC = () => {
                           <div>
                             <button
                               onClick={() => handleEditRouter(router)}
-                              className="dropdown-item"
+                              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
                             >
                               <Icon name="Pencil" size={16} />
                               Edit
                             </button>
-                            <button className="dropdown-item">
+                            <button className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle">
                               <Icon name="Eye" size={16} />
                               View Details
                             </button>
-                            <button className="dropdown-item">
+                            <button className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle">
                               <Icon name="GearSix" size={16} />
                               Configure
                             </button>
                             <button
                               onClick={() => handleDeleteRouter(router)}
-                              className="dropdown-item u-text-error"
+                              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle u-text-error"
                             >
                               <Icon name="Trash" size={16} />
                               Delete
@@ -485,7 +485,7 @@ const Network: React.FC = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="u-d-flex u-justify-content-center u-mt-6">
+              <div className="u-flex u-justify-center u-mt-6">
                 <div className="pagination-controls">
                   <Button
                     variant="outline"
@@ -528,10 +528,10 @@ const Network: React.FC = () => {
         <form onSubmit={handleSubmit}>
           <Grid>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">Router Name *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Router Name *</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="text"
                   value={formData.name}
                   onChange={(e) =>
@@ -542,9 +542,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">Router Type</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Router Type</label>
                 <Select
+                  className="u-w-100"
                   value={formData.router_type}
                   onChange={(e) =>
                     setFormData({
@@ -561,10 +562,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12}>
-              <div className="form-field">
-                <label className="form-label">Description</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Description</label>
                 <textarea
-                  className="form-textarea"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
@@ -574,10 +575,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={8}>
-              <div className="form-field">
-                <label className="form-label">Host/IP Address *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Host/IP Address *</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="text"
                   value={formData.host}
                   onChange={(e) =>
@@ -589,10 +590,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={4}>
-              <div className="form-field">
-                <label className="form-label">API Port</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">API Port</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="number"
                   value={formData.api_port}
                   onChange={(e) =>
@@ -605,10 +606,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">SSH Port</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">SSH Port</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="number"
                   value={formData.ssh_port}
                   onChange={(e) =>
@@ -621,10 +622,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">Username *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Username *</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="text"
                   value={formData.username}
                   onChange={(e) =>
@@ -635,10 +636,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">Password *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Password *</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="password"
                   value={formData.password}
                   onChange={(e) =>
@@ -652,8 +653,8 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">
                   <input
                     type="checkbox"
                     checked={formData.use_tls}
@@ -666,10 +667,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">Location</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Location</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="text"
                   value={formData.location}
                   onChange={(e) =>
@@ -680,10 +681,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">GPS Coordinates</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">GPS Coordinates</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="text"
                   value={formData.coordinates}
                   onChange={(e) =>
@@ -694,10 +695,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">SNMP Community</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">SNMP Community</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="text"
                   value={formData.snmp_community}
                   onChange={(e) =>
@@ -707,10 +708,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label">SNMP Port</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">SNMP Port</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="number"
                   value={formData.snmp_port}
                   onChange={(e) =>
@@ -723,10 +724,10 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12}>
-              <div className="form-field">
-                <label className="form-label">Notes</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Notes</label>
                 <textarea
-                  className="form-textarea"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   value={formData.notes}
                   onChange={(e) =>
                     setFormData({ ...formData, notes: e.target.value })
@@ -737,7 +738,7 @@ const Network: React.FC = () => {
             </GridCol>
           </Grid>
 
-          <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+          <div className="u-flex u-justify-end u-gap-2 u-mt-6">
             <Button
               type="button"
               variant="outline"

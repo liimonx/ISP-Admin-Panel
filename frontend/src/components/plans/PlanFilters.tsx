@@ -47,8 +47,8 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
   return (
     <Card className={`u-mb-6 ${className}`}>
       <div className="u-p-4">
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
-          <h3 className="u-text-lg u-fw-semibold">Filter Plans</h3>
+        <div className="u-flex u-justify-between u-items-center u-mb-4">
+          <h3 className="u-text-lg u-font-semibold">Filter Plans</h3>
           <Button
             variant="outline"
             size="sm"
@@ -62,7 +62,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
         <div className="u-grid u-grid-cols-1 u-gap-4 md:u-grid-cols-2 lg:u-grid-cols-3">
           {/* Search */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
               Search Plans
             </label>
             <Input
@@ -75,13 +75,13 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Status Filter */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
               Status
             </label>
             <Select
               value={statusFilter}
               onChange={(e) => onStatusChange(e.target.value)}
-              className="u-w-100"
+              className="u-w-full"
               options={[
                 { value: "", label: "All Status" },
                 { value: "active", label: "Active" },
@@ -92,13 +92,13 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Billing Cycle Filter */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
               Billing Cycle
             </label>
             <Select
               value={billingCycleFilter}
               onChange={(e) => onBillingCycleChange(e.target.value)}
-              className="u-w-100"
+              className="u-w-full"
               options={[
                 { value: "", label: "All Cycles" },
                 { value: "monthly", label: "Monthly" },
@@ -110,13 +110,13 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Speed Range Filter */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
               Speed Range
             </label>
             <Select
               value={speedRangeFilter}
               onChange={(e) => onSpeedRangeChange(e.target.value)}
-              className="u-w-100"
+              className="u-w-full"
               options={[
                 { value: "", label: "All Speeds" },
                 { value: "0-10", label: "0-10 Mbps" },
@@ -130,13 +130,13 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Price Range Filter */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-font-medium u-mb-1">
               Price Range
             </label>
             <Select
               value={priceRangeFilter}
               onChange={(e) => onPriceRangeChange(e.target.value)}
-              className="u-w-100"
+              className="u-w-full"
               options={[
                 { value: "", label: "All Prices" },
                 { value: "0-25", label: "$0 - $25" },
@@ -150,11 +150,11 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Special Filters */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-2">
+            <label className="u-block u-text-sm u-font-medium u-mb-2">
               Special Filters
             </label>
             <div className="u-space-y-2">
-              <label className="u-d-flex u-align-items-center u-gap-2">
+              <label className="u-flex u-items-center u-gap-2">
                 <input
                   type="checkbox"
                   checked={featuredOnly}
@@ -162,7 +162,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
                 />
                 <span className="u-text-sm">Featured Only</span>
               </label>
-              <label className="u-d-flex u-align-items-center u-gap-2">
+              <label className="u-flex u-items-center u-gap-2">
                 <input
                   type="checkbox"
                   checked={popularOnly}

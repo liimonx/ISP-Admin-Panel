@@ -70,7 +70,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
 
   return (
     <div
-      className={`u-d-flex u-align-items-center u-gap-2 ${fullWidth ? "u-w-100" : ""} ${className}`}
+      className={`u-flex u-items-center u-gap-2 ${fullWidth ? "u-w-100" : ""} ${className}`}
       data-testid={testId}
     >
       <div className={`u-position-relative ${fullWidth ? "u-flex-1" : ""}`}>
@@ -103,14 +103,14 @@ export const SearchBar: React.FC<SearchBarProps> = ({
         size={size}
         variant="primary"
         aria-label="Search"
-        className="u-d-flex u-align-items-center u-gap-1"
+        className="u-flex u-items-center u-gap-1"
       >
         {loading ? (
           <Icon name="Spinner" size={16} className="u-animation-spin" />
         ) : (
           <Icon name="MagnifyingGlass" size={16} />
         )}
-        <span className="u-d-none u-d-sm-inline">Search</span>
+        <span className="u-none u-sm-inline">Search</span>
       </Button>
     </div>
   );

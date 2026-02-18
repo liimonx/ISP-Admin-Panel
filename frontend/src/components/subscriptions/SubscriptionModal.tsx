@@ -44,29 +44,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div className="modal-backdrop" style={{ 
-      position: 'fixed', 
-      top: 0, 
-      left: 0, 
-      right: 0, 
-      bottom: 0, 
-      backgroundColor: 'rgba(0,0,0,0.5)', 
-      zIndex: 1050,
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center'
-    }}>
-      <div className="modal-content" style={{
-        backgroundColor: 'white',
-        borderRadius: '8px',
-        padding: '24px',
-        maxWidth: '800px',
-        width: '90%',
-        maxHeight: '90vh',
-        overflow: 'auto'
-      }}>
-        <div className="modal-header u-d-flex u-justify-content-between u-align-items-center u-mb-4">
-          <h2 className="u-fs-3 u-fw-semibold u-mb-0">
+    <div className="u-position-fixed u-top-0 u-start-0 u-end-0 u-bottom-0 u-bg-black u-opacity-50 u-z-index-1050 u-flex u-items-center u-justify-center">
+      <div className="u-bg-surface u-rounded u-p-6 u-max-w-2xl u-w-90vw u-max-h-90vh u-overflow-auto">
+        <div className="u-flex u-justify-between u-items-center u-mb-4">
+          <h2 className="u-text-lg u-fw-semibold u-mb-0">
             <Icon name={mode === "create" ? "Plus" : "Pencil"} size={20} className="u-me-2" />
             {mode === "create" ? "Add New Subscription" : "Edit Subscription"}
           </h2>
@@ -74,20 +55,20 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             <Icon name="X" size={20} />
           </Button>
         </div>
-      <form onSubmit={onSubmit} className="u-d-flex u-flex-column u-gap-4">
+      <form onSubmit={onSubmit} className="u-flex u-flex-column u-gap-4">
         {/* Customer and Plan Selection */}
         <div className="u-bg-secondary-subtle u-p-4 u-rounded">
-          <h4 className="u-fs-5 u-fw-semibold u-mb-3 u-text-primary-emphasis">
+          <h4 className="u-text-base u-fw-semibold u-mb-3 u-text-primary">
             <Icon name="User" size={16} className="u-me-2" />
             Customer & Plan Details
           </h4>
           
           <Grid>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Customer *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Customer *</label>
                 <select
-                  className="form-select"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   value={formData.customer_id}
                   onChange={(e) =>
                     setFormData({
@@ -108,10 +89,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             </GridCol>
             
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Plan *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Plan *</label>
                 <select
-                  className="form-select"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   value={formData.plan_id}
                   onChange={(e) => handlePlanChange(parseInt(e.target.value))}
                   required
@@ -130,7 +111,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
           {/* Plan Details Preview */}
           {selectedPlan && (
             <div className="u-mt-3 u-p-3 u-bg-primary-subtle u-rounded u-border u-border-primary-subtle">
-              <div className="u-d-flex u-flex-wrap u-gap-3 u-align-items-center">
+              <div className="u-flex u-flex-wrap u-gap-3 u-items-center">
                 <Badge variant="primary" size="sm" label={`${selectedPlan.download_speed}/${selectedPlan.upload_speed} ${selectedPlan.speed_unit?.toUpperCase()}`} />
                 {selectedPlan.data_quota && (
                   <Badge variant="info" size="sm" label={`${selectedPlan.data_quota} ${selectedPlan.quota_unit?.toUpperCase()} quota`} />
@@ -141,7 +122,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                 )}
               </div>
               {selectedPlan.description && (
-                <p className="u-fs-sm u-text-secondary-emphasis-emphasis u-mt-2 u-mb-0">
+                <p className="u-text-sm u-text-secondary-emphasis u-mt-2 u-mb-0">
                   {selectedPlan.description}
                 </p>
               )}
@@ -151,17 +132,17 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
         {/* Network Configuration */}
         <div className="u-bg-info-subtle u-p-4 u-rounded">
-          <h4 className="u-fs-5 u-fw-semibold u-mb-3 u-text-primary-emphasis">
+          <h4 className="u-text-base u-fw-semibold u-mb-3 u-text-primary">
             <Icon name="Globe" size={16} className="u-me-2" />
             Network Configuration
           </h4>
           
           <Grid>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Router *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Router *</label>
                 <select
-                  className="form-select"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   value={formData.router_id}
                   onChange={(e) =>
                     setFormData({
@@ -182,10 +163,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             </GridCol>
             
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Username *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Username *</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   value={formData.username}
                   onChange={(e) =>
                     setFormData({ ...formData, username: e.target.value })
@@ -199,10 +180,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Password *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Password *</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="password"
                   value={formData.password}
                   onChange={(e) =>
@@ -212,17 +193,17 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   required={mode === "create"}
                 />
                 {mode === "edit" && (
-                  <small className="form-text u-text-secondary-emphasis-emphasis">
+                  <small className="u-text-sm u-text-secondary-emphasis">
                     Leave empty to keep existing password
                   </small>
                 )}
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Access Method *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Access Method *</label>
                 <select
-                  className="form-select"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   value={formData.access_method}
                   onChange={(e) =>
                     setFormData({
@@ -244,10 +225,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             
             {formData.access_method === "static_ip" && (
               <GridCol xs={12} md={6}>
-                <div className="form-field">
-                  <label className="form-label u-fw-medium">Static IP Address</label>
+                <div className="u-mb-3">
+                  <label className="u-block u-fw-medium u-mb-1">Static IP Address</label>
                   <input
-                    className="form-input"
+                    className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                     value={formData.static_ip}
                     onChange={(e) =>
                       setFormData({ ...formData, static_ip: e.target.value })
@@ -260,10 +241,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             
             {formData.access_method === "dhcp" && (
               <GridCol xs={12} md={6}>
-                <div className="form-field">
-                  <label className="form-label u-fw-medium">MAC Address</label>
+                <div className="u-mb-3">
+                  <label className="u-block u-fw-medium u-mb-1">MAC Address</label>
                   <input
-                    className="form-input"
+                    className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                     value={formData.mac_address}
                     onChange={(e) =>
                       setFormData({ ...formData, mac_address: e.target.value })
@@ -278,17 +259,17 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
         {/* Subscription Details */}
         <div className="u-bg-success-subtle u-p-4 u-rounded">
-          <h4 className="u-fs-5 u-fw-semibold u-mb-3 u-text-primary-emphasis">
+          <h4 className="u-text-base u-fw-semibold u-mb-3 u-text-primary">
             <Icon name="Calendar" size={16} className="u-me-2" />
             Subscription Details
           </h4>
           
           <Grid>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Status *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Status *</label>
                 <select
-                  className="form-select"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   value={formData.status}
                   onChange={(e) =>
                     setFormData({
@@ -308,10 +289,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             </GridCol>
             
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Start Date *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Start Date *</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="date"
                   value={formData.start_date}
                   onChange={(e) =>
@@ -325,17 +306,17 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">End Date</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">End Date</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="date"
                   value={formData.end_date}
                   onChange={(e) =>
                     setFormData({ ...formData, end_date: e.target.value })
                   }
                 />
-                <small className="form-text u-text-secondary-emphasis-emphasis">
+                <small className="u-text-sm u-text-secondary-emphasis">
                   Leave empty for ongoing subscription
                 </small>
               </div>
@@ -345,17 +326,17 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
 
         {/* Billing Information */}
         <div className="u-bg-warning-subtle u-p-4 u-rounded">
-          <h4 className="u-fs-5 u-fw-semibold u-mb-3 u-text-primary-emphasis">
+          <h4 className="u-text-base u-fw-semibold u-mb-3 u-text-primary">
             <Icon name="CurrencyDollar" size={16} className="u-me-2" />
             Billing Information
           </h4>
           
           <Grid>
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Monthly Fee *</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Monthly Fee *</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="number"
                   step="0.01"
                   value={formData.monthly_fee}
@@ -371,10 +352,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             </GridCol>
             
             <GridCol xs={12} md={6}>
-              <div className="form-field">
-                <label className="form-label u-fw-medium">Setup Fee</label>
+              <div className="u-mb-3">
+                <label className="u-block u-fw-medium u-mb-1">Setup Fee</label>
                 <input
-                  className="form-input"
+                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
                   type="number"
                   step="0.01"
                   value={formData.setup_fee}
@@ -391,10 +372,10 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         </div>
 
         {/* Notes */}
-        <div className="form-field">
-          <label className="form-label u-fw-medium">Notes</label>
+        <div className="u-mb-3">
+          <label className="u-block u-fw-medium u-mb-1">Notes</label>
           <textarea
-            className="form-textarea"
+            className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
             value={formData.notes}
             onChange={(e) =>
               setFormData({ ...formData, notes: e.target.value })
@@ -405,7 +386,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         </div>
 
         {/* Modal Actions */}
-        <div className="u-d-flex u-justify-content-end u-gap-3 u-pt-4 u-border-t">
+        <div className="u-flex u-justify-end u-gap-3 u-pt-4 u-border-t">
           <Button
             type="button"
             variant="outline"

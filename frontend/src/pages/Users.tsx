@@ -315,7 +315,7 @@ const Users: React.FC = () => {
   return (
     <div className="u-p-6">
       {/* Header */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+      <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-h2 u-mb-2">User Management</h1>
           <p className="u-text-secondary">
@@ -337,7 +337,7 @@ const Users: React.FC = () => {
         <Grid className="u-mb-6">
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-items-center">
                 <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Users" size={24} className="u-text-primary" />
                 </div>
@@ -350,7 +350,7 @@ const Users: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-items-center">
                 <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="UserCheck" size={24} className="u-text-success" />
                 </div>
@@ -363,7 +363,7 @@ const Users: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-items-center">
                 <div className="u-bg-danger-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Shield" size={24} className="u-text-danger" />
                 </div>
@@ -376,7 +376,7 @@ const Users: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-items-center">
                 <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Clock" size={24} className="u-text-warning" />
                 </div>
@@ -440,7 +440,7 @@ const Users: React.FC = () => {
                 usersData?.results?.map((user: User) => ({
                   id: user.id,
                   user: (
-                    <div className="u-d-flex u-align-items-center">
+                    <div className="u-flex u-items-center">
                       <Avatar
                         size="sm"
                         initials={`${user.first_name?.charAt(0) || ""}${user.last_name?.charAt(0) || ""}`}
@@ -474,7 +474,7 @@ const Users: React.FC = () => {
                     ? new Date(user.date_joined).toLocaleDateString()
                     : "N/A",
                   actions: (
-                    <div className="u-d-flex u-gap-2">
+                    <div className="u-flex u-gap-2">
                       <Button
                         variant="outline"
                         size="sm"
@@ -557,7 +557,7 @@ const Users: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Username *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Username *</label>
               <Input
                 value={formData.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
@@ -571,7 +571,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Email *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Email *</label>
               <Input
                 type="email"
                 value={formData.email}
@@ -589,7 +589,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 First Name *
               </label>
               <Input
@@ -607,7 +607,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Last Name *
               </label>
               <Input
@@ -626,7 +626,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Role *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Role *</label>
               <Select
                 value={formData.role}
                 onChange={(e) => handleInputChange("role", e.target.value)}
@@ -635,7 +635,7 @@ const Users: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Phone</label>
+              <label className="u-block u-mb-2 u-fw-medium">Phone</label>
               <Input
                 type="tel"
                 value={formData.phone}
@@ -653,7 +653,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Password *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Password *</label>
               <Input
                 type="password"
                 value={formData.password}
@@ -668,7 +668,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Confirm Password *
               </label>
               <Input
@@ -688,7 +688,7 @@ const Users: React.FC = () => {
             </GridCol>
           </Grid>
 
-          <div className="u-d-flex u-align-items-center">
+          <div className="u-flex u-items-center">
             <Toggle
               initialOn={formData.is_active}
               onToggleOn={() =>
@@ -700,7 +700,7 @@ const Users: React.FC = () => {
           </div>
         </div>
 
-        <div className="u-d-flex u-justify-content-end u-gap-3 u-mt-6">
+        <div className="u-flex u-justify-end u-gap-3 u-mt-6">
           <Button
             variant="outline"
             onClick={() => {
@@ -742,7 +742,7 @@ const Users: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Username *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Username *</label>
               <Input
                 value={formData.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
@@ -756,7 +756,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Email *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Email *</label>
               <Input
                 type="email"
                 value={formData.email}
@@ -774,7 +774,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 First Name *
               </label>
               <Input
@@ -792,7 +792,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Last Name *
               </label>
               <Input
@@ -811,7 +811,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Role *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Role *</label>
               <Select
                 value={formData.role}
                 onChange={(e) => handleInputChange("role", e.target.value)}
@@ -820,7 +820,7 @@ const Users: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Phone</label>
+              <label className="u-block u-mb-2 u-fw-medium">Phone</label>
               <Input
                 type="tel"
                 value={formData.phone}
@@ -836,7 +836,7 @@ const Users: React.FC = () => {
             </GridCol>
           </Grid>
 
-          <div className="u-d-flex u-align-items-center">
+          <div className="u-flex u-items-center">
             <input
               type="checkbox"
               checked={formData.is_active}
@@ -853,7 +853,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 New Password (Optional)
               </label>
               <Input
@@ -870,7 +870,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Confirm New Password
               </label>
               <Input
@@ -891,7 +891,7 @@ const Users: React.FC = () => {
           </Grid>
         </div>
 
-        <div className="u-d-flex u-justify-content-end u-gap-3 u-mt-6">
+        <div className="u-flex u-justify-end u-gap-3 u-mt-6">
           <Button
             variant="outline"
             onClick={() => {
@@ -931,7 +931,7 @@ const Users: React.FC = () => {
         size="sm"
       >
         <div className="u-text-center">
-          <div className="u-bg-danger-subtle u-p-4 u-rounded-circle u-d-inline-flex u-mb-4">
+          <div className="u-bg-danger-subtle u-p-4 u-rounded-circle u-inline-flex u-mb-4">
             <Icon name="Trash" size={24} className="u-text-danger" />
           </div>
           <h3 className="u-h5 u-mb-3">Delete User</h3>
@@ -940,7 +940,7 @@ const Users: React.FC = () => {
             <strong>{selectedUser?.username}</strong>? This action cannot be
             undone.
           </p>
-          <div className="u-d-flex u-justify-content-center u-gap-3">
+          <div className="u-flex u-justify-center u-gap-3">
             <Button
               variant="outline"
               onClick={() => {

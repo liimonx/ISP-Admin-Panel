@@ -501,7 +501,7 @@ const Subscriptions: React.FC = () => {
     return (
       <div className="u-p-6">
         <Callout variant="error" className="u-mb-4">
-          <div className="u-d-flex u-align-items-center u-gap-2">
+          <div className="u-flex u-items-center u-gap-2">
             <Icon name="Warning" size={20} />
             <div>
               <strong>Error loading subscriptions</strong>
@@ -521,7 +521,6 @@ const Subscriptions: React.FC = () => {
                       <div
                         className="u-spinner-border u-spinner-border-sm u-me-2"
                         role="status"
-                        style={{ width: "16px", height: "16px" }}
                       >
                         <span className="u-visually-hidden">Loading...</span>
                       </div>
@@ -556,7 +555,7 @@ const Subscriptions: React.FC = () => {
       )}
 
       {/* Page Header */}
-      <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-6">
+      <div className="u-flex u-justify-between u-align-items-start u-mb-6">
         <div>
           <h1 className="u-fs-1 u-fw-bold u-text-primary-emphasis u-mb-2">
             <Icon name="Users" size={32} className="u-me-3" />
@@ -566,7 +565,7 @@ const Subscriptions: React.FC = () => {
             Manage customer subscriptions, service connections, and billing
           </p>
         </div>
-        <div className="u-d-flex u-gap-3">
+        <div className="u-flex u-gap-3">
           <Button
             variant="outline"
             size="md"
@@ -591,7 +590,7 @@ const Subscriptions: React.FC = () => {
       {/* Error Banner for Non-Critical Issues */}
       {subscriptionsError && subscriptions.length > 0 && (
         <Callout variant="warning" className="u-mb-4">
-          <div className="u-d-flex u-align-items-center u-gap-2">
+          <div className="u-flex u-items-center u-gap-2">
             <Icon name="Warning" size={20} />
             <div>
               <strong>Partial data loaded</strong>
@@ -637,8 +636,8 @@ const Subscriptions: React.FC = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="u-d-flex u-justify-content-center u-align-items-center u-mt-6">
-          <div className="u-d-flex u-align-items-center u-gap-3">
+        <div className="u-flex u-justify-center u-items-center u-mt-6">
+          <div className="u-flex u-items-center u-gap-3">
             <Button
               variant="outline"
               size="sm"
@@ -649,7 +648,7 @@ const Subscriptions: React.FC = () => {
               Previous
             </Button>
 
-            <div className="u-d-flex u-align-items-center u-gap-2">
+            <div className="u-flex u-items-center u-gap-2">
               <span className="u-text-secondary-emphasis u-fs-sm">
                 Page {currentPage} of {totalPages}
               </span>

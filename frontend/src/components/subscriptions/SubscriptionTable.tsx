@@ -79,7 +79,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
 
     if (!quota || quota === 0) {
       return (
-        <div className="u-text-center" style={{ minWidth: "140px" }}>
+        <div className="u-text-center u-min-w-36">
           <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
             {used.toFixed(1)} GB
           </div>
@@ -103,8 +103,8 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     const isNearLimit = percentage > 80;
 
     return (
-      <div style={{ minWidth: "140px" }}>
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+      <div className="u-min-w-36">
+        <div className="u-flex u-justify-between u-items-center u-mb-2">
           <span className="u-fs-xs u-text-secondary-emphasis">
             {used.toFixed(1)} / {quota} GB
           </span>
@@ -147,7 +147,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           </div>
         )}
 
-        <div className="u-d-flex u-gap-1">
+        <div className="u-flex u-gap-1">
           {onResetDataUsage && (
             <button
               onClick={() => onResetDataUsage(subscription)}
@@ -209,7 +209,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <button
           key="activate"
           onClick={() => onUpdateStatus(subscription, "active")}
-          className="dropdown-item u-d-flex u-align-items-center u-gap-2 u-text-success"
+          className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
         >
           <Icon name="Play" size={16} />
           Activate
@@ -222,7 +222,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <button
           key="suspend"
           onClick={() => onUpdateStatus(subscription, "suspended")}
-          className="dropdown-item u-d-flex u-align-items-center u-gap-2 u-text-warning"
+          className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-warning u-cursor-pointer hover:u-bg-warning-subtle"
         >
           <Icon name="Pause" size={16} />
           Suspend
@@ -235,7 +235,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <button
           key="reactivate"
           onClick={() => onUpdateStatus(subscription, "active")}
-          className="dropdown-item u-d-flex u-align-items-center u-gap-2 u-text-success"
+          className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
         >
           <Icon name="Play" size={16} />
           Reactivate
@@ -248,7 +248,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <button
           key="cancel"
           onClick={() => onUpdateStatus(subscription, "cancelled")}
-          className="dropdown-item u-d-flex u-align-items-center u-gap-2 u-text-error"
+          className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
         >
           <Icon name="X" size={16} />
           Cancel
@@ -262,9 +262,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
   if (isLoading) {
     return (
       <Card className="u-p-6">
-        <div className="u-d-flex u-justify-content-center u-align-items-center u-py-8">
+        <div className="u-flex u-justify-center u-items-center u-py-8">
           <div className="u-text-center">
-            <div className="u-d-flex u-justify-content-center u-mb-3">
+            <div className="u-flex u-justify-center u-mb-3">
               <div
                 className="u-spinner-border u-text-primary"
                 role="status"
@@ -315,10 +315,10 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       />
     ),
     customer: (
-      <div className="u-d-flex u-align-items-center u-gap-3">
+      <div className="u-flex u-items-center u-gap-3">
         <Avatar
           initials={subscription.customer?.name?.charAt(0) || "?"}
-          size="sm"
+          className="u-w-6 u-h-6"
         />
         <div>
           <div className="u-fw-medium u-text-primary-emphasis">
@@ -335,7 +335,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
           {subscription.plan?.name || "Unknown Plan"}
         </div>
-        <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-d-flex u-align-items-center u-gap-1">
+        <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-flex u-items-center u-gap-1">
           <Icon name="ArrowDown" size={12} />
           {subscription.plan?.download_speed || 0}
           <Icon name="ArrowUp" size={12} />
@@ -420,48 +420,48 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           <div>
             <button
               onClick={() => onView(subscription)}
-              className="dropdown-item u-d-flex u-align-items-center u-gap-2"
+              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
             >
               <Icon name="Eye" size={16} />
               View Details
             </button>
             <button
               onClick={() => onEdit(subscription)}
-              className="dropdown-item u-d-flex u-align-items-center u-gap-2"
+              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
             >
               <Icon name="Pencil" size={16} />
               Edit
             </button>
-            <div className="dropdown-divider"></div>
+            <div className="u-border-top u-border-light u-my-1"></div>
             {getStatusActions(subscription)}
 
-            <div className="dropdown-divider"></div>
+            <div className="u-border-top u-border-light u-my-1"></div>
             <button
-              className="dropdown-item u-d-flex u-align-items-center u-gap-2"
+              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
               onClick={() => onView(subscription)}
             >
               <Icon name="Receipt" size={16} />
               Billing History
             </button>
             <button
-              className="dropdown-item u-d-flex u-align-items-center u-gap-2"
+              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
               onClick={() => onView(subscription)}
             >
               <Icon name="ChartBar" size={16} />
               Usage Analytics
             </button>
             <button
-              className="dropdown-item u-d-flex u-align-items-center u-gap-2"
+              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
               onClick={() => onView(subscription)}
             >
               <Icon name="Wrench" size={16} />
               Router Settings
             </button>
 
-            <div className="dropdown-divider"></div>
+            <div className="u-border-top u-border-light u-my-1"></div>
             <button
               onClick={() => onDelete(subscription)}
-              className="dropdown-item u-d-flex u-align-items-center u-gap-2 u-text-error"
+              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
             >
               <Icon name="Trash" size={16} />
               Delete
@@ -482,8 +482,8 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         {/* Bulk Actions Bar */}
         {selectedIds.length > 0 && (
           <div className="u-bg-primary-subtle u-p-3 u-border-bottom">
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
-              <div className="u-d-flex u-align-items-center u-gap-3">
+            <div className="u-flex u-justify-between u-items-center">
+              <div className="u-flex u-items-center u-gap-3">
                 <span className="u-fw-medium u-text-primary">
                   {selectedIds.length} subscription
                   {selectedIds.length > 1 ? "s" : ""} selected
@@ -496,11 +496,11 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                   Clear Selection
                 </Button>
               </div>
-              <div className="u-d-flex u-align-items-center u-gap-2">
+              <div className="u-flex u-items-center u-gap-2">
                 <select
                   value={bulkActionStatus}
                   onChange={(e) => setBulkActionStatus(e.target.value)}
-                  className="u-form-select u-form-select-sm"
+                  className="u-w-100 u-py-1 u-px-2 u-border u-rounded u-bg-surface u-text-foreground u-text-sm"
                 >
                   <option value="">Select Action</option>
                   <option value="active">Activate</option>
@@ -525,12 +525,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           columns={[
             {
               key: "select",
-              title: (
-                <Checkbox
-                  checked={allSelected}
-                  onChange={(event) => handleSelectAll(event.target.checked)}
-                />
-              ),
+              title: "",
             },
             { key: "customer", title: "Customer" },
             { key: "plan", title: "Plan" },

@@ -259,7 +259,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         active={active}
         onClick={() => handleMenuClick(item)}
         disabled={item.disabled}
-        className={`${level > 0 ? "u-ps-8" : ""} ${collapsed ? "u-justify-content-center" : ""} u-mb-1`}
+        className={`${level > 0 ? "u-ps-8" : ""} ${collapsed ? "u-justify-center" : ""} u-mb-1`}
       >
         {!collapsed && item.label}
         {!collapsed && hasChildren && (
@@ -314,11 +314,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div
-      className={`u-h-100 u-bg-surface u-border-right u-d-flex u-flex-column u-transition-all u-shadow-sm ${
+      className={`u-min-vh-100 u-bg-surface u-border-right u-flex u-flex-column u-transition-all u-shadow-sm ${
         collapsed ? "u-w-16" : "u-w-64"
       } ${className}`}
       data-testid={testId}
-      style={{ height: '100vh' }}
     >
 
 
@@ -347,18 +346,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Footer */}
       <div className="u-p-4 u-border-top u-mt-auto">
         {!collapsed ? (
-          <div className="u-d-flex u-flex-column u-gap-2">
-            <div className="u-d-flex u-align-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
+          <div className="u-flex u-flex-column u-gap-2">
+            <div className="u-flex u-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
               <Icon name="Info" size={14} />
               <span>BCN ISP v1.0.0</span>
             </div>
-            <div className="u-d-flex u-align-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
+            <div className="u-flex u-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
               <Icon name="Globe" size={12} />
               <span>System Online</span>
             </div>
           </div>
         ) : (
-          <div className="u-d-flex u-justify-content-center">
+          <div className="u-flex u-justify-center">
             <Tooltip content="BCN ISP v1.0.0 - System Online">
               <Icon name="Info" size={16} className="u-text-secondary-emphasis" />
             </Tooltip>

@@ -35,7 +35,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
   return (
     <Card className={`u-mb-6 ${className}`}>
       <div className="u-p-4">
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+        <div className="u-flex u-justify-between u-items-center u-mb-4">
           <h3 className="u-text-lg u-fw-semibold">Filter Subscriptions</h3>
           <Button
             variant="outline"
@@ -50,7 +50,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
         <div className="u-grid u-grid-cols-1 u-gap-4 md:u-grid-cols-2 lg:u-grid-cols-4">
           {/* Search */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Search Subscriptions
             </label>
             <Input
@@ -63,7 +63,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Status Filter */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Status
             </label>
             <Select
@@ -82,7 +82,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Plan Filter */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Plan
             </label>
             <Select
@@ -101,7 +101,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Router Filter */}
           <div>
-            <label className="u-d-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Router
             </label>
             <Select

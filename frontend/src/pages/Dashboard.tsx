@@ -368,7 +368,7 @@ const Dashboard: React.FC = () => {
   if (error) {
     return (
       <Callout variant="error" className="u-mb-4">
-        <div className="u-d-flex u-justify-content-between u-align-items-center">
+        <div className="u-flex u-justify-between u-items-center">
           <div>
             <h3 className="u-mb-2">Error Loading Dashboard</h3>
             <p>
@@ -391,7 +391,7 @@ const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="u-d-flex u-justify-content-center u-align-items-center u-h-50vh">
+      <div className="u-flex u-justify-center u-items-center u-min-h-screen">
         <div className="u-text-center">
           <Spinner size="lg" className="u-mb-4" />
           <h3>Loading Dashboard...</h3>
@@ -405,17 +405,17 @@ const Dashboard: React.FC = () => {
     <div>
       {/* Page Header */}
       <div className="u-mb-8">
-        <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
+        <div className="u-flex u-justify-between u-items-start u-mb-4">
           <div>
-            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">
+            <h1 className="u-text-3xl u-font-bold u-mb-2 u-text-foreground">
               Dashboard
             </h1>
-            <p className="u-text-secondary-emphasis u-text-lg">
+            <p className="u-text-secondary u-text-lg">
               Welcome back! Here's what's happening with your ISP operations
               today.
             </p>
           </div>
-          <div className="u-d-flex u-gap-3 u-align-items-center">
+          <div className="u-flex u-gap-3 u-items-center">
             <Button
               variant="outline"
               size="md"
@@ -423,13 +423,13 @@ const Dashboard: React.FC = () => {
               disabled={refreshMutation.isPending}
             >
               <Icon name="ArrowClockwise" size={16} />
-              <span className="u-d-none u-d-sm-inline">
+              <span className="u-hidden u-sm-block">
                 {refreshMutation.isPending ? "Refreshing..." : "Refresh"}
               </span>
             </Button>
             <Button variant="outline" size="md">
               <Icon name="Download" size={16} />
-              <span className="u-d-none u-d-sm-inline">Export</span>
+              <span className="u-hidden u-sm-block">Export</span>
             </Button>
             <Button
               variant="primary"
@@ -437,13 +437,13 @@ const Dashboard: React.FC = () => {
               onClick={() => (window.location.href = "/customers")}
             >
               <Icon name="Plus" size={16} />
-              <span className="u-d-none u-d-sm-inline">Add Customer</span>
+              <span className="u-hidden u-sm-block">Add Customer</span>
             </Button>
           </div>
         </div>
 
         {/* Quick Stats Summary */}
-        <div className="u-d-flex u-gap-4 u-text-sm u-text-secondary-emphasis u-align-items-center">
+        <div className="u-flex u-gap-4 u-text-sm u-text-secondary u-items-center">
           <span>Last updated: {new Date().toLocaleTimeString()}</span>
           <span>•</span>
           <span>Auto-refresh: 30s</span>
@@ -513,20 +513,20 @@ const Dashboard: React.FC = () => {
       {/* Interactive Charts Section */}
       <Grid className="u-mb-8">
         <GridCol xs={12} lg={8}>
-          <Card className="u-h-100">
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+          <Card className="u-h-full">
+            <div className="u-flex u-justify-between u-items-center u-mb-6">
               <div>
-                <h3 className="u-text-xl u-fw-semibold u-mb-1">
+                <h3 className="u-text-xl u-font-semibold u-mb-1">
                   {selectedChart === "revenue" && "Revenue Analytics"}
                   {selectedChart === "traffic" && "Network Traffic"}
                   {selectedChart === "customers" && "Customer Growth"}
                   {selectedChart === "network" && "Network Performance"}
                 </h3>
-                <p className="u-text-sm u-text-secondary-emphasis">
+                <p className="u-text-sm u-text-secondary">
                   Track your key metrics over time
                 </p>
               </div>
-              <div className="u-d-flex u-gap-2 u-flex-wrap">
+              <div className="u-flex u-gap-2 u-flex-wrap">
                 {TIME_PERIODS.map((period) => (
                   <Button
                     key={period.value}
@@ -545,7 +545,7 @@ const Dashboard: React.FC = () => {
             </div>
 
             {/* Chart Type Selector */}
-            <div className="u-d-flex u-gap-2 u-mb-4 u-flex-wrap">
+            <div className="u-flex u-gap-2 u-mb-4 u-flex-wrap">
               {[
                 { key: "revenue", label: "Revenue", icon: "CurrencyDollar" },
                 { key: "traffic", label: "Traffic", icon: "Globe" },
@@ -564,7 +564,7 @@ const Dashboard: React.FC = () => {
               ))}
             </div>
 
-            <div className="u-min-h-400">
+            <div className="u-h-80">
               {selectedChart === "revenue" && (
                 <AreaChart datasets={revenueData} size="lg" />
               )}
@@ -581,7 +581,7 @@ const Dashboard: React.FC = () => {
           </Card>
         </GridCol>
         <GridCol xs={12} lg={4}>
-          <Card className="u-h-100">
+          <Card className="u-h-full">
             <div className="u-mb-4">
               <h3 className="u-text-xl u-fw-semibold u-mb-1">
                 Plan Distribution
@@ -716,32 +716,31 @@ const Dashboard: React.FC = () => {
       <Grid>
         <GridCol xs={12} lg={8}>
           <Card className="u-h-100">
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+            <div className="u-flex u-justify-between u-items-center u-mb-6">
               <div>
-                <h3 className="u-text-xl u-fw-semibold u-mb-1">
+                <h3 className="u-text-xl u-font-semibold u-mb-1">
                   Recent Customers
                 </h3>
-                <p className="u-text-sm u-text-secondary-emphasis">
+                <p className="u-text-sm u-text-secondary">
                   Latest customer registrations and activity
                 </p>
               </div>
               <Button
-                variant="ghost"
+                variant="link"
                 size="sm"
                 onClick={() => (window.location.href = "/customers")}
               >
                 View All
-                <Icon name="CaretRight" size={16} />
               </Button>
             </div>
             <div className="u-space-y-3">
               {recentCustomers.map((customer, index) => (
                 <div
                   key={customer.id || index}
-                  className="u-d-flex u-align-items-center u-justify-content-between u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-light"
+                  className="u-flex u-items-center u-justify-between u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-light"
                   onClick={() => handleCustomerClick(customer)}
                 >
-                  <div className="u-d-flex u-align-items-center u-gap-3">
+                  <div className="u-flex u-items-center u-gap-3">
                     <Avatar
                       initials={customer.name?.charAt(0) || "?"}
                       size="sm"
@@ -757,7 +756,7 @@ const Dashboard: React.FC = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="u-d-flex u-align-items-center u-gap-2">
+                  <div className="u-flex u-items-center u-gap-2">
                     <Badge
                       variant={
                         customer.status === "active" ? "success" : "warning"
@@ -795,8 +794,8 @@ const Dashboard: React.FC = () => {
 
             <div className="u-space-y-6">
               <div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-                  <div className="u-d-flex u-align-items-center u-gap-2">
+                <div className="u-flex u-justify-between u-items-center u-mb-2">
+                  <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Cpu" size={16} className="u-text-primary" />
                     <span className="u-text-sm u-fw-medium">Server Load</span>
                   </div>
@@ -817,8 +816,8 @@ const Dashboard: React.FC = () => {
               </div>
 
               <div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-                  <div className="u-d-flex u-align-items-center u-gap-2">
+                <div className="u-flex u-justify-between u-items-center u-mb-2">
+                  <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Memory" size={16} className="u-text-success" />
                     <span className="u-text-sm u-fw-medium">Memory Usage</span>
                   </div>
@@ -839,8 +838,8 @@ const Dashboard: React.FC = () => {
               </div>
 
               <div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-                  <div className="u-d-flex u-align-items-center u-gap-2">
+                <div className="u-flex u-justify-between u-items-center u-mb-2">
+                  <div className="u-flex u-items-center u-gap-2">
                     <Icon name="HardDrive" size={16} className="u-text-info" />
                     <span className="u-text-sm u-fw-medium">Storage</span>
                   </div>
@@ -861,8 +860,8 @@ const Dashboard: React.FC = () => {
               </div>
 
               <div>
-                <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-                  <div className="u-d-flex u-align-items-center u-gap-2">
+                <div className="u-flex u-justify-between u-items-center u-mb-2">
+                  <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Globe" size={16} className="u-text-warning" />
                     <span className="u-text-sm u-fw-medium">Network Load</span>
                   </div>
@@ -884,13 +883,13 @@ const Dashboard: React.FC = () => {
             </div>
 
             <div className="u-mt-6 u-pt-6 u-border-top">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3">
+              <div className="u-flex u-justify-between u-items-center u-mb-3">
                 <h4 className="u-text-sm u-fw-semibold">
                   Active Administrators
                 </h4>
                 <Badge variant="success" size="sm" label="3 online" />
               </div>
-              <div className="u-d-flex u-gap-2">
+              <div className="u-flex u-gap-2">
                 <Avatar initials="JD" size="sm" />
                 <Avatar initials="JS" size="sm" />
                 <Avatar initials="BW" size="sm" />
@@ -903,13 +902,13 @@ const Dashboard: React.FC = () => {
       {/* Customer Detail Modal */}
       <Modal
         isOpen={showCustomerModal}
-        onClose={() => setShowCustomerModal(false)}
-        title="Customer Details"
-        size="lg"
+        onOpenChange={setShowCustomerModal}
+        title={selectedCustomer ? `${selectedCustomer.first_name} ${selectedCustomer.last_name}` : ''}
+        size="md"
       >
         {selectedCustomer && (
           <div>
-            <div className="u-d-flex u-align-items-center u-gap-3 u-mb-4">
+            <div className="u-flex u-items-center u-gap-3 u-mb-4">
               <Avatar
                 initials={selectedCustomer.name?.charAt(0) || "?"}
                 size="lg"
@@ -954,7 +953,7 @@ const Dashboard: React.FC = () => {
               <p>{new Date(selectedCustomer.created_at).toLocaleString()}</p>
             </div>
 
-            <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+            <div className="u-flex u-justify-end u-gap-2 u-mt-6">
               <Button
                 variant="outline"
                 onClick={() => setShowCustomerModal(false)}

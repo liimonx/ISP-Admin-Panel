@@ -68,7 +68,7 @@ const Reports: React.FC = () => {
     return (
       <div className="u-p-6">
         <Callout variant="error" className="u-mb-4">
-          <div className="u-d-flex u-align-items-center u-gap-2">
+          <div className="u-flex u-items-center u-gap-2">
             <Icon name="Warning" size={20} />
             <div>
               <strong>Error loading reports</strong>
@@ -95,9 +95,9 @@ const Reports: React.FC = () => {
       {/* Report Controls */}
       <Card className="u-mb-6 u-border-0 u-shadow-sm">
         <div className="u-p-4">
-          <div className="u-d-flex u-gap-4 u-align-items-end u-flex-wrap">
+          <div className="u-flex u-gap-4 u-align-items-end u-flex-wrap">
             <div>
-              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-block">
                 Report Type
               </label>
               <Select
@@ -114,7 +114,7 @@ const Reports: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-block">
                 Time Range
               </label>
               <Select
@@ -132,30 +132,30 @@ const Reports: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-block">
                 Start Date
               </label>
               <input
                 type="date"
                 value={dateRange.start}
                 onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
-                className="form-input"
+                className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
               />
             </div>
 
             <div>
-              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-d-block">
+              <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis-emphasis u-mb-2 u-block">
                 End Date
               </label>
               <input
                 type="date"
                 value={dateRange.end}
                 onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
-                className="form-input"
+                className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
               />
             </div>
 
-            <div className="u-d-flex u-gap-2">
+            <div className="u-flex u-gap-2">
               <Button variant="outline" size="md">
                 <Icon name="Download" size={16} />
                 Export
@@ -171,7 +171,7 @@ const Reports: React.FC = () => {
 
       {/* Tabs Navigation */}
       <div className="u-mb-6">
-        <div className="u-d-flex u-gap-1 u-border-b u-border-secondary-subtle">
+        <div className="u-flex u-gap-1 u-border-b u-border-secondary-subtle">
           {[
             { id: "usage", label: "Usage Reports" },
             { id: "revenue", label: "Revenue Reports" },
@@ -196,7 +196,7 @@ const Reports: React.FC = () => {
         {reportType === "usage" && (
           <div>
             {/* Usage Overview Widgets */}
-            <div className="u-d-grid u-gap-4 u-mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
+            <div className="u-grid u-gap-4 u-mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
               <UsageWidget
                 title="Total Data Usage"
                 icon="Database"
@@ -236,7 +236,7 @@ const Reports: React.FC = () => {
             </div>
 
             {/* Charts and Top Users */}
-            <div className="u-d-grid u-gap-6" style={{ gridTemplateColumns: "2fr 1fr" }}>
+            <div className="u-grid u-gap-6" style={{ gridTemplateColumns: "2fr 1fr" }}>
               <UsageChart
                 title="Usage Trends"
                 data={trendsData?.trends || []}
@@ -253,7 +253,7 @@ const Reports: React.FC = () => {
         {/* Revenue Reports */}
         {reportType === "revenue" && (
           <div>
-            <div className="u-d-grid u-gap-4 u-mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
+            <div className="u-grid u-gap-4 u-mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
               <UsageWidget
                 title="Total Revenue"
                 icon="CurrencyDollar"

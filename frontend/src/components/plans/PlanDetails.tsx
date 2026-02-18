@@ -69,13 +69,13 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
     >
       <div className="u-space-y-6">
         {/* Plan Header */}
-        <div className="u-d-flex u-justify-content-between u-align-items-start">
+        <div className="u-flex u-justify-between u-items-start">
           <div className="u-flex-1">
-            <h2 className="u-text-xl u-fw-bold u-mb-2">{plan.name}</h2>
+            <h2 className="u-text-xl u-font-bold u-mb-2">{plan.name}</h2>
             {plan.description && (
-              <p className="u-text-secondary-emphasis u-mb-3">{plan.description}</p>
+              <p className="u-text-secondary u-mb-3">{plan.description}</p>
             )}
-            <div className="u-d-flex u-gap-2 u-flex-wrap">
+            <div className="u-flex u-gap-2 u-flex-wrap">
               {plan.is_popular && (
                 <Badge variant="primary" size="sm" label="Popular" />
               )}
@@ -103,26 +103,26 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Pricing Information */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Pricing</h3>
+          <h3 className="u-text-lg u-font-semibold">Pricing</h3>
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-bg-light u-p-4 u-rounded-md">
-              <div className="u-text-sm u-text-secondary-emphasis u-mb-1">Monthly Price</div>
-              <div className="u-text-2xl u-fw-bold u-text-primary">
+              <div className="u-text-sm u-text-secondary u-mb-1">Monthly Price</div>
+              <div className="u-text-2xl u-font-bold u-text-primary">
                 {formatPrice(plan.price)}
               </div>
-              <div className="u-text-sm u-text-secondary-emphasis">
+              <div className="u-text-sm u-text-secondary">
                 per {getBillingCycleLabel(plan.billing_cycle).toLowerCase()}
               </div>
             </div>
             
             {plan.setup_fee && plan.setup_fee > 0 && (
               <div className="u-bg-light u-p-4 u-rounded-md">
-                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">Setup Fee</div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-text-sm u-text-secondary u-mb-1">Setup Fee</div>
+                <div className="u-text-xl u-font-bold">
                   {formatPrice(plan.setup_fee)}
                 </div>
-                <div className="u-text-sm u-text-secondary-emphasis">one-time</div>
+                <div className="u-text-sm u-text-secondary">one-time</div>
               </div>
             )}
           </div>
@@ -132,34 +132,34 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Speed & Data Specifications */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Specifications</h3>
+          <h3 className="u-text-lg u-font-semibold">Specifications</h3>
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-space-y-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Download Speed:</span>
-                <span className="u-fw-medium">
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Download Speed:</span>
+                <span className="u-font-medium">
                   {formatSpeed(plan.download_speed, plan.speed_unit)}
                 </span>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Upload Speed:</span>
-                <span className="u-fw-medium">
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Upload Speed:</span>
+                <span className="u-font-medium">
                   {formatSpeed(plan.upload_speed, plan.speed_unit)}
                 </span>
               </div>
             </div>
             
             <div className="u-space-y-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Data Quota:</span>
-                <span className="u-fw-medium">
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Data Quota:</span>
+                <span className="u-font-medium">
                   {formatDataQuota(plan.data_quota || 0, plan.quota_unit)}
                 </span>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Billing Cycle:</span>
-                <span className="u-fw-medium">
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Billing Cycle:</span>
+                <span className="u-font-medium">
                   {getBillingCycleLabel(plan.billing_cycle)}
                 </span>
               </div>
@@ -172,13 +172,13 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
           <>
             <div className="u-border-t u-my-4"></div>
             <div className="u-space-y-4">
-              <h3 className="u-text-lg u-fw-semibold">Features</h3>
+              <h3 className="u-text-lg u-font-semibold">Features</h3>
               
               <div className="u-space-y-2">
                 {plan.features.map((feature, index) => (
                   <div
                     key={index}
-                    className="u-d-flex u-align-items-center u-gap-3"
+                    className="u-flex u-items-center u-gap-3"
                   >
                     <Icon
                       name="Check"
@@ -197,28 +197,28 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Plan Metadata */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Plan Information</h3>
+          <h3 className="u-text-lg u-font-semibold">Plan Information</h3>
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-space-y-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Status:</span>
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Status:</span>
                 <Badge
                   variant={plan.is_active ? "success" : "secondary"}
                   size="sm"
                   label={plan.is_active ? "Active" : "Inactive"}
                 />
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Featured:</span>
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Featured:</span>
                 <Badge
                   variant={plan.is_featured ? "primary" : "secondary"}
                   size="sm"
                   label={plan.is_featured ? "Yes" : "No"}
                 />
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Popular:</span>
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Popular:</span>
                 <Badge
                   variant={plan.is_popular ? "success" : "secondary"}
                   size="sm"
@@ -228,21 +228,21 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
             </div>
             
             <div className="u-space-y-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Created:</span>
-                <span className="u-fw-medium">
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Created:</span>
+                <span className="u-font-medium">
                   {formatDate(plan.created_at)}
                 </span>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Last Updated:</span>
-                <span className="u-fw-medium">
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Last Updated:</span>
+                <span className="u-font-medium">
                   {formatDate(plan.updated_at)}
                 </span>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <span className="u-text-secondary-emphasis">Plan ID:</span>
-                <span className="u-fw-medium u-font-mono">
+              <div className="u-flex u-justify-between u-items-center">
+                <span className="u-text-secondary">Plan ID:</span>
+                <span className="u-font-medium u-font-mono">
                   #{plan.id}
                 </span>
               </div>
@@ -251,7 +251,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
         </div>
 
         {/* Actions */}
-        <div className="u-d-flex u-justify-content-end u-gap-3 u-pt-4">
+        <div className="u-flex u-justify-end u-gap-3 u-pt-4">
           <Button
             variant="outline"
             onClick={onClose}

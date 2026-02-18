@@ -142,7 +142,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         </div>
 
         <div className="u-mb-4">
-          <label htmlFor="amount" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+          <label htmlFor="amount" className="u-block u-fs-sm u-fw-medium u-mb-1">
             Amount *
           </label>
           <Input
@@ -168,7 +168,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         </div>
 
         <div className="u-mb-4">
-          <label htmlFor="payment_method" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+          <label htmlFor="payment_method" className="u-block u-fs-sm u-fw-medium u-mb-1">
             Payment Method *
           </label>
           <Select
@@ -196,7 +196,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
 
         {selectedMethod?.requiresTransactionId && (
           <div className="u-mb-4">
-            <label htmlFor="transaction_id" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+            <label htmlFor="transaction_id" className="u-block u-fs-sm u-fw-medium u-mb-1">
               Transaction ID *
             </label>
             <Input
@@ -220,7 +220,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         )}
 
         <div className="u-mb-4">
-          <label htmlFor="notes" className="u-d-block u-fs-sm u-fw-medium u-mb-1">
+          <label htmlFor="notes" className="u-block u-fs-sm u-fw-medium u-mb-1">
             Notes
           </label>
           <Textarea
@@ -232,7 +232,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
           />
         </div>
 
-        <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+        <div className="u-flex u-justify-end u-gap-2 u-mt-6">
           <Button
             type="button"
             variant="outline"

@@ -189,7 +189,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           <h3 className="u-text-lg u-fw-semibold">Basic Information</h3>
           
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Plan Name *</label>
+            <label className="u-block u-mb-2 u-fw-medium">Plan Name *</label>
             <Input
               type="text"
               value={formData.name}
@@ -200,7 +200,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           </div>
 
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Description</label>
+            <label className="u-block u-mb-2 u-fw-medium">Description</label>
             <Textarea
               value={formData.description}
               onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
@@ -216,7 +216,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
-              <label className="u-d-block u-mb-2 u-fw-medium">Download Speed *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Download Speed *</label>
               <Input
                 type="number"
                 value={formData.download_speed}
@@ -228,7 +228,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
               />
             </div>
             <div>
-              <label className="u-d-block u-mb-2 u-fw-medium">Upload Speed *</label>
+              <label className="u-block u-mb-2 u-fw-medium">Upload Speed *</label>
               <Input
                 type="number"
                 value={formData.upload_speed}
@@ -242,7 +242,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           </div>
 
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Speed Unit</label>
+            <label className="u-block u-mb-2 u-fw-medium">Speed Unit</label>
             <Select
               value={formData.speed_unit}
               onChange={(value) => setFormData(prev => ({ ...prev, speed_unit: value as 'mbps' | 'gbps' }))}
@@ -260,7 +260,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
-              <label className="u-d-block u-mb-2 u-fw-medium">Data Quota</label>
+              <label className="u-block u-mb-2 u-fw-medium">Data Quota</label>
               <Input
                 type="number"
                 value={formData.data_quota}
@@ -273,7 +273,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
               />
             </div>
             <div>
-              <label className="u-d-block u-mb-2 u-fw-medium">Quota Unit</label>
+              <label className="u-block u-mb-2 u-fw-medium">Quota Unit</label>
               <Select
                 value={formData.quota_unit}
                 onChange={(value) => setFormData(prev => ({ ...prev, quota_unit: value as 'gb' | 'tb' | 'unlimited' }))}
@@ -293,7 +293,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
-              <label className="u-d-block u-mb-2 u-fw-medium">Monthly Price</label>
+              <label className="u-block u-mb-2 u-fw-medium">Monthly Price</label>
               <Input
                 type="number"
                 value={formData.price}
@@ -305,7 +305,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
               />
             </div>
             <div>
-              <label className="u-d-block u-mb-2 u-fw-medium">Setup Fee</label>
+              <label className="u-block u-mb-2 u-fw-medium">Setup Fee</label>
               <Input
                 type="number"
                 value={formData.setup_fee}
@@ -319,7 +319,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           </div>
 
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Billing Cycle</label>
+            <label className="u-block u-mb-2 u-fw-medium">Billing Cycle</label>
             <Select
               value={formData.billing_cycle}
               onChange={(value) => setFormData(prev => ({ ...prev, billing_cycle: value as 'monthly' | 'quarterly' | 'yearly' }))}
@@ -360,7 +360,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           <h3 className="u-text-lg u-fw-semibold">Features</h3>
           
           <div className="u-space-y-3">
-            <div className="u-d-flex u-gap-2">
+            <div className="u-flex u-gap-2">
               <Input
                 type="text"
                 value={newFeature}
@@ -381,17 +381,17 @@ const PlanForm: React.FC<PlanFormProps> = ({
             </div>
 
             {formData.features.length > 0 && (
-              <div className="u-d-flex u-flex-wrap u-gap-2">
+              <div className="u-flex u-flex-wrap u-gap-2">
                 {formData.features.map((feature, index) => (
                   <div
                     key={index}
-                    className="u-d-flex u-align-items-center u-gap-2 u-bg-primary  u-px-3 u-py-1 u-rounded-full u-text-sm"
+                    className="u-flex u-items-center u-gap-2 u-bg-primary  u-px-3 u-py-1 u-rounded-full u-text-sm"
                   >
                     <span>{feature}</span>
                     <button
                       type="button"
                       onClick={() => removeFeature(index)}
-                      className="u-bg-transparent u-border-0  u-cursor-pointer u-p-0 u-d-flex u-align-items-center u-justify-content-center u-w-4 u-h-4 hover:u-bg-white hover:u-text-primary u-rounded-full"
+                      className="u-bg-transparent u-border-0  u-cursor-pointer u-p-0 u-flex u-items-center u-justify-center u-w-4 u-h-4 hover:u-bg-white hover:u-text-primary u-rounded-full"
                     >
                       ×
                     </button>
@@ -403,7 +403,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
         </div>
 
         {/* Form Actions */}
-        <div className="u-d-flex u-justify-content-end u-gap-3 u-pt-4 u-border-top">
+        <div className="u-flex u-justify-end u-gap-3 u-pt-4 u-border-top">
           <Button
             type="button"
             variant="outline"

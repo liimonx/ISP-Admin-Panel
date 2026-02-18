@@ -95,7 +95,7 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
       {statsError && (
         <div className="u-mb-4">
           <Card className="u-border-warning">
-            <div className="u-p-3 u-d-flex u-align-items-center u-gap-2 u-text-warning">
+            <div className="u-p-3 u-flex u-items-center u-gap-2 u-text-warning">
               <Icon name="Warning" size={20} />
               <div>
                 <strong>Stats unavailable</strong>
@@ -200,9 +200,9 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
         <GridCol xs={12} sm={6} lg={3}>
           <Card className="u-h-100">
             <div className="u-p-4">
-              <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-3">
+              <div className="u-flex u-items-center u-justify-between u-mb-3">
                 <div
-                  className="u-d-flex u-align-items-center u-justify-content-center u-rounded-circle"
+                  className="u-flex u-items-center u-justify-center u-rounded-circle"
                   style={{
                     width: "48px",
                     height: "48px",
@@ -221,7 +221,6 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
                     <div
                       className="u-spinner-border u-spinner-border-sm"
                       role="status"
-                      style={{ width: "16px", height: "16px" }}
                     >
                       <span className="u-visually-hidden">Loading...</span>
                     </div>

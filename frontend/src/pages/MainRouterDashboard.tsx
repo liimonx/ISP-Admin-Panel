@@ -290,15 +290,15 @@ const MainRouterDashboard: React.FC = () => {
   return (
     <div className="u-p-6">
       {/* Header */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+      <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-h2 u-mb-2">Main Router Dashboard</h1>
           <p className="u-text-secondary">
             Comprehensive monitoring and management of the main network router
           </p>
         </div>
-        <div className="u-d-flex u-gap-3 u-align-items-center">
-          <div className="u-d-flex u-align-items-center">
+        <div className="u-flex u-gap-3 u-items-center">
+          <div className="u-flex u-items-center">
             <Toggle
               initialOn={autoRefresh}
               onToggleOn={() => setAutoRefresh(!autoRefresh)}
@@ -336,7 +336,7 @@ const MainRouterDashboard: React.FC = () => {
         <Grid className="u-mb-6">
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-items-center">
                 <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
                   <Icon
                     name="CheckCircle"
@@ -358,13 +358,13 @@ const MainRouterDashboard: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-items-center">
                 <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Cpu" size={24} className="u-text-primary" />
+                  <Icon name="Cpu" size={24}/>
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{resources?.cpu_usage || 0}%</h3>
-                  <p className="u-text-secondary u-mb-0">CPU Usage</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">CPU Usage</p>
                   <Progress
                     value={resources?.cpu_usage || 0}
                     size="sm"
@@ -382,7 +382,7 @@ const MainRouterDashboard: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-items-center">
                 <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="HardDrive" size={24} className="u-text-info" />
                 </div>
@@ -406,7 +406,7 @@ const MainRouterDashboard: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-items-center">
                 <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Users" size={24} className="u-text-warning" />
                 </div>
@@ -425,7 +425,7 @@ const MainRouterDashboard: React.FC = () => {
 
       {/* Tabs */}
       <div className="u-mb-6">
-        <div className="u-d-flex u-gap-1 u-border-bottom">
+        <div className="u-flex u-gap-1 u-border-bottom">
           {[
             { id: "overview", label: "Overview", icon: "ChartLine" },
             { id: "interfaces", label: "Interfaces", icon: "Globe" },
@@ -452,7 +452,7 @@ const MainRouterDashboard: React.FC = () => {
         <Grid className="u-mb-6">
           <GridCol xs={12} lg={8}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+              <div className="u-flex u-justify-between u-items-center u-mb-4">
                 <h3 className="u-h5 u-mb-0">Bandwidth Usage</h3>
                 <Badge variant="info" label={`Last ${selectedTimeRange}`} />
               </div>
@@ -697,13 +697,12 @@ const MainRouterDashboard: React.FC = () => {
             <div className="u-p-4">
               {logs && logs.length > 0 ? (
                 <div
-                  className="u-space-y-2"
-                  style={{ maxHeight: "500px", overflowY: "auto" }}
+                  className="u-space-y-2 u-max-h-125 u-overflow-y-auto"
                 >
                   {logs.map((log: any, index: number) => (
                     <div
                       key={index}
-                      className="u-p-3 u-bg-gray-subtle u-rounded u-d-flex u-justify-content-between"
+                      className="u-p-3 u-bg-gray-subtle u-rounded u-flex u-justify-between"
                     >
                       <div className="u-flex-1">
                         <div className="u-text-sm u-fw-medium u-mb-1">
@@ -763,7 +762,7 @@ const MainRouterDashboard: React.FC = () => {
       >
         <div className="u-space-y-4">
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Command</label>
+            <label className="u-block u-mb-2 u-fw-medium">Command</label>
             <Input
               value={command}
               onChange={(e) => setCommand(e.target.value)}
@@ -773,7 +772,7 @@ const MainRouterDashboard: React.FC = () => {
 
           {commandResult && (
             <div>
-              <label className="u-d-block u-mb-2 u-fw-medium">Output</label>
+              <label className="u-block u-mb-2 u-fw-medium">Output</label>
               <Textarea
                 value={commandResult}
                 readOnly
@@ -784,7 +783,7 @@ const MainRouterDashboard: React.FC = () => {
           )}
         </div>
 
-        <div className="u-d-flex u-justify-content-end u-gap-3 u-mt-6">
+        <div className="u-flex u-justify-end u-gap-3 u-mt-6">
           <Button
             variant="outline"
             onClick={() => {

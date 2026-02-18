@@ -12,9 +12,9 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children, requiredRole 
 
   if (isLoading) {
     return (
-      <div className="loading-container">
-        <div className="loading-spinner"></div>
-        <p>Loading...</p>
+      <div className="u-flex u-flex-column u-items-center u-justify-center u-h-100 u-w-100">
+        <div className="u-w-6 u-h-6 u-border-4 u-border-primary u-border-t-transparent u-rounded-circle u-animate-spin"></div>
+        <p className="u-mt-3">Loading...</p>
       </div>
     );
   }

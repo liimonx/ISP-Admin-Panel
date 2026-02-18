@@ -77,18 +77,13 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <Navbar
-      className={`u-bg-surface u-border-bottom u-shadow-sm ${className}`}
+      className={`u-bg-surface u-border-b u-shadow-sm ${className}`}
       data-testid={testId}
       position="fixed"
       containerWidth="100%"
-      glass={
-        {
-          displacementScale: 300
-        }
-      }
     >
-      <div className="u-d-flex u-align-items-center u-justify-content-between u-w-100 u-px-4 u-py-3">
-        <div className="u-d-flex u-align-items-center u-gap-4">
+      <div className="u-flex u-items-center u-justify-between u-w-100 u-px-4 u-py-3">
+        <div className="u-flex u-items-center u-gap-4">
           {showSidebarToggle && (
             <Button
               variant="ghost"
@@ -101,7 +96,7 @@ export const Header: React.FC<HeaderProps> = ({
             </Button>
           )}
 
-          <div className="u-d-flex u-align-items-center u-gap-2">
+          <div className="u-flex u-items-center u-gap-2">
             <Icon name="Globe" size={24} className="u-text-primary" />
             <span className="u-text-lg u-fw-bold u-text-primary">
               BCN ISP
@@ -110,7 +105,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {showSearch && (
-          <div className="u-d-none u-d-md-flex u-flex-1 u-max-w-lg u-mx-6">
+          <div className="u-none u-md-flex u-flex-1 u-max-w-lg u-mx-6">
             <SearchBar
               value={searchValue}
               onSearch={(value) => {
@@ -124,13 +119,13 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         )}
 
-        <div className="u-d-flex u-align-items-center u-gap-3">
+        <div className="u-flex u-items-center u-gap-3">
           {showSearch && (
             <Button
               variant="ghost"
               size="md"
               aria-label="Search"
-              className="u-d-md-none"
+              className="u-md-none"
             >
               <Icon name="MagnifyingGlass" size={20} />
             </Button>
@@ -142,7 +137,7 @@ export const Header: React.FC<HeaderProps> = ({
               size="md"
               onClick={onNotificationClick}
               aria-label="Notifications"
-              className="u-position-relative"
+              className="u-pos-relative"
             >
               <Icon name="Bell" size={20} />
               {notifications > 0 && (
@@ -150,7 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
                   variant="error"
                   size="sm"
                   label={notifications.toString()}
-                  className="u-position-absolute u-top-0 u-right-0 u-transform-translate-50"
+                  className="u-pos-absolute u-top-0 u-end-0 u-transform u-translate-x--50 u-translate-y--50"
                 />
               )}
             </Button>

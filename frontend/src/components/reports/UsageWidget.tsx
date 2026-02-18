@@ -34,7 +34,7 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
   if (isLoading) {
     return (
       <Card className={`u-h-100 ${className}`}>
-        <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
+        <div className="u-flex u-justify-between u-align-items-start u-mb-4">
           <div className="u-flex-1">
             <div className="u-bg-light u-h-4 u-w-75 u-rounded-sm u-mb-3"></div>
             <div className="u-bg-light u-h-6 u-w-50 u-rounded-sm u-mb-2"></div>
@@ -74,14 +74,14 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
 
   return (
     <Card className={`u-h-100 ${className}`}>
-      <div className="u-d-flex u-justify-content-between u-align-items-start">
+      <div className="u-flex u-justify-between u-align-items-start">
         <div className="u-flex-1">
           <div className="u-text-sm u-mb-2 u-text-muted">{title}</div>
           <div className={`u-text-2xl u-fw-bold u-mb-2 ${getColorClasses(color)}`}>
             {value}
           </div>
           {trend && (
-            <div className="u-d-flex u-align-items-center u-mb-2">
+            <div className="u-flex u-items-center u-mb-2">
               <Icon
                 name={trend.isPositive ? "TrendUp" : "TrendDown"}
                 size={16}
@@ -103,7 +103,7 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
 
         {icon && (
           <div
-            className={`u-p-3 u-rounded u-d-flex u-align-items-center u-justify-content-center ${getIconBgColor(color)}`}
+            className={`u-p-3 u-rounded u-flex u-items-center u-justify-center ${getIconBgColor(color)}`}
           >
             <Icon name={icon as any} size={24} className={getColorClasses(color)} />
           </div>

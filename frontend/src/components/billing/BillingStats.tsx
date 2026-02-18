@@ -63,7 +63,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
         {Array.from({ length: 12 }).map((_, index) => (
           <GridCol key={index} xs={12} md={6} lg={3} className="u-mb-4">
             <div className="u-p-4 u-border u-rounded">
-              <div className="u-d-flex u-align-items-center u-mb-3">
+              <div className="u-flex u-items-center u-mb-3">
                 <div className="u-bg-secondary-subtle u-w-8 u-h-8 u-rounded u-me-3"></div>
                 <div className="u-flex-fill">
                   <div className="u-bg-secondary-subtle u-h-4 u-rounded u-mb-2"></div>

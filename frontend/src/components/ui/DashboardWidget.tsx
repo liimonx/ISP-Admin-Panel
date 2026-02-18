@@ -29,9 +29,9 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   return (
     <Card className={`u-h-100 ${className}`}>
       {/* Widget Header */}
-      <div className={`u-d-flex u-justify-content-between u-align-items-start u-mb-4 ${headerClassName}`}>
+      <div className={`u-flex u-justify-between u-align-items-start u-mb-4 ${headerClassName}`}>
         <div className="u-flex-1 u-min-w-0">
-          <div className="u-d-flex u-align-items-center u-gap-2 u-mb-1">
+          <div className="u-flex u-items-center u-gap-2 u-mb-1">
             {icon && (
               <Icon 
                 name={icon as any} 
@@ -59,13 +59,13 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       {/* Widget Content */}
       <div className={`u-flex-1 ${contentClassName}`}>
         {error ? (
-          <div className="u-d-flex u-flex-column u-align-items-center u-justify-content-center u-py-8 u-text-center">
+          <div className="u-flex u-flex-column u-items-center u-justify-center u-py-8 u-text-center">
             <Icon name="Warning" size={32} className="u-text-error u-mb-3" />
             <p className="u-text-error u-mb-2">Error loading data</p>
             <p className="u-text-sm u-text-secondary-emphasis">{error}</p>
           </div>
         ) : loading ? (
-          <div className="u-d-flex u-align-items-center u-justify-content-center u-py-8">
+          <div className="u-flex u-items-center u-justify-center u-py-8">
             <Icon name="Spinner" size={24} className="u-spin u-text-primary" />
           </div>
         ) : (

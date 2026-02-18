@@ -25,9 +25,8 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onDis
       className={`
         u-transition-all
         ${isVisible && !isExiting ? 'u-opacity-100' : 'u-opacity-0'}
-        u-w-100 u-mb-3
+        u-w-100 u-mb-3 u-max-w-96
       `}
-      style={{ maxWidth: '24rem' }}
     >
       <Callout
         variant={notification.type}
@@ -36,7 +35,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onDis
       >
         <p className="u-mb-0">{notification.message}</p>
         {notification.actions && notification.actions.length > 0 && (
-          <div className="u-d-flex u-gap-2 u-mt-3">
+          <div className="u-flex u-gap-2 u-mt-3">
             {notification.actions.map((action, index) => (
               <Button
                 key={index}

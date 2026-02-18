@@ -198,7 +198,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
       key: 'user',
       header: 'User',
       render: (entry: AuditLogEntry) => (
-        <div className="u-d-flex u-align-items-center u-gap-2">
+        <div className="u-flex u-items-center u-gap-2">
           <Avatar
             initials={entry.user.name.charAt(0)}
             size="sm"
@@ -219,7 +219,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
       key: 'resource',
       header: 'Resource',
       render: (entry: AuditLogEntry) => (
-        <div className="u-d-flex u-align-items-center u-gap-2">
+        <div className="u-flex u-items-center u-gap-2">
           <Icon name={getResourceIcon(entry.resource_type)} size={16} />
           <div>
             <div className="u-fw-medium u-fs-sm">{entry.resource_name}</div>
@@ -282,7 +282,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
   return (
     <div className={className}>
       <Card>
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+        <div className="u-flex u-justify-between u-items-center u-mb-4">
           <h3>Billing Audit Trail</h3>
           <Button variant="outline" size="sm">
             <Icon name="Download" size={14} />
@@ -291,8 +291,8 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
         </div>
 
         {/* Filters */}
-        <div className="u-d-flex u-gap-4 u-mb-4 u-flex-wrap">
-          <div className="u-flex-fill" style={{ minWidth: '250px' }}>
+        <div className="u-flex u-gap-4 u-mb-4 u-flex-wrap">
+          <div className="u-flex-fill u-min-w-64">
             <Input
               type="text"
               placeholder="Search by user, resource, or action..."
@@ -309,7 +309,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
 
         {/* Audit Trail Table */}
         {auditLoading ? (
-          <div className="u-d-flex u-justify-content-center u-align-items-center u-py-8">
+          <div className="u-flex u-justify-center u-items-center u-py-8">
             <div className="u-text-center">
               <Spinner size="lg" />
               <p className="u-mt-2">Loading audit trail...</p>
@@ -324,7 +324,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
             />
 
             {/* Pagination */}
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center">
               <div className="u-fs-sm u-text-secondary">
                 Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, auditData.count)} of {auditData.count} entries
               </div>
@@ -360,7 +360,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
         {selectedEntry && (
           <div>
             <div className="u-mb-4">
-              <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-3">
+              <div className="u-flex u-justify-between u-align-items-start u-mb-3">
                 <div>
                   <h4 className="u-mb-1">Activity Details</h4>
                   <p className="u-text-secondary">
@@ -373,10 +373,10 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
 
             <div className="u-space-y-4">
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-d-block">
+                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-block">
                   User
                 </label>
-                <div className="u-d-flex u-align-items-center u-gap-3">
+                <div className="u-flex u-items-center u-gap-3">
                   <Avatar
                     initials={selectedEntry.user.name.charAt(0)}
                     size="md"
@@ -389,10 +389,10 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
               </div>
 
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-d-block">
+                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-block">
                   Resource
                 </label>
-                <div className="u-d-flex u-align-items-center u-gap-2">
+                <div className="u-flex u-items-center u-gap-2">
                   <Icon name={getResourceIcon(selectedEntry.resource_type)} size={20} />
                   <div>
                     <div className="u-fw-medium">{selectedEntry.resource_name}</div>
@@ -404,7 +404,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
               </div>
 
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-d-block">
+                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-block">
                   Action Details
                 </label>
                 <div className="u-bg-subtle u-p-3 u-rounded">
@@ -432,7 +432,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
               </div>
             </div>
 
-            <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+            <div className="u-flex u-justify-end u-gap-2 u-mt-6">
               <Button
                 variant="outline"
                 onClick={() => {

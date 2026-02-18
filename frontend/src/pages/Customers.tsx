@@ -273,7 +273,7 @@ const Customers: React.FC = () => {
     return (
       <div className="u-p-6">
         <Callout variant="error" className="u-mb-4">
-          <div className="u-d-flex u-align-items-center u-gap-3">
+          <div className="u-flex u-items-center u-gap-3">
             <Icon name="Warning" size={20} />
             <div>
               <h3 className="u-mb-2">Failed to Load Customers</h3>
@@ -293,7 +293,7 @@ const Customers: React.FC = () => {
     <div>
       {/* Page Header */}
       <div className="u-mb-8">
-        <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
+        <div className="u-flex u-justify-between u-align-items-start u-mb-4">
           <div>
             <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">
               Customer Management
@@ -303,21 +303,21 @@ const Customers: React.FC = () => {
               information
             </p>
           </div>
-          <div className="u-d-flex u-gap-3">
+          <div className="u-flex u-gap-3">
             <Button variant="outline" size="md" onClick={handleExport}>
               <Icon name="Download" size={16} />
-              <span className="u-d-none u-d-sm-inline">Export</span>
+              <span className="u-none u-sm-inline">Export</span>
             </Button>
             <Button variant="primary" size="md" onClick={handleCreateCustomer}>
               <Icon name="Plus" size={16} />
-              <span className="u-d-none u-d-sm-inline">Add Customer</span>
+              <span className="u-none u-sm-inline">Add Customer</span>
             </Button>
           </div>
         </div>
 
         {/* Quick Stats */}
-        <div className="u-d-flex u-gap-6 u-text-sm">
-          <div className="u-d-flex u-align-items-center u-gap-2">
+        <div className="u-flex u-gap-6 u-text-sm">
+          <div className="u-flex u-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-success u-rounded-circle"></div>
             <span className="u-text-secondary-emphasis">
               Total:{" "}
@@ -325,7 +325,7 @@ const Customers: React.FC = () => {
               customers
             </span>
           </div>
-          <div className="u-d-flex u-align-items-center u-gap-2">
+          <div className="u-flex u-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-primary u-rounded-circle"></div>
             <span className="u-text-secondary-emphasis">
               Active:{" "}
@@ -335,7 +335,7 @@ const Customers: React.FC = () => {
                 0}
             </span>
           </div>
-          <div className="u-d-flex u-align-items-center u-gap-2">
+          <div className="u-flex u-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-warning u-rounded-circle"></div>
             <span className="u-text-secondary-emphasis">
               Suspended:{" "}
@@ -348,13 +348,13 @@ const Customers: React.FC = () => {
 
       {/* Search and Filters */}
       <Card className="u-mb-8">
-        <div className="u-d-flex u-gap-4 u-align-items-center u-flex-wrap">
+        <div className="u-flex u-gap-4 u-items-center u-flex-wrap">
           <div className="u-flex-1 u-min-w-300">
             <div className="u-position-relative">
               <Icon
                 name="MagnifyingGlass"
                 size={16}
-                className="u-position-absolute u-left-3 u-top-50 u-transform-translate-y-neg-50 u-text-secondary-emphasis"
+                className="u-position-absolute u-left-3 u-top-50 u-transform-translate-y--50 u-text-secondary-emphasis"
               />
               <Input
                 type="text"
@@ -379,7 +379,7 @@ const Customers: React.FC = () => {
           />
           <Button variant="outline" size="md">
             <Icon name="Funnel" size={16} />
-            <span className="u-d-none u-d-md-inline">Advanced Filters</span>
+            <span className="u-none u-md-inline">Advanced Filters</span>
           </Button>
         </div>
       </Card>
@@ -398,7 +398,7 @@ const Customers: React.FC = () => {
                 customersData?.results?.map((customer) => ({
                   id: customer.id,
                   customer: (
-                    <div className="u-d-flex u-align-items-center">
+                    <div className="u-flex u-items-center">
                       <Avatar
                         size="sm"
                         initials={customer.name?.charAt(0) || "?"}
@@ -450,7 +450,7 @@ const Customers: React.FC = () => {
                   status: getStatusBadge(customer.status),
                   joined: new Date(customer.created_at).toLocaleDateString(),
                   actions: (
-                    <div className="u-d-flex u-gap-2">
+                    <div className="u-flex u-gap-2">
                       <Button
                         variant="outline"
                         size="sm"
@@ -647,7 +647,7 @@ const Customers: React.FC = () => {
               <p>{new Date(selectedCustomer.created_at).toLocaleString()}</p>
             </div>
 
-            <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+            <div className="u-flex u-justify-end u-gap-2 u-mt-6">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -685,7 +685,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="name"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Full Name *
               </label>
@@ -702,7 +702,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="email"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Email *
               </label>
@@ -722,7 +722,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="phone"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Phone *
               </label>
@@ -739,7 +739,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="company_name"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Company Name
               </label>
@@ -757,7 +757,7 @@ const Customers: React.FC = () => {
           <div className="u-mb-4">
             <label
               htmlFor="address"
-              className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              className="u-block u-fs-sm u-fw-medium u-mb-1"
             >
               Address *
             </label>
@@ -776,7 +776,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={4}>
               <label
                 htmlFor="city"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 City *
               </label>
@@ -793,7 +793,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={4}>
               <label
                 htmlFor="state"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 State *
               </label>
@@ -810,7 +810,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={4}>
               <label
                 htmlFor="postal_code"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Postal Code *
               </label>
@@ -830,7 +830,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="country"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Country *
               </label>
@@ -847,7 +847,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="tax_id"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Tax ID
               </label>
@@ -866,7 +866,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="status"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Status *
               </label>
@@ -894,7 +894,7 @@ const Customers: React.FC = () => {
           <div className="u-mb-4">
             <label
               htmlFor="notes"
-              className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              className="u-block u-fs-sm u-fw-medium u-mb-1"
             >
               Notes
             </label>
@@ -908,7 +908,7 @@ const Customers: React.FC = () => {
             />
           </div>
 
-          <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+          <div className="u-flex u-justify-end u-gap-2 u-mt-6">
             <Button
               type="button"
               variant="outline"

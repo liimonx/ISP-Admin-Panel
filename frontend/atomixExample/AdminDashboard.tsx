@@ -244,7 +244,7 @@ export const AdminDashboard: React.FC = () => {
       key: "actions",
       title: "Actions",
       render: (value: any, row: User) => (
-        <div className="u-d-flex u-gap-2">
+        <div className="u-flex u-gap-2">
           <Button
             size="sm"
             variant="primary"
@@ -381,14 +381,14 @@ export const AdminDashboard: React.FC = () => {
     <Grid>
       {/* Welcome Header */}
       <GridCol xs={12}>
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+        <div className="u-flex u-justify-between u-items-center u-mb-4">
           <div>
             <h1 className="u-fs-1 u-fw-bold u-mb-1">Welcome back, Admin!</h1>
             <p className="u-text-secondary-emphasis">
               Here's what's happening with your business today.
             </p>
           </div>
-          <div className="u-d-flex u-gap-2">
+          <div className="u-flex u-gap-2">
             <Button
               variant="secondary"
               onClick={handleRefreshData}
@@ -416,7 +416,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} sm={6} md={3}>
         <Card className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-start">
+            <div className="u-flex u-justify-between u-align-items-start">
               <div>
                 <div className="u-fs-1 u-fw-bold u-text-brand-emphasis u-mb-1">
                   {liveStats.totalUsers.toLocaleString()}
@@ -429,7 +429,7 @@ export const AdminDashboard: React.FC = () => {
                 <Icon name="Users" size="sm" className="u-text-light" />
               </div>
             </div>
-            <div className="u-d-flex u-align-items-center u-mt-2">
+            <div className="u-flex u-items-center u-mt-2">
               <Badge
                 variant="success"
                 size="sm"
@@ -446,7 +446,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} sm={6} md={3}>
         <Card className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-start">
+            <div className="u-flex u-justify-between u-align-items-start">
               <div>
                 <div className="u-fs-1 u-fw-bold u-text-success-emphasis u-mb-1">
                   {liveStats.activeUsers.toLocaleString()}
@@ -459,7 +459,7 @@ export const AdminDashboard: React.FC = () => {
                 <Icon name="TrendUp" size="sm" className="u-text-light" />
               </div>
             </div>
-            <div className="u-d-flex u-align-items-center u-mt-2">
+            <div className="u-flex u-items-center u-mt-2">
               <Badge variant="success" size="sm" label="+8%" />
               <span className="u-text-secondary-emphasis u-fs-6 u-ms-2">
                 vs last month
@@ -472,7 +472,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} sm={6} md={3}>
         <Card className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-start">
+            <div className="u-flex u-justify-between u-align-items-start">
               <div>
                 <div className="u-fs-1 u-fw-bold u-text-brand-emphasis u-mb-1">
                   ${liveStats.revenue.toLocaleString()}
@@ -489,7 +489,7 @@ export const AdminDashboard: React.FC = () => {
                 />
               </div>
             </div>
-            <div className="u-d-flex u-align-items-center u-mt-2">
+            <div className="u-flex u-items-center u-mt-2">
               <Badge variant="success" size="sm" label="+15%" />
               <span className="u-text-secondary-emphasis u-fs-6 u-ms-2">
                 vs last month
@@ -502,7 +502,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} sm={6} md={3}>
         <Card className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-start">
+            <div className="u-flex u-justify-between u-align-items-start">
               <div>
                 <div className="u-fs-1 u-fw-bold u-text-warning u-mb-1">
                   85%
@@ -526,7 +526,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} sm={6} md={3}>
         <Card className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center">
               <div>
                 <div className="u-fs-2 u-fw-bold u-text-info">
                   {liveStats.orders}
@@ -544,7 +544,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} sm={6} md={3}>
         <Card className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center">
               <div>
                 <div className="u-fs-2 u-fw-bold u-text-success-emphasis">
                   {liveStats.uptime.toFixed(1)}%
@@ -564,7 +564,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} sm={6} md={3}>
         <Card className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center">
               <div>
                 <div className="u-fs-2 u-fw-bold u-text-brand-emphasis">
                   {liveStats.rating.toFixed(1)}
@@ -582,7 +582,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} sm={6} md={3}>
         <Card className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center">
               <div>
                 <div className="u-fs-2 u-fw-bold u-text-error">
                   {liveStats.tickets}
@@ -600,14 +600,14 @@ export const AdminDashboard: React.FC = () => {
       {/* Main Dashboard Charts */}
       <GridCol xs={12} md={8}>
         <Card className="u-mb-3">
-          <div className="u-d-flex u-justify-content-between u-align-items-center u-p-3 u-border-b">
+          <div className="u-flex u-justify-between u-items-center u-p-3 u-border-b">
             <div>
               <h4 className="u-fw-medium u-mb-1">Traffic Overview</h4>
               <p className="u-text-secondary-emphasis u-fs-6 u-mb-0">
                 User visits and page views
               </p>
             </div>
-            <div className="u-d-flex u-gap-2">
+            <div className="u-flex u-gap-2">
               <Button
                 size="sm"
                 variant={selectedTimeRange === "7D" ? "primary" : "secondary"}
@@ -645,29 +645,29 @@ export const AdminDashboard: React.FC = () => {
           <div className="u-p-3">
             <DonutChart datasets={userDistributionDatasets} size="md" />
             <div className="u-mt-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-                <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
+                <div className="u-flex u-items-center">
                   <div className="u-w-3 u-h-3 u-bg-primary u-rounded u-me-2"></div>
                   <span className="u-fs-6">Admin</span>
                 </div>
                 <span className="u-fw-medium">15%</span>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-                <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
+                <div className="u-flex u-items-center">
                   <div className="u-w-3 u-h-3 u-bg-success u-rounded u-me-2"></div>
                   <span className="u-fs-6">Users</span>
                 </div>
                 <span className="u-fw-medium">65%</span>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
-                <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
+                <div className="u-flex u-items-center">
                   <div className="u-w-3 u-h-3 u-bg-info u-rounded u-me-2"></div>
                   <span className="u-fs-6">Editor</span>
                 </div>
                 <span className="u-fw-medium">15%</span>
               </div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
-                <div className="u-d-flex u-align-items-center">
+              <div className="u-flex u-justify-between u-items-center">
+                <div className="u-flex u-items-center">
                   <div className="u-w-3 u-h-3 u-bg-warning u-rounded u-me-2"></div>
                   <span className="u-fs-6">Manager</span>
                 </div>
@@ -691,7 +691,7 @@ export const AdminDashboard: React.FC = () => {
         <Card title="Monthly Goals" className="u-mb-3">
           <div className="u-p-3">
             <div className="u-mb-4">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span className="u-fw-medium">Sales Target</span>
                 <span className="u-fw-bold u-text-brand-emphasis">
                   $45K / $50K
@@ -704,7 +704,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="u-mb-4">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span className="u-fw-medium">User Acquisition</span>
                 <span className="u-fw-bold u-text-success-emphasis">
                   850 / 1000
@@ -717,7 +717,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="u-mb-4">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span className="u-fw-medium">Customer Satisfaction</span>
                 <span className="u-fw-bold u-text-warning">4.2 / 5.0</span>
               </div>
@@ -728,7 +728,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div>
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span className="u-fw-medium">Product Development</span>
                 <span className="u-fw-bold u-text-info">7 / 10</span>
               </div>
@@ -744,14 +744,14 @@ export const AdminDashboard: React.FC = () => {
       {/* Recent Activity Enhanced */}
       <GridCol xs={12} md={6}>
         <Card className="u-mb-3">
-          <div className="u-d-flex u-justify-content-between u-align-items-center u-p-3 u-border-b">
+          <div className="u-flex u-justify-between u-items-center u-p-3 u-border-b">
             <h4 className="u-fw-medium u-mb-0">Recent Activity</h4>
             <Button size="sm" variant="outline-primary">
               View All
             </Button>
           </div>
           <div className="u-p-3">
-            <div className="u-d-flex u-align-items-start u-mb-3">
+            <div className="u-flex u-align-items-start u-mb-3">
               <div className="u-bg-success u-rounded-circle u-p-2 u-me-3">
                 <Icon name="User" size="sm" className="u-text-light" />
               </div>
@@ -767,7 +767,7 @@ export const AdminDashboard: React.FC = () => {
               <Badge variant="success" size="sm" label="New" />
             </div>
 
-            <div className="u-d-flex u-align-items-start u-mb-3">
+            <div className="u-flex u-align-items-start u-mb-3">
               <div className="u-bg-primary u-rounded-circle u-p-2 u-me-3">
                 <Icon name="CreditCard" size="sm" className="u-text-light" />
               </div>
@@ -783,7 +783,7 @@ export const AdminDashboard: React.FC = () => {
               <Badge variant="primary" size="sm" label="$249" />
             </div>
 
-            <div className="u-d-flex u-align-items-start u-mb-3">
+            <div className="u-flex u-align-items-start u-mb-3">
               <div className="u-bg-info u-rounded-circle u-p-2 u-me-3">
                 <Icon name="Bell" size="sm" className="u-text-light" />
               </div>
@@ -799,7 +799,7 @@ export const AdminDashboard: React.FC = () => {
               <Badge variant="info" size="sm" label="Fixed" />
             </div>
 
-            <div className="u-d-flex u-align-items-start">
+            <div className="u-flex u-align-items-start">
               <div className="u-bg-warning u-rounded-circle u-p-2 u-me-3">
                 <Icon name="ShoppingCart" size="sm" className="u-text-light" />
               </div>
@@ -822,8 +822,8 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} md={6}>
         <Card title="Top Performing Features" className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3 u-pb-2 u-border-b">
-              <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center u-mb-3 u-pb-2 u-border-b">
+              <div className="u-flex u-items-center">
                 <Icon
                   name="ChartBar"
                   size="sm"
@@ -837,8 +837,8 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3 u-pb-2 u-border-b">
-              <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center u-mb-3 u-pb-2 u-border-b">
+              <div className="u-flex u-items-center">
                 <Icon
                   name="Users"
                   size="sm"
@@ -852,8 +852,8 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3 u-pb-2 u-border-b">
-              <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center u-mb-3 u-pb-2 u-border-b">
+              <div className="u-flex u-items-center">
                 <Icon
                   name="FileText"
                   size="sm"
@@ -867,8 +867,8 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3 u-pb-2 u-border-b">
-              <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center u-mb-3 u-pb-2 u-border-b">
+              <div className="u-flex u-items-center">
                 <Icon name="Gear" size="sm" className="u-me-2 u-text-warning" />
                 <span className="u-fw-medium">Settings Panel</span>
               </div>
@@ -878,8 +878,8 @@ export const AdminDashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
-              <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center">
+              <div className="u-flex u-items-center">
                 <Icon name="Shield" size="sm" className="u-me-2 u-text-error" />
                 <span className="u-fw-medium">Security Center</span>
               </div>
@@ -953,7 +953,7 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} md={4}>
         <Card title="Real-time Metrics" className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-flex-column u-gap-3">
+            <div className="u-flex u-flex-column u-gap-3">
               <div className="u-text-center">
                 <GaugeChart
                   value={liveStats.uptime}
@@ -980,29 +980,29 @@ export const AdminDashboard: React.FC = () => {
       <GridCol xs={12} md={4}>
         <Card title="Live Activity Feed" className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-flex-column u-gap-2">
-              <div className="u-d-flex u-align-items-center u-p-2 u-bg-brand-subtle u-rounded">
+            <div className="u-flex u-flex-column u-gap-2">
+              <div className="u-flex u-items-center u-p-2 u-bg-brand-subtle u-rounded">
                 <div className="u-bg-success u-rounded-circle u-w-2 u-h-2 u-me-2"></div>
                 <span className="u-fs-6">New user registered</span>
                 <span className="u-text-secondary-emphasis u-fs-6 u-ms-auto">
                   now
                 </span>
               </div>
-              <div className="u-d-flex u-align-items-center u-p-2 u-bg-brand-subtle u-rounded">
+              <div className="u-flex u-items-center u-p-2 u-bg-brand-subtle u-rounded">
                 <div className="u-bg-primary u-rounded-circle u-w-2 u-h-2 u-me-2"></div>
                 <span className="u-fs-6">Payment processed</span>
                 <span className="u-text-secondary-emphasis u-fs-6 u-ms-auto">
                   2m ago
                 </span>
               </div>
-              <div className="u-d-flex u-align-items-center u-p-2 u-bg-brand-subtle u-rounded">
+              <div className="u-flex u-items-center u-p-2 u-bg-brand-subtle u-rounded">
                 <div className="u-bg-warning u-rounded-circle u-w-2 u-h-2 u-me-2"></div>
                 <span className="u-fs-6">System alert</span>
                 <span className="u-text-secondary-emphasis u-fs-6 u-ms-auto">
                   5m ago
                 </span>
               </div>
-              <div className="u-d-flex u-align-items-center u-p-2 u-bg-brand-subtle u-rounded">
+              <div className="u-flex u-items-center u-p-2 u-bg-brand-subtle u-rounded">
                 <div className="u-bg-info u-rounded-circle u-w-2 u-h-2 u-me-2"></div>
                 <span className="u-fs-6">Data backup completed</span>
                 <span className="u-text-secondary-emphasis u-fs-6 u-ms-auto">
@@ -1022,7 +1022,7 @@ export const AdminDashboard: React.FC = () => {
               <GridCol xs={12} sm={6} md={2}>
                 <Button
                   variant="outline-primary"
-                  className="u-w-100 u-mb-2 u-d-flex u-flex-column u-align-items-center u-py-3"
+                  className="u-w-100 u-mb-2 u-flex u-flex-column u-items-center u-py-3"
                   onClick={() => handleQuickAction("add-user")}
                   disabled={quickActionLoading === "add-user"}
                 >
@@ -1043,7 +1043,7 @@ export const AdminDashboard: React.FC = () => {
               <GridCol xs={12} sm={6} md={2}>
                 <Button
                   variant="outline-success"
-                  className="u-w-100 u-mb-2 u-d-flex u-flex-column u-align-items-center u-py-3"
+                  className="u-w-100 u-mb-2 u-flex u-flex-column u-items-center u-py-3"
                   onClick={() => handleQuickAction("export-data")}
                   disabled={quickActionLoading === "export-data"}
                 >
@@ -1066,7 +1066,7 @@ export const AdminDashboard: React.FC = () => {
               <GridCol xs={12} sm={6} md={2}>
                 <Button
                   variant="outline-info"
-                  className="u-w-100 u-mb-2 u-d-flex u-flex-column u-align-items-center u-py-3"
+                  className="u-w-100 u-mb-2 u-flex u-flex-column u-items-center u-py-3"
                   onClick={() => handleQuickAction("generate-report")}
                   disabled={quickActionLoading === "generate-report"}
                 >
@@ -1089,7 +1089,7 @@ export const AdminDashboard: React.FC = () => {
               <GridCol xs={12} sm={6} md={2}>
                 <Button
                   variant="outline-warning"
-                  className="u-w-100 u-mb-2 u-d-flex u-flex-column u-align-items-center u-py-3"
+                  className="u-w-100 u-mb-2 u-flex u-flex-column u-items-center u-py-3"
                   onClick={() => handleQuickAction("send-alert")}
                   disabled={quickActionLoading === "send-alert"}
                 >
@@ -1110,7 +1110,7 @@ export const AdminDashboard: React.FC = () => {
               <GridCol xs={12} sm={6} md={2}>
                 <Button
                   variant="outline-error"
-                  className="u-w-100 u-mb-2 u-d-flex u-flex-column u-align-items-center u-py-3"
+                  className="u-w-100 u-mb-2 u-flex u-flex-column u-items-center u-py-3"
                   onClick={() => handleQuickAction("security-scan")}
                   disabled={quickActionLoading === "security-scan"}
                 >
@@ -1133,7 +1133,7 @@ export const AdminDashboard: React.FC = () => {
               <GridCol xs={12} sm={6} md={2}>
                 <Button
                   variant="outline-secondary"
-                  className="u-w-100 u-mb-2 u-d-flex u-flex-column u-align-items-center u-py-3"
+                  className="u-w-100 u-mb-2 u-flex u-flex-column u-items-center u-py-3"
                   onClick={() => setActiveView("settings")}
                 >
                   <Icon name="Gear" size="md" className="u-mb-2" />
@@ -1150,9 +1150,9 @@ export const AdminDashboard: React.FC = () => {
   const renderUsersView = () => (
     <>
       {/* Header Actions */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+      <div className="u-flex u-justify-between u-items-center u-mb-4">
         <h1 className="u-fs-1 u-fw-bold">Users</h1>
-        <div className="u-d-flex u-gap-2">
+        <div className="u-flex u-gap-2">
           <Button variant="secondary">
             <Icon name="Download" size="sm" className="u-me-1" />
             Export
@@ -1165,7 +1165,7 @@ export const AdminDashboard: React.FC = () => {
       </div>
 
       {/* Filters */}
-      <div className="u-d-flex u-gap-3 u-mb-4">
+      <div className="u-flex u-gap-3 u-mb-4">
         <Input
           placeholder="Search users..."
           className="u-flex-fill"
@@ -1216,21 +1216,21 @@ export const AdminDashboard: React.FC = () => {
         <Card title="Performance Metrics" className="u-mb-3">
           <div className="u-p-3">
             <div className="u-mb-3">
-              <div className="u-d-flex u-justify-content-between u-mb-1">
+              <div className="u-flex u-justify-between u-mb-1">
                 <span>CPU Usage</span>
                 <span>65%</span>
               </div>
               <Progress value={65} variant="primary" size="sm" />
             </div>
             <div className="u-mb-3">
-              <div className="u-d-flex u-justify-content-between u-mb-1">
+              <div className="u-flex u-justify-between u-mb-1">
                 <span>Memory Usage</span>
                 <span>78%</span>
               </div>
               <Progress value={78} variant="warning" size="sm" />
             </div>
             <div className="u-mb-3">
-              <div className="u-d-flex u-justify-content-between u-mb-1">
+              <div className="u-flex u-justify-between u-mb-1">
                 <span>Disk Usage</span>
                 <span>45%</span>
               </div>
@@ -1252,14 +1252,14 @@ export const AdminDashboard: React.FC = () => {
     <Grid>
       {/* Page Header */}
       <GridCol xs={12}>
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+        <div className="u-flex u-justify-between u-items-center u-mb-4">
           <div>
             <h1 className="u-fs-1 u-fw-bold u-mb-1">Reports</h1>
             <p className="u-text-secondary-emphasis">
               Generate and manage comprehensive business reports
             </p>
           </div>
-          <div className="u-d-flex u-gap-2">
+          <div className="u-flex u-gap-2">
             <Button variant="secondary">
               <Icon name="Calendar" size="sm" className="u-me-1" />
               Schedule Report
@@ -1354,7 +1354,7 @@ export const AdminDashboard: React.FC = () => {
               </GridCol>
             </Grid>
 
-            <div className="u-d-flex u-gap-2 u-mt-3">
+            <div className="u-flex u-gap-2 u-mt-3">
               <Button variant="primary">
                 <Icon name="FunnelSimple" size="sm" className="u-me-1" />
                 Apply Filters
@@ -1547,7 +1547,7 @@ export const AdminDashboard: React.FC = () => {
                 key: "actions",
                 title: "Actions",
                 render: (value: any, row: any) => (
-                  <div className="u-d-flex u-gap-1">
+                  <div className="u-flex u-gap-1">
                     {row.status === "Completed" && (
                       <>
                         <Button size="sm" variant="outline-primary">
@@ -1579,7 +1579,7 @@ export const AdminDashboard: React.FC = () => {
         <Card title="Report Statistics" className="u-mb-3">
           <div className="u-p-3">
             <div className="u-mb-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span className="u-fw-medium">Total Reports</span>
                 <span className="u-fw-bold u-text-brand-emphasis">247</span>
               </div>
@@ -1587,7 +1587,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span className="u-fw-medium">Completed</span>
                 <span className="u-fw-bold u-text-success-emphasis">198</span>
               </div>
@@ -1595,7 +1595,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span className="u-fw-medium">Pending</span>
                 <span className="u-fw-bold u-text-warning">35</span>
               </div>
@@ -1603,7 +1603,7 @@ export const AdminDashboard: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span className="u-fw-medium">Failed</span>
                 <span className="u-fw-bold u-text-error">14</span>
               </div>
@@ -1625,7 +1625,7 @@ export const AdminDashboard: React.FC = () => {
 
         <Card title="Scheduled Reports" className="u-mb-3">
           <div className="u-p-3">
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3">
+            <div className="u-flex u-justify-between u-items-center u-mb-3">
               <div>
                 <div className="u-fw-medium">Weekly User Report</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1635,7 +1635,7 @@ export const AdminDashboard: React.FC = () => {
               <Toggle />
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3">
+            <div className="u-flex u-justify-between u-items-center u-mb-3">
               <div>
                 <div className="u-fw-medium">Monthly Sales Report</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1645,7 +1645,7 @@ export const AdminDashboard: React.FC = () => {
               <Toggle />
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3">
+            <div className="u-flex u-justify-between u-items-center u-mb-3">
               <div>
                 <div className="u-fw-medium">Daily Security Audit</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1716,14 +1716,14 @@ export const AdminDashboard: React.FC = () => {
     <Grid>
       {/* Page Header */}
       <GridCol xs={12}>
-        <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-4">
+        <div className="u-flex u-justify-between u-items-center u-mb-4">
           <div>
             <h1 className="u-fs-1 u-fw-bold u-mb-1">Settings</h1>
             <p className="u-text-secondary-emphasis">
               Manage your application preferences and configuration
             </p>
           </div>
-          <div className="u-d-flex u-gap-2">
+          <div className="u-flex u-gap-2">
             <Button variant="secondary">
               <Icon name="ArrowCounterClockwise" size="sm" className="u-me-1" />
               Reset All
@@ -1785,7 +1785,7 @@ export const AdminDashboard: React.FC = () => {
               </FormGroup>
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+            <div className="u-flex u-justify-between u-items-center u-mb-2">
               <div>
                 <div className="u-fw-medium">Dark Mode</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1795,7 +1795,7 @@ export const AdminDashboard: React.FC = () => {
               <Toggle />
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center">
               <div>
                 <div className="u-fw-medium">Auto-save</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1848,7 +1848,7 @@ export const AdminDashboard: React.FC = () => {
               </FormGroup>
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+            <div className="u-flex u-justify-between u-items-center u-mb-2">
               <div>
                 <div className="u-fw-medium">Two-Factor Authentication</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1858,7 +1858,7 @@ export const AdminDashboard: React.FC = () => {
               <Toggle />
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+            <div className="u-flex u-justify-between u-items-center u-mb-2">
               <div>
                 <div className="u-fw-medium">Login Notifications</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1868,7 +1868,7 @@ export const AdminDashboard: React.FC = () => {
               <Toggle />
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center">
+            <div className="u-flex u-justify-between u-items-center">
               <div>
                 <div className="u-fw-medium">IP Restriction</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1888,17 +1888,17 @@ export const AdminDashboard: React.FC = () => {
             <div className="u-mb-3">
               <h6 className="u-fw-medium u-mb-2">Email Notifications</h6>
 
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span>System alerts</span>
                 <Toggle />
               </div>
 
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span>User registrations</span>
                 <Toggle />
               </div>
 
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3">
+              <div className="u-flex u-justify-between u-items-center u-mb-3">
                 <span>Weekly reports</span>
                 <Toggle />
               </div>
@@ -1907,17 +1907,17 @@ export const AdminDashboard: React.FC = () => {
             <div className="u-mb-3">
               <h6 className="u-fw-medium u-mb-2">Push Notifications</h6>
 
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span>Browser notifications</span>
                 <Toggle />
               </div>
 
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <span>Mobile notifications</span>
                 <Toggle />
               </div>
 
-              <div className="u-d-flex u-justify-content-between u-align-items-center">
+              <div className="u-flex u-justify-between u-items-center">
                 <span>Desktop alerts</span>
                 <Toggle />
               </div>
@@ -1948,7 +1948,7 @@ export const AdminDashboard: React.FC = () => {
               </FormGroup>
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+            <div className="u-flex u-justify-between u-items-center u-mb-2">
               <div>
                 <div className="u-fw-medium">Analytics Tracking</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1958,7 +1958,7 @@ export const AdminDashboard: React.FC = () => {
               <Toggle />
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+            <div className="u-flex u-justify-between u-items-center u-mb-2">
               <div>
                 <div className="u-fw-medium">Data Export</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1968,7 +1968,7 @@ export const AdminDashboard: React.FC = () => {
               <Toggle />
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-3">
+            <div className="u-flex u-justify-between u-items-center u-mb-3">
               <div>
                 <div className="u-fw-medium">GDPR Compliance</div>
                 <div className="u-text-secondary-emphasis u-fs-6">
@@ -1978,7 +1978,7 @@ export const AdminDashboard: React.FC = () => {
               <Toggle />
             </div>
 
-            <div className="u-d-flex u-gap-2">
+            <div className="u-flex u-gap-2">
               <Button variant="outline-error" size="sm" className="u-flex-fill">
                 <Icon name="Download" size="sm" className="u-me-1" />
                 Export Data
@@ -2034,22 +2034,22 @@ export const AdminDashboard: React.FC = () => {
                 <div className="u-mb-3">
                   <h6 className="u-fw-medium u-mb-2">API Features</h6>
 
-                  <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+                  <div className="u-flex u-justify-between u-items-center u-mb-2">
                     <span>CORS Enabled</span>
                     <Toggle />
                   </div>
 
-                  <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+                  <div className="u-flex u-justify-between u-items-center u-mb-2">
                     <span>API Key Authentication</span>
                     <Toggle />
                   </div>
 
-                  <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+                  <div className="u-flex u-justify-between u-items-center u-mb-2">
                     <span>Request Logging</span>
                     <Toggle />
                   </div>
 
-                  <div className="u-d-flex u-justify-content-between u-align-items-center">
+                  <div className="u-flex u-justify-between u-items-center">
                     <span>Rate Limiting</span>
                     <Toggle />
                   </div>
@@ -2058,14 +2058,14 @@ export const AdminDashboard: React.FC = () => {
             </Grid>
 
             <div className="u-border-top u-pt-3 u-mt-3">
-              <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-2">
+              <div className="u-flex u-justify-between u-items-center u-mb-2">
                 <div>
                   <div className="u-fw-medium">Current API Key</div>
                   <div className="u-text-secondary-emphasis u-fs-6">
                     sk_live_****************************
                   </div>
                 </div>
-                <div className="u-d-flex u-gap-2">
+                <div className="u-flex u-gap-2">
                   <Button variant="secondary" size="sm">
                     <Icon name="Eye" size="sm" className="u-me-1" />
                     Reveal
@@ -2101,7 +2101,7 @@ export const AdminDashboard: React.FC = () => {
   };
 
   return (
-    <div className="o-container-fluid">
+    <div className="u-container-fluid u-px-4">
       {/* Sidebar Navigation */}
       <Grid>
         <GridCol xs={12} md={3}>
@@ -2178,8 +2178,8 @@ export const AdminDashboard: React.FC = () => {
         <GridCol xs={12} md={9}>
           {/* Top Navigation */}
           <Navbar className="u-border-b">
-            <Nav className="u-justify-content-between u-w-100">
-              <div className="u-d-flex u-align-items-center">
+            <Nav className="u-justify-between u-w-100">
+              <div className="u-flex u-items-center">
                 <Breadcrumb
                   items={[
                     { label: "Admin", href: "#" },
@@ -2192,7 +2192,7 @@ export const AdminDashboard: React.FC = () => {
                   ]}
                 />
               </div>
-              <div className="u-d-flex u-align-items-center u-gap-3">
+              <div className="u-flex u-items-center u-gap-3">
                 <Button
                   variant="ghost"
                   size="sm"
@@ -2236,7 +2236,7 @@ export const AdminDashboard: React.FC = () => {
         title="Add New User"
         size="md"
         footer={
-          <div className="u-d-flex u-gap-2 u-justify-content-end">
+          <div className="u-flex u-gap-2 u-justify-end">
             <Button
               variant="secondary"
               onClick={() => setIsAddUserModalOpen(false)}
@@ -2305,7 +2305,7 @@ export const AdminDashboard: React.FC = () => {
         title="Edit User"
         size="md"
         footer={
-          <div className="u-d-flex u-gap-2 u-justify-content-end">
+          <div className="u-flex u-gap-2 u-justify-end">
             <Button
               variant="secondary"
               onClick={() => setIsEditUserModalOpen(false)}

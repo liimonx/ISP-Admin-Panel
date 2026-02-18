@@ -69,40 +69,40 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
   const canPay = isPending || isOverdue;
 
   return (
-    <Card className="u-h-100">
-      <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-4">
-        <div className="u-flex-fill">
-          <h4 className="u-mb-1 u-fs-lg u-fw-semibold">{invoice.invoice_number}</h4>
-          <p className="u-fs-sm u-text-secondary-emphasis u-mb-2">
+    <Card className="u-h-full">
+      <div className="u-flex u-justify-between u-items-start u-mb-4">
+        <div className="u-flex-1">
+          <h4 className="u-mb-1 u-text-lg u-font-semibold">{invoice.invoice_number}</h4>
+          <p className="u-text-sm u-text-secondary u-mb-2">
             {invoice.invoice_type} • Due: {new Date(invoice.due_date).toLocaleDateString()}
           </p>
           {getStatusBadge(invoice.status)}
         </div>
         <div className="u-text-right">
-          <div className="u-fs-xl u-fw-bold u-text-primary">
+          <div className="u-text-xl u-font-bold u-text-primary">
             {formatCurrency(invoice.total_amount)}
           </div>
           {toNumber(invoice.paid_amount) > 0 && (
-            <div className="u-fs-sm u-text-success">
+            <div className="u-text-sm u-text-success">
               {formatCurrency(invoice.paid_amount)} paid
             </div>
           )}
         </div>
       </div>
 
-      <div className="u-d-flex u-align-items-center u-gap-3 u-mb-4">
+      <div className="u-flex u-items-center u-gap-3 u-mb-4">
         <Avatar
           initials={invoice.customer?.name?.charAt(0) || '?'}
           size="md"
         />
-        <div className="u-flex-fill">
-          <div className="u-fw-medium u-fs-sm">
+        <div className="u-flex-1">
+          <div className="u-font-medium u-text-sm">
             {invoice.customer?.name || 'Unknown Customer'}
           </div>
-          <div className="u-fs-xs u-text-secondary-emphasis">
+          <div className="u-text-xs u-text-secondary">
             {invoice.customer?.email || 'No email'}
           </div>
-          <div className="u-fs-xs u-text-secondary-emphasis">
+          <div className="u-text-xs u-text-secondary">
             {invoice.customer?.phone || 'No phone'}
           </div>
         </div>
@@ -110,9 +110,9 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
 
       {!progress.isFullyPaid && (
         <div className="u-mb-4">
-          <div className="u-d-flex u-justify-content-between u-mb-2">
-            <span className="u-fs-sm u-fw-medium">Payment Progress</span>
-            <span className="u-fs-sm u-fw-medium">
+          <div className="u-flex u-justify-between u-mb-2">
+            <span className="u-text-sm u-font-medium">Payment Progress</span>
+            <span className="u-text-sm u-font-medium">
               {progress.percentage}%
             </span>
           </div>
@@ -121,17 +121,17 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
             variant={isOverdue ? 'error' : 'primary'}
             className="u-mb-2"
           />
-          <div className="u-fs-xs u-text-secondary-emphasis">
+          <div className="u-text-xs u-text-secondary">
             {formatCurrency(progress.remaining)} remaining
           </div>
         </div>
       )}
 
-      <div className="u-d-flex u-gap-2 u-mt-auto">
+      <div className="u-flex u-gap-2 u-mt-auto">
         <Button 
           variant="outline" 
           size="sm" 
-          className="u-flex-fill"
+          className="u-flex-1"
           onClick={() => onView(invoice)}
         >
           <Icon name="Eye" size={16} />
@@ -142,7 +142,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           <Button
             variant="primary"
             size="sm"
-            className="u-flex-fill"
+            className="u-flex-1"
             onClick={() => onPay(invoice)}
           >
             <Icon name="CurrencyDollar" size={16} />

@@ -70,7 +70,7 @@ export const Toast: React.FC<ToastProps> = ({
 
   return (
     <div
-      className={`u-d-flex u-align-items-center u-gap-3 u-p-3 u-border u-rounded u-shadow-sm ${className}`}
+      className={`u-flex u-items-center u-gap-3 u-p-3 u-border u-rounded u-shadow-sm ${className}`}
       style={{
         backgroundColor: variantStyles.backgroundColor,
         borderColor: variantStyles.borderColor,

@@ -362,22 +362,22 @@ const Billing: React.FC = () => {
   return (
     <div>
       {/* Page Header with Enhanced Stats */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+      <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-mb-2">Billing & Payments</h1>
           <p className="u-text-secondary">
             Manage invoices, payments, and financial records
           </p>
           {invoiceStats && (
-            <div className="u-d-flex u-gap-4 u-mt-3">
-              <div className="u-d-flex u-align-items-center u-gap-1">
+            <div className="u-flex u-gap-4 u-mt-3">
+              <div className="u-flex u-items-center u-gap-1">
                 <Icon name="TrendUp" size={14} className="u-text-success" />
                 <span className="u-fs-sm u-text-success">
                   {formatCurrency(invoiceStats.total_revenue || 0)} total
                   revenue
                 </span>
               </div>
-              <div className="u-d-flex u-align-items-center u-gap-1">
+              <div className="u-flex u-items-center u-gap-1">
                 <Icon name="Clock" size={14} className="u-text-warning" />
                 <span className="u-fs-sm u-text-warning">
                   {calculatedStats.outstandingAmount > 0
@@ -388,7 +388,7 @@ const Billing: React.FC = () => {
             </div>
           )}
         </div>
-        <div className="u-d-flex u-gap-2">
+        <div className="u-flex u-gap-2">
           <Button
             variant="outline"
             size="md"
@@ -406,7 +406,7 @@ const Billing: React.FC = () => {
 
       {/* Main Content with Tabs */}
       <div className="u-mb-6">
-        <div className="u-d-flex u-gap-4 u-border-bottom u-pb-3">
+        <div className="u-flex u-gap-4 u-border-bottom u-pb-3">
           <Button
             variant={activeTab === "overview" ? "primary" : "ghost"}
             size="md"
@@ -522,7 +522,7 @@ const Billing: React.FC = () => {
           {/* Quick Actions */}
           <Card className="u-mb-6">
             <h3 className="u-mb-4">Quick Actions</h3>
-            <div className="u-d-flex u-gap-4 u-flex-wrap">
+            <div className="u-flex u-gap-4 u-flex-wrap">
               <Button
                 variant="primary"
                 onClick={() => setIsGenerateInvoiceModalOpen(true)}
@@ -564,21 +564,21 @@ const Billing: React.FC = () => {
               <Card>
                 <h3 className="u-mb-4">Recent Invoices</h3>
                 {invoicesLoading ? (
-                  <div className="u-d-flex u-justify-content-center u-py-4">
+                  <div className="u-flex u-justify-center u-py-4">
                     <Spinner />
                   </div>
                 ) : invoicesData?.results?.length ? (
-                  <div className="u-d-flex u-flex-wrap u-gap-3">
+                  <div className="u-flex u-flex-wrap u-gap-3">
                     {invoicesData.results?.slice(0, 5).map((invoice) => (
                       <div
                         key={invoice.id}
-                        className={`c-btn c-btn--outline-${
+                        className={`u-flex u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-light u-border-${
                           invoice.status === "paid"
                             ? "success"
                             : invoice.status === "overdue"
                               ? "error"
                               : "warning"
-                        } u-justify-content-between u-align-items-start u-flex-1 u-max-w-100`}
+                        } u-justify-between u-align-items-start u-flex-1 u-max-w-100`}
                         onClick={() => handleViewInvoice(invoice)}
                       >
                         <div>
@@ -619,7 +619,7 @@ const Billing: React.FC = () => {
               <Card>
                 <h3 className="u-mb-4">Recent Payments</h3>
                 {paymentsLoading ? (
-                  <div className="u-d-flex u-justify-content-center u-py-4">
+                  <div className="u-flex u-justify-center u-py-4">
                     <Spinner />
                   </div>
                 ) : paymentsData?.results?.length ? (
@@ -627,7 +627,7 @@ const Billing: React.FC = () => {
                     {paymentsData.results?.slice(0, 5).map((paymentRecord) => (
                       <div
                         key={paymentRecord.id}
-                        className="u-d-flex u-justify-content-between u-align-items-center u-mb-2 u-p-3 u-border u-rounded u-cursor-pointer u-bg-brand-subtle"
+                        className="u-flex u-justify-between u-items-center u-mb-2 u-p-3 u-border u-rounded u-cursor-pointer u-bg-brand-subtle"
                         onClick={() => handleViewPayment(paymentRecord)}
                       >
                         <div>
@@ -670,7 +670,7 @@ const Billing: React.FC = () => {
       {activeTab === "invoices" && (
         <div>
           <Card className="u-mb-6">
-            <div className="u-d-flex u-gap-4 u-align-items-center u-mb-4">
+            <div className="u-flex u-gap-4 u-items-center u-mb-4">
               <div className="u-flex-fill">
                 <Input
                   type="text"
@@ -709,7 +709,7 @@ const Billing: React.FC = () => {
 
             {/* Invoice Summary Stats */}
             {invoicesData?.results && (
-              <div className="u-d-flex u-gap-4 u-mb-4 u-p-3 u-bg-subtle u-rounded">
+              <div className="u-flex u-gap-4 u-mb-4 u-p-3 u-bg-subtle u-rounded">
                 <div className="u-text-center">
                   <div className="u-fs-lg u-fw-bold">
                     {invoicesData.count || 0}
@@ -748,7 +748,7 @@ const Billing: React.FC = () => {
           </Card>
 
           {invoicesLoading ? (
-            <div className="u-d-flex u-justify-content-center u-align-items-center u-py-8">
+            <div className="u-flex u-justify-center u-items-center u-py-8">
               <div className="u-text-center">
                 <Spinner size="lg" />
                 <p>Loading invoices...</p>
@@ -797,7 +797,7 @@ const Billing: React.FC = () => {
 
           {/* Pagination */}
           {invoicesData?.count && invoicesData.count > itemsPerPage && (
-            <div className="u-d-flex u-justify-content-center u-gap-2 u-mt-6">
+            <div className="u-flex u-justify-center u-gap-2 u-mt-6">
               <Button
                 variant="outline"
                 size="sm"
@@ -807,7 +807,7 @@ const Billing: React.FC = () => {
                 <Icon name="CaretLeft" size={16} />
                 Previous
               </Button>
-              <span className="u-d-flex u-align-items-center u-px-3">
+              <span className="u-flex u-items-center u-px-3">
                 Page {currentPage} of{" "}
                 {Math.ceil((invoicesData?.count || 0) / itemsPerPage)}
               </span>
@@ -832,7 +832,7 @@ const Billing: React.FC = () => {
       {activeTab === "payments" && (
         <div>
           <Card className="u-mb-6">
-            <div className="u-d-flex u-gap-4 u-align-items-center u-mb-4">
+            <div className="u-flex u-gap-4 u-items-center u-mb-4">
               <div className="u-flex-fill">
                 <Input
                   type="text"
@@ -860,7 +860,7 @@ const Billing: React.FC = () => {
             {paymentsData?.results && (
               <div className="u-mb-4">
                 <h4 className="u-mb-3">Payment Methods Used</h4>
-                <div className="u-d-flex u-gap-3 u-flex-wrap">
+                <div className="u-flex u-gap-3 u-flex-wrap">
                   {["cash", "bank_transfer", "bkash", "nagad", "rocket"].map(
                     (method) => {
                       const count = paymentsData.results.filter(
@@ -897,7 +897,7 @@ const Billing: React.FC = () => {
           </Card>
 
           {paymentsLoading ? (
-            <div className="u-d-flex u-justify-content-center u-align-items-center u-py-8">
+            <div className="u-flex u-justify-center u-items-center u-py-8">
               <div className="u-text-center">
                 <Spinner size="lg" />
                 <p>Loading payments...</p>
@@ -936,7 +936,7 @@ const Billing: React.FC = () => {
 
           {/* Pagination */}
           {paymentsData?.count && paymentsData.count > itemsPerPage && (
-            <div className="u-d-flex u-justify-content-center u-gap-2 u-mt-6">
+            <div className="u-flex u-justify-center u-gap-2 u-mt-6">
               <Button
                 variant="outline"
                 size="sm"
@@ -946,7 +946,7 @@ const Billing: React.FC = () => {
                 <Icon name="CaretLeft" size={16} />
                 Previous
               </Button>
-              <span className="u-d-flex u-align-items-center u-px-3">
+              <span className="u-flex u-items-center u-px-3">
                 Page {currentPage} of{" "}
                 {Math.ceil((paymentsData?.count || 0) / itemsPerPage)}
               </span>
@@ -1011,7 +1011,7 @@ const Billing: React.FC = () => {
         {selectedInvoice && (
           <div>
             <div className="u-mb-4">
-              <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-3">
+              <div className="u-flex u-justify-between u-align-items-start u-mb-3">
                 <div>
                   <h2 className="u-mb-1">{selectedInvoice.invoice_number}</h2>
                   <p className=" u-mb-2">{selectedInvoice.invoice_type}</p>
@@ -1092,27 +1092,27 @@ const Billing: React.FC = () => {
             <div className="u-mb-4">
               <h4 className="u-mb-3">Invoice Summary</h4>
               <div className="u-space-y-2">
-                <div className="u-d-flex u-justify-content-between">
+                <div className="u-flex u-justify-between">
                   <span>Subtotal:</span>
                   <span>{formatCurrency(selectedInvoice.subtotal || 0)}</span>
                 </div>
-                <div className="u-d-flex u-justify-content-between">
+                <div className="u-flex u-justify-between">
                   <span>Tax:</span>
                   <span>{formatCurrency(selectedInvoice.tax_amount || 0)}</span>
                 </div>
-                <div className="u-d-flex u-justify-content-between">
+                <div className="u-flex u-justify-between">
                   <span>Discount:</span>
                   <span>
                     -{formatCurrency(selectedInvoice.discount_amount || 0)}
                   </span>
                 </div>
-                <div className="u-d-flex u-justify-content-between u-fw-bold u-border-top u-pt-2">
+                <div className="u-flex u-justify-between u-fw-bold u-border-top u-pt-2">
                   <span>Total:</span>
                   <span>
                     {formatCurrency(selectedInvoice.total_amount || 0)}
                   </span>
                 </div>
-                <div className="u-d-flex u-justify-content-between u-text-success">
+                <div className="u-flex u-justify-between u-text-success">
                   <span>Paid:</span>
                   <span>
                     {formatCurrency(selectedInvoice.paid_amount || 0)}
@@ -1120,7 +1120,7 @@ const Billing: React.FC = () => {
                 </div>
                 {toNumber(selectedInvoice.paid_amount || 0) <
                   toNumber(selectedInvoice.total_amount || 0) && (
-                  <div className="u-d-flex u-justify-content-between u-text-error">
+                  <div className="u-flex u-justify-between u-text-error">
                     <span>Remaining:</span>
                     <span>
                       {formatCurrency(
@@ -1140,7 +1140,7 @@ const Billing: React.FC = () => {
               </div>
             )}
 
-            <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+            <div className="u-flex u-justify-end u-gap-2 u-mt-6">
               {selectedInvoice.status !== "paid" && (
                 <Button
                   variant="primary"
@@ -1194,7 +1194,7 @@ const Billing: React.FC = () => {
         {selectedPayment && (
           <div>
             <div className="u-mb-4">
-              <div className="u-d-flex u-justify-content-between u-align-items-start u-mb-3">
+              <div className="u-flex u-justify-between u-align-items-start u-mb-3">
                 <div>
                   <h2 className="u-mb-1">
                     {selectedPayment.payment_number || "N/A"}
@@ -1293,7 +1293,7 @@ const Billing: React.FC = () => {
               </div>
             )}
 
-            <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+            <div className="u-flex u-justify-end u-gap-2 u-mt-6">
               <Button
                 variant="outline"
                 onClick={() =>

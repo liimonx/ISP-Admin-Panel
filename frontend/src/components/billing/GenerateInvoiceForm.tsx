@@ -189,7 +189,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
         <div className="u-mb-4">
           <label
             htmlFor="customer_id"
-            className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+            className="u-block u-fs-sm u-fw-medium u-mb-1"
           >
             Customer *
           </label>
@@ -227,7 +227,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
         <div className="u-mb-4">
           <label
             htmlFor="subscription_id"
-            className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+            className="u-block u-fs-sm u-fw-medium u-mb-1"
           >
             Subscription (Optional)
           </label>
@@ -257,7 +257,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
         <div className="u-mb-4">
           <label
             htmlFor="invoice_type"
-            className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+            className="u-block u-fs-sm u-fw-medium u-mb-1"
           >
             Invoice Type *
           </label>
@@ -282,11 +282,11 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
           )}
         </div>
 
-        <div className="u-d-flex u-gap-4 u-mb-4">
+        <div className="u-flex u-gap-4 u-mb-4">
           <div className="u-flex-fill">
             <label
               htmlFor="billing_period_start"
-              className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              className="u-block u-fs-sm u-fw-medium u-mb-1"
             >
               Billing Period Start *
             </label>
@@ -314,7 +314,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
           <div className="u-flex-fill">
             <label
               htmlFor="billing_period_end"
-              className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+              className="u-block u-fs-sm u-fw-medium u-mb-1"
             >
               Billing Period End *
             </label>
@@ -347,7 +347,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
             <div>
               <label
                 htmlFor="subtotal"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Subtotal *
               </label>
@@ -374,7 +374,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
             <div>
               <label
                 htmlFor="tax_amount"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Tax Amount
               </label>
@@ -394,7 +394,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
             <div>
               <label
                 htmlFor="discount_amount"
-                className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-fw-medium u-mb-1"
               >
                 Discount Amount
               </label>
@@ -411,7 +411,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
               />
             </div>
 
-            <div className="u-d-flex u-justify-content-between u-fw-bold u-border-top u-pt-2">
+            <div className="u-flex u-justify-between u-fw-bold u-border-top u-pt-2">
               <span>Total:</span>
               <span>{formatCurrency(calculateTotal())}</span>
             </div>
@@ -421,7 +421,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
         <div className="u-mb-4">
           <label
             htmlFor="notes"
-            className="u-d-block u-fs-sm u-fw-medium u-mb-1"
+            className="u-block u-fs-sm u-fw-medium u-mb-1"
           >
             Notes
           </label>
@@ -436,7 +436,7 @@ const GenerateInvoiceForm: React.FC<GenerateInvoiceFormProps> = ({
           />
         </div>
 
-        <div className="u-d-flex u-justify-content-end u-gap-2 u-mt-6">
+        <div className="u-flex u-justify-end u-gap-2 u-mt-6">
           <Button
             type="button"
             variant="outline"

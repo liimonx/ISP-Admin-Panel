@@ -145,7 +145,7 @@ const Login: React.FC = () => {
   }
 
   return (
-    <Container className="u-h-100vh u-d-flex u-align-items-center u-justify-content-center">
+    <Container className="u-min-vh-100 u-flex u-items-center u-justify-center">
       <Grid>
         <GridCol xs={12} sm={10} md={8} lg={6} xl={5}>
           <Card className="u-p-6">
@@ -167,7 +167,7 @@ const Login: React.FC = () => {
               )}
 
               <div className="u-mb-4">
-                <label htmlFor="username" className="u-d-block u-mb-2 u-fw-medium">Username</label>
+                <label htmlFor="username" className="u-block u-mb-2 u-fw-medium">Username</label>
                 <Input
                   id="username"
                   type="text"
@@ -185,7 +185,7 @@ const Login: React.FC = () => {
               </div>
 
               <div className="u-mb-4">
-                <label htmlFor="password" className="u-d-block u-mb-2 u-fw-medium">Password</label>
+                <label htmlFor="password" className="u-block u-mb-2 u-fw-medium">Password</label>
                 <div className="u-relative">
                   <Input
                     id="password"
@@ -214,16 +214,16 @@ const Login: React.FC = () => {
                 )}
               </div>
 
-              <div className="u-d-flex u-align-items-center u-justify-content-between u-mb-4">
-                <div className="u-form-check">
+              <div className="u-flex u-items-center u-justify-between u-mb-4">
+                <div className="u-flex u-items-center u-gap-2">
                   <input
                     type="checkbox"
                     id="rememberMe"
-                    className="u-form-check-input"
+                    className="u-w-4 u-h-4 u-m-0 u-bg-white u-border u-border-solid u-border-gray-300 u-rounded u-text-primary u-shadow-sm focus:u-outline-none focus:u-border-blue-500"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />
-                  <label htmlFor="rememberMe" className="u-form-check-label u-text-sm">
+                  <label htmlFor="rememberMe" className="u-text-sm u-text-foreground">
                     Remember me
                   </label>
                 </div>
@@ -260,7 +260,7 @@ const Login: React.FC = () => {
             <div className="u-mt-6 u-pt-6 u-border-top">
               <h3 className="u-mb-3">Demo Credentials:</h3>
               <div className="u-space-y-3">
-                <div className="u-d-flex u-flex-wrap u-gap-2">
+                <div className="u-flex u-flex-wrap u-gap-2">
                   <Button 
                     size="sm" 
                     variant="outline-primary"

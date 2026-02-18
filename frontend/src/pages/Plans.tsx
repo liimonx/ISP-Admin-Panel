@@ -353,9 +353,9 @@ const Plans: React.FC = () => {
   return (
     <div className="u-p-6">
       {/* Header */}
-      <div className="u-d-flex u-justify-content-between u-align-items-center u-mb-6">
+      <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
-          <h1 className="u-h2 u-mb-2">Plans Management</h1>
+          <h1 className="u-text-2xl u-mb-2">Plans Management</h1>
           <p className="u-text-secondary">
             Manage internet service plans and pricing
           </p>
@@ -365,7 +365,7 @@ const Plans: React.FC = () => {
           onClick={() => setIsCreateModalOpen(true)}
           disabled={isLoading}
         >
-          <Icon name="Plus" size={16} className="u-me-2" />
+          <Icon name="Plus" size={16} className="u-mr-2" />
           Add Plan
         </Button>
       </div>
@@ -375,12 +375,12 @@ const Plans: React.FC = () => {
         <Grid className="u-mb-6">
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
-                <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
+              <div className="u-flex u-items-center">
+                <div className="u-bg-primary-subtle u-p-3 u-rounded u-mr-3">
                   <Icon name="Package" size={24} className="u-text-primary" />
                 </div>
                 <div>
-                  <h3 className="u-h4 u-mb-1">{planStats.total_plans || 0}</h3>
+                  <h3 className="u-text-lg u-mb-1">{planStats.total_plans || 0}</h3>
                   <p className="u-text-secondary u-mb-0">Total Plans</p>
                 </div>
               </div>
@@ -388,8 +388,8 @@ const Plans: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
-                <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
+              <div className="u-flex u-items-center">
+                <div className="u-bg-success-subtle u-p-3 u-rounded u-mr-3">
                   <Icon
                     name="CheckCircle"
                     size={24}
@@ -397,7 +397,7 @@ const Plans: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="u-h4 u-mb-1">{planStats.active_plans || 0}</h3>
+                  <h3 className="u-text-lg u-mb-1">{planStats.active_plans || 0}</h3>
                   <p className="u-text-secondary u-mb-0">Active Plans</p>
                 </div>
               </div>
@@ -405,12 +405,12 @@ const Plans: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
-                <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
+              <div className="u-flex u-items-center">
+                <div className="u-bg-warning-subtle u-p-3 u-rounded u-mr-3">
                   <Icon name="Star" size={24} className="u-text-warning" />
                 </div>
                 <div>
-                  <h3 className="u-h4 u-mb-1">
+                  <h3 className="u-text-lg u-mb-1">
                     {planStats.featured_plans || 0}
                   </h3>
                   <p className="u-text-secondary u-mb-0">Featured Plans</p>
@@ -420,12 +420,12 @@ const Plans: React.FC = () => {
           </GridCol>
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
-              <div className="u-d-flex u-align-items-center">
-                <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
+              <div className="u-flex u-items-center">
+                <div className="u-bg-info-subtle u-p-3 u-rounded u-mr-3">
                   <Icon name="TrendUp" size={24} className="u-text-info" />
                 </div>
                 <div>
-                  <h3 className="u-h4 u-mb-1">
+                  <h3 className="u-text-lg u-mb-1">
                     {planStats.popular_plans || 0}
                   </h3>
                   <p className="u-text-secondary u-mb-0">Popular Plans</p>
@@ -496,7 +496,7 @@ const Plans: React.FC = () => {
                             : plan.description}
                         </div>
                       )}
-                      <div className="u-d-flex u-gap-2 u-mt-1">
+                      <div className="u-flex u-gap-2 u-mt-1">
                         {plan.is_featured && (
                           <Badge variant="warning" size="sm" label="Featured" />
                         )}
@@ -527,7 +527,7 @@ const Plans: React.FC = () => {
                     />
                   ),
                   actions: (
-                    <div className="u-d-flex u-gap-2">
+                    <div className="u-flex u-gap-2">
                       <Button
                         variant="outline"
                         size="sm"
@@ -611,7 +611,7 @@ const Plans: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Plan Name *
               </label>
               <Input
@@ -627,7 +627,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Billing Cycle *
               </label>
               <Select
@@ -642,7 +642,7 @@ const Plans: React.FC = () => {
           </Grid>
 
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Description</label>
+            <label className="u-block u-mb-2 u-fw-medium">Description</label>
             <Textarea
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
@@ -653,7 +653,7 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={4}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Price (৳) *
               </label>
               <Input
@@ -672,7 +672,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Download Speed *
               </label>
               <Input
@@ -692,7 +692,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Upload Speed *
               </label>
               <Input
@@ -712,7 +712,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Speed Unit</label>
+              <label className="u-block u-mb-2 u-fw-medium">Speed Unit</label>
               <Select
                 value={formData.speed_unit}
                 onChange={(e) =>
@@ -726,7 +726,7 @@ const Plans: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Setup Fee (৳) *
               </label>
               <Input
@@ -748,7 +748,7 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Data Quota</label>
+              <label className="u-block u-mb-2 u-fw-medium">Data Quota</label>
               <Input
                 type="number"
                 value={formData.data_quota}
@@ -766,7 +766,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Quota Unit</label>
+              <label className="u-block u-mb-2 u-fw-medium">Quota Unit</label>
               <Select
                 value={formData.quota_unit}
                 onChange={(e) =>
@@ -783,7 +783,7 @@ const Plans: React.FC = () => {
           </Grid>
 
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Features</label>
+            <label className="u-block u-mb-2 u-fw-medium">Features</label>
             <Textarea
               value={formData.features}
               onChange={(e) => handleInputChange("features", e.target.value)}
@@ -792,8 +792,8 @@ const Plans: React.FC = () => {
             />
           </div>
 
-          <div className="u-d-flex u-flex-wrap u-gap-4">
-            <div className="u-d-flex u-align-items-center">
+          <div className="u-flex u-flex-wrap u-gap-4">
+            <div className="u-flex u-items-center">
               <Toggle
                 initialOn={formData.is_active}
                 onToggleOn={() =>
@@ -803,7 +803,7 @@ const Plans: React.FC = () => {
               />
               <label>Active Plan</label>
             </div>
-            <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-items-center">
               <Toggle
                 initialOn={formData.is_featured}
                 onToggleOn={() =>
@@ -813,7 +813,7 @@ const Plans: React.FC = () => {
               />
               <label>Featured Plan</label>
             </div>
-            <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-items-center">
               <Toggle
                 initialOn={formData.is_popular}
                 onToggleOn={() =>
@@ -826,7 +826,7 @@ const Plans: React.FC = () => {
           </div>
         </div>
 
-        <div className="u-d-flex u-justify-content-end u-gap-3 u-mt-6">
+        <div className="u-flex u-justify-end u-gap-3 u-mt-6">
           <Button
             variant="outline"
             onClick={() => {
@@ -868,7 +868,7 @@ const Plans: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Plan Name *
               </label>
               <Input
@@ -884,7 +884,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Billing Cycle *
               </label>
               <Select
@@ -899,7 +899,7 @@ const Plans: React.FC = () => {
           </Grid>
 
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Description</label>
+            <label className="u-block u-mb-2 u-fw-medium">Description</label>
             <Textarea
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
@@ -910,7 +910,7 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={4}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Price (৳) *
               </label>
               <Input
@@ -929,7 +929,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Download Speed *
               </label>
               <Input
@@ -949,7 +949,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Upload Speed *
               </label>
               <Input
@@ -969,7 +969,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Speed Unit</label>
+              <label className="u-block u-mb-2 u-fw-medium">Speed Unit</label>
               <Select
                 value={formData.speed_unit}
                 onChange={(e) =>
@@ -983,7 +983,7 @@ const Plans: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-d-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-fw-medium">
                 Setup Fee (৳) *
               </label>
               <Input
@@ -1005,7 +1005,7 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Data Quota</label>
+              <label className="u-block u-mb-2 u-fw-medium">Data Quota</label>
               <Input
                 type="number"
                 value={formData.data_quota}
@@ -1023,7 +1023,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-d-block u-mb-2 u-fw-medium">Quota Unit</label>
+              <label className="u-block u-mb-2 u-fw-medium">Quota Unit</label>
               <Select
                 value={formData.quota_unit}
                 onChange={(e) =>
@@ -1040,7 +1040,7 @@ const Plans: React.FC = () => {
           </Grid>
 
           <div>
-            <label className="u-d-block u-mb-2 u-fw-medium">Features</label>
+            <label className="u-block u-mb-2 u-fw-medium">Features</label>
             <Textarea
               value={formData.features}
               onChange={(e) => handleInputChange("features", e.target.value)}
@@ -1049,8 +1049,8 @@ const Plans: React.FC = () => {
             />
           </div>
 
-          <div className="u-d-flex u-flex-wrap u-gap-4">
-            <div className="u-d-flex u-align-items-center">
+          <div className="u-flex u-flex-wrap u-gap-4">
+            <div className="u-flex u-items-center">
               <Toggle
                 initialOn={formData.is_active}
                 onToggleOn={() =>
@@ -1060,7 +1060,7 @@ const Plans: React.FC = () => {
               />
               <label>Active Plan</label>
             </div>
-            <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-items-center">
               <Toggle
                 initialOn={formData.is_featured}
                 onToggleOn={() =>
@@ -1070,7 +1070,7 @@ const Plans: React.FC = () => {
               />
               <label>Featured Plan</label>
             </div>
-            <div className="u-d-flex u-align-items-center">
+            <div className="u-flex u-items-center">
               <Toggle
                 initialOn={formData.is_popular}
                 onToggleOn={() =>
@@ -1083,7 +1083,7 @@ const Plans: React.FC = () => {
           </div>
         </div>
 
-        <div className="u-d-flex u-justify-content-end u-gap-3 u-mt-6">
+        <div className="u-flex u-justify-end u-gap-3 u-mt-6">
           <Button
             variant="outline"
             onClick={() => {
@@ -1123,7 +1123,7 @@ const Plans: React.FC = () => {
         size="sm"
       >
         <div className="u-text-center">
-          <div className="u-bg-danger-subtle u-p-4 u-rounded-circle u-d-inline-flex u-mb-4">
+          <div className="u-bg-danger-subtle u-p-4 u-rounded-circle u-inline-flex u-mb-4">
             <Icon name="Trash" size={24} className="u-text-danger" />
           </div>
           <h3 className="u-h5 u-mb-3">Delete Plan</h3>
@@ -1131,7 +1131,7 @@ const Plans: React.FC = () => {
             Are you sure you want to delete{" "}
             <strong>{selectedPlan?.name}</strong>? This action cannot be undone.
           </p>
-          <div className="u-d-flex u-justify-content-center u-gap-3">
+          <div className="u-flex u-justify-center u-gap-3">
             <Button
               variant="outline"
               onClick={() => {

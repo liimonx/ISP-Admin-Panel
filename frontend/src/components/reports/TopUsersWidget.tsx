@@ -62,7 +62,7 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
           <h3 className="u-text-lg u-fw-semibold u-mb-4">{title}</h3>
           <div className="u-space-y-3">
             {Array.from({ length: 5 }).map((_, index) => (
-              <div key={index} className="u-d-flex u-align-items-center u-gap-3">
+              <div key={index} className="u-flex u-items-center u-gap-3">
                 <div className="u-bg-light u-w-8 u-h-8 u-rounded-full"></div>
                 <div className="u-flex-1">
                   <div className="u-bg-light u-h-4 u-w-75 u-rounded-sm u-mb-1"></div>
@@ -91,8 +91,8 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
         ) : (
           <div className="u-space-y-3">
             {displayUsers.map((user, index) => (
-              <div key={user.id} className="u-d-flex u-align-items-center u-gap-3">
-                <div className="u-d-flex u-align-items-center u-gap-2">
+              <div key={user.id} className="u-flex u-items-center u-gap-3">
+                <div className="u-flex u-items-center u-gap-2">
                   <span className="u-text-sm u-fw-bold u-text-muted u-min-w-6">
                     {index + 1}
                   </span>
@@ -116,7 +116,7 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
                   )}
                 </div>
                 
-                <div className="u-d-flex u-align-items-center u-gap-2">
+                <div className="u-flex u-items-center u-gap-2">
                   <div className="u-text-right">
                     <div className="u-text-sm u-fw-medium">
                       {formatUsage(user.usage, user.usage_unit)}
