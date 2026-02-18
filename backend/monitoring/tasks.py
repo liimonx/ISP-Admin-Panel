@@ -5,7 +5,7 @@ import logging
 from celery import shared_task
 from django.utils import timezone
 from network.models import Router
-from network.services import RouterOSService, MikroTikService
+from network.services import RouterOSService, MikroTikService, parse_uptime
 from .models import RouterMetric, SNMPSnapshot, UsageSnapshot
 
 logger = logging.getLogger(__name__)
@@ -110,7 +110,7 @@ def create_snmp_snapshot(router):
                 router=router,
                 cpu_usage=float(resources.get('cpu_usage', 0)),
                 memory_usage=float(resources.get('memory_usage', 0)),
-                uptime=0,  # TODO: Parse uptime from resources
+                uptime=parse_uptime(resources.get('uptime')),
                 interface_data={'interfaces': interfaces}
             )
             
