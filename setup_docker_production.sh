@@ -36,6 +36,25 @@ if [ ! -f .env ]; then
     read -p "Press Enter after updating .env file..."
 fi
 
+# Generate secure passwords if not provided in environment
+echo "🔐 Generating secure passwords..."
+
+if [ -z "$ADMIN_PASSWORD" ]; then
+    if command -v openssl >/dev/null 2>&1; then
+        ADMIN_PASSWORD=$(openssl rand -base64 12)
+    else
+        ADMIN_PASSWORD=$(python3 -c "import secrets; print(secrets.token_urlsafe(12))")
+    fi
+fi
+
+if [ -z "$DJANGO_SUPERUSER_PASSWORD" ]; then
+    if command -v openssl >/dev/null 2>&1; then
+        DJANGO_SUPERUSER_PASSWORD=$(openssl rand -base64 12)
+    else
+        DJANGO_SUPERUSER_PASSWORD=$(python3 -c "import secrets; print(secrets.token_urlsafe(12))")
+    fi
+fi
+
 # Build and start services
 echo "🔨 Building Docker images..."
 docker-compose build
@@ -57,7 +76,7 @@ docker-compose exec backend python manage.py migrate
 
 # Create admin user
 echo "👤 Creating admin user..."
-docker-compose exec backend python manage.py create_admin
+docker-compose exec backend python manage.py create_admin --password "$ADMIN_PASSWORD"
 
 # Collect static files
 echo "📁 Collecting static files..."
@@ -69,18 +88,20 @@ docker-compose exec backend python manage.py seed_real_data --customers=100 --su
 
 # Create backup superuser
 echo "🔐 Creating backup superuser..."
-docker-compose exec backend python manage.py shell -c "
+docker-compose exec -e DJANGO_SUPERUSER_PASSWORD="$DJANGO_SUPERUSER_PASSWORD" backend python manage.py shell -c "
+import os
 from django.contrib.auth import get_user_model
 User = get_user_model()
+password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
 if not User.objects.filter(username='superadmin').exists():
     User.objects.create_superuser(
         username='superadmin',
         email='superadmin@isp.com',
-        password='superadmin123!',
+        password=password,
         first_name='Super',
         last_name='Admin'
     )
-    print('Backup superuser created: superadmin / superadmin123!')
+    print(f'Backup superuser created: superadmin / {password}')
 else:
     print('Backup superuser already exists')
 "
@@ -92,8 +113,8 @@ echo ""
 echo "📋 Summary:"
 echo "• All Docker services are running"
 echo "• Database migrations applied"
-echo "• Admin user created: admin / changeme123!"
-echo "• Backup superuser: superadmin / superadmin123!"
+echo "• Admin user created: admin / $ADMIN_PASSWORD"
+echo "• Backup superuser: superadmin / $DJANGO_SUPERUSER_PASSWORD"
 echo "• Static files collected"
 echo "• Real data seeded (100 customers, 200 subscriptions)"
 echo ""
