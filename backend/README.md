@@ -191,9 +191,9 @@ BKASH_APP_KEY=your-bkash-app-key
 SSLCOMMERZ_STORE_ID=your-store-id
 SSLCOMMERZ_STORE_PASSWORD=your-store-password
 
-# RouterOS Settings
-ROUTEROS_DEFAULT_USERNAME=admin
-ROUTEROS_DEFAULT_PASSWORD=password
+# Main Router Settings
+MAIN_ROUTER_USERNAME=admin
+MAIN_ROUTER_PASSWORD=password
 
 # Email Settings
 EMAIL_HOST=smtp.gmail.com

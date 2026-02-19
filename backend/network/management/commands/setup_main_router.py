@@ -20,13 +20,13 @@ class Command(BaseCommand):
         parser.add_argument(
             '--username',
             type=str,
-            default=getattr(settings, 'MAIN_ROUTER_USERNAME', 'admin'),
+            default=settings.MAIN_ROUTER_USERNAME,
             help='Router username',
         )
         parser.add_argument(
             '--password',
             type=str,
-            default=getattr(settings, 'MAIN_ROUTER_PASSWORD', ''),
+            default=settings.MAIN_ROUTER_PASSWORD,
             help='Router password',
         )
         parser.add_argument(
