@@ -106,6 +106,11 @@ class Invoice(models.Model):
         blank=True,
         help_text=_('Date when invoice was paid')
     )
+    sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_('Date when invoice was sent to customer')
+    )
     
     # Notes and Additional Info
     notes = models.TextField(blank=True, help_text=_('Additional notes'))
