@@ -376,17 +376,10 @@ class RouterViewSet(viewsets.ModelViewSet):
         
         average_response_time = 45  # This would need actual ping measurements
         
-        # Get interface count from actual routers
-        total_interfaces = 0
-        active_interfaces = 0
-        for router in Router.objects.filter(status='online'):
-            try:
-                service = MikroTikService(router)
-                interfaces = service.get_interfaces()
-                total_interfaces += len(interfaces)
-                active_interfaces += len([i for i in interfaces if i.get('status') == 'up'])
-            except:
-                pass
+        # Get interface count from cache (updated by background task)
+        from django.core.cache import cache
+        total_interfaces = cache.get('router_stats_total_interfaces', 0)
+        active_interfaces = cache.get('router_stats_active_interfaces', 0)
         
         # Get connection data from usage snapshots
         latest_usage = UsageSnapshot.objects.aggregate(
