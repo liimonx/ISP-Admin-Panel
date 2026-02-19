@@ -252,6 +252,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'network.tasks.backup_main_router_config',
         'schedule': timedelta(days=1),
     },
+    'update-router-interface-stats': {
+        'task': 'network.tasks.update_router_interface_stats',
+        'schedule': timedelta(minutes=5),
+    },
 }
 
 # Payment Provider Settings
