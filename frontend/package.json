@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test": "vitest run"
   },
   "dependencies": {
     "@hookform/resolvers": "^2.9.11",
@@ -25,6 +26,7 @@
     "yup": "^1.0.2"
   },
   "devDependencies": {
+    "vitest": "^0.34.6",
     "@types/node": "^24.3.0",
     "@types/react": "^18.0.28",
     "@types/react-dom": "^18.0.11",
