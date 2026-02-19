@@ -123,7 +123,7 @@ def plan_stats_view(request):
     featured_plans = Plan.objects.filter(is_featured=True).count()
     
     # Revenue statistics
-    total_monthly_revenue = sum(plan.get_total_revenue() for plan in Plan.objects.all())
+    total_monthly_revenue = sum(plan.get_total_revenue() for plan in Plan.objects.with_revenue())
     
     # Most popular plans
     popular_plans = Plan.objects.filter(is_active=True).order_by('-subscriptions__count')[:5]
