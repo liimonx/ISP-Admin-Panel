@@ -13,6 +13,7 @@ from .models import Invoice, Payment
 from customers.models import Customer
 from subscriptions.models import Subscription
 from plans.models import Plan
+from core.email import EmailService
 
 logger = logging.getLogger(__name__)
 
@@ -340,8 +341,7 @@ class BillingService:
         sent_count = 0
         for invoice in reminder_invoices:
             try:
-                # TODO: Implement actual email sending
-                # EmailService.send_invoice_reminder(invoice)
+                EmailService.send_invoice_reminder(invoice)
 
                 logger.info(
                     f"Sent reminder for invoice {invoice.invoice_number}",
