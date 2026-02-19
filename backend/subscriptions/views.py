@@ -1,6 +1,7 @@
 from rest_framework import generics, permissions, filters, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
+from django.db.models import Sum
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from core.responses import APIResponse
@@ -270,10 +271,12 @@ def subscription_stats_view(request):
         cancelled_subscriptions = Subscription.objects.filter(status='cancelled').count()
 
         # Revenue statistics
-        total_monthly_revenue = sum(sub.monthly_fee for sub in Subscription.objects.filter(status='active'))
+        revenue_agg = Subscription.objects.filter(status='active').aggregate(total=Sum('monthly_fee'))
+        total_monthly_revenue = revenue_agg['total'] or 0
 
         # Data usage statistics
-        total_data_used = sum(float(sub.data_used) for sub in Subscription.objects.all())
+        data_agg = Subscription.objects.aggregate(total=Sum('data_used'))
+        total_data_used = float(data_agg['total'] or 0)
 
         stats = {
             'total_subscriptions': total_subscriptions,
