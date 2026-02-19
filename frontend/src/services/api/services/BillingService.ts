@@ -107,6 +107,17 @@ export class BillingService extends BaseApiService {
   }
 
   /**
+   * Refund a payment
+   */
+  async refundPayment(id: number, data?: any): Promise<Payment> {
+    this.validateId(id, "payment");
+    return this.post<Payment>(
+      `${ENDPOINTS.PAYMENTS.BASE}/${id}/mark_refunded/`,
+      data,
+    );
+  }
+
+  /**
    * Get payment statistics
    */
   async getPaymentStats(): Promise<any> {
