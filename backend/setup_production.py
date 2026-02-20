@@ -5,6 +5,8 @@ This script prepares the backend for real data and production use.
 """
 import os
 import sys
+import secrets
+import string
 import django
 from pathlib import Path
 
@@ -23,9 +25,23 @@ from django.db import connection
 User = get_user_model()
 
 
+def generate_secure_password(length=16):
+    """Generate a secure random password."""
+    alphabet = string.ascii_letters + string.digits + string.punctuation
+    return ''.join(secrets.choice(alphabet) for i in range(length))
+
+
 def run_command(command, *args, **kwargs):
     """Run a Django management command."""
-    print(f"Running: {command} {' '.join(args)}")
+    # Mask sensitive arguments for logging
+    safe_args = []
+    for arg in args:
+        if isinstance(arg, str) and arg.startswith('--password='):
+            safe_args.append('--password=******')
+        else:
+            safe_args.append(str(arg))
+
+    print(f"Running: {command} {' '.join(safe_args)}")
     try:
         call_command(command, *args, **kwargs)
         print(f"✅ {command} completed successfully")
@@ -64,7 +80,20 @@ def main():
     
     # Create admin user
     print("\n👤 Creating admin user...")
-    if not run_command('create_admin'):
+    admin_username = os.environ.get('DJANGO_ADMIN_USERNAME', 'admin')
+    admin_email = os.environ.get('DJANGO_ADMIN_EMAIL', 'admin@isp.com')
+    admin_password = os.environ.get('DJANGO_ADMIN_PASSWORD')
+
+    if not admin_password:
+        admin_password = generate_secure_password()
+        admin_password_source = "generated"
+    else:
+        admin_password_source = "env"
+
+    if not run_command('create_admin',
+                      f'--username={admin_username}',
+                      f'--email={admin_email}',
+                      f'--password={admin_password}'):
         return
     
     # Collect static files
@@ -79,16 +108,30 @@ def main():
     
     # Create superuser (backup)
     print("\n🔐 Creating backup superuser...")
+
+    superuser_username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'superadmin')
+    superuser_email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'superadmin@isp.com')
+    superuser_password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+
+    if not superuser_password:
+        superuser_password = generate_secure_password()
+        superuser_password_source = "generated"
+    else:
+        superuser_password_source = "env"
+
     try:
-        if not User.objects.filter(username='superadmin').exists():
+        if not User.objects.filter(username=superuser_username).exists():
             User.objects.create_superuser(
-                username='superadmin',
-                email='superadmin@isp.com',
-                password='superadmin123!',
+                username=superuser_username,
+                email=superuser_email,
+                password=superuser_password,
                 first_name='Super',
                 last_name='Admin'
             )
-            print("✅ Backup superuser created: superadmin / superadmin123!")
+            if superuser_password_source == "generated":
+                print(f"✅ Backup superuser created: {superuser_username} / {superuser_password}")
+            else:
+                print(f"✅ Backup superuser created: {superuser_username} / [HIDDEN] (from env)")
         else:
             print("ℹ️  Backup superuser already exists")
     except Exception as e:
@@ -98,8 +141,17 @@ def main():
     print("🎉 Production setup completed successfully!")
     print("\n📋 Summary:")
     print("• Database migrations applied")
-    print("• Admin user created: admin / changeme123!")
-    print("• Backup superuser: superadmin / superadmin123!")
+
+    if admin_password_source == "generated":
+        print(f"• Admin user created: {admin_username} / {admin_password}")
+    else:
+        print(f"• Admin user created: {admin_username} / [HIDDEN] (from env)")
+
+    if superuser_password_source == "generated":
+        print(f"• Backup superuser: {superuser_username} / {superuser_password}")
+    else:
+        print(f"• Backup superuser: {superuser_username} / [HIDDEN] (from env)")
+
     print("• Static files collected")
     print("• Real data seeded (100 customers, 200 subscriptions)")
     print("\n🔗 Access URLs:")

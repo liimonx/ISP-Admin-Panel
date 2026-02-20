@@ -252,6 +252,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'network.tasks.backup_main_router_config',
         'schedule': timedelta(days=1),
     },
+    'update-router-interface-stats': {
+        'task': 'network.tasks.update_router_interface_stats',
+        'schedule': timedelta(minutes=5),
+    },
 }
 
 # Payment Provider Settings
@@ -271,6 +275,14 @@ ROUTEROS_DEFAULT_PASSWORD = env('ROUTEROS_DEFAULT_PASSWORD', default='')
 SNMP_COMMUNITY = env('SNMP_COMMUNITY', default='public')
 SNMP_TIMEOUT = env.int('SNMP_TIMEOUT', default=1)
 SNMP_RETRIES = env.int('SNMP_RETRIES', default=3)
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 
 # Rate Limiting Settings
 RATE_LIMITS = {

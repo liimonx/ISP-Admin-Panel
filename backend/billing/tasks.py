@@ -13,6 +13,7 @@ from .services import BillingService
 from subscriptions.models import Subscription
 from customers.models import Customer
 from core.exceptions import BusinessLogicError, ExternalServiceError
+from core.email import EmailService
 
 logger = logging.getLogger(__name__)
 
@@ -357,17 +358,20 @@ def send_pending_invoices(self, batch_size=50):
 
         for invoice in pending_invoices:
             try:
-                with transaction.atomic():
-                    # Mark as sent
-                    invoice.status = Invoice.Status.SENT if hasattr(Invoice.Status, 'SENT') else Invoice.Status.PENDING
-                    invoice.sent_at = timezone.now()
-                    invoice.save()
+                # Send invoice email first
+                if EmailService.send_invoice(invoice):
+                    with transaction.atomic():
+                        # Mark as sent
+                        invoice.status = Invoice.Status.SENT if hasattr(Invoice.Status, 'SENT') else Invoice.Status.PENDING
+                        invoice.sent_at = timezone.now()
+                        invoice.save()
 
-                    # TODO: Implement actual email sending
-                    # EmailService.send_invoice(invoice)
-
-                    sent_count += 1
-                    logger.info(f"Sent invoice {invoice.invoice_number} to {invoice.customer.email}")
+                        sent_count += 1
+                        logger.info(f"Sent invoice {invoice.invoice_number} to {invoice.customer.email}")
+                else:
+                    error_msg = f"Failed to send email for invoice {invoice.invoice_number}"
+                    logger.error(error_msg)
+                    errors.append(error_msg)
 
             except Exception as e:
                 error_msg = f"Failed to send invoice {invoice.invoice_number}: {str(e)}"
