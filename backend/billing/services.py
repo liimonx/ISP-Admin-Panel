@@ -341,7 +341,6 @@ class BillingService:
         sent_count = 0
         for invoice in reminder_invoices:
             try:
-                # Send invoice reminder email
                 EmailService.send_invoice_reminder(invoice)
 
                 logger.info(
