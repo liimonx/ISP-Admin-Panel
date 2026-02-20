@@ -327,6 +327,10 @@ export class ApiService {
     return this.billing.recordPayment(data);
   }
 
+  async refundPayment(id: number, data?: any) {
+    return this.billing.refundPayment(id, data);
+  }
+
   async getPaymentStats() {
     return this.billing.getPaymentStats();
   }

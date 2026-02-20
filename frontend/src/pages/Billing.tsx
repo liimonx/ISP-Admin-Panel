@@ -266,9 +266,32 @@ const Billing: React.FC = () => {
     }
   };
 
-  const handleRefundPayment = (_payment: Payment) => {
-    // TODO: Implement payment refund
-    notificationManager.info("Payment refund feature coming soon");
+  const handleRefundPayment = async (payment: Payment) => {
+    if (
+      window.confirm(
+        `Are you sure you want to refund payment ${payment.payment_number}?`,
+      )
+    ) {
+      try {
+        await apiService.refundPayment(payment.id);
+        notificationManager.success("Payment refunded successfully");
+        queryClient.invalidateQueries({ queryKey: ["payments"] });
+        queryClient.invalidateQueries({ queryKey: ["invoices"] });
+        queryClient.invalidateQueries({ queryKey: ["payment-stats"] });
+        queryClient.invalidateQueries({ queryKey: ["invoice-stats"] });
+
+        // If payment modal is open and showing this payment, close it
+        if (selectedPayment?.id === payment.id) {
+          setIsPaymentModalOpen(false);
+          setSelectedPayment(null);
+        }
+      } catch (error: any) {
+        console.error("Error refunding payment:", error);
+        notificationManager.error(
+          "Failed to refund payment: " + (error.message || "Unknown error"),
+        );
+      }
+    }
   };
 
   const handleGenerateInvoice = (data: any) => {
