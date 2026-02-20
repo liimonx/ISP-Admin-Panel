@@ -1,6 +1,23 @@
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from decimal import Decimal
+from django.db.models import Count, Q, F
+
+
+class PlanQuerySet(models.QuerySet):
+    def with_revenue(self):
+        return self.annotate(
+            active_subs_count=Count('subscriptions', filter=Q(subscriptions__status='active')),
+            annotated_revenue=F('price') * F('active_subs_count')
+        )
+
+
+class PlanManager(models.Manager):
+    def get_queryset(self):
+        return PlanQuerySet(self.model, using=self._db)
+
+    def with_revenue(self):
+        return self.get_queryset().with_revenue()
 
 
 class Plan(models.Model):
@@ -88,7 +105,9 @@ class Plan(models.Model):
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    
+
+    objects = PlanManager()
+
     class Meta:
         verbose_name = _('Plan')
         verbose_name_plural = _('Plans')
@@ -131,6 +150,8 @@ class Plan(models.Model):
     
     def get_total_revenue(self):
         """Calculate total monthly revenue from this plan."""
+        if hasattr(self, 'annotated_revenue'):
+            return self.annotated_revenue
         active_subs = self.subscriptions.filter(status='active')
         return self.price * active_subs.count()
     
