@@ -123,22 +123,6 @@ const Login: React.FC = () => {
     setShowPassword(!showPassword);
   };
 
-  const handleDemoLogin = async (username: string, password: string) => {
-    setFormData({ username, password });
-    setIsSubmitting(true);
-    setLoginError(null);
-    
-    try {
-      await login(username, password);
-      toast.success('Demo login successful!');
-    } catch (error) {
-      setLoginError('Demo login failed. Please try again.');
-      toast.error('Demo login failed');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
   // If already authenticated, redirect to home
   if (isAuthenticated && !isLoading) {
     return <Navigate to="/" replace />;
@@ -256,44 +240,6 @@ const Login: React.FC = () => {
               </Button>
             </form>
 
-            {/* Demo Credentials */}
-            <div className="u-mt-6 u-pt-6 u-border-top">
-              <h3 className="u-mb-3">Demo Credentials:</h3>
-              <div className="u-space-y-3">
-                <div className="u-flex u-flex-wrap u-gap-2">
-                  <Button 
-                    size="sm" 
-                    variant="outline-primary"
-                    onClick={() => handleDemoLogin('admin', 'changeme123!')}
-                    disabled={isSubmitting}
-                  >
-                    Admin Login
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline-secondary"
-                    onClick={() => handleDemoLogin('support', 'changeme123!')}
-                    disabled={isSubmitting}
-                  >
-                    Support Login
-                  </Button>
-                  <Button 
-                    size="sm" 
-                    variant="outline-success"
-                    onClick={() => handleDemoLogin('accountant', 'changeme123!')}
-                    disabled={isSubmitting}
-                  >
-                    Accountant Login
-                  </Button>
-                </div>
-                
-                <div className="u-text-sm u-text-secondary">
-                  <p className="u-mb-1"><strong>Admin:</strong> admin / changeme123!</p>
-                  <p className="u-mb-1"><strong>Support:</strong> support / changeme123!</p>
-                  <p className="u-mb-0"><strong>Accountant:</strong> accountant / changeme123!</p>
-                </div>
-              </div>
-            </div>
           </Card>
           
           {/* Footer */}
