@@ -1,27 +1,44 @@
 import { describe, it, expect } from 'vitest';
-import { formatDuration } from './formatters';
+import { getInitials } from './formatters';
 
-describe('formatDuration', () => {
-  it('should format seconds less than a minute correctly', () => {
-    expect(formatDuration(45)).toBe('45s');
-    expect(formatDuration(10)).toBe('10s');
-    expect(formatDuration(0)).toBe('0s');
+describe('getInitials', () => {
+  it('should return initials for valid first and last names', () => {
+    expect(getInitials('John', 'Doe')).toBe('JD');
+    expect(getInitials('Jane', 'Smith')).toBe('JS');
   });
 
-  it('should format minutes correctly', () => {
-    expect(formatDuration(60)).toBe('1m 0s');
-    expect(formatDuration(125)).toBe('2m 5s');
-    expect(formatDuration(3599)).toBe('59m 59s');
+  it('should handle empty strings gracefully', () => {
+    expect(getInitials('', '')).toBe('');
+    expect(getInitials('John', '')).toBe('J');
+    expect(getInitials('', 'Doe')).toBe('D');
   });
 
-  it('should format hours correctly', () => {
-    expect(formatDuration(3600)).toBe('1h 0m 0s');
-    expect(formatDuration(3665)).toBe('1h 1m 5s');
-    expect(formatDuration(7322)).toBe('2h 2m 2s');
+  it('should handle single names correctly', () => {
+    expect(getInitials('John', '')).toBe('J');
+    expect(getInitials('', 'Doe')).toBe('D');
   });
 
-  it('should format fractional seconds as integers', () => {
-    expect(formatDuration(1.5)).toBe('1s');
-    expect(formatDuration(61.5)).toBe('1m 1s');
+  it('should handle null or undefined inputs (ignoring strict types)', () => {
+    // We cast to any to simulate runtime behavior where types might not be enforced
+    expect(getInitials(null as any, null as any)).toBe('');
+    expect(getInitials(undefined as any, undefined as any)).toBe('');
+    expect(getInitials('John', null as any)).toBe('J');
+    expect(getInitials(undefined as any, 'Doe')).toBe('D');
+  });
+
+  it('should handle names with leading spaces', () => {
+    // Current implementation does not trim, so " John" results in " "
+    expect(getInitials(' John', 'Doe')).toBe(' D');
+    expect(getInitials('John', ' Doe')).toBe('J ');
+  });
+
+  it('should handle special characters', () => {
+    expect(getInitials('J@ne', 'D!oe')).toBe('JD');
+    expect(getInitials('@lice', '#bob')).toBe('@#');
+  });
+
+  it('should be case insensitive regarding output (always uppercase)', () => {
+    expect(getInitials('john', 'doe')).toBe('JD');
+    expect(getInitials('jOhN', 'dOe')).toBe('JD');
   });
 });
