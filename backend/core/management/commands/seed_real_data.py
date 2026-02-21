@@ -2,6 +2,8 @@
 Management command to seed the database with realistic data for production use.
 """
 import random
+import os
+import secrets
 from decimal import Decimal
 from datetime import datetime, timedelta
 from django.core.management.base import BaseCommand
@@ -88,17 +90,25 @@ class Command(BaseCommand):
 
     def create_admin_user(self):
         """Create admin user if not exists."""
-        if not User.objects.filter(username='admin').exists():
+        username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'admin')
+        email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'admin@isp.com')
+        password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
+
+        if not password:
+            password = secrets.token_urlsafe(16)
+            self.stdout.write(self.style.WARNING(f'Generated admin password: {password}'))
+
+        if not User.objects.filter(username=username).exists():
             User.objects.create_superuser(
-                username='admin',
-                email='admin@isp.com',
-                password='changeme123!',
+                username=username,
+                email=email,
+                password=password,
                 first_name='Admin',
                 last_name='User'
             )
-            self.stdout.write('Created admin user.')
+            self.stdout.write(self.style.SUCCESS(f'Created admin user: {username}'))
         else:
-            self.stdout.write('Admin user already exists.')
+            self.stdout.write(f'Admin user {username} already exists.')
 
     def create_plans(self):
         """Create realistic internet plans."""

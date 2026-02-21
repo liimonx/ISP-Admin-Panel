@@ -252,6 +252,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'network.tasks.backup_main_router_config',
         'schedule': timedelta(days=1),
     },
+    'update-router-interface-stats': {
+        'task': 'network.tasks.update_router_interface_stats',
+        'schedule': timedelta(minutes=5),
+    },
 }
 
 # Payment Provider Settings
@@ -262,15 +266,18 @@ BKASH_APP_SECRET = env('BKASH_APP_SECRET', default='')
 SSLCOMMERZ_STORE_ID = env('SSLCOMMERZ_STORE_ID', default='')
 SSLCOMMERZ_STORE_PASSWORD = env('SSLCOMMERZ_STORE_PASSWORD', default='')
 
-# RouterOS Settings
-ROUTEROS_DEFAULT_PORT = env.int('ROUTEROS_DEFAULT_PORT', default=8729)
-ROUTEROS_DEFAULT_USERNAME = env('ROUTEROS_DEFAULT_USERNAME', default='admin')
-ROUTEROS_DEFAULT_PASSWORD = env('ROUTEROS_DEFAULT_PASSWORD', default='')
-
 # SNMP Settings
 SNMP_COMMUNITY = env('SNMP_COMMUNITY', default='public')
 SNMP_TIMEOUT = env.int('SNMP_TIMEOUT', default=1)
 SNMP_RETRIES = env.int('SNMP_RETRIES', default=3)
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 
 # Rate Limiting Settings
 RATE_LIMITS = {
@@ -360,8 +367,8 @@ CACHES = {
 MAIN_ROUTER_IP = env('MAIN_ROUTER_IP', default='103.115.252.60')
 MAIN_ROUTER_API_PORT = env.int('MAIN_ROUTER_API_PORT', default=8728)
 MAIN_ROUTER_SSH_PORT = env.int('MAIN_ROUTER_SSH_PORT', default=22)
-MAIN_ROUTER_USERNAME = env('MAIN_ROUTER_USERNAME', default='admin')
-MAIN_ROUTER_PASSWORD = env('MAIN_ROUTER_PASSWORD', default='')
+MAIN_ROUTER_USERNAME = env('MAIN_ROUTER_USERNAME')
+MAIN_ROUTER_PASSWORD = env('MAIN_ROUTER_PASSWORD')
 MAIN_ROUTER_USE_TLS = env.bool('MAIN_ROUTER_USE_TLS', default=True)
 
 # Router API Configuration
@@ -374,3 +381,15 @@ MIKROTIK_MOCK_MODE = env.bool('MIKROTIK_MOCK_MODE', default=DEBUG)
 MIKROTIK_CONNECTION_TIMEOUT = env.int('MIKROTIK_CONNECTION_TIMEOUT', default=30)
 MIKROTIK_MAX_RETRIES = env.int('MIKROTIK_MAX_RETRIES', default=3)
 MIKROTIK_RETRY_DELAY = env.int('MIKROTIK_RETRY_DELAY', default=5)
+
+# Email Settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = env('EMAIL_HOST', default='smtp.gmail.com')
+EMAIL_PORT = env.int('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
+
+if DEBUG:
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'

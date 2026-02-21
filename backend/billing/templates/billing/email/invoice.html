@@ -1,0 +1,63 @@
+{% extends 'billing/email/base_email.html' %}
+
+{% block title %}Invoice #{{ invoice.invoice_number }}{% endblock %}
+
+{% block content %}
+    <p>Dear {{ customer.name }},</p>
+
+    <p>Thank you for choosing {{ company_name }}. Here is your invoice for the billing period {{ invoice.billing_period_start|date:"M d, Y" }} to {{ invoice.billing_period_end|date:"M d, Y" }}.</p>
+
+    <div style="margin: 20px 0; border: 1px solid #ddd; padding: 15px; border-radius: 5px;">
+        <p><strong>Invoice Number:</strong> {{ invoice.invoice_number }}</p>
+        <p><strong>Issue Date:</strong> {{ invoice.created_at|date:"M d, Y" }}</p>
+        <p><strong>Due Date:</strong> {{ invoice.due_date|date:"M d, Y" }}</p>
+        <p><strong>Status:</strong> <span style="text-transform: uppercase;">{{ invoice.status }}</span></p>
+    </div>
+
+    <table class="invoice-table" width="100%">
+        <thead>
+            <tr>
+                <th>Description</th>
+                <th style="text-align: right;">Amount</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if invoice.subscription %}
+            <tr>
+                <td>{{ invoice.subscription.plan.name }} Subscription</td>
+                <td style="text-align: right;">{{ invoice.subtotal }}</td>
+            </tr>
+            {% else %}
+             <tr>
+                <td>Service Charge</td>
+                <td style="text-align: right;">{{ invoice.subtotal }}</td>
+            </tr>
+            {% endif %}
+
+            {% if invoice.tax_amount > 0 %}
+            <tr>
+                <td>Tax</td>
+                <td style="text-align: right;">{{ invoice.tax_amount }}</td>
+            </tr>
+            {% endif %}
+
+            {% if invoice.discount_amount > 0 %}
+            <tr>
+                <td>Discount</td>
+                <td style="text-align: right;">-{{ invoice.discount_amount }}</td>
+            </tr>
+            {% endif %}
+
+            <tr class="total-row">
+                <td style="border-top: 2px solid #333;"><strong>Total Due</strong></td>
+                <td style="text-align: right; border-top: 2px solid #333;"><strong>{{ invoice.total_amount }}</strong></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Please make the payment by the due date to avoid service interruption.</p>
+
+    <div style="text-align: center;">
+        <a href="#" class="button">Pay Invoice Now</a>
+    </div>
+{% endblock %}

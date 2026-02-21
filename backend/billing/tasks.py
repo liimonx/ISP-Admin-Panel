@@ -13,6 +13,7 @@ from .services import BillingService
 from subscriptions.models import Subscription
 from customers.models import Customer
 from core.exceptions import BusinessLogicError, ExternalServiceError
+from core.email import EmailService
 
 logger = logging.getLogger(__name__)
 
@@ -363,8 +364,8 @@ def send_pending_invoices(self, batch_size=50):
                     invoice.sent_at = timezone.now()
                     invoice.save()
 
-                    # TODO: Implement actual email sending
-                    # EmailService.send_invoice(invoice)
+                    # Send invoice via email
+                    EmailService.send_invoice(invoice)
 
                     sent_count += 1
                     logger.info(f"Sent invoice {invoice.invoice_number} to {invoice.customer.email}")
