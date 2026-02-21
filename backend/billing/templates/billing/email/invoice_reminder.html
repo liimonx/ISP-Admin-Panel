@@ -1,0 +1,22 @@
+{% extends 'billing/email/base_email.html' %}
+
+{% block title %}REMINDER: Invoice #{{ invoice.invoice_number }}{% endblock %}
+
+{% block content %}
+    <p>Dear {{ customer.name }},</p>
+
+    <p>This is a friendly reminder that invoice <strong>#{{ invoice.invoice_number }}</strong> generated on {{ invoice.created_at|date:"M d, Y" }} is due on <strong>{{ invoice.due_date|date:"M d, Y" }}</strong>.</p>
+
+    <div style="background-color: #fff3cd; color: #856404; padding: 15px; margin: 20px 0; border: 1px solid #ffeeba; border-radius: 5px;">
+        <p><strong>Total Due:</strong> {{ invoice.total_amount }}</p>
+        <p><strong>Due Date:</strong> {{ invoice.due_date|date:"M d, Y" }}</p>
+    </div>
+
+    <p>If you have already made the payment, please disregard this notice.</p>
+
+    <p>To view your invoice or make a payment, please click the link below:</p>
+
+    <div style="text-align: center;">
+        <a href="#" class="button">View & Pay Invoice</a>
+    </div>
+{% endblock %}

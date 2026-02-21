@@ -21,6 +21,7 @@ from customers.models import Customer
 from subscriptions.models import Subscription
 from core.responses import APIResponse
 from core.performance import cache_result, measure_execution_time
+from core.email import EmailService
 
 
 @extend_schema(
@@ -565,8 +566,8 @@ def send_invoice_view(request, pk):
         invoice.sent_at = timezone.now()
         invoice.save()
 
-        # TODO: Implement actual email sending logic
-        # EmailService.send_invoice(invoice)
+        # Send invoice via email
+        EmailService.send_invoice(invoice)
 
         return APIResponse.success(
             data=InvoiceSerializer(invoice).data,
