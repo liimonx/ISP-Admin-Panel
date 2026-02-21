@@ -358,20 +358,17 @@ def send_pending_invoices(self, batch_size=50):
 
         for invoice in pending_invoices:
             try:
-                # Send invoice email first
-                if EmailService.send_invoice(invoice):
-                    with transaction.atomic():
-                        # Mark as sent
-                        invoice.status = Invoice.Status.SENT if hasattr(Invoice.Status, 'SENT') else Invoice.Status.PENDING
-                        invoice.sent_at = timezone.now()
-                        invoice.save()
+                with transaction.atomic():
+                    # Mark as sent
+                    invoice.status = Invoice.Status.SENT if hasattr(Invoice.Status, 'SENT') else Invoice.Status.PENDING
+                    invoice.sent_at = timezone.now()
+                    invoice.save()
 
-                        sent_count += 1
-                        logger.info(f"Sent invoice {invoice.invoice_number} to {invoice.customer.email}")
-                else:
-                    error_msg = f"Failed to send email for invoice {invoice.invoice_number}"
-                    logger.error(error_msg)
-                    errors.append(error_msg)
+                    # Send invoice via email
+                    EmailService.send_invoice(invoice)
+
+                    sent_count += 1
+                    logger.info(f"Sent invoice {invoice.invoice_number} to {invoice.customer.email}")
 
             except Exception as e:
                 error_msg = f"Failed to send invoice {invoice.invoice_number}: {str(e)}"
