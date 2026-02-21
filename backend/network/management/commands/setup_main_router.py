@@ -85,7 +85,7 @@ class Command(BaseCommand):
                 'use_tls': use_tls,
                 'status': Router.Status.OFFLINE,
                 'location': 'Main Data Center',
-                'snmp_community': getattr(settings, 'SNMP_COMMUNITY', 'public'),
+                'snmp_community': settings.SNMP_COMMUNITY,
                 'snmp_port': 161,
                 'notes': 'Main router configured via management command',
             }
