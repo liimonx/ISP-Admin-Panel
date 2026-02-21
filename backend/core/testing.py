@@ -30,6 +30,7 @@ class APITestMixin:
     def create_test_user(self, **kwargs):
         """Create a test user with default values."""
         defaults = {
+            'username': fake.user_name(),
             'email': fake.email(),
             'first_name': fake.first_name(),
             'last_name': fake.last_name(),
@@ -41,6 +42,7 @@ class APITestMixin:
     def create_admin_user(self, **kwargs):
         """Create a test admin user."""
         defaults = {
+            'username': fake.user_name(),
             'email': fake.email(),
             'first_name': fake.first_name(),
             'last_name': fake.last_name(),

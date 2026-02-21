@@ -2,6 +2,7 @@
 Custom exception handler for consistent API error responses.
 """
 import logging
+from functools import singledispatch
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.http import Http404
 from django.db import IntegrityError
@@ -15,6 +16,146 @@ from rest_framework.exceptions import (
 from .responses import APIResponse
 
 logger = logging.getLogger(__name__)
+
+
+@singledispatch
+def _handle_exception(exc, context, response=None):
+    """
+    Default handler for exceptions not explicitly registered.
+    Handles generic DRF exceptions and unexpected server errors.
+    """
+    # Handle generic exceptions that were handled by DRF but don't have a specific handler here
+    if response is not None:
+        custom_response_data = {
+            'success': False,
+            'message': 'An error occurred',
+            'data': None,
+            'timestamp': APIResponse.success().data['timestamp']
+        }
+
+        if hasattr(exc, 'detail'):
+            if isinstance(exc.detail, dict):
+                custom_response_data['errors'] = exc.detail
+                # Try to extract a meaningful message
+                if 'detail' in exc.detail:
+                    custom_response_data['message'] = exc.detail['detail']
+                elif 'non_field_errors' in exc.detail:
+                    custom_response_data['message'] = exc.detail['non_field_errors'][0] if exc.detail['non_field_errors'] else 'Validation error'
+            elif isinstance(exc.detail, list):
+                custom_response_data['message'] = exc.detail[0] if exc.detail else 'An error occurred'
+                custom_response_data['errors'] = exc.detail
+            else:
+                custom_response_data['message'] = str(exc.detail)
+
+        response.data = custom_response_data
+        return response
+
+    # Handle unexpected server errors
+    view = context.get('view', None)
+    request = context.get('request', None)
+
+    logger.critical(
+        f"Unhandled exception in API: {str(exc)}",
+        extra={
+            'exception': str(exc),
+            'exception_type': exc.__class__.__name__,
+            'view': view.__class__.__name__ if view else 'Unknown',
+            'path': request.path if request else 'Unknown'
+        },
+        exc_info=True
+    )
+
+    return APIResponse.server_error("An unexpected error occurred. Please try again later.")
+
+
+@_handle_exception.register(ValidationError)
+def _(exc, context, response=None):
+    return APIResponse.validation_error(exc.detail)
+
+
+@_handle_exception.register(NotAuthenticated)
+def _(exc, context, response=None):
+    return APIResponse.unauthorized("Authentication credentials were not provided")
+
+
+@_handle_exception.register(PermissionDenied)
+def _(exc, context, response=None):
+    return APIResponse.forbidden("You do not have permission to perform this action")
+
+
+@_handle_exception.register(NotFound)
+@_handle_exception.register(Http404)
+def _(exc, context, response=None):
+    return APIResponse.not_found("The requested resource was not found")
+
+
+@_handle_exception.register(MethodNotAllowed)
+def _(exc, context, response=None):
+    allowed_methods = []
+    if isinstance(exc.detail, dict):
+        allowed_methods = exc.detail.get('allowed_methods', [])
+
+    message = f"Method '{context['request'].method}' not allowed."
+    if allowed_methods:
+        message += f" Allowed methods: {', '.join(allowed_methods)}"
+    return APIResponse.error(
+        message=message,
+        status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
+        error_code="METHOD_NOT_ALLOWED"
+    )
+
+
+@_handle_exception.register(Throttled)
+def _(exc, context, response=None):
+    wait_time = exc.wait
+    return APIResponse.error(
+        message=f"Request was throttled. Expected available in {wait_time} seconds.",
+        status_code=status.HTTP_429_TOO_MANY_REQUESTS,
+        error_code="THROTTLED"
+    )
+
+
+@_handle_exception.register(ParseError)
+def _(exc, context, response=None):
+    return APIResponse.error(
+        message="Malformed request data",
+        status_code=status.HTTP_400_BAD_REQUEST,
+        error_code="PARSE_ERROR"
+    )
+
+
+@_handle_exception.register(UnsupportedMediaType)
+def _(exc, context, response=None):
+    return APIResponse.error(
+        message="Unsupported media type",
+        status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
+        error_code="UNSUPPORTED_MEDIA_TYPE"
+    )
+
+
+@_handle_exception.register(NotAcceptable)
+def _(exc, context, response=None):
+    return APIResponse.error(
+        message="Could not satisfy the request Accept header",
+        status_code=status.HTTP_406_NOT_ACCEPTABLE,
+        error_code="NOT_ACCEPTABLE"
+    )
+
+
+@_handle_exception.register(DjangoValidationError)
+def _(exc, context, response=None):
+    return APIResponse.validation_error({
+        'non_field_errors': [str(exc)]
+    })
+
+
+@_handle_exception.register(IntegrityError)
+def _(exc, context, response=None):
+    return APIResponse.error(
+        message="Database integrity error. This operation violates database constraints",
+        status_code=status.HTTP_409_CONFLICT,
+        error_code="INTEGRITY_ERROR"
+    )
 
 
 def custom_exception_handler(exc, context):
@@ -41,110 +182,7 @@ def custom_exception_handler(exc, context):
             }
         )
 
-    # Handle specific exceptions with custom responses
-    if isinstance(exc, ValidationError):
-        return APIResponse.validation_error(exc.detail)
-
-    elif isinstance(exc, NotAuthenticated):
-        return APIResponse.unauthorized("Authentication credentials were not provided")
-
-    elif isinstance(exc, PermissionDenied):
-        return APIResponse.forbidden("You do not have permission to perform this action")
-
-    elif isinstance(exc, NotFound) or isinstance(exc, Http404):
-        return APIResponse.not_found("The requested resource was not found")
-
-    elif isinstance(exc, MethodNotAllowed):
-        allowed_methods = exc.detail.get('allowed_methods', [])
-        message = f"Method '{context['request'].method}' not allowed."
-        if allowed_methods:
-            message += f" Allowed methods: {', '.join(allowed_methods)}"
-        return APIResponse.error(
-            message=message,
-            status_code=status.HTTP_405_METHOD_NOT_ALLOWED,
-            error_code="METHOD_NOT_ALLOWED"
-        )
-
-    elif isinstance(exc, Throttled):
-        wait_time = exc.wait
-        return APIResponse.error(
-            message=f"Request was throttled. Expected available in {wait_time} seconds.",
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            error_code="THROTTLED"
-        )
-
-    elif isinstance(exc, ParseError):
-        return APIResponse.error(
-            message="Malformed request data",
-            status_code=status.HTTP_400_BAD_REQUEST,
-            error_code="PARSE_ERROR"
-        )
-
-    elif isinstance(exc, UnsupportedMediaType):
-        return APIResponse.error(
-            message="Unsupported media type",
-            status_code=status.HTTP_415_UNSUPPORTED_MEDIA_TYPE,
-            error_code="UNSUPPORTED_MEDIA_TYPE"
-        )
-
-    elif isinstance(exc, NotAcceptable):
-        return APIResponse.error(
-            message="Could not satisfy the request Accept header",
-            status_code=status.HTTP_406_NOT_ACCEPTABLE,
-            error_code="NOT_ACCEPTABLE"
-        )
-
-    elif isinstance(exc, DjangoValidationError):
-        return APIResponse.validation_error({
-            'non_field_errors': [str(exc)]
-        })
-
-    elif isinstance(exc, IntegrityError):
-        return APIResponse.error(
-            message="Database integrity error. This operation violates database constraints",
-            status_code=status.HTTP_409_CONFLICT,
-            error_code="INTEGRITY_ERROR"
-        )
-
-    # Handle generic exceptions
-    elif response is not None:
-        custom_response_data = {
-            'success': False,
-            'message': 'An error occurred',
-            'data': None,
-            'timestamp': APIResponse.success()['timestamp']
-        }
-
-        if hasattr(exc, 'detail'):
-            if isinstance(exc.detail, dict):
-                custom_response_data['errors'] = exc.detail
-                # Try to extract a meaningful message
-                if 'detail' in exc.detail:
-                    custom_response_data['message'] = exc.detail['detail']
-                elif 'non_field_errors' in exc.detail:
-                    custom_response_data['message'] = exc.detail['non_field_errors'][0] if exc.detail['non_field_errors'] else 'Validation error'
-            elif isinstance(exc.detail, list):
-                custom_response_data['message'] = exc.detail[0] if exc.detail else 'An error occurred'
-                custom_response_data['errors'] = exc.detail
-            else:
-                custom_response_data['message'] = str(exc.detail)
-
-        response.data = custom_response_data
-        return response
-
-    # Handle unexpected server errors
-    logger.critical(
-        f"Unhandled exception in API: {str(exc)}",
-        extra={
-            'exception': str(exc),
-            'exception_type': exc.__class__.__name__,
-            'view': view.__class__.__name__ if view else 'Unknown',
-            'path': request.path if request else 'Unknown'
-        },
-        exc_info=True
-    )
-
-    return APIResponse.server_error("An unexpected error occurred. Please try again later.")
+    return _handle_exception(exc, context, response)
 
 
 class APIException(Exception):

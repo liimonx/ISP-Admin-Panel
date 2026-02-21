@@ -354,3 +354,31 @@ def backup_main_router_config():
     except Exception as e:
         logger.error(f"Error backing up main router config: {str(e)}")
         return False
+@shared_task
+def update_router_interface_stats():
+    """
+    Update aggregate interface statistics from all online routers.
+    """
+    from django.core.cache import cache
+
+    total_interfaces = 0
+    active_interfaces = 0
+    routers_checked = 0
+
+    for router in Router.objects.filter(status='online'):
+        try:
+            service = MikroTikService(router)
+            interfaces = service.get_interfaces()
+            total_interfaces += len(interfaces)
+            active_interfaces += len([i for i in interfaces if i.get('status') == 'up'])
+            routers_checked += 1
+        except Exception as e:
+            logger.warning(f"Failed to get interfaces for stats from router {router.name}: {str(e)}")
+            pass
+
+    # Cache the results for 1 hour
+    cache.set('router_stats_total_interfaces', total_interfaces, 3600)
+    cache.set('router_stats_active_interfaces', active_interfaces, 3600)
+
+    logger.info(f"Updated router interface stats: {total_interfaces} total, {active_interfaces} active from {routers_checked} routers")
+    return f"Updated stats from {routers_checked} routers"

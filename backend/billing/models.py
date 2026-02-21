@@ -106,6 +106,11 @@ class Invoice(models.Model):
         blank=True,
         help_text=_('Date when invoice was paid')
     )
+    sent_at = models.DateTimeField(
+        null=True,
+        blank=True,
+        help_text=_('Date when invoice was sent to customer')
+    )
     
     # Notes and Additional Info
     notes = models.TextField(blank=True, help_text=_('Additional notes'))
@@ -181,6 +186,20 @@ class Invoice(models.Model):
         self.status = self.Status.OVERDUE
         self.save()
     
+    def refund_payment(self, amount):
+        """Refund a payment amount."""
+        self.paid_amount -= amount
+        if self.paid_amount < 0:
+            self.paid_amount = Decimal('0.00')
+
+        if self.paid_amount < self.total_amount:
+            if timezone.now().date() > self.due_date:
+                self.status = self.Status.OVERDUE
+            else:
+                self.status = self.Status.PENDING
+
+        self.save()
+
     def save(self, *args, **kwargs):
         """Override save to calculate total."""
         if not self.total_amount:
@@ -343,6 +362,10 @@ class Payment(models.Model):
     
     def mark_as_refunded(self):
         """Mark payment as refunded."""
+        if self.status == self.Status.REFUNDED:
+            return
+
+        self.invoice.refund_payment(self.amount)
         self.status = self.Status.REFUNDED
         self.save()
     

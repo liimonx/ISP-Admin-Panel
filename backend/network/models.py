@@ -120,8 +120,7 @@ class Router(models.Model):
     
     def get_total_bandwidth_usage(self):
         """Get total bandwidth usage for this router."""
-        active_subs = self.subscriptions.filter(status='active')
-        return sum(sub.data_used for sub in active_subs)
+        return self.subscriptions.filter(status='active').aggregate(total=models.Sum('data_used'))['total'] or 0
     
     def get_total_bandwidth_usage_float(self):
         """Get total bandwidth usage as float for API responses."""
