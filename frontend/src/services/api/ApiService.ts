@@ -9,6 +9,7 @@ import { MonitoringService } from "./services/MonitoringService";
 import { UserService } from "./services/UserService";
 import { ReportService } from "./services/ReportService";
 import { HealthService } from "./services/HealthService";
+import { CoreService } from "./services/CoreService";
 
 /**
  * Main API service that composes all individual services
@@ -25,6 +26,7 @@ export class ApiService {
   public readonly users: UserService;
   public readonly reports: ReportService;
   public readonly health: HealthService;
+  public readonly core: CoreService;
 
   constructor(config?: Partial<ServiceConfig>) {
     // Initialize all service instances with the same configuration
@@ -37,6 +39,7 @@ export class ApiService {
     this.users = new UserService(config);
     this.reports = new ReportService(config);
     this.health = new HealthService(config);
+    this.core = new CoreService(config);
   }
 
   // Backward compatibility methods - delegate to appropriate services
@@ -327,8 +330,24 @@ export class ApiService {
     return this.billing.recordPayment(data);
   }
 
+  async updatePayment(id: number, data: any) {
+    return this.billing.updatePayment(id, data);
+  }
+
+  async deletePayment(id: number) {
+    return this.billing.deletePayment(id);
+  }
+
   async refundPayment(id: number, data?: any) {
     return this.billing.refundPayment(id, data);
+  }
+
+  async markPaymentCompleted(id: number, data?: any) {
+    return this.billing.markPaymentCompleted(id, data);
+  }
+
+  async markPaymentFailed(id: number, data?: any) {
+    return this.billing.markPaymentFailed(id, data);
   }
 
   async getPaymentStats() {
@@ -398,23 +417,74 @@ export class ApiService {
     return this.reports.getRevenueReports(params);
   }
 
-  // Enhanced Dashboard Stats
+  // Enhanced Dashboard Stats (using CoreService for the proper backend endpoint)
   async getDashboardStats(): Promise<Stats> {
-    const [customerStats, subscriptionStats, routerStats, invoiceStats] =
-      await Promise.all([
-        this.customers.getCustomerStats(),
-        this.subscriptions.getSubscriptionStats(),
-        this.routers.getRouterStats(),
-        this.billing.getInvoiceStats(),
-      ]);
+    try {
+      // Use the dedicated backend endpoint for efficiency
+      return await this.core.getDashboardStats() as unknown as Stats;
+    } catch {
+      // Fallback: aggregate from individual stat endpoints
+      const [customerStats, subscriptionStats, routerStats, invoiceStats] =
+        await Promise.all([
+          this.customers.getCustomerStats(),
+          this.subscriptions.getSubscriptionStats(),
+          this.routers.getRouterStats(),
+          this.billing.getInvoiceStats(),
+        ]);
 
-    return {
-      total_customers: customerStats.total_customers || 0,
-      active_customers: customerStats.active_customers || 0,
-      total_subscriptions: subscriptionStats.total_subscriptions || 0,
-      total_monthly_revenue: invoiceStats.total_monthly_revenue || 0,
-      total_routers: routerStats.total_routers || 0,
-      online_routers: routerStats.online_routers || 0,
-    };
+      return {
+        total_customers: customerStats.total_customers || 0,
+        active_customers: customerStats.active_customers || 0,
+        total_subscriptions: subscriptionStats.total_subscriptions || 0,
+        total_monthly_revenue: invoiceStats.total_monthly_revenue || 0,
+        total_routers: routerStats.total_routers || 0,
+        online_routers: routerStats.online_routers || 0,
+      };
+    }
+  }
+
+  // Core Analytics & Stats delegates
+  async getCoreAllStats() {
+    return this.core.getAllStats();
+  }
+
+  async getCoreCustomerStats() {
+    return this.core.getCustomerStats();
+  }
+
+  async getCoreInvoiceStats() {
+    return this.core.getInvoiceStats();
+  }
+
+  async getCorePaymentStats() {
+    return this.core.getPaymentStats();
+  }
+
+  async getCorePlanStats() {
+    return this.core.getPlanStats();
+  }
+
+  async getCoreRouterStats() {
+    return this.core.getRouterStats();
+  }
+
+  async getCoreSubscriptionStats() {
+    return this.core.getSubscriptionStats();
+  }
+
+  async getPaymentMethodAnalytics() {
+    return this.core.getPaymentMethodAnalytics();
+  }
+
+  async getTopCustomers(params?: Record<string, any>) {
+    return this.core.getTopCustomers(params);
+  }
+
+  async getDailyTrends(params?: Record<string, any>) {
+    return this.core.getDailyTrends(params);
+  }
+
+  async getMonthlyTrends(params?: Record<string, any>) {
+    return this.core.getMonthlyTrends(params);
   }
 }

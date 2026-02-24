@@ -88,7 +88,7 @@ export class BillingService extends BaseApiService {
   async getPayments(
     params?: Record<string, any>,
   ): Promise<ApiResponse<Payment>> {
-    return this.getPaginated<Payment>(ENDPOINTS.PAYMENTS.BASE, params);
+    return this.getPaginated<Payment>(ENDPOINTS.BILLING.PAYMENTS, params);
   }
 
   /**
@@ -96,23 +96,64 @@ export class BillingService extends BaseApiService {
    */
   async getPayment(id: number): Promise<Payment> {
     this.validateId(id, "payment");
-    return this.get<Payment>(`${ENDPOINTS.PAYMENTS.BASE}/${id}/`);
+    return this.get<Payment>(`${ENDPOINTS.BILLING.PAYMENTS}/${id}/`);
   }
 
   /**
    * Record a new payment
    */
   async recordPayment(data: any): Promise<Payment> {
-    return this.post<Payment>(ENDPOINTS.PAYMENTS.BASE + "/", data);
+    return this.post<Payment>(ENDPOINTS.BILLING.PAYMENTS + "/", data);
   }
 
   /**
-   * Refund a payment
+   * Update an existing payment
+   */
+  async updatePayment(id: number, data: Partial<Payment>): Promise<Payment> {
+    this.validateId(id, "payment");
+    return this.put<Payment>(`${ENDPOINTS.BILLING.PAYMENTS}/${id}/`, data);
+  }
+
+  /**
+   * Delete a payment
+   */
+  async deletePayment(id: number): Promise<void> {
+    this.validateId(id, "payment");
+    return this.delete(`${ENDPOINTS.BILLING.PAYMENTS}/${id}/`);
+  }
+
+  /**
+   * Mark a payment as refunded
+   * Endpoint: POST /api/payments/payments/{id}/mark_refunded/
    */
   async refundPayment(id: number, data?: any): Promise<Payment> {
     this.validateId(id, "payment");
     return this.post<Payment>(
       `${ENDPOINTS.PAYMENTS.BASE}/${id}/mark_refunded/`,
+      data,
+    );
+  }
+
+  /**
+   * Mark a payment as completed
+   * Endpoint: POST /api/payments/payments/{id}/mark_completed/
+   */
+  async markPaymentCompleted(id: number, data?: any): Promise<Payment> {
+    this.validateId(id, "payment");
+    return this.post<Payment>(
+      `${ENDPOINTS.PAYMENTS.BASE}/${id}/mark_completed/`,
+      data,
+    );
+  }
+
+  /**
+   * Mark a payment as failed
+   * Endpoint: POST /api/payments/payments/{id}/mark_failed/
+   */
+  async markPaymentFailed(id: number, data?: any): Promise<Payment> {
+    this.validateId(id, "payment");
+    return this.post<Payment>(
+      `${ENDPOINTS.PAYMENTS.BASE}/${id}/mark_failed/`,
       data,
     );
   }

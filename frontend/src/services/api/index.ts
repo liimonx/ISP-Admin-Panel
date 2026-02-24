@@ -13,6 +13,7 @@ export { MonitoringService } from "./services/MonitoringService";
 export { UserService } from "./services/UserService";
 export { ReportService } from "./services/ReportService";
 export { HealthService } from "./services/HealthService";
+export { CoreService } from "./services/CoreService";
 export { ApiService } from "./ApiService";
 
 // Import the ApiService class to create an instance
@@ -31,3 +32,4 @@ export const monitoringService = apiService.monitoring;
 export const userService = apiService.users;
 export const reportService = apiService.reports;
 export const healthService = apiService.health;
+export const coreService = apiService.core;

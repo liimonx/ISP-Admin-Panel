@@ -60,6 +60,7 @@ export const ENDPOINTS = {
   },
   BILLING: {
     INVOICES: "/billing/invoices",
+    PAYMENTS: "/billing/payments",
     GENERATE: "/billing/generate-invoice",
     BULK_GENERATE: "/billing/bulk-generate",
     INVOICE_STATS: "/billing/invoices/stats",
@@ -88,6 +89,20 @@ export const ENDPOINTS = {
     TOP_USERS: "/reports/top-users",
     USAGE_TRENDS: "/reports/usage-trends",
     REVENUE: "/reports/revenue",
+  },
+  CORE: {
+    DASHBOARD_STATS: "/core/dashboard/stats",
+    STATS_ALL: "/core/stats/all",
+    STATS_CUSTOMERS: "/core/stats/customers",
+    STATS_INVOICES: "/core/stats/invoices",
+    STATS_PAYMENTS: "/core/stats/payments",
+    STATS_PLANS: "/core/stats/plans",
+    STATS_ROUTERS: "/core/stats/routers",
+    STATS_SUBSCRIPTIONS: "/core/stats/subscriptions",
+    ANALYTICS_PAYMENT_METHODS: "/core/analytics/payment-methods",
+    ANALYTICS_TOP_CUSTOMERS: "/core/analytics/top-customers",
+    TRENDS_DAILY: "/core/trends/daily",
+    TRENDS_MONTHLY: "/core/trends/monthly",
   },
 } as const;
 
