@@ -73,32 +73,39 @@ backend/
 ## 🛠️ Tech Stack
 
 ### Core Framework
+
 - **Django 4.2** - Web framework
 - **Django REST Framework 3.14** - API framework
 - **PostgreSQL 15** - Database
 - **Redis 7** - Cache and message broker
 
 ### Authentication & Security
+
 - **SimpleJWT 5.2** - JWT authentication
 - **django-cors-headers 4.0** - CORS handling
 - **django-environ 0.11** - Environment management
 
 ### API Documentation
+
 - **drf-spectacular 0.26** - OpenAPI/Swagger docs
 
 ### Background Tasks
+
 - **Celery 5.3** - Task queue
 - **Redis** - Message broker
 
 ### Network Integration
+
 - **librouteros 3.3** - MikroTik RouterOS API
 - **pysnmp 4.4** - SNMP monitoring
 
 ### Payment Integrations
+
 - **stripe 5.4** - Stripe payments
 - **requests 2.31** - HTTP client for webhooks
 
 ### Development & Testing
+
 - **pytest 7.4** - Testing framework
 - **pytest-django 4.5** - Django test integration
 - **factory-boy 3.3** - Test data factories
@@ -114,53 +121,20 @@ backend/
 
 ### Development Setup
 
-1. **Clone and setup:**
-   ```bash
-   cd backend
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   pip install -r requirements.txt
-   ```
+1. **Clone and setup:**`cd backend python -m venv venv source venv/bin/activate # On Windows: venv\Scripts\activate pip install -r requirements.txt`
+2. **Environment configuration:**`cp env.example .env
 
-2. **Environment configuration:**
-   ```bash
-   cp env.example .env
-   # Edit .env with your configuration
-   ```
+# Edit .env with your configuration`
 
-3. **Database setup:**
-   ```bash
-   python manage.py migrate
-   python manage.py createsuperuser
-   ```
-
-4. **Load initial data:**
-   ```bash
-   python manage.py setup_isp
-   ```
-
-5. **Start development server:**
-   ```bash
-   python manage.py runserver
-   ```
-
-6. **Start Celery (in another terminal):**
-   ```bash
-   celery -A isp_admin worker --loglevel=info
-   celery -A isp_admin beat --loglevel=info
-   ```
+1. **Database setup:**`python manage.py migrate python manage.py createsuperuser`
+2. **Load initial data:**`python manage.py setup_isp`
+3. **Start development server:**`python manage.py runserver`
+4. **Start Celery (in another terminal):**`celery -A isp_admin worker --loglevel=info celery -A isp_admin beat --loglevel=info`
 
 ### Docker Setup
 
-1. **Build and run:**
-   ```bash
-   docker-compose up --build
-   ```
-
-2. **Setup initial data:**
-   ```bash
-   docker-compose exec backend python manage.py setup_isp
-   ```
+1. **Build and run:**`docker-compose up --build`
+2. **Setup initial data:**`docker-compose exec backend python manage.py setup_isp`
 
 ## 🔧 Configuration
 
@@ -216,11 +190,13 @@ The application uses PostgreSQL with the following default settings:
 ### Redis Configuration
 
 Redis is used for:
+
 - Celery message broker
 - Session storage
 - Caching
 
 Default configuration:
+
 - **Host**: `localhost`
 - **Port**: `6379`
 - **Database**: `0`
@@ -230,34 +206,41 @@ Default configuration:
 ### Core Models
 
 #### User (accounts)
+
 - **Fields**: username, email, first_name, last_name, role, phone, is_active
 - **Roles**: Admin, Support, Accountant
 - **Features**: JWT authentication, role-based permissions
 
 #### Customer (customers)
+
 - **Fields**: name, email, phone, address, status, company_name, tax_id, notes
 - **Status**: Active, Inactive, Suspended
 - **Features**: Search, filtering, bulk operations
 
 #### Plan (plans)
+
 - **Fields**: name, description, download_speed, upload_speed, price, setup_fee, billing_cycle
 - **Features**: Speed units, data quotas, feature lists
 
 #### Subscription (subscriptions)
+
 - **Fields**: customer, plan, router, username, password, status, start_date, end_date
 - **Status**: Active, Suspended, Expired, Cancelled
 - **Features**: Data usage tracking, automatic status updates
 
 #### Router (network)
+
 - **Fields**: name, host, port, username, password, is_active
 - **Features**: RouterOS API integration, connection testing
 
 #### Invoice (billing)
+
 - **Fields**: customer, subscription, invoice_number, amount, status, due_date
 - **Status**: Draft, Sent, Paid, Overdue, Cancelled
 - **Features**: Automatic generation, payment tracking
 
 #### Payment (billing)
+
 - **Fields**: invoice, amount, payment_method, status, external_id
 - **Methods**: Stripe, bKash, SSLCommerz
 - **Features**: Webhook processing, payment verification
@@ -273,18 +256,21 @@ Default configuration:
 ### Role-Based Access Control
 
 #### Admin Role
+
 - Full system access
 - User management
 - System configuration
 - All CRUD operations
 
 #### Support Role
+
 - Customer management
 - Subscription management
 - Network monitoring
 - Limited billing access
 
 #### Accountant Role
+
 - Billing management
 - Payment processing
 - Financial reports
@@ -293,12 +279,14 @@ Default configuration:
 ## 📡 API Endpoints
 
 ### Authentication
+
 - `POST /api/auth/login/` - User login
 - `POST /api/auth/token/refresh/` - Refresh JWT token
 - `POST /api/auth/logout/` - User logout
 - `GET /api/auth/me/` - Current user info
 
 ### Customers
+
 - `GET /api/customers/` - List customers
 - `POST /api/customers/` - Create customer
 - `GET /api/customers/{id}/` - Customer details
@@ -308,6 +296,7 @@ Default configuration:
 - `GET /api/customers/stats/` - Customer statistics
 
 ### Plans
+
 - `GET /api/plans/` - List plans
 - `POST /api/plans/` - Create plan
 - `GET /api/plans/{id}/` - Plan details
@@ -317,6 +306,7 @@ Default configuration:
 - `GET /api/plans/featured/` - Featured plans
 
 ### Subscriptions
+
 - `GET /api/subscriptions/` - List subscriptions
 - `POST /api/subscriptions/` - Create subscription
 - `GET /api/subscriptions/{id}/` - Subscription details
@@ -326,6 +316,7 @@ Default configuration:
 - `GET /api/subscriptions/suspended/` - Suspended subscriptions
 
 ### Network
+
 - `GET /api/network/routers/` - List routers
 - `POST /api/network/routers/` - Create router
 - `GET /api/network/routers/{id}/` - Router details
@@ -334,6 +325,7 @@ Default configuration:
 - `GET /api/network/routers/{id}/pppoe-users/` - PPPoE users
 
 ### Billing
+
 - `GET /api/billing/invoices/` - List invoices
 - `GET /api/billing/invoices/{id}/` - Invoice details
 - `GET /api/billing/payments/` - List payments
@@ -341,10 +333,12 @@ Default configuration:
 - `GET /api/billing/invoices/stats/` - Invoice statistics
 
 ### Monitoring
+
 - `GET /api/monitoring/stats/` - System statistics
 - `GET /api/monitoring/routers/{id}/` - Router monitoring data
 
 ### Users (Admin Only)
+
 - `GET /api/auth/users/` - List users
 - `POST /api/auth/users/create/` - Create user
 - `GET /api/auth/users/{id}/` - User details
@@ -356,17 +350,20 @@ Default configuration:
 ### Celery Tasks
 
 #### Billing Tasks
+
 - `generate_monthly_invoices` - Generate monthly invoices
 - `enforce_overdue_invoices` - Suspend overdue subscriptions
 - `reactivate_paid_subscriptions` - Reactivate paid subscriptions
 - `send_payment_reminders` - Send payment reminders
 
 #### Monitoring Tasks
+
 - `poll_snmp_usage` - Poll router SNMP data
 - `create_snmp_snapshot` - Create monitoring snapshots
 - `check_router_status` - Check router connectivity
 
 #### Maintenance Tasks
+
 - `cleanup_old_invoices` - Clean up old invoice data
 - `cleanup_old_snapshots` - Clean up old monitoring data
 
@@ -406,6 +403,7 @@ The `RouterOSService` class provides:
 ### SNMP Monitoring
 
 SNMP polling for:
+
 - **System Resources**: CPU, memory, disk usage
 - **Interface Statistics**: Bytes in/out, packet counts
 - **Network Performance**: Bandwidth utilization
@@ -416,16 +414,19 @@ SNMP polling for:
 ### Supported Providers
 
 #### Stripe
+
 - **Webhook Processing**: Automatic payment confirmation
 - **Subscription Management**: Recurring billing
 - **Payment Methods**: Cards, digital wallets
 
 #### bKash
+
 - **Mobile Banking**: Bangladesh mobile payments
 - **Webhook Processing**: Payment verification
 - **Transaction Tracking**: Payment status updates
 
 #### SSLCommerz
+
 - **Bangladesh Payments**: Local payment gateway
 - **Multiple Methods**: Cards, mobile banking, internet banking
 - **Webhook Processing**: Payment confirmation
@@ -439,19 +440,25 @@ SNMP polling for:
 ## 📚 API Documentation
 
 ### Swagger UI
+
 Access the interactive API documentation at:
+
 ```
 http://localhost:8000/api/schema/swagger-ui/
 ```
 
 ### ReDoc
+
 Alternative documentation format:
+
 ```
 http://localhost:8000/api/schema/redoc/
 ```
 
 ### OpenAPI Schema
+
 Raw OpenAPI schema:
+
 ```
 http://localhost:8000/api/schema/
 ```
@@ -491,42 +498,17 @@ tests/
 
 ### Docker Deployment
 
-1. **Build and run:**
-   ```bash
-   docker-compose up --build -d
-   ```
-
-2. **Run migrations:**
-   ```bash
-   docker-compose exec backend python manage.py migrate
-   ```
-
-3. **Create superuser:**
-   ```bash
-   docker-compose exec backend python manage.py createsuperuser
-   ```
-
-4. **Load initial data:**
-   ```bash
-   docker-compose exec backend python manage.py setup_isp
-   ```
+1. **Build and run:**`docker-compose up --build -d`
+2. **Run migrations:**`docker-compose exec backend python manage.py migrate`
+3. **Create superuser:**`docker-compose exec backend python manage.py createsuperuser`
+4. **Load initial data:**`docker-compose exec backend python manage.py setup_isp`
 
 ### Production Settings
 
 For production deployment:
 
-1. **Set environment variables:**
-   ```env
-   DEBUG=False
-   SECRET_KEY=your-production-secret-key
-   ALLOWED_HOSTS=your-domain.com
-   ```
-
-2. **Configure database:**
-   ```env
-   DATABASE_URL=postgresql://user:password@host:5432/database
-   ```
-
+1. **Set environment variables:**`DEBUG=False SECRET_KEY=your-production-secret-key ALLOWED_HOSTS=your-domain.com`
+2. **Configure database:**`DATABASE_URL=postgresql://user:password@host:5432/database`
 3. **Set up SSL certificates**
 4. **Configure backup strategy**
 5. **Set up monitoring and logging**
@@ -542,6 +524,7 @@ For production deployment:
 ### Logging Configuration
 
 Configured logging levels:
+
 - **DEBUG**: Development debugging
 - **INFO**: General application info
 - **WARNING**: Warning messages

@@ -5,6 +5,7 @@ A comprehensive web-based management system for Internet Service Providers (ISPs
 ## 🚀 Features
 
 ### Core Functionality
+
 - **Customer Management**: Complete customer lifecycle management
 - **Subscription Management**: Plan-based subscription system with automated billing
 - **Network Management**: Router and network infrastructure monitoring
@@ -13,6 +14,7 @@ A comprehensive web-based management system for Internet Service Providers (ISPs
 - **User Management**: Role-based access control and authentication
 
 ### Technical Features
+
 - **Modern Architecture**: Microservices-based architecture with Docker
 - **Real-time Monitoring**: Live network status and performance metrics
 - **API-First Design**: RESTful APIs with comprehensive documentation
@@ -42,6 +44,7 @@ A comprehensive web-based management system for Internet Service Providers (ISPs
 ## 🛠️ Technology Stack
 
 ### Backend
+
 - **Framework**: Django 4.2+ with Django REST Framework
 - **Database**: PostgreSQL 15
 - **Cache**: Redis 7
@@ -50,6 +53,7 @@ A comprehensive web-based management system for Internet Service Providers (ISPs
 - **API Documentation**: Django REST Framework browsable API
 
 ### Frontend
+
 - **Framework**: React 18 with TypeScript
 - **Build Tool**: Vite
 - **UI Library**: Custom Atomix Design System
@@ -58,6 +62,7 @@ A comprehensive web-based management system for Internet Service Providers (ISPs
 - **Styling**: SCSS with CSS Modules
 
 ### Infrastructure
+
 - **Containerization**: Docker & Docker Compose
 - **Web Server**: Nginx
 - **Process Management**: Gunicorn
@@ -67,18 +72,21 @@ A comprehensive web-based management system for Internet Service Providers (ISPs
 ## 📦 Quick Start
 
 ### Prerequisites
+
 - Docker & Docker Compose
 - Git
 - Node.js 18+ (for local development)
 - Python 3.9+ (for local development)
 
 ### 1. Clone the Repository
+
 ```bash
 git clone <repository-url>
 cd bcn
 ```
 
 ### 2. Environment Setup
+
 ```bash
 # Copy environment template
 cp backend/env.example .env
@@ -88,6 +96,7 @@ nano .env
 ```
 
 ### 3. Start with Docker (Recommended)
+
 ```bash
 # Build and start all services
 ./build-all.sh
@@ -98,13 +107,15 @@ docker-compose logs -f
 ```
 
 ### 4. Access the Application
-- **Frontend**: http://localhost:3000
-- **Backend API**: http://localhost:8000
-- **Admin Panel**: http://localhost:8000/admin
+
+- **Frontend**: [http://localhost:3000](http://localhost:3000)
+- **Backend API**: [http://localhost:8000](http://localhost:8000)
+- **Admin Panel**: [http://localhost:8000/admin](http://localhost:8000/admin)
 
 ## 🔧 Development Setup
 
 ### Local Development
+
 ```bash
 # Setup development environment
 ./setup-dev.sh
@@ -122,12 +133,14 @@ npm run dev
 ### Available Scripts
 
 #### Build Scripts
+
 - `./build-all.sh` - Build all Docker images
 - `./build-frontend.sh` - Build frontend only
 - `./setup-dev.sh` - Setup development environment
 - `./deploy.sh` - Production deployment
 
 #### Frontend Scripts
+
 ```bash
 cd frontend
 npm run dev          # Start development server
@@ -138,6 +151,7 @@ npm run type-check   # Run TypeScript checks
 ```
 
 #### Backend Scripts
+
 ```bash
 cd backend
 python manage.py runserver     # Start development server
@@ -215,6 +229,7 @@ ROUTER_HEALTH_CHECK_INTERVAL=300
 ## 🚀 Deployment
 
 ### Production Deployment
+
 ```bash
 # Full deployment with backup
 ./deploy.sh
@@ -225,6 +240,7 @@ docker-compose up -d
 ```
 
 ### Docker Commands
+
 ```bash
 # Build images
 docker-compose build
@@ -245,11 +261,13 @@ docker-compose down -v --rmi all
 ## 📊 API Documentation
 
 ### Authentication
+
 - **Login**: `POST /api/auth/login/`
 - **Logout**: `POST /api/auth/logout/`
 - **Refresh Token**: `POST /api/auth/token/refresh/`
 
 ### Core Endpoints
+
 - **Customers**: `/api/customers/`
 - **Subscriptions**: `/api/subscriptions/`
 - **Plans**: `/api/plans/`
@@ -258,25 +276,30 @@ docker-compose down -v --rmi all
 - **Reports**: `/api/reports/`
 
 ### API Documentation
+
 Access the interactive API documentation at:
-- **Browsable API**: http://localhost:8000/api/
-- **Swagger UI**: http://localhost:8000/api/docs/
+
+- **Browsable API**: [http://localhost:8000/api/](http://localhost:8000/api/)
+- **Swagger UI**: [http://localhost:8000/api/docs/](http://localhost:8000/api/docs/)
 
 ## 🧪 Testing
 
 ### Backend Tests
+
 ```bash
 cd backend
 python manage.py test
 ```
 
 ### Frontend Tests
+
 ```bash
 cd frontend
 npm test
 ```
 
 ### Integration Tests
+
 ```bash
 # Run with Docker
 docker-compose -f docker-compose.test.yml up --abort-on-container-exit
@@ -285,12 +308,14 @@ docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 ## 📈 Monitoring & Health Checks
 
 ### Health Endpoints
+
 - **Frontend**: `GET /health`
 - **Backend**: `GET /api/health/`
 - **Database**: Built-in PostgreSQL health checks
 - **Redis**: Built-in Redis health checks
 
 ### Monitoring
+
 - **Logs**: `docker-compose logs -f`
 - **Metrics**: Built-in performance monitoring
 - **Alerts**: Automated alerting system
@@ -298,6 +323,7 @@ docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 ## 🔒 Security
 
 ### Security Features
+
 - **Authentication**: JWT-based authentication
 - **Authorization**: Role-based access control
 - **HTTPS**: SSL/TLS encryption
@@ -308,6 +334,7 @@ docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 - **Security Headers**: Security-focused HTTP headers
 
 ### Security Best Practices
+
 - Regular security updates
 - Environment variable protection
 - Database connection encryption
@@ -317,6 +344,7 @@ docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 ## 🤝 Contributing
 
 ### Development Workflow
+
 1. Fork the repository
 2. Create a feature branch
 3. Make your changes
@@ -324,6 +352,7 @@ docker-compose -f docker-compose.test.yml up --abort-on-container-exit
 5. Submit a pull request
 
 ### Code Standards
+
 - **Backend**: Follow Django best practices and PEP 8
 - **Frontend**: Follow React best practices and ESLint rules
 - **Commits**: Use conventional commit messages
@@ -336,11 +365,13 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🆘 Support
 
 ### Getting Help
+
 1. Check the [documentation](BUILD_INSTRUCTIONS.md)
 2. Review [GitHub issues](https://github.com/your-repo/issues)
 3. Contact the development team
 
 ### Troubleshooting
+
 - **Common Issues**: See [BUILD_INSTRUCTIONS.md](BUILD_INSTRUCTIONS.md#troubleshooting)
 - **Logs**: Check `docker-compose logs`
 - **Health Checks**: Verify all services are running
@@ -348,6 +379,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🗺️ Roadmap
 
 ### Upcoming Features
+
 - [ ] Mobile application
 - [ ] Advanced analytics dashboard
 - [ ] Automated network provisioning
@@ -356,13 +388,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - [ ] Advanced reporting features
 
 ### Version History
+
 - **v1.0.0**: Initial release with core functionality
 - **v1.1.0**: Enhanced dashboard and reporting
 - **v1.2.0**: Mobile responsiveness improvements
 - **v2.0.0**: Planned major UI/UX overhaul
 
----
-
-**Last Updated**: $(date)
-**Version**: 1.0.0
-**Maintainer**: Development Team
+**Last Updated**: $(date)**Version**: 1.0.0**Maintainer**: Development Team
