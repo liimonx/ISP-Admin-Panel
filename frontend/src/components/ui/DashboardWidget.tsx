@@ -29,19 +29,19 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
   return (
     <Card className={`u-h-100 ${className}`}>
       {/* Widget Header */}
-      <div className={`u-flex u-justify-between u-align-items-start u-mb-4 ${headerClassName}`}>
+      <div
+        className={`u-flex u-justify-between u-align-items-start u-mb-4 ${headerClassName}`}
+      >
         <div className="u-flex-1 u-min-w-0">
           <div className="u-flex u-items-center u-gap-2 u-mb-1">
             {icon && (
-              <Icon 
-                name={icon as any} 
-                size={20} 
-                className="u-text-primary u-flex-shrink-0" 
+              <Icon
+                name={icon as any}
+                size={20}
+                className="u-text-primary u-flex-shrink-0"
               />
             )}
-            <h3 className="u-text-lg u-fw-semibold u-truncate">
-              {title}
-            </h3>
+            <h3 className="u-text-lg u-fw-semibold u-truncate">{title}</h3>
           </div>
           {description && (
             <p className="u-text-sm u-text-secondary-emphasis u-line-clamp-2">
@@ -49,11 +49,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
             </p>
           )}
         </div>
-        {actions && (
-          <div className="u-flex-shrink-0 u-ms-3">
-            {actions}
-          </div>
-        )}
+        {actions && <div className="u-flex-shrink-0 u-ms-3">{actions}</div>}
       </div>
 
       {/* Widget Content */}

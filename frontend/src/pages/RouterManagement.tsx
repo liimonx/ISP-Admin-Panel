@@ -57,10 +57,16 @@ const RouterCard: React.FC<RouterCardProps> = ({
     <Card className="u-p-4 u-border u-rounded u-shadow-sm u-flex u-flex-col u-justify-between">
       <div>
         <h3 className="u-text-lg u-fw-semibold u-mb-2">{router.name}</h3>
-        <p className="u-text-sm u-text-secondary u-mb-2">{router.host}</p>
+        <p className="u-text-sm u-text-secondary-emphasis u-mb-2">
+          {router.host}
+        </p>
         <div className="u-flex u-items-center u-gap-2 u-mb-2">
           <Icon name={getStatusIcon(router.status)} size={16} />
-          <Badge variant={getStatusColor(router.status)} size="sm" label={router.status} />
+          <Badge
+            variant={getStatusColor(router.status)}
+            size="sm"
+            label={router.status}
+          />
         </div>
       </div>
       <div className="u-flex u-justify-between u-items-center u-mt-auto">
@@ -70,25 +76,13 @@ const RouterCard: React.FC<RouterCardProps> = ({
         </div>
       </div>
       <div className="u-flex u-gap-2 u-mt-3">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onEdit(router)}
-        >
+        <Button variant="outline" size="sm" onClick={() => onEdit(router)}>
           <Icon name="Gear" size={16} />
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onView(router)}
-        >
+        <Button variant="outline" size="sm" onClick={() => onView(router)}>
           <Icon name="Eye" size={16} />
         </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onDelete(router.id)}
-        >
+        <Button variant="outline" size="sm" onClick={() => onDelete(router.id)}>
           <Icon name="Trash" size={16} />
         </Button>
       </div>
@@ -284,7 +278,7 @@ const RouterManagement: React.FC = () => {
                   { value: "all", label: "All Status" },
                   { value: "online", label: "Online" },
                   { value: "offline", label: "Offline" },
-                  { value: "maintenance", label: "Maintenance" }
+                  { value: "maintenance", label: "Maintenance" },
                 ]}
               />
             </div>
@@ -306,8 +300,12 @@ const RouterManagement: React.FC = () => {
         <Card>
           <div className="u-p-6 u-text-center">
             <Icon name="Warning" size={48} className="u-text-error u-mb-4" />
-            <h3 className="u-text-lg u-fw-semibold u-mb-2">Error Loading Routers</h3>
-            <p className="u-text-muted">Failed to load router data. Please try again.</p>
+            <h3 className="u-text-lg u-fw-semibold u-mb-2">
+              Error Loading Routers
+            </h3>
+            <p className="u-text-muted">
+              Failed to load router data. Please try again.
+            </p>
           </div>
         </Card>
       ) : (
@@ -337,7 +335,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <Input
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               placeholder="Enter router name"
               required
             />
@@ -349,7 +349,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <Input
               value={formData.host}
-              onChange={(e) => setFormData({ ...formData, host: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, host: e.target.value })
+              }
               placeholder="192.168.1.1"
               required
             />
@@ -361,12 +363,17 @@ const RouterManagement: React.FC = () => {
             </label>
             <Select
               value={formData.router_type}
-              onChange={(e) => setFormData({ ...formData, router_type: e.target.value as Router["router_type"] })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  router_type: e.target.value as Router["router_type"],
+                })
+              }
               className="u-w-100"
               options={[
                 { value: "mikrotik", label: "MikroTik" },
                 { value: "cisco", label: "Cisco" },
-                { value: "other", label: "Other" }
+                { value: "other", label: "Other" },
               ]}
             />
           </div>
@@ -378,7 +385,9 @@ const RouterManagement: React.FC = () => {
             <Input
               type="number"
               value={formData.ssh_port}
-              onChange={(e) => setFormData({ ...formData, ssh_port: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, ssh_port: parseInt(e.target.value) })
+              }
               placeholder="22"
               min="1"
               max="65535"
@@ -391,7 +400,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <Input
               value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, username: e.target.value })
+              }
               placeholder="admin"
               required
             />
@@ -404,7 +415,9 @@ const RouterManagement: React.FC = () => {
             <Input
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               placeholder="Enter password"
             />
           </div>
@@ -417,10 +430,14 @@ const RouterManagement: React.FC = () => {
               <input
                 type="checkbox"
                 checked={formData.use_tls}
-                onChange={(e) => setFormData({ ...formData, use_tls: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, use_tls: e.target.checked })
+                }
                 className="u-me-2"
               />
-              <span className="u-text-sm">Enable TLS/SSL for secure connections</span>
+              <span className="u-text-sm">
+                Enable TLS/SSL for secure connections
+              </span>
             </div>
           </div>
 
@@ -430,7 +447,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <Input
               value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, location: e.target.value })
+              }
               placeholder="Data Center A, Rack 1"
             />
           </div>
@@ -441,7 +460,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               placeholder="Router description"
               className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
               rows={3}
@@ -459,7 +480,7 @@ const RouterManagement: React.FC = () => {
           <Button
             variant="primary"
             onClick={() => handleSubmit(false)}
-                          disabled={createMutation.isLoading}
+            disabled={createMutation.isLoading}
           >
             Add Router
           </Button>
@@ -479,7 +500,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <Input
               value={formData.name}
-              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, name: e.target.value })
+              }
               placeholder="Enter router name"
               required
             />
@@ -491,7 +514,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <Input
               value={formData.host}
-              onChange={(e) => setFormData({ ...formData, host: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, host: e.target.value })
+              }
               placeholder="192.168.1.1"
               required
             />
@@ -503,12 +528,17 @@ const RouterManagement: React.FC = () => {
             </label>
             <Select
               value={formData.router_type}
-              onChange={(e) => setFormData({ ...formData, router_type: e.target.value as Router["router_type"] })}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  router_type: e.target.value as Router["router_type"],
+                })
+              }
               className="u-w-100"
               options={[
                 { value: "mikrotik", label: "MikroTik" },
                 { value: "cisco", label: "Cisco" },
-                { value: "other", label: "Other" }
+                { value: "other", label: "Other" },
               ]}
             />
           </div>
@@ -520,7 +550,9 @@ const RouterManagement: React.FC = () => {
             <Input
               type="number"
               value={formData.ssh_port}
-              onChange={(e) => setFormData({ ...formData, ssh_port: parseInt(e.target.value) })}
+              onChange={(e) =>
+                setFormData({ ...formData, ssh_port: parseInt(e.target.value) })
+              }
               placeholder="22"
               min="1"
               max="65535"
@@ -533,7 +565,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <Input
               value={formData.username}
-              onChange={(e) => setFormData({ ...formData, username: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, username: e.target.value })
+              }
               placeholder="admin"
               required
             />
@@ -546,7 +580,9 @@ const RouterManagement: React.FC = () => {
             <Input
               type="password"
               value={formData.password}
-              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, password: e.target.value })
+              }
               placeholder="Enter new password"
             />
           </div>
@@ -559,10 +595,14 @@ const RouterManagement: React.FC = () => {
               <input
                 type="checkbox"
                 checked={formData.use_tls}
-                onChange={(e) => setFormData({ ...formData, use_tls: e.target.checked })}
+                onChange={(e) =>
+                  setFormData({ ...formData, use_tls: e.target.checked })
+                }
                 className="u-me-2"
               />
-              <span className="u-text-sm">Enable TLS/SSL for secure connections</span>
+              <span className="u-text-sm">
+                Enable TLS/SSL for secure connections
+              </span>
             </div>
           </div>
 
@@ -572,7 +612,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <Input
               value={formData.location}
-              onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, location: e.target.value })
+              }
               placeholder="Data Center A, Rack 1"
             />
           </div>
@@ -583,7 +625,9 @@ const RouterManagement: React.FC = () => {
             </label>
             <textarea
               value={formData.description}
-              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, description: e.target.value })
+              }
               placeholder="Router description"
               className="u-w-100 u-p-2 u-border u-rounded u-bg-white"
               rows={3}
@@ -592,16 +636,13 @@ const RouterManagement: React.FC = () => {
         </div>
 
         <div className="u-flex u-gap-3 u-mt-6 u-justify-end">
-          <Button
-            variant="secondary"
-            onClick={() => setIsEditModalOpen(false)}
-          >
+          <Button variant="secondary" onClick={() => setIsEditModalOpen(false)}>
             Cancel
           </Button>
           <Button
             variant="primary"
             onClick={() => handleSubmit(true)}
-                          disabled={updateMutation.isLoading}
+            disabled={updateMutation.isLoading}
           >
             Update Router
           </Button>
@@ -617,17 +658,23 @@ const RouterManagement: React.FC = () => {
         {selectedRouter && (
           <div className="u-space-y-4">
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">Name</label>
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                Name
+              </label>
               <p className="u-text-lg u-fw-semibold">{selectedRouter.name}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">Host</label>
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                Host
+              </label>
               <p className="u-text-lg">{selectedRouter.host}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">Status</label>
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                Status
+              </label>
               <Badge
                 variant={getStatusColor(selectedRouter.status)}
                 label={selectedRouter.status}
@@ -635,41 +682,48 @@ const RouterManagement: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">Username</label>
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                Username
+              </label>
               <p>{selectedRouter.username}</p>
             </div>
 
             {selectedRouter.location && (
               <div>
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">Location</label>
+                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                  Location
+                </label>
                 <p>{selectedRouter.location}</p>
               </div>
             )}
 
             {selectedRouter.description && (
               <div>
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">Description</label>
+                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                  Description
+                </label>
                 <p>{selectedRouter.description}</p>
               </div>
             )}
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">Created</label>
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                Created
+              </label>
               <p>{new Date(selectedRouter.created_at).toLocaleDateString()}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">Last Updated</label>
+              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                Last Updated
+              </label>
               <p>{new Date(selectedRouter.updated_at).toLocaleDateString()}</p>
             </div>
           </div>
         )}
 
         <div className="u-flex u-gap-3 u-mt-6 u-justify-end">
-          <Button
-            variant="secondary"
-            onClick={() => setIsViewModalOpen(false)}
-          >
+          <Button variant="secondary" onClick={() => setIsViewModalOpen(false)}>
             Close
           </Button>
         </div>

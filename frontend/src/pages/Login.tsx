@@ -223,7 +223,7 @@ const Login: React.FC = () => {
                   <input
                     type="checkbox"
                     id="rememberMe"
-                    className="u-w-4 u-h-4 u-m-0 u-bg-white u-border u-border-solid u-border-gray-300 u-rounded u-text-primary u-shadow-sm focus:u-outline-none focus:u-border-blue-500"
+                    className="u-m-0 u-cursor-pointer"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />

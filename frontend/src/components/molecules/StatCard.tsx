@@ -42,9 +42,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             <div className="u-bg-light u-h-6 u-w-50 u-rounded u-mb-2"></div>
             <div className="u-bg-light u-h-3 u-w-25 u-rounded"></div>
           </div>
-          {icon && (
-            <div className="u-bg-light u-p-2 u-rounded"></div>
-          )}
+          {icon && <div className="u-bg-light u-p-2 u-rounded"></div>}
         </div>
       </Card>
     );
@@ -54,7 +52,9 @@ export const StatCard: React.FC<StatCardProps> = ({
     <Card className={`u-h-full ${className}`} data-testid={testId}>
       <div className="u-flex u-justify-between u-items-start">
         <div className="u-flex-1">
-          <div className="u-text-sm u-mb-2 u-text-secondary">{title}</div>
+          <div className="u-text-sm u-mb-2 u-text-secondary-emphasis">
+            {title}
+          </div>
           <div className="u-text-2xl u-fw-bold u-mb-2">{value}</div>
           {trend && (
             <div className="u-flex u-items-center u-mb-2">
@@ -73,7 +73,9 @@ export const StatCard: React.FC<StatCardProps> = ({
             </div>
           )}
           {description && (
-            <div className="u-text-xs u-text-secondary">{description}</div>
+            <div className="u-text-xs u-text-secondary-emphasis">
+              {description}
+            </div>
           )}
         </div>
 

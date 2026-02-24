@@ -318,7 +318,7 @@ const Customers: React.FC = () => {
         {/* Quick Stats */}
         <div className="u-flex u-gap-6 u-text-sm">
           <div className="u-flex u-items-center u-gap-2">
-            <div className="u-w-3 u-h-3 u-bg-success u-rounded-circle"></div>
+            <div className="u-w-3 u-h-3 u-bg-success-subtle u-rounded-circle"></div>
             <span className="u-text-secondary-emphasis">
               Total:{" "}
               {customersData?.count || customerStats?.total_customers || 0}{" "}
@@ -326,7 +326,7 @@ const Customers: React.FC = () => {
             </span>
           </div>
           <div className="u-flex u-items-center u-gap-2">
-            <div className="u-w-3 u-h-3 u-bg-primary u-rounded-circle"></div>
+            <div className="u-w-3 u-h-3 u-bg-primary-subtle u-rounded-circle"></div>
             <span className="u-text-secondary-emphasis">
               Active:{" "}
               {customersData?.results?.filter((c) => c.status === "active")
@@ -336,7 +336,7 @@ const Customers: React.FC = () => {
             </span>
           </div>
           <div className="u-flex u-items-center u-gap-2">
-            <div className="u-w-3 u-h-3 u-bg-warning u-rounded-circle"></div>
+            <div className="u-w-3 u-h-3 u-bg-warning-subtle u-rounded-circle"></div>
             <span className="u-text-secondary-emphasis">
               Suspended:{" "}
               {customersData?.results?.filter((c) => c.status === "suspended")
@@ -389,7 +389,9 @@ const Customers: React.FC = () => {
         {isLoading ? (
           <div className="u-text-center u-p-6">
             <Spinner size="lg" />
-            <p className="u-mt-3 u-text-secondary">Loading customers...</p>
+            <p className="u-mt-3 u-text-secondary-emphasis">
+              Loading customers...
+            </p>
           </div>
         ) : (
           <>
@@ -409,7 +411,7 @@ const Customers: React.FC = () => {
                           {sanitizeText(customer.name)}
                         </div>
                         {customer.company_name && (
-                          <div className="u-text-secondary u-text-sm">
+                          <div className="u-text-secondary-emphasis u-text-sm">
                             {sanitizeText(customer.company_name)}
                           </div>
                         )}
@@ -422,7 +424,7 @@ const Customers: React.FC = () => {
                         <Icon
                           name="Envelope"
                           size={14}
-                          className="u-me-2 u-text-secondary"
+                          className="u-me-2 u-text-secondary-emphasis"
                         />
                         {sanitizeEmail(customer.email)}
                       </div>
@@ -430,7 +432,7 @@ const Customers: React.FC = () => {
                         <Icon
                           name="Phone"
                           size={14}
-                          className="u-me-2 u-text-secondary"
+                          className="u-me-2 u-text-secondary-emphasis"
                         />
                         {sanitizePhone(customer.phone)}
                       </div>
@@ -442,7 +444,7 @@ const Customers: React.FC = () => {
                         {sanitizeText(customer.city)},{" "}
                         {sanitizeText(customer.state)}
                       </div>
-                      <div className="u-text-secondary u-text-sm">
+                      <div className="u-text-secondary-emphasis u-text-sm">
                         {sanitizeText(customer.country)}
                       </div>
                     </div>
@@ -506,10 +508,10 @@ const Customers: React.FC = () => {
                 <Icon
                   name="Users"
                   size={48}
-                  className="u-text-secondary u-mb-3"
+                  className="u-text-secondary-emphasis u-mb-3"
                 />
                 <h3 className="u-h5 u-mb-2">No customers found</h3>
-                <p className="u-text-secondary u-mb-4">
+                <p className="u-text-secondary-emphasis u-mb-4">
                   {searchQuery || statusFilter !== "all"
                     ? "Try adjusting your filters"
                     : "Get started by creating your first customer"}

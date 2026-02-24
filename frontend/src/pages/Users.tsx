@@ -303,7 +303,7 @@ const Users: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => refetch()}
-            className="u-ml-2"
+            className="u-ms-2"
           >
             Try Again
           </Button>
@@ -318,7 +318,7 @@ const Users: React.FC = () => {
       <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-h2 u-mb-2">User Management</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Manage system users and their permissions
           </p>
         </div>
@@ -343,7 +343,9 @@ const Users: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{userStats.total_users || 0}</h3>
-                  <p className="u-text-secondary u-mb-0">Total Users</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Total Users
+                  </p>
                 </div>
               </div>
             </Card>
@@ -356,7 +358,9 @@ const Users: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{userStats.active_users || 0}</h3>
-                  <p className="u-text-secondary u-mb-0">Active Users</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Active Users
+                  </p>
                 </div>
               </div>
             </Card>
@@ -369,7 +373,9 @@ const Users: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{userStats.admin_users || 0}</h3>
-                  <p className="u-text-secondary u-mb-0">Administrators</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Administrators
+                  </p>
                 </div>
               </div>
             </Card>
@@ -384,7 +390,9 @@ const Users: React.FC = () => {
                   <h3 className="u-h4 u-mb-1">
                     {userStats.recently_active || 0}
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Recently Active</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Recently Active
+                  </p>
                 </div>
               </div>
             </Card>
@@ -431,7 +439,7 @@ const Users: React.FC = () => {
         {isLoading ? (
           <div className="u-text-center u-p-6">
             <Spinner size="lg" />
-            <p className="u-mt-3 u-text-secondary">Loading users...</p>
+            <p className="u-mt-3 u-text-secondary-emphasis">Loading users...</p>
           </div>
         ) : (
           <>
@@ -448,7 +456,7 @@ const Users: React.FC = () => {
                       />
                       <div>
                         <div className="u-fw-medium">{user.username}</div>
-                        <div className="u-text-secondary u-text-sm">
+                        <div className="u-text-secondary-emphasis u-text-sm">
                           {user.first_name} {user.last_name}
                         </div>
                       </div>
@@ -523,10 +531,10 @@ const Users: React.FC = () => {
                 <Icon
                   name="Users"
                   size={48}
-                  className="u-text-secondary u-mb-3"
+                  className="u-text-secondary-emphasis u-mb-3"
                 />
                 <h3 className="u-h5 u-mb-2">No users found</h3>
-                <p className="u-text-secondary u-mb-4">
+                <p className="u-text-secondary-emphasis u-mb-4">
                   {searchQuery || roleFilter !== "all" || statusFilter !== "all"
                     ? "Try adjusting your filters"
                     : "Get started by creating your first user"}
@@ -589,9 +597,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
-                First Name *
-              </label>
+              <label className="u-block u-mb-2 u-fw-medium">First Name *</label>
               <Input
                 value={formData.first_name}
                 onChange={(e) =>
@@ -607,9 +613,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
-                Last Name *
-              </label>
+              <label className="u-block u-mb-2 u-fw-medium">Last Name *</label>
               <Input
                 value={formData.last_name}
                 onChange={(e) => handleInputChange("last_name", e.target.value)}
@@ -690,10 +694,8 @@ const Users: React.FC = () => {
 
           <div className="u-flex u-items-center">
             <Toggle
-              initialOn={formData.is_active}
-              onToggleOn={() =>
-                handleInputChange("is_active", !formData.is_active)
-              }
+              checked={formData.is_active}
+              onChange={(checked) => handleInputChange("is_active", checked)}
               className="u-me-3"
             />
             <label>Active User</label>
@@ -774,9 +776,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
-                First Name *
-              </label>
+              <label className="u-block u-mb-2 u-fw-medium">First Name *</label>
               <Input
                 value={formData.first_name}
                 onChange={(e) =>
@@ -792,9 +792,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
-                Last Name *
-              </label>
+              <label className="u-block u-mb-2 u-fw-medium">Last Name *</label>
               <Input
                 value={formData.last_name}
                 onChange={(e) => handleInputChange("last_name", e.target.value)}
@@ -935,7 +933,7 @@ const Users: React.FC = () => {
             <Icon name="Trash" size={24} className="u-text-danger" />
           </div>
           <h3 className="u-h5 u-mb-3">Delete User</h3>
-          <p className="u-text-secondary u-mb-4">
+          <p className="u-text-secondary-emphasis u-mb-4">
             Are you sure you want to delete{" "}
             <strong>{selectedUser?.username}</strong>? This action cannot be
             undone.

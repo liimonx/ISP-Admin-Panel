@@ -45,7 +45,7 @@ class RouterViewSet(viewsets.ModelViewSet):
             ),
             annotated_total_bandwidth_usage=Coalesce(
                 Sum('subscriptions__data_used', filter=Q(subscriptions__status='active')),
-                models.Value(0.0, output_field=models.FloatField())
+                models.Value(0.0, output_field=models.DecimalField())
             ),
             annotated_subscriptions_count=Count('subscriptions')
         )

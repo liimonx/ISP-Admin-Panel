@@ -341,7 +341,7 @@ const Plans: React.FC = () => {
             variant="outline"
             size="sm"
             onClick={() => refetch()}
-            className="u-ml-2"
+            className="u-ms-2"
           >
             Try Again
           </Button>
@@ -356,7 +356,7 @@ const Plans: React.FC = () => {
       <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-text-2xl u-mb-2">Plans Management</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Manage internet service plans and pricing
           </p>
         </div>
@@ -365,7 +365,7 @@ const Plans: React.FC = () => {
           onClick={() => setIsCreateModalOpen(true)}
           disabled={isLoading}
         >
-          <Icon name="Plus" size={16} className="u-mr-2" />
+          <Icon name="Plus" size={16} className="u-me-2" />
           Add Plan
         </Button>
       </div>
@@ -376,12 +376,16 @@ const Plans: React.FC = () => {
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
-                <div className="u-bg-primary-subtle u-p-3 u-rounded u-mr-3">
+                <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Package" size={24} className="u-text-primary" />
                 </div>
                 <div>
-                  <h3 className="u-text-lg u-mb-1">{planStats.total_plans || 0}</h3>
-                  <p className="u-text-secondary u-mb-0">Total Plans</p>
+                  <h3 className="u-text-lg u-mb-1">
+                    {planStats.total_plans || 0}
+                  </h3>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Total Plans
+                  </p>
                 </div>
               </div>
             </Card>
@@ -389,7 +393,7 @@ const Plans: React.FC = () => {
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
-                <div className="u-bg-success-subtle u-p-3 u-rounded u-mr-3">
+                <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
                   <Icon
                     name="CheckCircle"
                     size={24}
@@ -397,8 +401,12 @@ const Plans: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="u-text-lg u-mb-1">{planStats.active_plans || 0}</h3>
-                  <p className="u-text-secondary u-mb-0">Active Plans</p>
+                  <h3 className="u-text-lg u-mb-1">
+                    {planStats.active_plans || 0}
+                  </h3>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Active Plans
+                  </p>
                 </div>
               </div>
             </Card>
@@ -406,14 +414,16 @@ const Plans: React.FC = () => {
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
-                <div className="u-bg-warning-subtle u-p-3 u-rounded u-mr-3">
+                <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Star" size={24} className="u-text-warning" />
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
                     {planStats.featured_plans || 0}
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Featured Plans</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Featured Plans
+                  </p>
                 </div>
               </div>
             </Card>
@@ -421,14 +431,16 @@ const Plans: React.FC = () => {
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
-                <div className="u-bg-info-subtle u-p-3 u-rounded u-mr-3">
+                <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="TrendUp" size={24} className="u-text-info" />
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
                     {planStats.popular_plans || 0}
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Popular Plans</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Popular Plans
+                  </p>
                 </div>
               </div>
             </Card>
@@ -478,7 +490,7 @@ const Plans: React.FC = () => {
         {isLoading ? (
           <div className="u-text-center u-p-6">
             <Spinner size="lg" />
-            <p className="u-mt-3 u-text-secondary">Loading plans...</p>
+            <p className="u-mt-3 u-text-secondary-emphasis">Loading plans...</p>
           </div>
         ) : (
           <>
@@ -490,7 +502,7 @@ const Plans: React.FC = () => {
                     <div>
                       <div className="u-fw-medium">{plan.name}</div>
                       {plan.description && (
-                        <div className="u-text-secondary u-text-sm">
+                        <div className="u-text-secondary-emphasis u-text-sm">
                           {plan.description.length > 50
                             ? `${plan.description.substring(0, 50)}...`
                             : plan.description}
@@ -511,7 +523,7 @@ const Plans: React.FC = () => {
                       <div className="u-fw-medium">
                         {formatPrice(plan.price, plan.billing_cycle)}
                       </div>
-                      <div className="u-text-secondary u-text-sm">
+                      <div className="u-text-secondary-emphasis u-text-sm">
                         {getBillingCycleLabel(plan.billing_cycle)}
                       </div>
                     </div>
@@ -575,10 +587,10 @@ const Plans: React.FC = () => {
                 <Icon
                   name="Package"
                   size={48}
-                  className="u-text-secondary u-mb-3"
+                  className="u-text-secondary-emphasis u-mb-3"
                 />
                 <h3 className="u-h5 u-mb-2">No plans found</h3>
-                <p className="u-text-secondary u-mb-4">
+                <p className="u-text-secondary-emphasis u-mb-4">
                   {searchQuery ||
                   statusFilter !== "all" ||
                   billingCycleFilter !== "all"
@@ -611,9 +623,7 @@ const Plans: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
-                Plan Name *
-              </label>
+              <label className="u-block u-mb-2 u-fw-medium">Plan Name *</label>
               <Input
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
@@ -653,9 +663,7 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={4}>
-              <label className="u-block u-mb-2 u-fw-medium">
-                Price (৳) *
-              </label>
+              <label className="u-block u-mb-2 u-fw-medium">Price (৳) *</label>
               <Input
                 type="number"
                 value={formData.price}
@@ -795,19 +803,17 @@ const Plans: React.FC = () => {
           <div className="u-flex u-flex-wrap u-gap-4">
             <div className="u-flex u-items-center">
               <Toggle
-                initialOn={formData.is_active}
-                onToggleOn={() =>
-                  handleInputChange("is_active", !formData.is_active)
-                }
+                checked={formData.is_active}
+                onChange={(checked) => handleInputChange("is_active", checked)}
                 className="u-me-2"
               />
               <label>Active Plan</label>
             </div>
             <div className="u-flex u-items-center">
               <Toggle
-                initialOn={formData.is_featured}
-                onToggleOn={() =>
-                  handleInputChange("is_featured", !formData.is_featured)
+                checked={formData.is_featured}
+                onChange={(checked) =>
+                  handleInputChange("is_featured", checked)
                 }
                 className="u-me-2"
               />
@@ -815,10 +821,8 @@ const Plans: React.FC = () => {
             </div>
             <div className="u-flex u-items-center">
               <Toggle
-                initialOn={formData.is_popular}
-                onToggleOn={() =>
-                  handleInputChange("is_popular", !formData.is_popular)
-                }
+                checked={formData.is_popular}
+                onChange={(checked) => handleInputChange("is_popular", checked)}
                 className="u-me-2"
               />
               <label>Popular Plan</label>
@@ -868,9 +872,7 @@ const Plans: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
-                Plan Name *
-              </label>
+              <label className="u-block u-mb-2 u-fw-medium">Plan Name *</label>
               <Input
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
@@ -910,9 +912,7 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={4}>
-              <label className="u-block u-mb-2 u-fw-medium">
-                Price (৳) *
-              </label>
+              <label className="u-block u-mb-2 u-fw-medium">Price (৳) *</label>
               <Input
                 type="number"
                 value={formData.price}
@@ -1052,19 +1052,17 @@ const Plans: React.FC = () => {
           <div className="u-flex u-flex-wrap u-gap-4">
             <div className="u-flex u-items-center">
               <Toggle
-                initialOn={formData.is_active}
-                onToggleOn={() =>
-                  handleInputChange("is_active", !formData.is_active)
-                }
+                checked={formData.is_active}
+                onChange={(checked) => handleInputChange("is_active", checked)}
                 className="u-me-2"
               />
               <label>Active Plan</label>
             </div>
             <div className="u-flex u-items-center">
               <Toggle
-                initialOn={formData.is_featured}
-                onToggleOn={() =>
-                  handleInputChange("is_featured", !formData.is_featured)
+                checked={formData.is_featured}
+                onChange={(checked) =>
+                  handleInputChange("is_featured", checked)
                 }
                 className="u-me-2"
               />
@@ -1072,10 +1070,8 @@ const Plans: React.FC = () => {
             </div>
             <div className="u-flex u-items-center">
               <Toggle
-                initialOn={formData.is_popular}
-                onToggleOn={() =>
-                  handleInputChange("is_popular", !formData.is_popular)
-                }
+                checked={formData.is_popular}
+                onChange={(checked) => handleInputChange("is_popular", checked)}
                 className="u-me-2"
               />
               <label>Popular Plan</label>
@@ -1127,7 +1123,7 @@ const Plans: React.FC = () => {
             <Icon name="Trash" size={24} className="u-text-danger" />
           </div>
           <h3 className="u-h5 u-mb-3">Delete Plan</h3>
-          <p className="u-text-secondary u-mb-4">
+          <p className="u-text-secondary-emphasis u-mb-4">
             Are you sure you want to delete{" "}
             <strong>{selectedPlan?.name}</strong>? This action cannot be undone.
           </p>

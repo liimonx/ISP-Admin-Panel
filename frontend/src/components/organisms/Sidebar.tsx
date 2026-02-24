@@ -75,14 +75,15 @@ const createMenuItems = (badgeData: any): MenuItem[] => [
         path: "/subscriptions",
         badge: {
           text: badgeData?.subscriptions?.active?.toString() || "0",
-          variant: badgeData?.subscriptions?.pending > 0 ? "warning" : "success",
+          variant:
+            badgeData?.subscriptions?.pending > 0 ? "warning" : "success",
         },
         tooltip: "Active subscriptions",
       },
       {
         id: "router-management",
         label: "Router Management",
-        icon: "Router",
+        icon: "Broadcast",
         path: "/routers",
         tooltip: "Manage network routers",
       },
@@ -116,7 +117,7 @@ const createMenuItems = (badgeData: any): MenuItem[] => [
       {
         id: "main-router",
         label: "Main Router",
-        icon: "Router",
+        icon: "Broadcast",
         path: "/main-router",
         tooltip: "Main router dashboard",
       },
@@ -205,18 +206,18 @@ export const Sidebar: React.FC<SidebarProps> = ({
   useEffect(() => {
     const currentPath = location.pathname;
     const newExpandedSections: string[] = [];
-    
+
     menuItems.forEach((item) => {
       if (item.children) {
         const hasActiveChild = item.children.some(
-          (child) => child.path === currentPath
+          (child) => child.path === currentPath,
         );
         if (hasActiveChild) {
           newExpandedSections.push(item.id);
         }
       }
     });
-    
+
     if (newExpandedSections.length > 0) {
       setExpandedSections(newExpandedSections);
     }
@@ -283,9 +284,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       return (
         <div key={item.id}>
           {collapsed && item.tooltip ? (
-            <Tooltip content={item.tooltip}>
-              {menuItemContent}
-            </Tooltip>
+            <Tooltip content={item.tooltip}>{menuItemContent}</Tooltip>
           ) : (
             menuItemContent
           )}
@@ -302,9 +301,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
     return (
       <div key={item.id}>
         {collapsed && item.tooltip ? (
-          <Tooltip content={item.tooltip}>
-            {menuItemContent}
-          </Tooltip>
+          <Tooltip content={item.tooltip}>{menuItemContent}</Tooltip>
         ) : (
           menuItemContent
         )}
@@ -319,17 +316,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
       } ${className}`}
       data-testid={testId}
     >
-
-
       {/* Navigation Menu */}
       <div className="u-flex-1 u-overflow-y-auto u-py-4">
         <SideMenu>
           <SideMenuList>
             {menuItems.map((item, index) => {
-              const showDivider = index > 0 && 
+              const showDivider =
+                index > 0 &&
                 item.category !== menuItems[index - 1].category &&
                 !collapsed;
-              
+
               return (
                 <React.Fragment key={item.id}>
                   {showDivider && (
@@ -359,7 +355,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         ) : (
           <div className="u-flex u-justify-center">
             <Tooltip content="BCN ISP v1.0.0 - System Online">
-              <Icon name="Info" size={16} className="u-text-secondary-emphasis" />
+              <Icon
+                name="Info"
+                size={16}
+                className="u-text-secondary-emphasis"
+              />
             </Tooltip>
           </div>
         )}

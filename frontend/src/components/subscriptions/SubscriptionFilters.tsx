@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, Input, Button, Icon, Select } from '@shohojdhara/atomix';
+import React from "react";
+import { Card, Input, Button, Icon, Select } from "@shohojdhara/atomix";
 
 export interface SubscriptionFiltersProps {
   searchQuery: string;
@@ -16,7 +16,7 @@ export interface SubscriptionFiltersProps {
 
 /**
  * SubscriptionFilters Component
- * 
+ *
  * A component for filtering subscriptions with various criteria.
  * Built using Atomix Card, Input, Button, and Icon components.
  */
@@ -30,18 +30,14 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
   routerFilter,
   onRouterChange,
   onReset,
-  className = '',
+  className = "",
 }) => {
   return (
     <Card className={`u-mb-6 ${className}`}>
       <div className="u-p-4">
         <div className="u-flex u-justify-between u-items-center u-mb-4">
           <h3 className="u-text-lg u-fw-semibold">Filter Subscriptions</h3>
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={onReset}
-          >
+          <Button variant="outline" size="sm" onClick={onReset}>
             <Icon name="X" size={16} />
             Clear Filters
           </Button>
@@ -75,16 +71,14 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
                 { value: "active", label: "Active" },
                 { value: "pending", label: "Pending" },
                 { value: "suspended", label: "Suspended" },
-                { value: "cancelled", label: "Cancelled" }
+                { value: "cancelled", label: "Cancelled" },
               ]}
             />
           </div>
 
           {/* Plan Filter */}
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
-              Plan
-            </label>
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">Plan</label>
             <Select
               value={planFilter}
               onChange={(e) => onPlanChange(e.target.value)}
@@ -94,7 +88,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
                 { value: "basic", label: "Basic Plan" },
                 { value: "standard", label: "Standard Plan" },
                 { value: "premium", label: "Premium Plan" },
-                { value: "enterprise", label: "Enterprise Plan" }
+                { value: "enterprise", label: "Enterprise Plan" },
               ]}
             />
           </div>
@@ -112,7 +106,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
                 { value: "all", label: "All Routers" },
                 { value: "router-1", label: "Router 1" },
                 { value: "router-2", label: "Router 2" },
-                { value: "router-3", label: "Router 3" }
+                { value: "router-3", label: "Router 3" },
               ]}
             />
           </div>

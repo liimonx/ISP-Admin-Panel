@@ -1,4 +1,4 @@
-import axios, { AxiosResponse, AxiosRequestConfig } from "axios";
+import axios, { AxiosResponse } from "axios";
 import { ApiResponse } from "../../../types";
 import {
   StandardApiResponse,
@@ -52,8 +52,18 @@ export abstract class BaseApiService {
   ): ApiResponse<T> {
     const data = response.data;
 
+    // Guard against empty missing data
+    if (!data) {
+      return {
+        count: 0,
+        next: undefined,
+        previous: undefined,
+        results: [],
+      };
+    }
+
     // Handle new standardized format
-    if (data.success !== undefined) {
+    if (typeof data === "object" && "success" in data) {
       if (!data.success) {
         throw new ApiError(
           data.message || "API request failed",
@@ -120,7 +130,7 @@ export abstract class BaseApiService {
    * Enhanced error handling
    */
   protected handleApiError(error: any): never {
-    if (error instanceof ApiError) {
+    if (error instanceof ApiError || error?.name === "ApiError" || error?.name === "AppError") {
       throw error;
     }
 
@@ -141,10 +151,12 @@ export abstract class BaseApiService {
     } else if (error.request) {
       throw new NetworkError();
     } else {
+      console.error("Unhandled API Error:", error);
       throw new ApiError(
-        "Request failed - please try again",
+        error?.message || "Request failed - please try again",
         undefined,
         "REQUEST_ERROR",
+        error
       );
     }
   }
@@ -166,16 +178,19 @@ export abstract class BaseApiService {
         return await fn();
       } catch (error: any) {
         lastError = error;
+        
+        // Extract status either from raw Axios error or wrapped ApiError
+        const errorStatus = error.status || error.response?.status;
 
         // Don't retry on certain status codes
         if (
-          error.response?.status &&
+          errorStatus &&
           [
             HTTP_STATUS.BAD_REQUEST,
             HTTP_STATUS.UNAUTHORIZED,
             HTTP_STATUS.FORBIDDEN,
             HTTP_STATUS.NOT_FOUND,
-          ].includes(error.response.status)
+          ].includes(errorStatus)
         ) {
           throw error;
         }
@@ -187,8 +202,16 @@ export abstract class BaseApiService {
 
         // Only retry on rate limit or server errors
         if (
-          error.response?.status === HTTP_STATUS.TOO_MANY_REQUESTS ||
-          error.response?.status >= HTTP_STATUS.INTERNAL_SERVER_ERROR
+          errorStatus === HTTP_STATUS.TOO_MANY_REQUESTS ||
+          errorStatus >= HTTP_STATUS.INTERNAL_SERVER_ERROR ||
+          error instanceof NetworkError ||
+          error.request ||
+          error.code === 'ECONNABORTED' || // Axios timeout
+          error.code === 'NETWORK_ERROR' || // AppError wrapped timeout
+          error.code === 'GATEWAY_TIMEOUT' ||
+          error.code === 'BAD_GATEWAY' ||
+          error.code === 'SERVICE_UNAVAILABLE' ||
+          error.code === 'INTERNAL_SERVER_ERROR'
         ) {
           const delay = baseDelay * Math.pow(2, attempt);
           await new Promise((resolve) => setTimeout(resolve, delay));

@@ -27,7 +27,7 @@ class SubscriptionAdmin(admin.ModelAdmin):
             'fields': ('router', 'access_method', 'ip_address', 'mac_address')
         }),
         ('Bandwidth Settings', {
-            'fields': ('download_speed', 'upload_speed', 'data_limit', 'data_used'),
+            'fields': ('data_used',),
             'classes': ('collapse',)
         }),
         ('Dates', {
@@ -85,14 +85,15 @@ class SubscriptionAdmin(admin.ModelAdmin):
     status_display.short_description = 'Status'
     
     def speed_display(self, obj):
-        if obj.download_speed and obj.upload_speed:
-            return f"{obj.download_speed}↓ / {obj.upload_speed}↑ Mbps"
+        if obj.plan and getattr(obj.plan, 'download_speed', None) and getattr(obj.plan, 'upload_speed', None):
+            return f"{obj.plan.download_speed}↓ / {obj.plan.upload_speed}↑ Mbps"
         return '-'
     speed_display.short_description = 'Speed'
     
     def data_usage_display(self, obj):
-        if obj.data_limit:
-            usage_pct = (obj.data_used / obj.data_limit * 100) if obj.data_limit > 0 else 0
+        data_limit = getattr(obj.plan, 'data_quota', 0)
+        if data_limit:
+            usage_pct = (obj.data_used / data_limit * 100) if data_limit > 0 else 0
             if usage_pct > 90:
                 color = 'red'
             elif usage_pct > 75:
@@ -102,25 +103,25 @@ class SubscriptionAdmin(admin.ModelAdmin):
             
             return format_html(
                 '<span style="color: {};">{:.1f} GB / {:.1f} GB ({:.1f}%)</span>',
-                color, obj.data_used, obj.data_limit, usage_pct
+                color, obj.data_used, data_limit, usage_pct
             )
         return f"{obj.data_used:.1f} GB"
     data_usage_display.short_description = 'Data Usage'
     
     def expires_display(self, obj):
-        if obj.expires_at:
+        if obj.end_date:
             from django.utils import timezone
-            now = timezone.now()
-            if obj.expires_at < now:
+            now = timezone.now().date()
+            if obj.end_date < now:
                 return format_html(
                     '<span style="color: red; font-weight: bold;">Expired</span>'
                 )
-            elif obj.expires_at < now + timezone.timedelta(days=7):
+            elif obj.end_date < now + timezone.timedelta(days=7):
                 return format_html(
                     '<span style="color: orange; font-weight: bold;">Expires Soon</span>'
                 )
             else:
-                return obj.expires_at.strftime('%Y-%m-%d')
+                return obj.end_date.strftime('%Y-%m-%d')
         return '-'
     expires_display.short_description = 'Expires'
     

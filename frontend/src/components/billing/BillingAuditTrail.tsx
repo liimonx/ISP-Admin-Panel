@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 import {
   Card,
   Button,
@@ -13,14 +13,14 @@ import {
   Pagination,
   Callout,
   Modal,
-} from '@shohojdhara/atomix';
-import { apiService } from '../../services/apiService';
-import { formatCurrency } from '../../utils/formatters';
+} from "@shohojdhara/atomix";
+import { apiService } from "../../services/apiService";
+import { formatCurrency } from "../../utils/formatters";
 
 interface AuditLogEntry {
   id: number;
   action: string;
-  resource_type: 'invoice' | 'payment' | 'customer' | 'subscription';
+  resource_type: "invoice" | "payment" | "customer" | "subscription";
   resource_id: number;
   resource_name: string;
   user: {
@@ -36,19 +36,21 @@ interface AuditLogEntry {
 
 interface BillingAuditTrailProps {
   className?: string;
-  resourceType?: 'invoice' | 'payment' | 'customer' | 'subscription';
+  resourceType?: "invoice" | "payment" | "customer" | "subscription";
   resourceId?: number;
 }
 
 const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
-  className = '',
+  className = "",
   resourceType,
   resourceId,
 }) => {
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [actionFilter, setActionFilter] = useState('all');
-  const [selectedEntry, setSelectedEntry] = useState<AuditLogEntry | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [actionFilter, setActionFilter] = useState("all");
+  const [selectedEntry, setSelectedEntry] = useState<AuditLogEntry | null>(
+    null,
+  );
   const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
   const itemsPerPage = 20;
 
@@ -58,14 +60,21 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
     isLoading: auditLoading,
     error: auditError,
   } = useQuery({
-    queryKey: ['billing-audit-trail', currentPage, searchQuery, actionFilter, resourceType, resourceId],
+    queryKey: [
+      "billing-audit-trail",
+      currentPage,
+      searchQuery,
+      actionFilter,
+      resourceType,
+      resourceId,
+    ],
     queryFn: async () => {
       try {
         const params: any = {
           page: currentPage,
           limit: itemsPerPage,
           search: searchQuery || undefined,
-          action: actionFilter !== 'all' ? actionFilter : undefined,
+          action: actionFilter !== "all" ? actionFilter : undefined,
         };
 
         if (resourceType) params.resource_type = resourceType;
@@ -83,21 +92,30 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
 
   const generateMockAuditData = () => {
     const actions = [
-      'created', 'updated', 'deleted', 'paid', 'sent', 'cancelled',
-      'marked_overdue', 'refunded', 'approved', 'rejected'
+      "created",
+      "updated",
+      "deleted",
+      "paid",
+      "sent",
+      "cancelled",
+      "marked_overdue",
+      "refunded",
+      "approved",
+      "rejected",
     ];
-    const resourceTypes = ['invoice', 'payment', 'customer', 'subscription'];
+    const resourceTypes = ["invoice", "payment", "customer", "subscription"];
     const users = [
-      { id: 1, name: 'Admin User', email: 'admin@company.com' },
-      { id: 2, name: 'Billing Manager', email: 'billing@company.com' },
-      { id: 3, name: 'Support Agent', email: 'support@company.com' },
+      { id: 1, name: "Admin User", email: "admin@company.com" },
+      { id: 2, name: "Billing Manager", email: "billing@company.com" },
+      { id: 3, name: "Support Agent", email: "support@company.com" },
     ];
 
     const mockEntries: AuditLogEntry[] = [];
     for (let i = 0; i < 50; i++) {
       const user = users[Math.floor(Math.random() * users.length)];
       const action = actions[Math.floor(Math.random() * actions.length)];
-      const resource = resourceTypes[Math.floor(Math.random() * resourceTypes.length)];
+      const resource =
+        resourceTypes[Math.floor(Math.random() * resourceTypes.length)];
 
       mockEntries.push({
         id: i + 1,
@@ -107,55 +125,67 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
         resource_name: `${resource.charAt(0).toUpperCase() + resource.slice(1)} #${Math.floor(Math.random() * 1000) + 1}`,
         user,
         details: {
-          old_value: action === 'updated' ? 'pending' : null,
-          new_value: action === 'updated' ? 'paid' : null,
-          amount: action.includes('paid') || action.includes('refund') ? Math.floor(Math.random() * 10000) + 1000 : null,
-          reason: action === 'cancelled' ? 'Customer request' : null,
+          old_value: action === "updated" ? "pending" : null,
+          new_value: action === "updated" ? "paid" : null,
+          amount:
+            action.includes("paid") || action.includes("refund")
+              ? Math.floor(Math.random() * 10000) + 1000
+              : null,
+          reason: action === "cancelled" ? "Customer request" : null,
         },
-        timestamp: new Date(Date.now() - Math.floor(Math.random() * 30 * 24 * 60 * 60 * 1000)).toISOString(),
+        timestamp: new Date(
+          Date.now() - Math.floor(Math.random() * 30 * 24 * 60 * 60 * 1000),
+        ).toISOString(),
         ip_address: `192.168.1.${Math.floor(Math.random() * 255)}`,
-        user_agent: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
+        user_agent:
+          "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
       });
     }
 
     return {
-      results: mockEntries.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage),
+      results: mockEntries.slice(
+        (currentPage - 1) * itemsPerPage,
+        currentPage * itemsPerPage,
+      ),
       count: mockEntries.length,
       total_pages: Math.ceil(mockEntries.length / itemsPerPage),
     };
   };
 
   const getActionBadge = (action: string) => {
-    const variants: Record<string, 'success' | 'error' | 'warning' | 'secondary' | 'primary'> = {
-      created: 'success',
-      updated: 'primary',
-      deleted: 'error',
-      paid: 'success',
-      sent: 'primary',
-      cancelled: 'error',
-      marked_overdue: 'warning',
-      refunded: 'warning',
-      approved: 'success',
-      rejected: 'error',
+    const variants: Record<
+      string,
+      "success" | "error" | "warning" | "secondary" | "primary"
+    > = {
+      created: "success",
+      updated: "primary",
+      deleted: "error",
+      paid: "success",
+      sent: "primary",
+      cancelled: "error",
+      marked_overdue: "warning",
+      refunded: "warning",
+      approved: "success",
+      rejected: "error",
     };
 
     return (
       <Badge
-        variant={variants[action] || 'secondary'}
+        variant={variants[action] || "secondary"}
         size="sm"
-        label={action.replace('_', ' ').toUpperCase()}
+        label={action.replace("_", " ").toUpperCase()}
       />
     );
   };
 
   const getResourceIcon = (resourceType: string) => {
     const icons: Record<string, string> = {
-      invoice: 'Receipt',
-      payment: 'CurrencyDollar',
-      customer: 'User',
-      subscription: 'Package',
+      invoice: "Receipt",
+      payment: "CurrencyDollar",
+      customer: "User",
+      subscription: "Package",
     };
-    return icons[resourceType] || 'File';
+    return icons[resourceType] || "File";
   };
 
   const handleViewDetails = (entry: AuditLogEntry) => {
@@ -168,62 +198,61 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
   };
 
   const actionOptions = [
-    { value: 'all', label: 'All Actions' },
-    { value: 'created', label: 'Created' },
-    { value: 'updated', label: 'Updated' },
-    { value: 'deleted', label: 'Deleted' },
-    { value: 'paid', label: 'Paid' },
-    { value: 'sent', label: 'Sent' },
-    { value: 'cancelled', label: 'Cancelled' },
-    { value: 'marked_overdue', label: 'Marked Overdue' },
-    { value: 'refunded', label: 'Refunded' },
+    { value: "all", label: "All Actions" },
+    { value: "created", label: "Created" },
+    { value: "updated", label: "Updated" },
+    { value: "deleted", label: "Deleted" },
+    { value: "paid", label: "Paid" },
+    { value: "sent", label: "Sent" },
+    { value: "cancelled", label: "Cancelled" },
+    { value: "marked_overdue", label: "Marked Overdue" },
+    { value: "refunded", label: "Refunded" },
   ];
 
   const columns = [
     {
-      key: 'timestamp',
-      header: 'Date & Time',
+      key: "timestamp",
+      header: "Date & Time",
       render: (entry: AuditLogEntry) => (
         <div>
           <div className="u-fw-medium u-fs-sm">
             {new Date(entry.timestamp).toLocaleDateString()}
           </div>
-          <div className="u-fs-xs u-text-secondary">
+          <div className="u-fs-xs u-text-secondary-emphasis">
             {new Date(entry.timestamp).toLocaleTimeString()}
           </div>
         </div>
       ),
     },
     {
-      key: 'user',
-      header: 'User',
+      key: "user",
+      header: "User",
       render: (entry: AuditLogEntry) => (
         <div className="u-flex u-items-center u-gap-2">
-          <Avatar
-            initials={entry.user.name.charAt(0)}
-            size="sm"
-          />
+          <Avatar initials={entry.user.name.charAt(0)} size="sm" />
           <div>
             <div className="u-fw-medium u-fs-sm">{entry.user.name}</div>
-            <div className="u-fs-xs u-text-secondary">{entry.user.email}</div>
+            <div className="u-fs-xs u-text-secondary-emphasis">
+              {entry.user.email}
+            </div>
           </div>
         </div>
       ),
     },
     {
-      key: 'action',
-      header: 'Action',
+      key: "action",
+      header: "Action",
       render: (entry: AuditLogEntry) => getActionBadge(entry.action),
     },
     {
-      key: 'resource',
-      header: 'Resource',
+      key: "resource",
+      header: "Resource",
       render: (entry: AuditLogEntry) => (
         <div className="u-flex u-items-center u-gap-2">
           <Icon name={getResourceIcon(entry.resource_type)} size={16} />
           <div>
             <div className="u-fw-medium u-fs-sm">{entry.resource_name}</div>
-            <div className="u-fs-xs u-text-secondary u-text-capitalize">
+            <div className="u-fs-xs u-text-secondary-emphasis u-text-capitalize">
               {entry.resource_type}
             </div>
           </div>
@@ -231,8 +260,8 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
       ),
     },
     {
-      key: 'details',
-      header: 'Details',
+      key: "details",
+      header: "Details",
       render: (entry: AuditLogEntry) => (
         <div>
           {entry.details.amount && (
@@ -241,12 +270,12 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
             </div>
           )}
           {entry.details.old_value && entry.details.new_value && (
-            <div className="u-fs-xs u-text-secondary">
+            <div className="u-fs-xs u-text-secondary-emphasis">
               {entry.details.old_value} → {entry.details.new_value}
             </div>
           )}
           {entry.details.reason && (
-            <div className="u-fs-xs u-text-secondary">
+            <div className="u-fs-xs u-text-secondary-emphasis">
               {entry.details.reason}
             </div>
           )}
@@ -254,8 +283,8 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
       ),
     },
     {
-      key: 'actions',
-      header: 'Actions',
+      key: "actions",
+      header: "Actions",
       render: (entry: AuditLogEntry) => (
         <Button
           variant="outline"
@@ -325,8 +354,10 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
 
             {/* Pagination */}
             <div className="u-flex u-justify-between u-items-center">
-              <div className="u-fs-sm u-text-secondary">
-                Showing {((currentPage - 1) * itemsPerPage) + 1} to {Math.min(currentPage * itemsPerPage, auditData.count)} of {auditData.count} entries
+              <div className="u-fs-sm u-text-secondary-emphasis">
+                Showing {(currentPage - 1) * itemsPerPage + 1} to{" "}
+                {Math.min(currentPage * itemsPerPage, auditData.count)} of{" "}
+                {auditData.count} entries
               </div>
               <Pagination
                 currentPage={currentPage}
@@ -338,10 +369,16 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
           </>
         ) : (
           <div className="u-text-center u-py-8">
-            <Icon name="FileText" size={48} className="u-text-secondary u-mb-4" />
+            <Icon
+              name="FileText"
+              size={48}
+              className="u-text-secondary-emphasis u-mb-4"
+            />
             <h4 className="u-mb-2">No audit entries found</h4>
-            <p className="u-text-secondary">
-              {searchQuery ? 'No entries match your search criteria.' : 'No audit trail entries available.'}
+            <p className="u-text-secondary-emphasis">
+              {searchQuery
+                ? "No entries match your search criteria."
+                : "No audit trail entries available."}
             </p>
           </div>
         )}
@@ -363,7 +400,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
               <div className="u-flex u-justify-between u-align-items-start u-mb-3">
                 <div>
                   <h4 className="u-mb-1">Activity Details</h4>
-                  <p className="u-text-secondary">
+                  <p className="u-text-secondary-emphasis">
                     {formatTimestamp(selectedEntry.timestamp)}
                   </p>
                 </div>
@@ -373,7 +410,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
 
             <div className="u-space-y-4">
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-block">
+                <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-1 u-block">
                   User
                 </label>
                 <div className="u-flex u-items-center u-gap-3">
@@ -383,39 +420,51 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
                   />
                   <div>
                     <div className="u-fw-medium">{selectedEntry.user.name}</div>
-                    <div className="u-fs-sm u-text-secondary">{selectedEntry.user.email}</div>
+                    <div className="u-fs-sm u-text-secondary-emphasis">
+                      {selectedEntry.user.email}
+                    </div>
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-block">
+                <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-1 u-block">
                   Resource
                 </label>
                 <div className="u-flex u-items-center u-gap-2">
-                  <Icon name={getResourceIcon(selectedEntry.resource_type)} size={20} />
+                  <Icon
+                    name={getResourceIcon(selectedEntry.resource_type)}
+                    size={20}
+                  />
                   <div>
-                    <div className="u-fw-medium">{selectedEntry.resource_name}</div>
-                    <div className="u-fs-sm u-text-secondary u-text-capitalize">
-                      {selectedEntry.resource_type} (ID: {selectedEntry.resource_id})
+                    <div className="u-fw-medium">
+                      {selectedEntry.resource_name}
+                    </div>
+                    <div className="u-fs-sm u-text-secondary-emphasis u-text-capitalize">
+                      {selectedEntry.resource_type} (ID:{" "}
+                      {selectedEntry.resource_id})
                     </div>
                   </div>
                 </div>
               </div>
 
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary u-mb-1 u-block">
+                <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-1 u-block">
                   Action Details
                 </label>
                 <div className="u-bg-subtle u-p-3 u-rounded">
-                  {selectedEntry.details.old_value && selectedEntry.details.new_value && (
-                    <div className="u-mb-2">
-                      <strong>Status Change:</strong> {selectedEntry.details.old_value} → {selectedEntry.details.new_value}
-                    </div>
-                  )}
+                  {selectedEntry.details.old_value &&
+                    selectedEntry.details.new_value && (
+                      <div className="u-mb-2">
+                        <strong>Status Change:</strong>{" "}
+                        {selectedEntry.details.old_value} →{" "}
+                        {selectedEntry.details.new_value}
+                      </div>
+                    )}
                   {selectedEntry.details.amount && (
                     <div className="u-mb-2">
-                      <strong>Amount:</strong> {formatCurrency(selectedEntry.details.amount)}
+                      <strong>Amount:</strong>{" "}
+                      {formatCurrency(selectedEntry.details.amount)}
                     </div>
                   )}
                   {selectedEntry.details.reason && (
@@ -423,9 +472,11 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
                       <strong>Reason:</strong> {selectedEntry.details.reason}
                     </div>
                   )}
-                  <div className="u-fs-xs u-text-secondary u-mt-3">
-                    <strong>Technical Details:</strong><br />
-                    IP Address: {selectedEntry.ip_address}<br />
+                  <div className="u-fs-xs u-text-secondary-emphasis u-mt-3">
+                    <strong>Technical Details:</strong>
+                    <br />
+                    IP Address: {selectedEntry.ip_address}
+                    <br />
                     User Agent: {selectedEntry.user_agent?.substring(0, 50)}...
                   </div>
                 </div>

@@ -35,7 +35,11 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
               {index > 0 && (
-                <Icon name="CaretRight" size={12} className="u-text-secondary-emphasis" />
+                <Icon
+                  name="CaretRight"
+                  size={12}
+                  className="u-text-secondary-emphasis"
+                />
               )}
               {crumb.href ? (
                 <a
@@ -85,7 +89,8 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                   }`}
                 ></div>
                 <span className="u-text-secondary-emphasis">
-                  {stat.label}: <span className="u-fw-medium">{stat.value}</span>
+                  {stat.label}:{" "}
+                  <span className="u-fw-medium">{stat.value}</span>
                 </span>
               </div>
             ))}

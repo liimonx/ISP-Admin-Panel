@@ -410,7 +410,7 @@ const Dashboard: React.FC = () => {
             <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">
               Dashboard
             </h1>
-            <p className="u-text-secondary u-text-lg">
+            <p className="u-text-secondary-emphasis u-text-lg">
               Welcome back! Here's what's happening with your ISP operations
               today.
             </p>
@@ -443,7 +443,7 @@ const Dashboard: React.FC = () => {
         </div>
 
         {/* Quick Stats Summary */}
-        <div className="u-flex u-gap-4 u-text-sm u-text-secondary u-items-center">
+        <div className="u-flex u-gap-4 u-text-sm u-text-secondary-emphasis u-items-center">
           <span>Last updated: {new Date().toLocaleTimeString()}</span>
           <span>•</span>
           <span>Auto-refresh: 30s</span>
@@ -522,7 +522,7 @@ const Dashboard: React.FC = () => {
                   {selectedChart === "customers" && "Customer Growth"}
                   {selectedChart === "network" && "Network Performance"}
                 </h3>
-                <p className="u-text-sm u-text-secondary">
+                <p className="u-text-sm u-text-secondary-emphasis">
                   Track your key metrics over time
                 </p>
               </div>
@@ -721,7 +721,7 @@ const Dashboard: React.FC = () => {
                 <h3 className="u-text-xl u-fw-semibold u-mb-1">
                   Recent Customers
                 </h3>
-                <p className="u-text-sm u-text-secondary">
+                <p className="u-text-sm u-text-secondary-emphasis">
                   Latest customer registrations and activity
                 </p>
               </div>
@@ -903,7 +903,11 @@ const Dashboard: React.FC = () => {
       <Modal
         isOpen={showCustomerModal}
         onOpenChange={setShowCustomerModal}
-        title={selectedCustomer ? `${selectedCustomer.first_name} ${selectedCustomer.last_name}` : ''}
+        title={
+          selectedCustomer
+            ? `${selectedCustomer.first_name} ${selectedCustomer.last_name}`
+            : ""
+        }
         size="md"
       >
         {selectedCustomer && (

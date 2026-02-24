@@ -388,7 +388,7 @@ const Billing: React.FC = () => {
       <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-mb-2">Billing & Payments</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Manage invoices, payments, and financial records
           </p>
           {invoiceStats && (
@@ -505,7 +505,9 @@ const Billing: React.FC = () => {
                 <p className="u-fs-xl u-fw-bold u-text-success">
                   {((invoiceStats?.collection_rate || 0) * 100).toFixed(1)}%
                 </p>
-                <p className="u-fs-sm u-text-secondary">Payment success rate</p>
+                <p className="u-fs-sm u-text-secondary-emphasis">
+                  Payment success rate
+                </p>
               </Card>
             </GridCol>
             <GridCol xs={12} md={4}>
@@ -519,7 +521,7 @@ const Billing: React.FC = () => {
                 <p className="u-fs-xl u-fw-bold u-text-primary">
                   {Math.round(invoiceStats?.avg_payment_days || 0)} days
                 </p>
-                <p className="u-fs-sm u-text-secondary">
+                <p className="u-fs-sm u-text-secondary-emphasis">
                   From invoice to payment
                 </p>
               </Card>
@@ -535,7 +537,7 @@ const Billing: React.FC = () => {
                 <p className="u-fs-xl u-fw-bold u-text-warning">
                   {formatCurrency(invoiceStats?.monthly_recurring_revenue || 0)}
                 </p>
-                <p className="u-fs-sm u-text-secondary">
+                <p className="u-fs-sm u-text-secondary-emphasis">
                   Expected monthly income
                 </p>
               </Card>
@@ -737,7 +739,7 @@ const Billing: React.FC = () => {
                   <div className="u-fs-lg u-fw-bold">
                     {invoicesData.count || 0}
                   </div>
-                  <div className="u-fs-sm u-text-secondary">Total</div>
+                  <div className="u-fs-sm u-text-secondary-emphasis">Total</div>
                 </div>
                 <div className="u-text-center">
                   <div className="u-fs-lg u-fw-bold u-text-success">
@@ -746,7 +748,7 @@ const Billing: React.FC = () => {
                         .length
                     }
                   </div>
-                  <div className="u-fs-sm u-text-secondary">Paid</div>
+                  <div className="u-fs-sm u-text-secondary-emphasis">Paid</div>
                 </div>
                 <div className="u-text-center">
                   <div className="u-fs-lg u-fw-bold u-text-warning">
@@ -755,7 +757,9 @@ const Billing: React.FC = () => {
                         .length
                     }
                   </div>
-                  <div className="u-fs-sm u-text-secondary">Pending</div>
+                  <div className="u-fs-sm u-text-secondary-emphasis">
+                    Pending
+                  </div>
                 </div>
                 <div className="u-text-center">
                   <div className="u-fs-lg u-fw-bold u-text-error">
@@ -764,7 +768,9 @@ const Billing: React.FC = () => {
                         .length
                     }
                   </div>
-                  <div className="u-fs-sm u-text-secondary">Overdue</div>
+                  <div className="u-fs-sm u-text-secondary-emphasis">
+                    Overdue
+                  </div>
                 </div>
               </div>
             )}
@@ -904,10 +910,10 @@ const Billing: React.FC = () => {
                           <div className="u-fs-sm u-fw-medium u-text-capitalize">
                             {method.replace("_", " ")}
                           </div>
-                          <div className="u-fs-xs u-text-secondary">
+                          <div className="u-fs-xs u-text-secondary-emphasis">
                             {count} payments
                           </div>
-                          <div className="u-fs-xs u-text-secondary">
+                          <div className="u-fs-xs u-text-secondary-emphasis">
                             {formatCurrency(total)}
                           </div>
                         </div>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React from "react";
 import {
   Card,
   Button,
@@ -6,9 +6,9 @@ import {
   Avatar,
   Progress,
   Icon,
-} from '@shohojdhara/atomix';
-import { Invoice } from '../../types';
-import { formatCurrency, toNumber } from '../../utils/formatters';
+} from "@shohojdhara/atomix";
+import { Invoice } from "../../types";
+import { formatCurrency, toNumber } from "../../utils/formatters";
 
 interface InvoiceCardProps {
   invoice: Invoice;
@@ -25,29 +25,25 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
   onDownload,
   onSend,
 }) => {
-  const getStatusBadge = (status: Invoice['status']) => {
+  const getStatusBadge = (status: Invoice["status"]) => {
     const variants = {
-      draft: 'secondary',
-      pending: 'warning',
-      paid: 'success',
-      overdue: 'error',
-      cancelled: 'secondary',
+      draft: "secondary",
+      pending: "warning",
+      paid: "success",
+      overdue: "error",
+      cancelled: "secondary",
     } as const;
 
     const labels = {
-      draft: 'Draft',
-      pending: 'Pending',
-      paid: 'Paid',
-      overdue: 'Overdue',
-      cancelled: 'Cancelled',
+      draft: "Draft",
+      pending: "Pending",
+      paid: "Paid",
+      overdue: "Overdue",
+      cancelled: "Cancelled",
     };
 
     return (
-      <Badge
-        variant={variants[status]}
-        size="sm"
-        label={labels[status]}
-      />
+      <Badge variant={variants[status]} size="sm" label={labels[status]} />
     );
   };
 
@@ -55,7 +51,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
     const total = toNumber(invoice.total_amount);
     const paid = toNumber(invoice.paid_amount);
     const percentage = total > 0 ? (paid / total) * 100 : 0;
-    
+
     return {
       percentage: Math.round(percentage),
       remaining: total - paid,
@@ -64,17 +60,20 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
   };
 
   const progress = getPaymentProgress();
-  const isOverdue = invoice.status === 'overdue';
-  const isPending = invoice.status === 'pending';
+  const isOverdue = invoice.status === "overdue";
+  const isPending = invoice.status === "pending";
   const canPay = isPending || isOverdue;
 
   return (
     <Card className="u-h-full">
       <div className="u-flex u-justify-between u-items-start u-mb-4">
         <div className="u-flex-1">
-          <h4 className="u-mb-1 u-text-lg u-fw-semibold">{invoice.invoice_number}</h4>
-          <p className="u-text-sm u-text-secondary u-mb-2">
-            {invoice.invoice_type} • Due: {new Date(invoice.due_date).toLocaleDateString()}
+          <h4 className="u-mb-1 u-text-lg u-fw-semibold">
+            {invoice.invoice_number}
+          </h4>
+          <p className="u-text-sm u-text-secondary-emphasis u-mb-2">
+            {invoice.invoice_type} • Due:{" "}
+            {new Date(invoice.due_date).toLocaleDateString()}
           </p>
           {getStatusBadge(invoice.status)}
         </div>
@@ -91,19 +90,16 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
       </div>
 
       <div className="u-flex u-items-center u-gap-3 u-mb-4">
-        <Avatar
-          initials={invoice.customer?.name?.charAt(0) || '?'}
-          size="md"
-        />
+        <Avatar initials={invoice.customer?.name?.charAt(0) || "?"} size="md" />
         <div className="u-flex-1">
           <div className="u-fw-medium u-text-sm">
-            {invoice.customer?.name || 'Unknown Customer'}
+            {invoice.customer?.name || "Unknown Customer"}
           </div>
-          <div className="u-text-xs u-text-secondary">
-            {invoice.customer?.email || 'No email'}
+          <div className="u-text-xs u-text-secondary-emphasis">
+            {invoice.customer?.email || "No email"}
           </div>
-          <div className="u-text-xs u-text-secondary">
-            {invoice.customer?.phone || 'No phone'}
+          <div className="u-text-xs u-text-secondary-emphasis">
+            {invoice.customer?.phone || "No phone"}
           </div>
         </div>
       </div>
@@ -118,26 +114,26 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           </div>
           <Progress
             value={progress.percentage}
-            variant={isOverdue ? 'error' : 'primary'}
+            variant={isOverdue ? "error" : "primary"}
             className="u-mb-2"
           />
-          <div className="u-text-xs u-text-secondary">
+          <div className="u-text-xs u-text-secondary-emphasis">
             {formatCurrency(progress.remaining)} remaining
           </div>
         </div>
       )}
 
       <div className="u-flex u-gap-2 u-mt-auto">
-        <Button 
-          variant="outline" 
-          size="sm" 
+        <Button
+          variant="outline"
+          size="sm"
           className="u-flex-1"
           onClick={() => onView(invoice)}
         >
           <Icon name="Eye" size={16} />
           View
         </Button>
-        
+
         {canPay && (
           <Button
             variant="primary"
@@ -150,21 +146,13 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           </Button>
         )}
 
-        {invoice.status === 'pending' && (
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => onSend(invoice)}
-          >
+        {invoice.status === "pending" && (
+          <Button variant="outline" size="sm" onClick={() => onSend(invoice)}>
             <Icon name="Send" size={16} />
           </Button>
         )}
 
-        <Button 
-          variant="outline" 
-          size="sm"
-          onClick={() => onDownload(invoice)}
-        >
+        <Button variant="outline" size="sm" onClick={() => onDownload(invoice)}>
           <Icon name="Download" size={16} />
         </Button>
       </div>

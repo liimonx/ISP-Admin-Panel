@@ -92,7 +92,7 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
 
   return (
     <div className={className}>
-      {statsError && (
+      {!!statsError && (
         <div className="u-mb-4">
           <Card className="u-border-warning">
             <div className="u-p-3 u-flex u-items-center u-gap-2 u-text-warning">

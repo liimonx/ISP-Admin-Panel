@@ -171,14 +171,6 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     );
   };
 
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedIds(subscriptions.map((s) => s.id));
-    } else {
-      setSelectedIds([]);
-    }
-  };
-
   const handleSelectOne = (
     id: number,
     event: React.ChangeEvent<HTMLInputElement>,
@@ -286,7 +278,11 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     return (
       <Card className="u-p-6">
         <div className="u-text-center u-py-8">
-          <Icon name="Users" size={48} className="u-text-secondary u-mb-3" />
+          <Icon
+            name="Users"
+            size={48}
+            className="u-text-secondary-emphasis u-mb-3"
+          />
           <h3 className="u-text-primary-emphasis u-mb-2">
             No subscriptions found
           </h3>
@@ -302,9 +298,6 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       </Card>
     );
   }
-
-  const allSelected =
-    selectedIds.length === subscriptions.length && subscriptions.length > 0;
 
   const tableData = subscriptions.map((subscription) => ({
     id: subscription.id,
@@ -550,7 +543,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                   <div className="u-fs-3 u-fw-bold u-text-primary">
                     {subscriptions.filter((s) => s.status === "active").length}
                   </div>
-                  <div className="u-fs-sm u-text-secondary">Active</div>
+                  <div className="u-fs-sm u-text-secondary-emphasis">
+                    Active
+                  </div>
                 </div>
               </div>
               <div className="u-col-md-3">
@@ -558,7 +553,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                   <div className="u-fs-3 u-fw-bold u-text-warning">
                     {subscriptions.filter((s) => s.status === "pending").length}
                   </div>
-                  <div className="u-fs-sm u-text-secondary">Pending</div>
+                  <div className="u-fs-sm u-text-secondary-emphasis">
+                    Pending
+                  </div>
                 </div>
               </div>
               <div className="u-col-md-3">
@@ -569,7 +566,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                         .length
                     }
                   </div>
-                  <div className="u-fs-sm u-text-secondary">Suspended</div>
+                  <div className="u-fs-sm u-text-secondary-emphasis">
+                    Suspended
+                  </div>
                 </div>
               </div>
               <div className="u-col-md-3">
@@ -581,7 +580,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                       .reduce((sum, s) => sum + (s.monthly_fee || 0), 0)
                       .toLocaleString()}
                   </div>
-                  <div className="u-fs-sm u-text-secondary">
+                  <div className="u-fs-sm u-text-secondary-emphasis">
                     Monthly Revenue
                   </div>
                 </div>

@@ -67,11 +67,7 @@ const MainRouterDashboard: React.FC = () => {
   }, [queryClient, autoRefresh]);
 
   // Main router status
-  const {
-    data: routerStatus,
-    isLoading: statusLoading,
-    error: statusError,
-  } = useQuery({
+  const { data: routerStatus, error: statusError } = useQuery({
     queryKey: ["main-router-status"],
     queryFn: () => apiService.routers.getMainRouterStatus(),
     staleTime: 10000, // 10 seconds
@@ -276,7 +272,7 @@ const MainRouterDashboard: React.FC = () => {
                 queryKey: ["main-router-status"],
               })
             }
-            className="u-ml-2"
+            className="u-ms-2"
           >
             Try Again
           </Button>
@@ -293,15 +289,15 @@ const MainRouterDashboard: React.FC = () => {
       <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-h2 u-mb-2">Main Router Dashboard</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Comprehensive monitoring and management of the main network router
           </p>
         </div>
         <div className="u-flex u-gap-3 u-items-center">
           <div className="u-flex u-items-center">
             <Toggle
-              initialOn={autoRefresh}
-              onToggleOn={() => setAutoRefresh(!autoRefresh)}
+              checked={autoRefresh}
+              onChange={(checked) => setAutoRefresh(checked)}
               className="u-me-2"
             />
             <label className="u-text-sm">Auto Refresh</label>
@@ -350,7 +346,7 @@ const MainRouterDashboard: React.FC = () => {
                       ? formatUptime(routerStatus.uptime)
                       : "N/A"}
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Uptime</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">Uptime</p>
                   <Badge variant="success" label="Online" size="sm" />
                 </div>
               </div>
@@ -360,7 +356,7 @@ const MainRouterDashboard: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Cpu" size={24}/>
+                  <Icon name="Cpu" size={24} />
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{resources?.cpu_usage || 0}%</h3>
@@ -390,7 +386,9 @@ const MainRouterDashboard: React.FC = () => {
                   <h3 className="u-h4 u-mb-1">
                     {resources?.memory_usage || 0}%
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Memory Usage</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Memory Usage
+                  </p>
                   <Progress
                     value={resources?.memory_usage || 0}
                     size="sm"
@@ -412,8 +410,10 @@ const MainRouterDashboard: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{connectionsData?.count || 0}</h3>
-                  <p className="u-text-secondary u-mb-0">Active Connections</p>
-                  <div className="u-text-sm u-text-secondary">
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Active Connections
+                  </p>
+                  <div className="u-text-sm u-text-secondary-emphasis">
                     {dhcpLeases?.count || 0} DHCP leases
                   </div>
                 </div>
@@ -430,7 +430,7 @@ const MainRouterDashboard: React.FC = () => {
             { id: "overview", label: "Overview", icon: "ChartLine" },
             { id: "interfaces", label: "Interfaces", icon: "Globe" },
             { id: "connections", label: "Connections", icon: "Link" },
-            { id: "dhcp", label: "DHCP Leases", icon: "Router" },
+            { id: "dhcp", label: "DHCP Leases", icon: "Broadcast" },
             { id: "logs", label: "Logs", icon: "List" },
           ].map((tab) => (
             <Button
@@ -459,7 +459,7 @@ const MainRouterDashboard: React.FC = () => {
               {bandwidthLoading ? (
                 <div className="u-text-center u-p-6">
                   <Spinner />
-                  <p className="u-mt-2 u-text-secondary">
+                  <p className="u-mt-2 u-text-secondary-emphasis">
                     Loading bandwidth data...
                   </p>
                 </div>
@@ -474,7 +474,7 @@ const MainRouterDashboard: React.FC = () => {
               {resourcesLoading ? (
                 <div className="u-text-center u-p-6">
                   <Spinner />
-                  <p className="u-mt-2 u-text-secondary">
+                  <p className="u-mt-2 u-text-secondary-emphasis">
                     Loading resource data...
                   </p>
                 </div>
@@ -494,7 +494,9 @@ const MainRouterDashboard: React.FC = () => {
           {interfacesLoading ? (
             <div className="u-text-center u-p-6">
               <Spinner size="lg" />
-              <p className="u-mt-3 u-text-secondary">Loading interfaces...</p>
+              <p className="u-mt-3 u-text-secondary-emphasis">
+                Loading interfaces...
+              </p>
             </div>
           ) : (
             <DataTable
@@ -504,7 +506,7 @@ const MainRouterDashboard: React.FC = () => {
                   interface: (
                     <div>
                       <div className="u-fw-medium">{iface.name}</div>
-                      <div className="u-text-secondary u-text-sm">
+                      <div className="u-text-secondary-emphasis u-text-sm">
                         {iface.type}
                       </div>
                     </div>
@@ -515,7 +517,7 @@ const MainRouterDashboard: React.FC = () => {
                       <div className="u-text-sm">
                         {iface.ip_address || "N/A"}
                       </div>
-                      <div className="u-text-secondary u-text-sm">
+                      <div className="u-text-secondary-emphasis u-text-sm">
                         {iface.mac_address || "N/A"}
                       </div>
                     </div>
@@ -563,7 +565,9 @@ const MainRouterDashboard: React.FC = () => {
           {connectionsLoading ? (
             <div className="u-text-center u-p-6">
               <Spinner size="lg" />
-              <p className="u-mt-3 u-text-secondary">Loading connections...</p>
+              <p className="u-mt-3 u-text-secondary-emphasis">
+                Loading connections...
+              </p>
             </div>
           ) : (
             <>
@@ -576,7 +580,7 @@ const MainRouterDashboard: React.FC = () => {
                         <div className="u-fw-medium">
                           {conn.client_name || "Unknown"}
                         </div>
-                        <div className="u-text-secondary u-text-sm">
+                        <div className="u-text-secondary-emphasis u-text-sm">
                           {conn.mac_address || "N/A"}
                         </div>
                       </div>
@@ -638,7 +642,9 @@ const MainRouterDashboard: React.FC = () => {
           {dhcpLoading ? (
             <div className="u-text-center u-p-6">
               <Spinner size="lg" />
-              <p className="u-mt-3 u-text-secondary">Loading DHCP leases...</p>
+              <p className="u-mt-3 u-text-secondary-emphasis">
+                Loading DHCP leases...
+              </p>
             </div>
           ) : (
             <DataTable
@@ -650,7 +656,7 @@ const MainRouterDashboard: React.FC = () => {
                       <div className="u-fw-medium">
                         {lease.hostname || "Unknown"}
                       </div>
-                      <div className="u-text-secondary u-text-sm">
+                      <div className="u-text-secondary-emphasis u-text-sm">
                         {lease.mac_address}
                       </div>
                     </div>
@@ -691,14 +697,14 @@ const MainRouterDashboard: React.FC = () => {
           {logsLoading ? (
             <div className="u-text-center u-p-6">
               <Spinner size="lg" />
-              <p className="u-mt-3 u-text-secondary">Loading logs...</p>
+              <p className="u-mt-3 u-text-secondary-emphasis">
+                Loading logs...
+              </p>
             </div>
           ) : (
             <div className="u-p-4">
               {logs && logs.length > 0 ? (
-                <div
-                  className="u-space-y-2 u-max-h-125 u-overflow-y-auto"
-                >
+                <div className="u-space-y-2 u-max-h-125 u-overflow-y-auto">
                   {logs.map((log: any, index: number) => (
                     <div
                       key={index}
@@ -708,7 +714,7 @@ const MainRouterDashboard: React.FC = () => {
                         <div className="u-text-sm u-fw-medium u-mb-1">
                           {log.message || sanitizeText(log.log_entry)}
                         </div>
-                        <div className="u-text-secondary u-text-sm">
+                        <div className="u-text-secondary-emphasis u-text-sm">
                           {log.level && (
                             <Badge
                               variant={
@@ -736,10 +742,10 @@ const MainRouterDashboard: React.FC = () => {
                   <Icon
                     name="FileText"
                     size={48}
-                    className="u-text-secondary u-mb-3"
+                    className="u-text-secondary-emphasis u-mb-3"
                   />
                   <h3 className="u-h6 u-mb-2">No logs available</h3>
-                  <p className="u-text-secondary">
+                  <p className="u-text-secondary-emphasis">
                     System logs will appear here when available
                   </p>
                 </div>

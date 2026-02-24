@@ -8,52 +8,62 @@ const Reports: React.FC = () => {
   const [reportType, setReportType] = useState("usage");
   const [timeRange, setTimeRange] = useState("monthly");
   const [dateRange, setDateRange] = useState({
-    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    end: new Date().toISOString().split('T')[0],
+    start: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000)
+      .toISOString()
+      .split("T")[0],
+    end: new Date().toISOString().split("T")[0],
   });
 
   // Fetch usage reports
-  const { data: usageData, isLoading: usageLoading, error: usageError } = useQuery({
+  const {
+    data: usageData,
+    isLoading: usageLoading,
+    error: usageError,
+  } = useQuery({
     queryKey: ["usage-reports", timeRange, dateRange],
-    queryFn: () => apiService.getUsageReports({ 
-      time_range: timeRange,
-      start_date: dateRange.start,
-      end_date: dateRange.end 
-    }),
+    queryFn: () =>
+      apiService.getUsageReports({
+        time_range: timeRange,
+        start_date: dateRange.start,
+        end_date: dateRange.end,
+      }),
     staleTime: 60000,
   });
 
   // Fetch top users
   const { data: topUsersData, isLoading: topUsersLoading } = useQuery({
     queryKey: ["top-users", timeRange, dateRange],
-    queryFn: () => apiService.getTopUsers({ 
-      time_range: timeRange,
-      start_date: dateRange.start,
-      end_date: dateRange.end,
-      limit: 10
-    }),
+    queryFn: () =>
+      apiService.getTopUsers({
+        time_range: timeRange,
+        start_date: dateRange.start,
+        end_date: dateRange.end,
+        limit: 10,
+      }),
     staleTime: 60000,
   });
 
   // Fetch usage trends
   const { data: trendsData, isLoading: trendsLoading } = useQuery({
     queryKey: ["usage-trends", timeRange, dateRange],
-    queryFn: () => apiService.getUsageTrends({ 
-      time_range: timeRange,
-      start_date: dateRange.start,
-      end_date: dateRange.end 
-    }),
+    queryFn: () =>
+      apiService.getUsageTrends({
+        time_range: timeRange,
+        start_date: dateRange.start,
+        end_date: dateRange.end,
+      }),
     staleTime: 60000,
   });
 
   // Fetch revenue reports
   const { data: revenueData, isLoading: revenueLoading } = useQuery({
     queryKey: ["revenue-reports", timeRange, dateRange],
-    queryFn: () => apiService.getRevenueReports({ 
-      time_range: timeRange,
-      start_date: dateRange.start,
-      end_date: dateRange.end 
-    }),
+    queryFn: () =>
+      apiService.getRevenueReports({
+        time_range: timeRange,
+        start_date: dateRange.start,
+        end_date: dateRange.end,
+      }),
     staleTime: 60000,
   });
 
@@ -72,7 +82,9 @@ const Reports: React.FC = () => {
             <Icon name="Warning" size={20} />
             <div>
               <strong>Error loading reports</strong>
-              <p className="u-mb-0 u-mt-1">Please try refreshing the page or contact support.</p>
+              <p className="u-mb-0 u-mt-1">
+                Please try refreshing the page or contact support.
+              </p>
             </div>
           </div>
         </Callout>
@@ -108,7 +120,7 @@ const Reports: React.FC = () => {
                   { value: "usage", label: "Usage Reports" },
                   { value: "revenue", label: "Revenue Reports" },
                   { value: "customers", label: "Customer Reports" },
-                  { value: "network", label: "Network Reports" }
+                  { value: "network", label: "Network Reports" },
                 ]}
               />
             </div>
@@ -126,7 +138,7 @@ const Reports: React.FC = () => {
                   { value: "weekly", label: "Weekly" },
                   { value: "monthly", label: "Monthly" },
                   { value: "quarterly", label: "Quarterly" },
-                  { value: "yearly", label: "Yearly" }
+                  { value: "yearly", label: "Yearly" },
                 ]}
               />
             </div>
@@ -138,7 +150,9 @@ const Reports: React.FC = () => {
               <input
                 type="date"
                 value={dateRange.start}
-                onChange={(e) => setDateRange({ ...dateRange, start: e.target.value })}
+                onChange={(e) =>
+                  setDateRange({ ...dateRange, start: e.target.value })
+                }
                 className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
               />
             </div>
@@ -150,7 +164,9 @@ const Reports: React.FC = () => {
               <input
                 type="date"
                 value={dateRange.end}
-                onChange={(e) => setDateRange({ ...dateRange, end: e.target.value })}
+                onChange={(e) =>
+                  setDateRange({ ...dateRange, end: e.target.value })
+                }
                 className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
               />
             </div>
@@ -196,23 +212,32 @@ const Reports: React.FC = () => {
         {reportType === "usage" && (
           <div>
             {/* Usage Overview Widgets */}
-            <div className="u-grid u-gap-4 u-mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
+            <div
+              className="u-grid u-gap-4 u-mb-6"
+              style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              }}
+            >
               <UsageWidget
                 title="Total Data Usage"
                 icon="Database"
-                value={`${usageData?.total_usage?.toFixed(1) || '0'} GB`}
+                value={`${usageData?.total_usage?.toFixed(1) || "0"} GB`}
                 subtitle="Current period"
-                trend={usageData?.usage_trend ? {
-                  value: usageData.usage_trend,
-                  isPositive: usageData.usage_trend > 0
-                } : undefined}
+                trend={
+                  usageData?.usage_trend
+                    ? {
+                        value: usageData.usage_trend,
+                        isPositive: usageData.usage_trend > 0,
+                      }
+                    : undefined
+                }
                 color="primary"
                 isLoading={usageLoading}
               />
               <UsageWidget
                 title="Average Usage"
                 icon="ChartLine"
-                value={`${usageData?.average_usage?.toFixed(1) || '0'} GB`}
+                value={`${usageData?.average_usage?.toFixed(1) || "0"} GB`}
                 subtitle="Per customer"
                 color="info"
                 isLoading={usageLoading}
@@ -220,7 +245,7 @@ const Reports: React.FC = () => {
               <UsageWidget
                 title="Peak Usage"
                 icon="TrendUp"
-                value={`${usageData?.peak_usage?.toFixed(1) || '0'} GB`}
+                value={`${usageData?.peak_usage?.toFixed(1) || "0"} GB`}
                 subtitle="Highest recorded"
                 color="warning"
                 isLoading={usageLoading}
@@ -228,15 +253,20 @@ const Reports: React.FC = () => {
               <UsageWidget
                 title="Bandwidth Utilization"
                 icon="Gauge"
-                value={`${usageData?.bandwidth_utilization?.toFixed(1) || '0'}%`}
+                value={`${usageData?.bandwidth_utilization?.toFixed(1) || "0"}%`}
                 subtitle="Network capacity"
-                color={usageData?.bandwidth_utilization > 80 ? "error" : "success"}
+                color={
+                  usageData?.bandwidth_utilization > 80 ? "error" : "success"
+                }
                 isLoading={usageLoading}
               />
             </div>
 
             {/* Charts and Top Users */}
-            <div className="u-grid u-gap-6" style={{ gridTemplateColumns: "2fr 1fr" }}>
+            <div
+              className="u-grid u-gap-6"
+              style={{ gridTemplateColumns: "2fr 1fr" }}
+            >
               <UsageChart
                 title="Usage Trends"
                 data={trendsData?.trends || []}
@@ -253,16 +283,25 @@ const Reports: React.FC = () => {
         {/* Revenue Reports */}
         {reportType === "revenue" && (
           <div>
-            <div className="u-grid u-gap-4 u-mb-6" style={{ gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))" }}>
+            <div
+              className="u-grid u-gap-4 u-mb-6"
+              style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
+              }}
+            >
               <UsageWidget
                 title="Total Revenue"
                 icon="CurrencyDollar"
                 value={formatCurrency(revenueData?.total_revenue || 0)}
                 subtitle="Current period"
-                trend={revenueData?.revenue_trend ? {
-                  value: revenueData.revenue_trend,
-                  isPositive: revenueData.revenue_trend > 0
-                } : undefined}
+                trend={
+                  revenueData?.revenue_trend
+                    ? {
+                        value: revenueData.revenue_trend,
+                        isPositive: revenueData.revenue_trend > 0,
+                      }
+                    : undefined
+                }
                 color="success"
                 isLoading={revenueLoading}
               />
@@ -285,7 +324,7 @@ const Reports: React.FC = () => {
               <UsageWidget
                 title="MRR Growth"
                 icon="TrendUp"
-                value={`${revenueData?.mrr_growth?.toFixed(1) || '0'}%`}
+                value={`${revenueData?.mrr_growth?.toFixed(1) || "0"}%`}
                 subtitle="Monthly recurring revenue"
                 color={revenueData?.mrr_growth > 0 ? "success" : "error"}
                 isLoading={revenueLoading}
@@ -304,9 +343,17 @@ const Reports: React.FC = () => {
           <Card className="u-border-0 u-shadow-sm">
             <div className="u-p-6">
               <div className="u-text-center u-py-8">
-                <Icon name="Users" size={48} className="u-text-secondary-emphasis u-mb-4" />
-                <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">Customer Reports</h3>
-                <p className="u-text-secondary-emphasis-emphasis">Detailed customer analytics and reports will be available soon</p>
+                <Icon
+                  name="Users"
+                  size={48}
+                  className="u-text-secondary-emphasis u-mb-4"
+                />
+                <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">
+                  Customer Reports
+                </h3>
+                <p className="u-text-secondary-emphasis-emphasis">
+                  Detailed customer analytics and reports will be available soon
+                </p>
               </div>
             </div>
           </Card>
@@ -317,9 +364,18 @@ const Reports: React.FC = () => {
           <Card className="u-border-0 u-shadow-sm">
             <div className="u-p-6">
               <div className="u-text-center u-py-8">
-                <Icon name="Globe" size={48} className="u-text-secondary-emphasis u-mb-4" />
-                <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">Network Reports</h3>
-                <p className="u-text-secondary-emphasis-emphasis">Network performance and infrastructure reports will be available soon</p>
+                <Icon
+                  name="Globe"
+                  size={48}
+                  className="u-text-secondary-emphasis u-mb-4"
+                />
+                <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">
+                  Network Reports
+                </h3>
+                <p className="u-text-secondary-emphasis-emphasis">
+                  Network performance and infrastructure reports will be
+                  available soon
+                </p>
               </div>
             </div>
           </Card>

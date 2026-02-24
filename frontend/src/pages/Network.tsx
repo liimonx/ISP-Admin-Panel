@@ -16,6 +16,7 @@ import {
   Select,
   Dropdown,
   Progress,
+  Textarea,
 } from "@shohojdhara/atomix";
 import { Router } from "../types";
 import { apiService } from "../services/apiService";
@@ -233,7 +234,7 @@ const Network: React.FC = () => {
       <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-mb-2">Network Management</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Manage routers and network devices for your ISP infrastructure
           </p>
         </div>
@@ -259,14 +260,14 @@ const Network: React.FC = () => {
           <Card>
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondary u-mb-1">
+                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
                   Total Routers
                 </div>
                 <div className="u-text-xl u-fw-bold">
                   {routersData?.count || 0}
                 </div>
               </div>
-              <div className="u-bg-primary-light u-p-3 u-rounded">
+              <div className="u-bg-primary-subtle u-p-3 u-rounded">
                 <Icon name="Globe" size={24} className="u-text-primary" />
               </div>
             </div>
@@ -276,7 +277,7 @@ const Network: React.FC = () => {
           <Card>
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondary u-mb-1">
+                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
                   Online Routers
                 </div>
                 <div className="u-text-xl u-fw-bold">
@@ -284,7 +285,7 @@ const Network: React.FC = () => {
                     .length || 0}
                 </div>
               </div>
-              <div className="u-bg-success-light u-p-3 u-rounded">
+              <div className="u-bg-success-subtle u-p-3 u-rounded">
                 <Icon name="CheckCircle" size={24} className="u-text-success" />
               </div>
             </div>
@@ -294,7 +295,7 @@ const Network: React.FC = () => {
           <Card>
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondary u-mb-1">
+                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
                   Offline Routers
                 </div>
                 <div className="u-text-xl u-fw-bold">
@@ -302,7 +303,7 @@ const Network: React.FC = () => {
                     .length || 0}
                 </div>
               </div>
-              <div className="u-bg-error-light u-p-3 u-rounded">
+              <div className="u-bg-error-subtle u-p-3 u-rounded">
                 <Icon name="XCircle" size={24} className="u-text-error" />
               </div>
             </div>
@@ -312,7 +313,7 @@ const Network: React.FC = () => {
           <Card>
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondary u-mb-1">
+                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
                   Maintenance
                 </div>
                 <div className="u-text-xl u-fw-bold">
@@ -321,7 +322,7 @@ const Network: React.FC = () => {
                   ).length || 0}
                 </div>
               </div>
-              <div className="u-bg-warning-light u-p-3 u-rounded">
+              <div className="u-bg-warning-subtle u-p-3 u-rounded">
                 <Icon name="Wrench" size={24} className="u-text-warning" />
               </div>
             </div>
@@ -347,7 +348,7 @@ const Network: React.FC = () => {
                 { value: "all", label: "All Status" },
                 { value: "online", label: "Online" },
                 { value: "offline", label: "Offline" },
-                { value: "maintenance", label: "Maintenance" }
+                { value: "maintenance", label: "Maintenance" },
               ]}
             />
           </GridCol>
@@ -388,7 +389,7 @@ const Network: React.FC = () => {
                     <div>
                       <div className="u-fw-medium">{router.name}</div>
                       {router.description && (
-                        <div className="u-text-sm u-text-secondary">
+                        <div className="u-text-sm u-text-secondary-emphasis">
                           {router.description}
                         </div>
                       )}
@@ -398,7 +399,7 @@ const Network: React.FC = () => {
                   host: (
                     <div>
                       <div className="u-text-sm">{router.host}</div>
-                      <div className="u-text-xs u-text-secondary">
+                      <div className="u-text-xs u-text-secondary-emphasis">
                         API: {router.api_port} | SSH: {router.ssh_port}
                       </div>
                     </div>
@@ -411,7 +412,7 @@ const Network: React.FC = () => {
                         size="sm"
                         className="u-mb-1"
                       />
-                      <div className="u-text-xs u-text-secondary">
+                      <div className="u-text-xs u-text-secondary-emphasis">
                         {Math.floor(Math.random() * 30)} days
                       </div>
                     </div>
@@ -529,10 +530,11 @@ const Network: React.FC = () => {
           <Grid>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">Router Name *</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
-                  type="text"
+                <label className="u-block u-fw-medium u-mb-1">
+                  Router Name *
+                </label>
+                <Input
+                  className="u-w-100"
                   value={formData.name}
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
@@ -543,7 +545,9 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">Router Type</label>
+                <label className="u-block u-fw-medium u-mb-1">
+                  Router Type
+                </label>
                 <Select
                   className="u-w-100"
                   value={formData.router_type}
@@ -556,16 +560,18 @@ const Network: React.FC = () => {
                   options={[
                     { value: "mikrotik", label: "MikroTik" },
                     { value: "cisco", label: "Cisco" },
-                    { value: "other", label: "Other" }
+                    { value: "other", label: "Other" },
                   ]}
                 />
               </div>
             </GridCol>
             <GridCol xs={12}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">Description</label>
-                <textarea
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
+                <label className="u-block u-fw-medium u-mb-1">
+                  Description
+                </label>
+                <Textarea
+                  className="u-w-100"
                   value={formData.description}
                   onChange={(e) =>
                     setFormData({ ...formData, description: e.target.value })
@@ -576,10 +582,11 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={8}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">Host/IP Address *</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
-                  type="text"
+                <label className="u-block u-fw-medium u-mb-1">
+                  Host/IP Address *
+                </label>
+                <Input
+                  className="u-w-100"
                   value={formData.host}
                   onChange={(e) =>
                     setFormData({ ...formData, host: e.target.value })
@@ -592,8 +599,8 @@ const Network: React.FC = () => {
             <GridCol xs={12} md={4}>
               <div className="u-mb-3">
                 <label className="u-block u-fw-medium u-mb-1">API Port</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
+                <Input
+                  className="u-w-100"
                   type="number"
                   value={formData.api_port}
                   onChange={(e) =>
@@ -608,8 +615,8 @@ const Network: React.FC = () => {
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
                 <label className="u-block u-fw-medium u-mb-1">SSH Port</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
+                <Input
+                  className="u-w-100"
                   type="number"
                   value={formData.ssh_port}
                   onChange={(e) =>
@@ -624,9 +631,8 @@ const Network: React.FC = () => {
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
                 <label className="u-block u-fw-medium u-mb-1">Username *</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
-                  type="text"
+                <Input
+                  className="u-w-100"
                   value={formData.username}
                   onChange={(e) =>
                     setFormData({ ...formData, username: e.target.value })
@@ -638,8 +644,8 @@ const Network: React.FC = () => {
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
                 <label className="u-block u-fw-medium u-mb-1">Password *</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
+                <Input
+                  className="u-w-100"
                   type="password"
                   value={formData.password}
                   onChange={(e) =>
@@ -669,9 +675,8 @@ const Network: React.FC = () => {
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
                 <label className="u-block u-fw-medium u-mb-1">Location</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
-                  type="text"
+                <Input
+                  className="u-w-100"
                   value={formData.location}
                   onChange={(e) =>
                     setFormData({ ...formData, location: e.target.value })
@@ -682,10 +687,11 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">GPS Coordinates</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
-                  type="text"
+                <label className="u-block u-fw-medium u-mb-1">
+                  GPS Coordinates
+                </label>
+                <Input
+                  className="u-w-100"
                   value={formData.coordinates}
                   onChange={(e) =>
                     setFormData({ ...formData, coordinates: e.target.value })
@@ -696,10 +702,11 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">SNMP Community</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
-                  type="text"
+                <label className="u-block u-fw-medium u-mb-1">
+                  SNMP Community
+                </label>
+                <Input
+                  className="u-w-100"
                   value={formData.snmp_community}
                   onChange={(e) =>
                     setFormData({ ...formData, snmp_community: e.target.value })
@@ -710,8 +717,8 @@ const Network: React.FC = () => {
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
                 <label className="u-block u-fw-medium u-mb-1">SNMP Port</label>
-                <input
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
+                <Input
+                  className="u-w-100"
                   type="number"
                   value={formData.snmp_port}
                   onChange={(e) =>
@@ -726,8 +733,8 @@ const Network: React.FC = () => {
             <GridCol xs={12}>
               <div className="u-mb-3">
                 <label className="u-block u-fw-medium u-mb-1">Notes</label>
-                <textarea
-                  className="u-w-100 u-py-2 u-px-3 u-border u-rounded u-bg-surface u-text-foreground"
+                <Textarea
+                  className="u-w-100"
                   value={formData.notes}
                   onChange={(e) =>
                     setFormData({ ...formData, notes: e.target.value })

@@ -274,9 +274,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
             />
           </div>
           <div>
-            <label className="u-fs-sm u-fw-medium u-mb-1 u-block">
-              Period
-            </label>
+            <label className="u-fs-sm u-fw-medium u-mb-1 u-block">Period</label>
             <Select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
@@ -345,7 +343,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                   >
                     {Math.abs(calculateGrowthRate()).toFixed(1)}%
                   </span>
-                  <span className="u-fs-sm u-text-secondary">
+                  <span className="u-fs-sm u-text-secondary-emphasis">
                     vs last month
                   </span>
                 </div>
@@ -364,7 +362,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                     calculateTotalRevenue() / (revenueData?.length || 1),
                   )}
                 </p>
-                <p className="u-fs-sm u-text-secondary u-mt-2">
+                <p className="u-fs-sm u-text-secondary-emphasis u-mt-2">
                   Based on {revenueData?.length || 0} months
                 </p>
               </Card>
@@ -386,7 +384,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                       )
                     : formatCurrency(0)}
                 </p>
-                <p className="u-fs-sm u-text-secondary u-mt-2">
+                <p className="u-fs-sm u-text-secondary-emphasis u-mt-2">
                   Highest monthly revenue
                 </p>
               </Card>
@@ -447,7 +445,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                         >
                           <div>
                             <div className="u-fw-medium">{method.method}</div>
-                            <div className="u-fs-sm u-text-secondary">
+                            <div className="u-fs-sm u-text-secondary-emphasis">
                               {method.count} transactions
                             </div>
                           </div>
@@ -455,7 +453,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                             <div className="u-fw-medium">
                               {formatCurrency(method.amount)}
                             </div>
-                            <div className="u-fs-sm u-text-secondary">
+                            <div className="u-fs-sm u-text-secondary-emphasis">
                               {method.percentage.toFixed(1)}%
                             </div>
                           </div>
@@ -487,16 +485,14 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                       key={index}
                       className="u-flex u-items-center u-p-4 u-border u-rounded u-bg-subtle"
                     >
-                      <div
-                        className="u-flex u-items-center u-justify-center u-bg-primary u-text-white u-rounded-circle u-me-3 u-w-10 u-h-10"
-                      >
+                      <div className="u-flex u-items-center u-justify-center u-bg-primary u-text-white u-rounded-circle u-me-3 u-w-10 u-h-10">
                         {index + 1}
                       </div>
                       <div className="u-flex-fill">
                         <div className="u-fw-medium u-mb-1">
                           {customer.customer_name}
                         </div>
-                        <div className="u-fs-sm u-text-secondary">
+                        <div className="u-fs-sm u-text-secondary-emphasis">
                           {customer.invoice_count} invoices • Avg payment time:{" "}
                           {customer.avg_payment_time} days
                         </div>

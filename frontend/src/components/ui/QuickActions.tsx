@@ -26,7 +26,9 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
     <Card className={`${className}`}>
       <div className="u-mb-4">
         <h3 className="u-text-lg u-fw-semibold u-mb-1">{title}</h3>
-        <p className="u-text-sm u-text-secondary">Common tasks and shortcuts</p>
+        <p className="u-text-sm u-text-secondary-emphasis">
+          Common tasks and shortcuts
+        </p>
       </div>
 
       <div className="u-grid u-grid-cols-2 u-gap-3">

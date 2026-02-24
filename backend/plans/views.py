@@ -3,6 +3,7 @@ from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
+from django.db.models import Count
 from .models import Plan
 from .serializers import (
     PlanSerializer, PlanCreateSerializer, PlanUpdateSerializer,
@@ -121,19 +122,21 @@ def plan_stats_view(request):
     total_plans = Plan.objects.count()
     active_plans = Plan.objects.filter(is_active=True).count()
     featured_plans = Plan.objects.filter(is_featured=True).count()
+    popular_plans_count = Plan.objects.filter(is_popular=True).count()
     
     # Revenue statistics
     total_monthly_revenue = sum(plan.get_total_revenue() for plan in Plan.objects.with_revenue())
     
     # Most popular plans
-    popular_plans = Plan.objects.filter(is_active=True).order_by('-subscriptions__count')[:5]
+    top_plans = Plan.objects.filter(is_active=True).annotate(subs_count=Count('subscriptions')).order_by('-subs_count')[:5]
     
     stats = {
         'total_plans': total_plans,
         'active_plans': active_plans,
         'featured_plans': featured_plans,
+        'popular_plans': popular_plans_count,
+        'top_plans': PlanListSerializer(top_plans, many=True).data,
         'total_monthly_revenue': float(total_monthly_revenue),
-        'popular_plans': PlanListSerializer(popular_plans, many=True).data
     }
     
     return Response(stats)

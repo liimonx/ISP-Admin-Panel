@@ -52,7 +52,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
     return (
       <div className="u-p-4 u-text-center">
         <p className="u-text-error">Failed to load billing statistics</p>
-        <p className="u-fs-sm u-text-secondary">{error}</p>
+        <p className="u-fs-sm u-text-secondary-emphasis">{error}</p>
       </div>
     );
   }

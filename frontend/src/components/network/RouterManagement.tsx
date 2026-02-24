@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
-import { routerService } from '../../services/routerService';
+import React, { useState, useEffect } from "react";
+import { routerService } from "../../services/routerService";
 
 interface Router {
   id: number;
   name: string;
   host: string;
   api_port: number;
-  status: 'online' | 'offline' | 'maintenance';
+  status: "online" | "offline" | "maintenance";
   router_type: string;
   location?: string;
   use_tls: boolean;
@@ -16,7 +16,9 @@ interface Router {
 const RouterManagement: React.FC = () => {
   const [routers, setRouters] = useState<Router[]>([]);
   const [loading, setLoading] = useState(true);
-  const [testingConnection, setTestingConnection] = useState<number | null>(null);
+  const [testingConnection, setTestingConnection] = useState<number | null>(
+    null,
+  );
 
   useEffect(() => {
     loadRouters();
@@ -27,7 +29,7 @@ const RouterManagement: React.FC = () => {
       const response = await routerService.getRouters();
       setRouters(response.data || []);
     } catch (error) {
-      console.error('Failed to load routers:', error);
+      console.error("Failed to load routers:", error);
     } finally {
       setLoading(false);
     }
@@ -38,9 +40,11 @@ const RouterManagement: React.FC = () => {
     try {
       const result = await routerService.testRouterConnection(router.id);
       if (result.success) {
-        setRouters(prev => prev.map(r => 
-          r.id === router.id ? { ...r, status: 'online' as const } : r
-        ));
+        setRouters((prev) =>
+          prev.map((r) =>
+            r.id === router.id ? { ...r, status: "online" as const } : r,
+          ),
+        );
         alert(`Connection successful to ${router.name}`);
       } else {
         alert(`Connection failed to ${router.name}`);
@@ -54,14 +58,14 @@ const RouterManagement: React.FC = () => {
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case 'online': 
-        return 'u-bg-success-subtle u-text-success u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded'; 
-      case 'offline': 
-        return 'u-bg-error-subtle u-c-error u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded'; 
-      case 'maintenance': 
-        return 'u-bg-warning-subtle u-c-warning u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded'; 
-      default: 
-        return 'u-bg-secondary-subtle u-c-secondary u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded';
+      case "online":
+        return "u-bg-success-subtle u-text-success u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded";
+      case "offline":
+        return "u-bg-error-subtle u-c-error u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded";
+      case "maintenance":
+        return "u-bg-warning-subtle u-c-warning u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded";
+      default:
+        return "u-bg-secondary-subtle u-c-secondary u-inline-flex u-px-2 u-py-1 u-text-xs u-fw-semibold u-rounded";
     }
   };
 
@@ -72,7 +76,7 @@ const RouterManagement: React.FC = () => {
   return (
     <div className="u-p-6">
       <h2 className="u-text-2xl u-fw-bold u-mb-6">Router Management</h2>
-      
+
       <div className="u-bg-surface u-rounded u-shadow u-overflow-hidden">
         <table className="u-w-100 uivide-y uivide-gray-200">
           <thead className="u-bg-subtle">
@@ -96,8 +100,12 @@ const RouterManagement: React.FC = () => {
               <tr key={router.id}>
                 <td className="u-px-6 u-py-4 u-whitespace-nowrap">
                   <div>
-                    <div className="u-text-sm u-fw-medium u-text-foreground">{router.name}</div>
-                    <div className="u-text-sm u-text-secondary-emphasis">{router.host}:{router.api_port}</div>
+                    <div className="u-text-sm u-fw-medium u-text-foreground">
+                      {router.name}
+                    </div>
+                    <div className="u-text-sm u-text-secondary-emphasis">
+                      {router.host}:{router.api_port}
+                    </div>
                   </div>
                 </td>
                 <td className="u-px-6 u-py-4 u-whitespace-nowrap">
@@ -114,7 +122,9 @@ const RouterManagement: React.FC = () => {
                     disabled={testingConnection === router.id}
                     className="u-text-primary hover:u-text-primary-focus u-opacity-60 hover:u-opacity-100 u-transition-opacity u-border-0 u-bg-transparent u-cursor-pointer"
                   >
-                    {testingConnection === router.id ? 'Testing...' : 'Test Connection'}
+                    {testingConnection === router.id
+                      ? "Testing..."
+                      : "Test Connection"}
                   </button>
                 </td>
               </tr>

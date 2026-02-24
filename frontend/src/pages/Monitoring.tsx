@@ -251,7 +251,7 @@ const Monitoring: React.FC = () => {
               queryClient.invalidateQueries({ queryKey: ["monitoring-stats"] });
               refetchRouters();
             }}
-            className="u-ml-2"
+            className="u-ms-2"
           >
             Try Again
           </Button>
@@ -268,16 +268,16 @@ const Monitoring: React.FC = () => {
       <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
           <h1 className="u-text-2xl u-mb-2">Network Monitoring</h1>
-          <p className="u-text-secondary">
+          <p className="u-text-secondary-emphasis">
             Real-time monitoring of network infrastructure and performance
           </p>
         </div>
         <div className="u-flex u-gap-3 u-items-center">
           <div className="u-flex u-items-center">
             <Toggle
-              initialOn={autoRefresh}
-              onToggleOn={() => setAutoRefresh(!autoRefresh)}
-              className="u-mr-2"
+              checked={autoRefresh}
+              onChange={(checked) => setAutoRefresh(checked)}
+              className="u-me-2"
             />
             <label className="u-text-sm">Auto Refresh</label>
           </div>
@@ -296,14 +296,16 @@ const Monitoring: React.FC = () => {
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
-                <div className="u-bg-primary-subtle u-p-3 u-rounded u-mr-3">
+                <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Desktop" size={20} className="u-text-primary" />
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
                     {monitoringStats.total_routers || 0}
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Total Routers</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Total Routers
+                  </p>
                 </div>
               </div>
             </Card>
@@ -311,7 +313,7 @@ const Monitoring: React.FC = () => {
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
-                <div className="u-bg-success-subtle u-p-3 u-rounded u-mr-3">
+                <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
                   <Icon
                     name="CheckCircle"
                     size={24}
@@ -322,7 +324,7 @@ const Monitoring: React.FC = () => {
                   <h3 className="u-text-lg u-mb-1">
                     {monitoringStats.online_routers || 0}
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Online</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">Online</p>
                   <div className="u-text-sm u-text-success">
                     {monitoringStats.total_routers > 0
                       ? `${((monitoringStats.online_routers / monitoringStats.total_routers) * 100).toFixed(1)}%`
@@ -336,14 +338,16 @@ const Monitoring: React.FC = () => {
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
-                <div className="u-bg-warning-subtle u-p-3 u-rounded u-mr-3">
+                <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Warning" size={24} className="u-text-warning" />
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
                     {monitoringStats.alerts_count || 0}
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Active Alerts</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Active Alerts
+                  </p>
                   <div className="u-text-sm u-text-warning">
                     {monitoringStats.critical_alerts || 0} critical
                   </div>
@@ -354,14 +358,16 @@ const Monitoring: React.FC = () => {
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
-                <div className="u-bg-info-subtle u-p-3 u-rounded u-mr-3">
+                <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
                   <Icon name="Cpu" size={20} className="u-text-success" />
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
                     {monitoringStats.total_bandwidth_usage || 0} GB
                   </h3>
-                  <p className="u-text-secondary u-mb-0">Bandwidth Usage</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Bandwidth Usage
+                  </p>
                   <div className="u-text-sm u-text-info">
                     Peak: {monitoringStats.peak_bandwidth_usage || 0} Mbps
                   </div>
@@ -383,7 +389,7 @@ const Monitoring: React.FC = () => {
             {statsLoading ? (
               <div className="u-text-center u-p-6">
                 <Spinner />
-                <p className="u-mt-2 u-text-secondary">
+                <p className="u-mt-2 u-text-secondary-emphasis">
                   Loading bandwidth data...
                 </p>
               </div>
@@ -398,7 +404,7 @@ const Monitoring: React.FC = () => {
             {statsLoading ? (
               <div className="u-text-center u-p-6">
                 <Spinner />
-                <p className="u-mt-2 u-text-secondary">
+                <p className="u-mt-2 u-text-secondary-emphasis">
                   Loading status data...
                 </p>
               </div>
@@ -420,7 +426,7 @@ const Monitoring: React.FC = () => {
               onClick={() => refetchRouters()}
               disabled={routersLoading}
             >
-              <Icon name="ArrowClockwise" size={16} className="u-mr-2" />
+              <Icon name="ArrowClockwise" size={16} className="u-me-2" />
               Refresh
             </Button>
           </div>
@@ -452,7 +458,9 @@ const Monitoring: React.FC = () => {
         {routersLoading ? (
           <div className="u-text-center u-p-6">
             <Spinner size="lg" />
-            <p className="u-mt-3 u-text-secondary">Loading routers...</p>
+            <p className="u-mt-3 u-text-secondary-emphasis">
+              Loading routers...
+            </p>
           </div>
         ) : (
           <>
@@ -463,7 +471,7 @@ const Monitoring: React.FC = () => {
                   router: (
                     <div className="u-flex u-items-center">
                       <div
-                        className={`u-w-3 u-h-3 u-rounded-circle u-mr-3 ${
+                        className={`u-w-3 u-h-3 u-rounded-circle u-me-3 ${
                           router.status === "online"
                             ? "u-bg-success"
                             : router.status === "offline"
@@ -478,7 +486,7 @@ const Monitoring: React.FC = () => {
                           {sanitizeText(router.name)}
                         </div>
                         {router.description && (
-                          <div className="u-text-secondary u-text-sm">
+                          <div className="u-text-secondary-emphasis u-text-sm">
                             {sanitizeText(router.description)}
                           </div>
                         )}
@@ -491,11 +499,11 @@ const Monitoring: React.FC = () => {
                         <Icon
                           name="Globe"
                           size={14}
-                          className="u-mr-2 u-text-secondary"
+                          className="u-me-2 u-text-secondary-emphasis"
                         />
                         {router.host}
                       </div>
-                      <div className="u-text-sm u-text-secondary">
+                      <div className="u-text-sm u-text-secondary-emphasis">
                         API: {router.api_port} | SSH: {router.ssh_port}
                       </div>
                     </div>
@@ -508,7 +516,7 @@ const Monitoring: React.FC = () => {
                         size="sm"
                         className="u-mb-1"
                       />
-                      <div className="u-text-sm u-text-secondary">
+                      <div className="u-text-sm u-text-secondary-emphasis">
                         {router.uptime ? formatUptime(router.uptime) : "N/A"}
                       </div>
                     </div>
@@ -519,7 +527,7 @@ const Monitoring: React.FC = () => {
                         <Icon
                           name="ArrowDown"
                           size={12}
-                          className="u-mr-1 u-text-success"
+                          className="u-me-1 u-text-success"
                         />
                         {router.rx_bytes
                           ? formatBandwidth(router.rx_bytes)
@@ -529,7 +537,7 @@ const Monitoring: React.FC = () => {
                         <Icon
                           name="ArrowUp"
                           size={12}
-                          className="u-mr-1 u-text-info"
+                          className="u-me-1 u-text-info"
                         />
                         {router.tx_bytes
                           ? formatBandwidth(router.tx_bytes)
@@ -589,10 +597,10 @@ const Monitoring: React.FC = () => {
                 <Icon
                   name="Desktop"
                   size={48}
-                  className="u-text-secondary u-mb-3"
+                  className="u-text-secondary-emphasis u-mb-3"
                 />
                 <h3 className="u-text-lg u-mb-2">No routers found</h3>
-                <p className="u-text-secondary u-mb-4">
+                <p className="u-text-secondary-emphasis u-mb-4">
                   {searchQuery || routerStatusFilter !== "all"
                     ? "Try adjusting your filters"
                     : "No routers are currently configured for monitoring"}
@@ -601,7 +609,7 @@ const Monitoring: React.FC = () => {
                   variant="primary"
                   onClick={() => (window.location.href = "/network")}
                 >
-                  <Icon name="Plus" size={16} className="u-mr-2" />
+                  <Icon name="Plus" size={16} className="u-me-2" />
                   Add Router
                 </Button>
               </div>
@@ -688,7 +696,7 @@ const Monitoring: React.FC = () => {
             {selectedRouter.description && (
               <div>
                 <h4 className="u-text-lg u-mb-2">Description</h4>
-                <p className="u-text-secondary">
+                <p className="u-text-secondary-emphasis">
                   {sanitizeText(selectedRouter.description)}
                 </p>
               </div>
