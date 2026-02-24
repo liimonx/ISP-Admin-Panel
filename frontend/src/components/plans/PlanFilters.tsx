@@ -48,7 +48,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
     <Card className={`u-mb-6 ${className}`}>
       <div className="u-p-4">
         <div className="u-flex u-justify-between u-items-center u-mb-4">
-          <h3 className="u-text-lg u-font-semibold">Filter Plans</h3>
+          <h3 className="u-text-lg u-fw-semibold">Filter Plans</h3>
           <Button
             variant="outline"
             size="sm"
@@ -62,7 +62,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
         <div className="u-grid u-grid-cols-1 u-gap-4 md:u-grid-cols-2 lg:u-grid-cols-3">
           {/* Search */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Search Plans
             </label>
             <Input
@@ -75,7 +75,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Status Filter */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Status
             </label>
             <Select
@@ -92,7 +92,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Billing Cycle Filter */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Billing Cycle
             </label>
             <Select
@@ -110,7 +110,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Speed Range Filter */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Speed Range
             </label>
             <Select
@@ -130,7 +130,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Price Range Filter */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-1">
+            <label className="u-block u-text-sm u-fw-medium u-mb-1">
               Price Range
             </label>
             <Select
@@ -150,7 +150,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
 
           {/* Special Filters */}
           <div>
-            <label className="u-block u-text-sm u-font-medium u-mb-2">
+            <label className="u-block u-text-sm u-fw-medium u-mb-2">
               Special Filters
             </label>
             <div className="u-space-y-2">

@@ -25,12 +25,10 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
   return (
     <Card className={`${className}`}>
       <div className="u-mb-4">
-        <h3 className="u-text-lg u-font-semibold u-mb-1">{title}</h3>
-        <p className="u-text-sm u-text-secondary">
-          Common tasks and shortcuts
-        </p>
+        <h3 className="u-text-lg u-fw-semibold u-mb-1">{title}</h3>
+        <p className="u-text-sm u-text-secondary">Common tasks and shortcuts</p>
       </div>
-      
+
       <div className="u-grid u-grid-cols-2 u-gap-3">
         {actions.map((action) => (
           <Button
@@ -39,12 +37,12 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
             size="md"
             onClick={action.onClick}
             disabled={action.disabled}
-            className="u-flex u-flex-col u-items-center u-gap-2 u-p-4 u-h-auto u-pos-absolute"
+            className="u-flex u-flex-col u-items-center u-gap-2 u-p-4 u-h-auto u-absolute"
           >
             <Icon name={action.icon as any} size={24} />
-            <span className="u-text-sm u-font-medium">{action.label}</span>
+            <span className="u-text-sm u-fw-medium">{action.label}</span>
             {action.badge && (
-              <span className="u-pos-absolute u-top-2 u-right-2 u-bg-primary u-text-xs u-px-2 u-py-1 u-rounded-full">
+              <span className="u-absolute u-top-2 u-right-2 u-bg-primary u-text-xs u-px-2 u-py-1 u-rounded-full">
                 {action.badge}
               </span>
             )}

@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Navigate, useNavigate } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import { useAuth } from '@/context/AuthContext';
+import React, { useState, useEffect } from "react";
+import { Navigate, useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
+import { useAuth } from "@/context/AuthContext";
 import {
   Card,
   Input,
@@ -12,7 +12,7 @@ import {
   GridCol,
   Callout,
   Spinner,
-} from '@shohojdhara/atomix';
+} from "@shohojdhara/atomix";
 
 type LoginFormData = {
   username: string;
@@ -25,8 +25,8 @@ const Login: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loginError, setLoginError] = useState<string | null>(null);
   const [formData, setFormData] = useState<LoginFormData>({
-    username: '',
-    password: '',
+    username: "",
+    password: "",
   });
   const [errors, setErrors] = useState<Partial<LoginFormData>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -35,85 +35,85 @@ const Login: React.FC = () => {
   // Check if we have a redirect URL in localStorage
   useEffect(() => {
     if (isAuthenticated) {
-      const redirectUrl = localStorage.getItem('redirect_after_login');
+      const redirectUrl = localStorage.getItem("redirect_after_login");
       if (redirectUrl) {
-        localStorage.removeItem('redirect_after_login');
+        localStorage.removeItem("redirect_after_login");
         navigate(redirectUrl, { replace: true });
       } else {
-        navigate('/', { replace: true });
+        navigate("/", { replace: true });
       }
     }
   }, [isAuthenticated, navigate]);
 
   const validateForm = () => {
     const newErrors: Partial<LoginFormData> = {};
-    
+
     if (!formData.username.trim()) {
-      newErrors.username = 'Username is required';
+      newErrors.username = "Username is required";
     }
-    
+
     if (!formData.password.trim()) {
-      newErrors.password = 'Password is required';
+      newErrors.password = "Password is required";
     }
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleInputChange = (field: keyof LoginFormData, value: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [field]: value
+      [field]: value,
     }));
-    
+
     // Clear error when user starts typing
     if (errors[field]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [field]: undefined
+        [field]: undefined,
       }));
     }
   };
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) {
       return;
     }
-    
+
     setIsSubmitting(true);
     setLoginError(null);
-    
+
     try {
       await login(formData.username, formData.password);
-      toast.success('Login successful!');
+      toast.success("Login successful!");
     } catch (error: any) {
-      let errorMessage = 'Login failed. Please try again.';
-      
+      let errorMessage = "Login failed. Please try again.";
+
       if (error.response) {
         switch (error.response.status) {
           case 400:
-            errorMessage = 'Invalid request. Please check your credentials.';
+            errorMessage = "Invalid request. Please check your credentials.";
             break;
           case 401:
-            errorMessage = 'Invalid username or password.';
+            errorMessage = "Invalid username or password.";
             break;
           case 429:
-            errorMessage = 'Too many login attempts. Please try again later.';
+            errorMessage = "Too many login attempts. Please try again later.";
             break;
           case 500:
-            errorMessage = 'Server error. Please try again later.';
+            errorMessage = "Server error. Please try again later.";
             break;
           default:
             errorMessage = error.response.data?.message || errorMessage;
         }
       } else if (error.request) {
-        errorMessage = 'Network error. Please check your connection.';
+        errorMessage = "Network error. Please check your connection.";
       }
-      
+
       setLoginError(errorMessage);
-      toast.error('Login failed');
+      toast.error("Login failed");
     } finally {
       setIsSubmitting(false);
     }
@@ -139,7 +139,9 @@ const Login: React.FC = () => {
                 <Icon name="Globe" size={48} className="u-text-primary" />
               </div>
               <h1 className="u-mb-2">ISP Admin Panel</h1>
-              <p className="u-text-secondary-emphasis">Sign in to manage your ISP operations</p>
+              <p className="u-text-secondary-emphasis">
+                Sign in to manage your ISP operations
+              </p>
             </div>
 
             {/* Login Form */}
@@ -151,7 +153,12 @@ const Login: React.FC = () => {
               )}
 
               <div className="u-mb-4">
-                <label htmlFor="username" className="u-block u-mb-2 u-fw-medium">Username</label>
+                <label
+                  htmlFor="username"
+                  className="u-block u-mb-2 u-fw-medium"
+                >
+                  Username
+                </label>
                 <Input
                   id="username"
                   type="text"
@@ -159,25 +166,36 @@ const Login: React.FC = () => {
                   autoComplete="username"
                   autoFocus
                   value={formData.username}
-                  onChange={(e) => handleInputChange('username', e.target.value)}
+                  onChange={(e) =>
+                    handleInputChange("username", e.target.value)
+                  }
                   name="username"
                   disabled={isSubmitting}
                 />
                 {errors.username && (
-                  <div className="u-text-error u-text-sm u-mt-1">{errors.username}</div>
+                  <div className="u-text-error u-text-sm u-mt-1">
+                    {errors.username}
+                  </div>
                 )}
               </div>
 
               <div className="u-mb-4">
-                <label htmlFor="password" className="u-block u-mb-2 u-fw-medium">Password</label>
+                <label
+                  htmlFor="password"
+                  className="u-block u-mb-2 u-fw-medium"
+                >
+                  Password
+                </label>
                 <div className="u-relative">
                   <Input
                     id="password"
-                    type={showPassword ? 'text' : 'password'}
+                    type={showPassword ? "text" : "password"}
                     placeholder="Enter your password"
                     autoComplete="current-password"
                     value={formData.password}
-                    onChange={(e) => handleInputChange('password', e.target.value)}
+                    onChange={(e) =>
+                      handleInputChange("password", e.target.value)
+                    }
                     name="password"
                     disabled={isSubmitting}
                   />
@@ -187,14 +205,16 @@ const Login: React.FC = () => {
                     type="button"
                     onClick={togglePasswordVisibility}
                     aria-label="Toggle password visibility"
-                    className="u-position-absolute u-right-2 u-top-50 u-transform-translate-y-50"
+                    className="u-absolute u-right-2 u-top-50 u-transform-translate-y-50"
                     disabled={isSubmitting}
                   >
-                    <Icon name={showPassword ? 'EyeSlash' : 'Eye'} size={16} />
+                    <Icon name={showPassword ? "EyeSlash" : "Eye"} size={16} />
                   </Button>
                 </div>
                 {errors.password && (
-                  <div className="u-text-error u-text-sm u-mt-1">{errors.password}</div>
+                  <div className="u-text-error u-text-sm u-mt-1">
+                    {errors.password}
+                  </div>
                 )}
               </div>
 
@@ -207,17 +227,20 @@ const Login: React.FC = () => {
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
                   />
-                  <label htmlFor="rememberMe" className="u-text-sm u-text-foreground">
+                  <label
+                    htmlFor="rememberMe"
+                    className="u-text-sm u-text-foreground"
+                  >
                     Remember me
                   </label>
                 </div>
-                
-                <Button 
-                  variant="link" 
+
+                <Button
+                  variant="link"
                   size="sm"
                   type="button"
                   className="u-p-0"
-                  onClick={() => navigate('/forgot-password')}
+                  onClick={() => navigate("/forgot-password")}
                   disabled={isSubmitting}
                 >
                   Forgot password?
@@ -236,15 +259,18 @@ const Login: React.FC = () => {
                     <Spinner size="sm" className="u-me-2" />
                     Signing In...
                   </>
-                ) : 'Sign In'}
+                ) : (
+                  "Sign In"
+                )}
               </Button>
             </form>
-
           </Card>
-          
+
           {/* Footer */}
           <div className="u-text-center u-mt-4 u-text-sm u-text-secondary-emphasis">
-            <p>© {new Date().getFullYear()} ISP Admin Panel. All rights reserved.</p>
+            <p>
+              © {new Date().getFullYear()} ISP Admin Panel. All rights reserved.
+            </p>
           </div>
         </GridCol>
       </Grid>

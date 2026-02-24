@@ -354,13 +354,13 @@ const Settings: React.FC = () => {
           <div className="u-border-b u-p-4 u-mb-4">
             <div className="u-flex u-items-center u-gap-2">
               <Icon name="Gear" size={20} />
-              <h2 className="u-text-lg u-font-semibold">System Settings</h2>
+              <h2 className="u-text-lg u-fw-semibold">System Settings</h2>
             </div>
           </div>
           <div className="u-p-4">
             <div className="u-flex u-items-center u-justify-between u-mb-3">
               <div>
-                <label className="u-text-sm u-font-medium">Maintenance Mode</label>
+                <label className="u-text-sm u-fw-medium">Maintenance Mode</label>
                 <p className="u-text-xs u-text-secondary-emphasis">
                   Enable maintenance mode to restrict access
                 </p>
@@ -373,7 +373,7 @@ const Settings: React.FC = () => {
 
             <div className="u-flex u-items-center u-justify-between u-mb-3">
               <div>
-                <label className="u-text-sm u-font-medium">Auto Backup</label>
+                <label className="u-text-sm u-fw-medium">Auto Backup</label>
                 <p className="u-text-xs u-text-secondary-emphasis">
                   Automatically backup system data
                 </p>
@@ -386,7 +386,7 @@ const Settings: React.FC = () => {
 
             {settings.autoBackup && (
               <div className="u-mb-3">
-                <label className="u-block u-text-sm u-font-medium u-mb-1">
+                <label className="u-block u-text-sm u-fw-medium u-mb-1">
                   Backup Frequency
                 </label>
                 <Select
@@ -405,7 +405,7 @@ const Settings: React.FC = () => {
 
             <div className="u-flex u-items-center u-justify-between u-mb-3">
               <div>
-                <label className="u-text-sm u-font-medium">Email Notifications</label>
+                <label className="u-text-sm u-fw-medium">Email Notifications</label>
                 <p className="u-text-xs u-text-secondary-emphasis">
                   Send email notifications for system events
                 </p>
@@ -418,7 +418,7 @@ const Settings: React.FC = () => {
 
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <label className="u-text-sm u-font-medium">SMS Notifications</label>
+                <label className="u-text-sm u-fw-medium">SMS Notifications</label>
                 <p className="u-text-xs u-text-secondary-emphasis">
                   Send SMS notifications for critical alerts
                 </p>

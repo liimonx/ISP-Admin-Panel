@@ -51,27 +51,33 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   className = "",
   "data-testid": testId,
 }) => {
-  const items = dropdownItems.length > 0 ? dropdownItems : [
-    {
-      label: "Profile",
-      icon: "User",
-      onClick: () => console.log("Profile clicked"),
-    },
-    {
-      label: "Settings",
-      icon: "Gear",
-      onClick: () => console.log("Settings clicked"),
-    },
-    {
-      label: "Sign out",
-      icon: "SignOut",
-      onClick: () => console.log("Sign out clicked"),
-      divider: true,
-    },
-  ];
+  const items =
+    dropdownItems.length > 0
+      ? dropdownItems
+      : [
+          {
+            label: "Profile",
+            icon: "User",
+            onClick: () => console.log("Profile clicked"),
+          },
+          {
+            label: "Settings",
+            icon: "Gear",
+            onClick: () => console.log("Settings clicked"),
+          },
+          {
+            label: "Sign out",
+            icon: "SignOut",
+            onClick: () => console.log("Sign out clicked"),
+            divider: true,
+          },
+        ];
 
   const avatarWithStatus = (
-    <div className={`u-inline-flex u-relative ${className}`} data-testid={testId}>
+    <div
+      className={`u-inline-flex u-relative ${className}`}
+      data-testid={testId}
+    >
       <Avatar
         src={user.avatar}
         alt={user.name}
@@ -80,12 +86,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
       />
 
       {showStatus && user.status && (
-        <div className="u-position-absolute u-bottom-0 u-right-0 u-transform-translate--25">
-          <Badge 
-            variant={statusVariants[user.status]} 
-            size="sm" 
-            label="" 
-          />
+        <div className="u-absolute u-bottom-0 u-right-0 u-transform-translate--25">
+          <Badge variant={statusVariants[user.status]} size="sm" label="" />
         </div>
       )}
     </div>
@@ -98,9 +100,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
           <div className="u-py-2">
             {/* User Info Header */}
             <div className="u-px-4 u-py-2 u-border-bottom">
-              <div className="u-fw-medium u-text-sm">
-                {user.name}
-              </div>
+              <div className="u-fw-medium u-text-sm">{user.name}</div>
               {user.email && (
                 <div className="u-text-xs u-text-muted">{user.email}</div>
               )}

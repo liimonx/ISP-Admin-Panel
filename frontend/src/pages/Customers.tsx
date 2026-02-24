@@ -350,11 +350,11 @@ const Customers: React.FC = () => {
       <Card className="u-mb-8">
         <div className="u-flex u-gap-4 u-items-center u-flex-wrap">
           <div className="u-flex-1 u-min-w-300">
-            <div className="u-position-relative">
+            <div className="u-relative">
               <Icon
                 name="MagnifyingGlass"
-                size={16}
-                className="u-position-absolute u-left-3 u-top-50 u-transform-translate-y--50 u-text-secondary-emphasis"
+                size={18}
+                className="u-absolute u-left-3 u-top-50 u-transform-translate-y--50 u-text-secondary-emphasis"
               />
               <Input
                 type="text"
@@ -536,14 +536,7 @@ const Customers: React.FC = () => {
       >
         {selectedCustomer && (
           <div>
-            <div
-              style={{
-                display: "flex",
-                alignItems: "center",
-                gap: "0.75rem",
-                marginBottom: "1rem",
-              }}
-            >
+            <div className="u-flex u-items-center u-gap-3 u-mb-4">
               <Avatar
                 initials={selectedCustomer.name?.charAt(0) || "?"}
                 size="lg"

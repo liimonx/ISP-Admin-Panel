@@ -262,7 +262,7 @@ const Network: React.FC = () => {
                 <div className="u-text-sm u-text-secondary u-mb-1">
                   Total Routers
                 </div>
-                <div className="u-text-xl u-font-bold">
+                <div className="u-text-xl u-fw-bold">
                   {routersData?.count || 0}
                 </div>
               </div>
@@ -279,7 +279,7 @@ const Network: React.FC = () => {
                 <div className="u-text-sm u-text-secondary u-mb-1">
                   Online Routers
                 </div>
-                <div className="u-text-xl u-font-bold">
+                <div className="u-text-xl u-fw-bold">
                   {routersData?.results?.filter((r) => r.status === "online")
                     .length || 0}
                 </div>
@@ -297,7 +297,7 @@ const Network: React.FC = () => {
                 <div className="u-text-sm u-text-secondary u-mb-1">
                   Offline Routers
                 </div>
-                <div className="u-text-xl u-font-bold">
+                <div className="u-text-xl u-fw-bold">
                   {routersData?.results?.filter((r) => r.status === "offline")
                     .length || 0}
                 </div>
@@ -315,7 +315,7 @@ const Network: React.FC = () => {
                 <div className="u-text-sm u-text-secondary u-mb-1">
                   Maintenance
                 </div>
-                <div className="u-text-xl u-font-bold">
+                <div className="u-text-xl u-fw-bold">
                   {routersData?.results?.filter(
                     (r) => r.status === "maintenance",
                   ).length || 0}

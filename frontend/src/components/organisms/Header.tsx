@@ -98,9 +98,7 @@ export const Header: React.FC<HeaderProps> = ({
 
           <div className="u-flex u-items-center u-gap-2">
             <Icon name="Globe" size={24} className="u-text-primary" />
-            <span className="u-text-lg u-fw-bold u-text-primary">
-              BCN ISP
-            </span>
+            <span className="u-text-lg u-fw-bold u-text-primary">BCN ISP</span>
           </div>
         </div>
 
@@ -137,7 +135,7 @@ export const Header: React.FC<HeaderProps> = ({
               size="md"
               onClick={onNotificationClick}
               aria-label="Notifications"
-              className="u-pos-relative"
+              className="u-relative"
             >
               <Icon name="Bell" size={20} />
               {notifications > 0 && (
@@ -145,7 +143,7 @@ export const Header: React.FC<HeaderProps> = ({
                   variant="error"
                   size="sm"
                   label={notifications.toString()}
-                  className="u-pos-absolute u-top-0 u-end-0 u-transform u-translate-x--50 u-translate-y--50"
+                  className="u-absolute u-top-0 u-end-0 u-transform u-translate-x--50 u-translate-y--50"
                 />
               )}
             </Button>
@@ -160,7 +158,7 @@ export const Header: React.FC<HeaderProps> = ({
                 email: user.email,
                 avatar: user.avatar,
                 role: user.role,
-                status: user.status
+                status: user.status,
               }}
               showDropdown
               dropdownItems={userDropdownItems}

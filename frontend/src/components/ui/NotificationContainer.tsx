@@ -1,13 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { Callout, Button } from '@shohojdhara/atomix';
-import { Notification, notificationManager } from '@/utils/notifications';
+import React, { useState, useEffect } from "react";
+import { Callout, Button } from "@shohojdhara/atomix";
+import { Notification, notificationManager } from "@/utils/notifications";
 
 interface NotificationItemProps {
   notification: Notification;
   onDismiss: (id: string) => void;
 }
 
-const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onDismiss }) => {
+const NotificationItem: React.FC<NotificationItemProps> = ({
+  notification,
+  onDismiss,
+}) => {
   const [isVisible, setIsVisible] = useState(false);
   const [isExiting, setIsExiting] = useState(false);
 
@@ -24,14 +27,14 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onDis
     <div
       className={`
         u-transition-all
-        ${isVisible && !isExiting ? 'u-opacity-100' : 'u-opacity-0'}
+        ${isVisible && !isExiting ? "u-opacity-100" : "u-opacity-0"}
         u-w-100 u-mb-3 u-max-w-96
       `}
     >
       <Callout
         variant={notification.type}
         title={notification.title}
-        className="u-shadow-lg u-position-relative"
+        className="u-shadow-lg u-relative"
       >
         <p className="u-mb-0">{notification.message}</p>
         {notification.actions && notification.actions.length > 0 && (
@@ -40,7 +43,13 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onDis
               <Button
                 key={index}
                 size="sm"
-                variant={action.style === 'primary' ? 'primary' : action.style === 'danger' ? 'error' : 'secondary'}
+                variant={
+                  action.style === "primary"
+                    ? "primary"
+                    : action.style === "danger"
+                      ? "error"
+                      : "secondary"
+                }
                 onClick={action.action}
               >
                 {action.label}
@@ -50,8 +59,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onDis
         )}
         <button
           onClick={handleDismiss}
-          className="u-position-absolute u-top-0 u-end-0 u-p-2 u-bg-transparent u-border-0 u-text-muted"
-          style={{ transform: 'translate(25%, -25%)' }}
+          className="u-absolute u-top-0 u-end-0 u-p-2 u-bg-transparent u-border-0 u-text-muted"
         >
           ×
         </button>
@@ -65,10 +73,10 @@ export const NotificationContainer: React.FC = () => {
 
   useEffect(() => {
     const unsubscribe = notificationManager.subscribe((notification) => {
-      setNotifications(prev => {
-        const existing = prev.find(n => n.id === notification.id);
+      setNotifications((prev) => {
+        const existing = prev.find((n) => n.id === notification.id);
         if (existing) {
-          return prev.map(n => n.id === notification.id ? notification : n);
+          return prev.map((n) => (n.id === notification.id ? notification : n));
         }
         return [...prev, notification];
       });
@@ -78,12 +86,12 @@ export const NotificationContainer: React.FC = () => {
   }, []);
 
   const handleDismiss = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id));
+    setNotifications((prev) => prev.filter((n) => n.id !== id));
     notificationManager.dismiss(id);
   };
 
   return (
-    <div className="u-position-fixed u-top-0 u-end-0 u-p-4" style={{ zIndex: 1050 }}>
+    <div className="u-fixed u-top-0 u-end-0 u-p-4 u-z-modal">
       {notifications.map((notification) => (
         <NotificationItem
           key={notification.id}

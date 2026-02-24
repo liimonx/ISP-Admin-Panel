@@ -72,14 +72,14 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
     <Card className="u-h-full">
       <div className="u-flex u-justify-between u-items-start u-mb-4">
         <div className="u-flex-1">
-          <h4 className="u-mb-1 u-text-lg u-font-semibold">{invoice.invoice_number}</h4>
+          <h4 className="u-mb-1 u-text-lg u-fw-semibold">{invoice.invoice_number}</h4>
           <p className="u-text-sm u-text-secondary u-mb-2">
             {invoice.invoice_type} • Due: {new Date(invoice.due_date).toLocaleDateString()}
           </p>
           {getStatusBadge(invoice.status)}
         </div>
         <div className="u-text-right">
-          <div className="u-text-xl u-font-bold u-text-primary">
+          <div className="u-text-xl u-fw-bold u-text-primary">
             {formatCurrency(invoice.total_amount)}
           </div>
           {toNumber(invoice.paid_amount) > 0 && (
@@ -96,7 +96,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           size="md"
         />
         <div className="u-flex-1">
-          <div className="u-font-medium u-text-sm">
+          <div className="u-fw-medium u-text-sm">
             {invoice.customer?.name || 'Unknown Customer'}
           </div>
           <div className="u-text-xs u-text-secondary">
@@ -111,8 +111,8 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
       {!progress.isFullyPaid && (
         <div className="u-mb-4">
           <div className="u-flex u-justify-between u-mb-2">
-            <span className="u-text-sm u-font-medium">Payment Progress</span>
-            <span className="u-text-sm u-font-medium">
+            <span className="u-text-sm u-fw-medium">Payment Progress</span>
+            <span className="u-text-sm u-fw-medium">
               {progress.percentage}%
             </span>
           </div>

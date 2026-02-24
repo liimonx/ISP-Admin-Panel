@@ -391,7 +391,7 @@ const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="u-flex u-justify-center u-items-center u-min-h-screen">
+      <div className="u-flex u-justify-center u-items-center u-min-vh-100">
         <div className="u-text-center">
           <Spinner size="lg" className="u-mb-4" />
           <h3>Loading Dashboard...</h3>
@@ -407,7 +407,7 @@ const Dashboard: React.FC = () => {
       <div className="u-mb-8">
         <div className="u-flex u-justify-between u-items-start u-mb-4">
           <div>
-            <h1 className="u-text-3xl u-font-bold u-mb-2 u-text-foreground">
+            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">
               Dashboard
             </h1>
             <p className="u-text-secondary u-text-lg">
@@ -423,13 +423,13 @@ const Dashboard: React.FC = () => {
               disabled={refreshMutation.isPending}
             >
               <Icon name="ArrowClockwise" size={16} />
-              <span className="u-hidden u-sm-block">
+              <span className="u-none u-sm-block">
                 {refreshMutation.isPending ? "Refreshing..." : "Refresh"}
               </span>
             </Button>
             <Button variant="outline" size="md">
               <Icon name="Download" size={16} />
-              <span className="u-hidden u-sm-block">Export</span>
+              <span className="u-none u-sm-block">Export</span>
             </Button>
             <Button
               variant="primary"
@@ -437,7 +437,7 @@ const Dashboard: React.FC = () => {
               onClick={() => (window.location.href = "/customers")}
             >
               <Icon name="Plus" size={16} />
-              <span className="u-hidden u-sm-block">Add Customer</span>
+              <span className="u-none u-sm-block">Add Customer</span>
             </Button>
           </div>
         </div>
@@ -516,7 +516,7 @@ const Dashboard: React.FC = () => {
           <Card className="u-h-full">
             <div className="u-flex u-justify-between u-items-center u-mb-6">
               <div>
-                <h3 className="u-text-xl u-font-semibold u-mb-1">
+                <h3 className="u-text-xl u-fw-semibold u-mb-1">
                   {selectedChart === "revenue" && "Revenue Analytics"}
                   {selectedChart === "traffic" && "Network Traffic"}
                   {selectedChart === "customers" && "Customer Growth"}
@@ -718,7 +718,7 @@ const Dashboard: React.FC = () => {
           <Card className="u-h-100">
             <div className="u-flex u-justify-between u-items-center u-mb-6">
               <div>
-                <h3 className="u-text-xl u-font-semibold u-mb-1">
+                <h3 className="u-text-xl u-fw-semibold u-mb-1">
                   Recent Customers
                 </h3>
                 <p className="u-text-sm u-text-secondary">

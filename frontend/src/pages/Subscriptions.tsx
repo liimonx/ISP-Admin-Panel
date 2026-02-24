@@ -549,8 +549,7 @@ const Subscriptions: React.FC = () => {
           message={toastMessage}
           variant={toastType}
           onClose={() => setShowToast(false)}
-          className="u-position-fixed u-top-0 u-end-0 u-m-3"
-          style={{ zIndex: 1050 }}
+          className="u-fixed u-top-0 u-end-0 u-m-3 u-z-modal"
         />
       )}
 

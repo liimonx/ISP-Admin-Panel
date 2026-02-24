@@ -71,7 +71,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
         {/* Plan Header */}
         <div className="u-flex u-justify-between u-items-start">
           <div className="u-flex-1">
-            <h2 className="u-text-xl u-font-bold u-mb-2">{plan.name}</h2>
+            <h2 className="u-text-xl u-fw-bold u-mb-2">{plan.name}</h2>
             {plan.description && (
               <p className="u-text-secondary u-mb-3">{plan.description}</p>
             )}
@@ -103,12 +103,12 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Pricing Information */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-font-semibold">Pricing</h3>
+          <h3 className="u-text-lg u-fw-semibold">Pricing</h3>
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-bg-light u-p-4 u-rounded-md">
               <div className="u-text-sm u-text-secondary u-mb-1">Monthly Price</div>
-              <div className="u-text-2xl u-font-bold u-text-primary">
+              <div className="u-text-2xl u-fw-bold u-text-primary">
                 {formatPrice(plan.price)}
               </div>
               <div className="u-text-sm u-text-secondary">
@@ -119,7 +119,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
             {plan.setup_fee && plan.setup_fee > 0 && (
               <div className="u-bg-light u-p-4 u-rounded-md">
                 <div className="u-text-sm u-text-secondary u-mb-1">Setup Fee</div>
-                <div className="u-text-xl u-font-bold">
+                <div className="u-text-xl u-fw-bold">
                   {formatPrice(plan.setup_fee)}
                 </div>
                 <div className="u-text-sm u-text-secondary">one-time</div>
@@ -132,19 +132,19 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Speed & Data Specifications */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-font-semibold">Specifications</h3>
+          <h3 className="u-text-lg u-fw-semibold">Specifications</h3>
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-space-y-3">
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary">Download Speed:</span>
-                <span className="u-font-medium">
+                <span className="u-fw-medium">
                   {formatSpeed(plan.download_speed, plan.speed_unit)}
                 </span>
               </div>
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary">Upload Speed:</span>
-                <span className="u-font-medium">
+                <span className="u-fw-medium">
                   {formatSpeed(plan.upload_speed, plan.speed_unit)}
                 </span>
               </div>
@@ -153,13 +153,13 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
             <div className="u-space-y-3">
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary">Data Quota:</span>
-                <span className="u-font-medium">
+                <span className="u-fw-medium">
                   {formatDataQuota(plan.data_quota || 0, plan.quota_unit)}
                 </span>
               </div>
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary">Billing Cycle:</span>
-                <span className="u-font-medium">
+                <span className="u-fw-medium">
                   {getBillingCycleLabel(plan.billing_cycle)}
                 </span>
               </div>
@@ -172,7 +172,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
           <>
             <div className="u-border-t u-my-4"></div>
             <div className="u-space-y-4">
-              <h3 className="u-text-lg u-font-semibold">Features</h3>
+              <h3 className="u-text-lg u-fw-semibold">Features</h3>
               
               <div className="u-space-y-2">
                 {plan.features.map((feature, index) => (
@@ -197,7 +197,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Plan Metadata */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-font-semibold">Plan Information</h3>
+          <h3 className="u-text-lg u-fw-semibold">Plan Information</h3>
           
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-space-y-3">
@@ -230,19 +230,19 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
             <div className="u-space-y-3">
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary">Created:</span>
-                <span className="u-font-medium">
+                <span className="u-fw-medium">
                   {formatDate(plan.created_at)}
                 </span>
               </div>
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary">Last Updated:</span>
-                <span className="u-font-medium">
+                <span className="u-fw-medium">
                   {formatDate(plan.updated_at)}
                 </span>
               </div>
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary">Plan ID:</span>
-                <span className="u-font-medium u-font-mono">
+                <span className="u-fw-medium u-font-mono">
                   #{plan.id}
                 </span>
               </div>

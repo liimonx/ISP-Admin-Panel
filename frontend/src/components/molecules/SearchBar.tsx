@@ -41,10 +41,6 @@ export const SearchBar: React.FC<SearchBarProps> = ({
     if (!isControlled) {
       setInternalValue(newValue);
     }
-    // If user types and presses Enter, trigger search
-    if (e.key === 'Enter' && onSearch && newValue.trim()) {
-      onSearch(newValue.trim());
-    }
   };
 
   const handleSearch = () => {
@@ -63,7 +59,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       handleSearch();
     }
   };
@@ -73,13 +69,15 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       className={`u-flex u-items-center u-gap-2 ${fullWidth ? "u-w-100" : ""} ${className}`}
       data-testid={testId}
     >
-      <div className={`u-position-relative ${fullWidth ? "u-flex-1" : ""}`}>
+      <div
+        className={`u-relative ${fullWidth ? "u-flex-1" : ""}`}
+        onKeyDown={handleKeyDown}
+      >
         <Input
           type="text"
           placeholder={placeholder}
           value={searchValue}
           onChange={handleInputChange}
-          onKeyDown={handleKeyDown}
           disabled={disabled}
           size={size}
           className="u-pe-10"
@@ -89,7 +87,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             type="button"
             onClick={handleClear}
             disabled={disabled}
-            className="u-position-absolute u-right-2 u-top-50 u-transform-translate-y-50 u-bg-transparent u-border-0 u-cursor-pointer u-p-1 u-text-muted hover:u-text-dark"
+            className="u-absolute u-right-2 u-top-50 u-transform-translate-y-50 u-bg-transparent u-border-0 u-cursor-pointer u-p-1 u-text-muted hover:u-text-dark"
             aria-label="Clear search"
           >
             <Icon name="XCircle" size={16} />
