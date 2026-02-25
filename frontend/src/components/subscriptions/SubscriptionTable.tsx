@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import {
   Card,
   DataTable,
@@ -11,6 +11,7 @@ import {
 } from "@shohojdhara/atomix";
 import { Subscription } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
+import { calculateSubscriptionStats } from "../../utils/subscriptionStats";
 
 interface SubscriptionTableProps {
   subscriptions: Subscription[];
@@ -469,6 +470,10 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     ),
   }));
 
+  const stats = useMemo(() => {
+    return calculateSubscriptionStats(subscriptions);
+  }, [subscriptions]);
+
   return (
     <>
       <Card className="u-overflow-hidden u-border-0 u-shadow-sm">
@@ -541,7 +546,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               <div className="u-col-md-3">
                 <div className="u-text-center">
                   <div className="u-fs-3 u-fw-bold u-text-primary">
-                    {subscriptions.filter((s) => s.status === "active").length}
+                    {stats.active}
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">
                     Active
@@ -551,7 +556,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               <div className="u-col-md-3">
                 <div className="u-text-center">
                   <div className="u-fs-3 u-fw-bold u-text-warning">
-                    {subscriptions.filter((s) => s.status === "pending").length}
+                    {stats.pending}
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">
                     Pending
@@ -561,10 +566,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               <div className="u-col-md-3">
                 <div className="u-text-center">
                   <div className="u-fs-3 u-fw-bold u-text-error">
-                    {
-                      subscriptions.filter((s) => s.status === "suspended")
-                        .length
-                    }
+                    {stats.suspended}
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">
                     Suspended
@@ -574,11 +576,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               <div className="u-col-md-3">
                 <div className="u-text-center">
                   <div className="u-fs-3 u-fw-bold u-text-success">
-                    $
-                    {subscriptions
-                      .filter((s) => s.status === "active")
-                      .reduce((sum, s) => sum + (s.monthly_fee || 0), 0)
-                      .toLocaleString()}
+                    ${stats.revenue.toLocaleString()}
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">
                     Monthly Revenue
