@@ -32,8 +32,3 @@ app.conf.beat_schedule = {
         'schedule': 86400.0,  # Daily
     },
 }
-
-
-@app.task(bind=True, ignore_result=True)
-def debug_task(self):
-    print(f'Request: {self.request!r}')
