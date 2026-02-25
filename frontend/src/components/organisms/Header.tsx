@@ -56,25 +56,6 @@ export const Header: React.FC<HeaderProps> = ({
     setSearchValue("");
   };
 
-  const userDropdownItems = [
-    {
-      label: "Profile",
-      icon: "User",
-      onClick: () => console.log("Profile clicked"),
-    },
-    {
-      label: "Settings",
-      icon: "Gear",
-      onClick: () => console.log("Settings clicked"),
-    },
-    {
-      label: "Sign out",
-      icon: "SignOut",
-      onClick: () => console.log("Sign out clicked"),
-      divider: true,
-    },
-  ];
-
   return (
     <Navbar
       className={`u-bg-surface u-border-b u-shadow-sm ${className}`}
@@ -161,7 +142,6 @@ export const Header: React.FC<HeaderProps> = ({
                 status: user.status,
               }}
               showDropdown
-              dropdownItems={userDropdownItems}
               size="md"
             />
           )}
