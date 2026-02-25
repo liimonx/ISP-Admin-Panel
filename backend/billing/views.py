@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Sum, Count, Avg
+from django.db.models.functions import TruncMonth
 from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
@@ -320,19 +321,38 @@ def invoice_stats_view(request):
         now = timezone.now()
         monthly_data = []
 
+        # Calculate start date (12 months ago)
+        twelve_months_ago = (now - relativedelta(months=11)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
+
+        # Aggregate by month
+        monthly_stats = queryset.filter(
+            created_at__gte=twelve_months_ago
+        ).annotate(
+            month=TruncMonth('created_at')
+        ).values('month').annotate(
+            count=Count('id'),
+            sum_total=Sum('total_amount'),
+            sum_paid=Sum('total_amount', filter=Q(status='paid'))
+        ).order_by('month')
+
+        # Convert to dictionary for easy access
+        stats_dict = {
+            item['month'].strftime('%Y-%m'): item
+            for item in monthly_stats
+            if item['month']
+        }
+
         for i in range(12):
             month_start = (now - relativedelta(months=i)).replace(day=1, hour=0, minute=0, second=0, microsecond=0)
-            month_end = (month_start + relativedelta(months=1)) - timedelta(microseconds=1)
+            month_key = month_start.strftime('%Y-%m')
 
-            month_invoices = queryset.filter(
-                created_at__range=[month_start, month_end]
-            )
+            stat = stats_dict.get(month_key, {})
 
             monthly_data.append({
-                'month': month_start.strftime('%Y-%m'),
-                'invoice_count': month_invoices.count(),
-                'total_amount': month_invoices.aggregate(Sum('total_amount'))['total_amount__sum'] or Decimal('0'),
-                'paid_amount': month_invoices.filter(status='paid').aggregate(Sum('total_amount'))['total_amount__sum'] or Decimal('0')
+                'month': month_key,
+                'invoice_count': stat.get('count', 0),
+                'total_amount': stat.get('sum_total', Decimal('0')) or Decimal('0'),
+                'paid_amount': stat.get('sum_paid', Decimal('0')) or Decimal('0')
             })
 
         # Top customers by invoice amount
