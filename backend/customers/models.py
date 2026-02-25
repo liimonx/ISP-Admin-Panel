@@ -89,7 +89,7 @@ class Customer(models.Model):
     
     def get_total_monthly_bill(self):
         """Calculate total monthly bill from active subscriptions."""
-        active_subs = self.get_active_subscriptions()
+        active_subs = self.get_active_subscriptions().select_related('plan')
         return sum(sub.plan.price for sub in active_subs)
     
     def get_subscriptions_count(self):
