@@ -60,7 +60,8 @@ class Command(BaseCommand):
                 'host': '192.168.1.1',
                 'api_port': 8729,
                 'username': 'admin',
-                'password': 'password'
+                'password': 'password',
+                'snmp_community': 'public'
             }
         )
         if created:

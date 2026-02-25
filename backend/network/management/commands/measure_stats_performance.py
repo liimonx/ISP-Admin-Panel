@@ -18,7 +18,8 @@ class Command(BaseCommand):
                 name=f'Router {i}',
                 host=f'192.168.1.{i}',
                 status='online',
-                router_type='mikrotik'
+                router_type='mikrotik',
+                snmp_community='public'
             )
 
         factory = RequestFactory()

@@ -12,7 +12,8 @@ class PlanRevenueTests(TestCase):
             name="Test Router",
             host="192.168.1.1",
             username="admin",
-            password="password"
+            password="password",
+            snmp_community="public"
         )
         self.customer = Customer.objects.create(
             name="Test Customer",

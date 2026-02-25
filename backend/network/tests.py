@@ -13,7 +13,8 @@ class RouterModelTest(TestCase):
             name="Test Router",
             host="192.168.1.1",
             router_type=Router.RouterType.MIKROTIK,
-            status=Router.Status.ONLINE
+            status=Router.Status.ONLINE,
+            snmp_community='public'
         )
 
         self.plan = Plan.objects.create(
