@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django.core.validators import RegexValidator
 from django.conf import settings
 import os
+from core.encryption import EncryptionService
 
 
 class Router(models.Model):
@@ -42,8 +43,18 @@ class Router(models.Model):
     
     # Authentication
     username = models.CharField(max_length=100, help_text=_('Router username'))
-    password = models.CharField(max_length=100, help_text=_('Router password'))
+    encrypted_password = models.CharField(max_length=255, help_text=_('Router password (encrypted)'))
     use_tls = models.BooleanField(default=True, help_text=_('Use TLS for API connection'))
+
+    @property
+    def password(self):
+        """Get decrypted router password."""
+        return EncryptionService.decrypt(self.encrypted_password)
+
+    @password.setter
+    def password(self, value):
+        """Set encrypted router password."""
+        self.encrypted_password = EncryptionService.encrypt(value)
     
     # Status and Monitoring
     status = models.CharField(
