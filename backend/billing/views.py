@@ -1,5 +1,6 @@
 from django.shortcuts import get_object_or_404
 from django.db.models import Q, Sum, Count, Avg
+from django.db.models.functions import TruncDay
 from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
@@ -442,15 +443,40 @@ def payment_stats_view(request):
 
         # Daily payment trends (last 30 days)
         daily_data = []
+
+        # Calculate date range
+        end_date = timezone.now().date()
+        start_date = end_date - timedelta(days=29)
+
+        # Get daily statistics in a single query
+        daily_stats = queryset.filter(
+            created_at__date__gte=start_date,
+            created_at__date__lte=end_date
+        ).annotate(
+            date=TruncDay('created_at')
+        ).values('date').annotate(
+            payment_count=Count('id'),
+            total_amount=Sum('amount'),
+            successful_count=Count('id', filter=Q(status='completed'))
+        ).order_by('date')
+
+        # Convert to dictionary for easy lookup
+        # TruncDay returns datetime, so we need to convert to date
+        stats_dict = {
+            item['date'].date() if isinstance(item['date'], datetime) else item['date']: item
+            for item in daily_stats
+        }
+
+        # Build the final list ensuring all days are represented
         for i in range(30):
-            date = (timezone.now() - timedelta(days=i)).date()
-            day_payments = queryset.filter(created_at__date=date)
+            date = end_date - timedelta(days=i)
+            day_stat = stats_dict.get(date, {})
 
             daily_data.append({
                 'date': date.isoformat(),
-                'payment_count': day_payments.count(),
-                'total_amount': str(day_payments.aggregate(Sum('amount'))['amount__sum'] or Decimal('0')),
-                'successful_count': day_payments.filter(status='completed').count()
+                'payment_count': day_stat.get('payment_count', 0),
+                'total_amount': str(day_stat.get('total_amount') or Decimal('0')),
+                'successful_count': day_stat.get('successful_count', 0)
             })
 
         stats = {
