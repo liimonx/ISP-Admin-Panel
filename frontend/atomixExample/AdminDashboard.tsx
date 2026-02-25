@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import toast, { Toaster } from "react-hot-toast";
 import {
   Badge,
   Block,
@@ -293,14 +294,14 @@ export const AdminDashboard: React.FC = () => {
 
   const handleDeleteUser = (userId: number) => {
     // In a real app, this would make an API call
-    console.log("Delete user:", userId);
+    toast.success(`User ${userId} deleted successfully`);
   };
 
   const handleUserSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
     // In a real app, this would make an API call
-    console.log("User form submitted:", Object.fromEntries(formData));
+    toast.success("User saved successfully");
     setIsAddUserModalOpen(false);
     setIsEditUserModalOpen(false);
     setSelectedUser(null);
@@ -326,7 +327,7 @@ export const AdminDashboard: React.FC = () => {
     await new Promise((resolve) => setTimeout(resolve, 2000));
     setQuickActionLoading(null);
     // Show success feedback
-    console.log(`${action} completed successfully`);
+    toast.success(`${action} completed successfully`);
   };
 
   const handleNotificationClick = () => {
@@ -2102,6 +2103,7 @@ export const AdminDashboard: React.FC = () => {
 
   return (
     <div className="u-container-fluid u-px-4">
+      <Toaster />
       {/* Sidebar Navigation */}
       <Grid>
         <GridCol xs={12} md={3}>
