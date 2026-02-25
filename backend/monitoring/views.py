@@ -126,7 +126,7 @@ def monitoring_stats_view(request):
     """
     try:
         from network.models import Router
-        from django.db.models import Avg, Max
+        from django.db.models import Avg, Max, OuterRef, Subquery
         
         # Get router counts
         total_routers = Router.objects.count()
@@ -138,11 +138,18 @@ def monitoring_stats_view(request):
         total_metrics = RouterMetric.objects.count()
         
         # Get latest metrics for each router
-        latest_metrics = []
-        for router in Router.objects.all():
-            latest_metric = RouterMetric.objects.filter(router=router).first()
-            if latest_metric:
-                latest_metrics.append(latest_metric)
+        latest_metric_subquery = RouterMetric.objects.filter(
+            router=OuterRef('pk')
+        ).order_by('-timestamp').values('pk')[:1]
+
+        routers_with_metric = Router.objects.annotate(
+            latest_metric_id=Subquery(latest_metric_subquery)
+        )
+
+        metric_ids = [r.latest_metric_id for r in routers_with_metric if r.latest_metric_id]
+
+        # Fetch actual metric objects efficiently
+        latest_metrics = list(RouterMetric.objects.filter(pk__in=metric_ids).order_by('-timestamp'))
         
         # Calculate averages from latest metrics
         avg_cpu = sum(m.cpu_usage for m in latest_metrics) / len(latest_metrics) if latest_metrics else 0
