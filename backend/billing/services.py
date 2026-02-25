@@ -247,15 +247,15 @@ class BillingService:
         generated_invoices = []
         errors = []
 
+        # Check if invoice already exists for this billing period
+        existing_invoices_ids = set(Invoice.objects.filter(
+            subscription__in=subscriptions,
+            billing_period_start=billing_date
+        ).values_list('subscription_id', flat=True))
+
         for subscription in subscriptions:
             try:
-                # Check if invoice already exists for this billing period
-                existing_invoice = Invoice.objects.filter(
-                    subscription=subscription,
-                    billing_period_start=billing_date
-                ).first()
-
-                if existing_invoice:
+                if subscription.id in existing_invoices_ids:
                     errors.append({
                         'subscription_id': subscription.id,
                         'customer_name': subscription.customer.name,
