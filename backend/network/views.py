@@ -5,6 +5,7 @@ from django.db.models import Count, Avg, Sum, Q
 from django.db.models.functions import Coalesce
 from django.db import models
 from django.utils import timezone
+from django.conf import settings
 from datetime import datetime, timedelta
 import logging
 from core.responses import APIResponse
@@ -428,7 +429,7 @@ def main_router_status(request):
         
         # Get or create main router record
         main_router, created = Router.objects.get_or_create(
-            host='103.115.252.60',
+            host=settings.MAIN_ROUTER_IP,
             defaults={
                 'name': 'Main Router',
                 'router_type': 'mikrotik',
@@ -484,7 +485,7 @@ def main_router_interfaces(request):
         from network.services import MikroTikService
         
         # Get main router
-        main_router = Router.objects.filter(host='103.115.252.60').first()
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
         if not main_router:
             raise Exception("Main router not found")
         
@@ -516,7 +517,7 @@ def main_router_bandwidth(request):
         
         # Get or create main router record
         main_router, created = Router.objects.get_or_create(
-            host='103.115.252.60',
+            host=settings.MAIN_ROUTER_IP,
             defaults={
                 'name': 'Main Router',
                 'router_type': 'mikrotik',

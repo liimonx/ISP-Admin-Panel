@@ -1,3 +1,8 @@
+import os
+
+# Set required environment variables for testing
+os.environ.setdefault('MAIN_ROUTER_IP', '127.0.0.1')
+
 from .settings import *
 
 # Use in-memory cache for tests
