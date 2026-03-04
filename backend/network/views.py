@@ -442,6 +442,7 @@ def main_router_status(request):
                 'use_tls': True,
                 'status': 'online',
                 'location': 'Main Data Center',
+                'snmp_community': 'public',
             }
         )
         
@@ -530,6 +531,7 @@ def main_router_bandwidth(request):
                 'use_tls': True,
                 'status': 'online',
                 'location': 'Main Data Center',
+                'snmp_community': 'public',
             }
         )
         

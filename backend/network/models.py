@@ -69,7 +69,6 @@ class Router(models.Model):
     # Configuration
     snmp_community = models.CharField(
         max_length=100,
-        default='public',
         help_text=_('SNMP community string')
     )
     snmp_port = models.IntegerField(
