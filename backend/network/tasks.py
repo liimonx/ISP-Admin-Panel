@@ -264,7 +264,7 @@ def check_main_router_health():
     """
     try:
         # Get the main router
-        main_router = Router.objects.filter(host=getattr(settings, 'MAIN_ROUTER_IP', '103.115.252.60')).first()
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
         
         if not main_router:
             logger.warning("Main router not found in database")
@@ -293,7 +293,7 @@ def sync_main_router_data():
     """
     try:
         # Get the main router
-        main_router = Router.objects.filter(host=getattr(settings, 'MAIN_ROUTER_IP', '103.115.252.60')).first()
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
         
         if not main_router:
             logger.warning("Main router not found in database")
@@ -331,7 +331,7 @@ def backup_main_router_config():
     """
     try:
         # Get the main router
-        main_router = Router.objects.filter(host=getattr(settings, 'MAIN_ROUTER_IP', '103.115.252.60')).first()
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
         
         if not main_router:
             logger.warning("Main router not found in database")

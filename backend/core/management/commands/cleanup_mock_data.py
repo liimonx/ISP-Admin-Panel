@@ -2,6 +2,7 @@
 Management command to remove mock/sample data from the database.
 """
 from django.core.management.base import BaseCommand
+from django.conf import settings
 from django.db import transaction
 
 
@@ -63,7 +64,7 @@ class Command(BaseCommand):
             # Keep the main router but remove other mock routers
             from network.models import Router
             mock_routers = Router.objects.exclude(
-                host='103.115.252.60'
+                host=settings.MAIN_ROUTER_IP
             ).filter(
                 name__icontains='test'
             )

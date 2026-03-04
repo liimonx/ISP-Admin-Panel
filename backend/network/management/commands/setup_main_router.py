@@ -14,7 +14,7 @@ class Command(BaseCommand):
         parser.add_argument(
             '--host',
             type=str,
-            default=getattr(settings, 'MAIN_ROUTER_IP', '103.115.252.60'),
+            default=settings.MAIN_ROUTER_IP,
             help='Router IP address',
         )
         parser.add_argument(
