@@ -17,6 +17,7 @@ from .serializers import (
     RouterCreateSerializer, RouterUpdateSerializer, RouterSessionSerializer
 )
 from .services import MikroTikService
+from .permissions import IsNetworkAdmin
 
 logger = logging.getLogger(__name__)
 
@@ -827,6 +828,7 @@ def main_router_test_connection(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsNetworkAdmin])
 def main_router_restart(request):
     """Restart main router."""
     try:

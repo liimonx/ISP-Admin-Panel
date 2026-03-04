@@ -1,5 +1,7 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { Avatar, Badge, Icon, Dropdown } from "@shohojdhara/atomix";
+import { useAuth } from "@/context/AuthContext";
 
 export interface UserAvatarProps {
   user: {
@@ -51,27 +53,37 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   className = "",
   "data-testid": testId,
 }) => {
-  const items =
-    dropdownItems.length > 0
-      ? dropdownItems
-      : [
+  const navigate = useNavigate();
+  const { logout } = useAuth();
+
+  const handleSettings = () => {
+    navigate("/settings/system");
+  };
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  const defaultItems = [
+    ...(user.role === "admin"
+      ? [
           {
-            label: "Profile",
-            icon: "User",
-            onClick: () => console.log("Profile clicked"),
-          },
-          {
-            label: "Settings",
+            label: "System Settings",
             icon: "Gear",
-            onClick: () => console.log("Settings clicked"),
+            onClick: handleSettings,
           },
-          {
-            label: "Sign out",
-            icon: "SignOut",
-            onClick: () => console.log("Sign out clicked"),
-            divider: true,
-          },
-        ];
+        ]
+      : []),
+    {
+      label: "Sign out",
+      icon: "SignOut",
+      onClick: handleLogout,
+      divider: user.role === "admin",
+    },
+  ];
+
+  const items = dropdownItems.length > 0 ? dropdownItems : defaultItems;
 
   const avatarWithStatus = (
     <div
