@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import {
   Card,
   DataTable,
@@ -25,6 +25,40 @@ interface SubscriptionTableProps {
   onUpdateDataUsage?: (subscription: Subscription, dataUsage: number) => void;
 }
 
+const getStatusBadge = (status: Subscription["status"]) => {
+  const variants = {
+    active: "success",
+    inactive: "secondary",
+    suspended: "warning",
+    cancelled: "error",
+    pending: "primary",
+  } as const;
+
+  return (
+    <Badge
+      variant={variants[status]}
+      size="sm"
+      label={status.charAt(0).toUpperCase() + status.slice(1)}
+    />
+  );
+};
+
+const getAccessMethodBadge = (method: Subscription["access_method"]) => {
+  const labels = {
+    pppoe: "PPPoE",
+    static_ip: "Static IP",
+    dhcp: "DHCP",
+  };
+
+  const colors = {
+    pppoe: "primary",
+    static_ip: "info",
+    dhcp: "secondary",
+  } as const;
+
+  return <Badge variant={colors[method]} size="sm" label={labels[method]} />;
+};
+
 const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
   subscriptions,
   isLoading,
@@ -39,41 +73,8 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
 }) => {
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkActionStatus, setBulkActionStatus] = useState<string>("");
-  const getStatusBadge = (status: Subscription["status"]) => {
-    const variants = {
-      active: "success",
-      inactive: "secondary",
-      suspended: "warning",
-      cancelled: "error",
-      pending: "primary",
-    } as const;
 
-    return (
-      <Badge
-        variant={variants[status]}
-        size="sm"
-        label={status.charAt(0).toUpperCase() + status.slice(1)}
-      />
-    );
-  };
-
-  const getAccessMethodBadge = (method: Subscription["access_method"]) => {
-    const labels = {
-      pppoe: "PPPoE",
-      static_ip: "Static IP",
-      dhcp: "DHCP",
-    };
-
-    const colors = {
-      pppoe: "primary",
-      static_ip: "info",
-      dhcp: "secondary",
-    } as const;
-
-    return <Badge variant={colors[method]} size="sm" label={labels[method]} />;
-  };
-
-  const getDataUsageProgress = (subscription: Subscription) => {
+  const getDataUsageProgress = useCallback((subscription: Subscription) => {
     const used = Number(subscription.data_used) || 0;
     const quota = subscription.plan?.data_quota;
 
@@ -169,9 +170,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         </div>
       </div>
     );
-  };
+  }, [onUpdateDataUsage, onResetDataUsage]);
 
-  const handleSelectOne = (
+  const handleSelectOne = useCallback((
     id: number,
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
@@ -181,9 +182,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     } else {
       setSelectedIds((prev) => prev.filter((selectedId) => selectedId !== id));
     }
-  };
+  }, []);
 
-  const handleBulkAction = () => {
+  const handleBulkAction = useCallback(() => {
     if (selectedIds.length === 0 || !bulkActionStatus || !onBulkUpdateStatus) {
       return;
     }
@@ -191,9 +192,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     onBulkUpdateStatus(selectedIds, bulkActionStatus);
     setSelectedIds([]);
     setBulkActionStatus("");
-  };
+  }, [selectedIds, bulkActionStatus, onBulkUpdateStatus]);
 
-  const getStatusActions = (subscription: Subscription) => {
+  const getStatusActions = useCallback((subscription: Subscription) => {
     const actions = [];
 
     if (subscription.status === "pending") {
@@ -249,7 +250,192 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     }
 
     return actions;
-  };
+  }, [onUpdateStatus]);
+
+  const baseTableData = useMemo(() => {
+    return subscriptions.map((subscription) => ({
+      id: subscription.id,
+      customer: (
+        <div className="u-flex u-items-center u-gap-3">
+          <Avatar
+            initials={subscription.customer?.name?.charAt(0) || "?"}
+            className="u-w-6 u-h-6"
+          />
+          <div>
+            <div className="u-fw-medium u-text-primary-emphasis">
+              {subscription.customer?.name || "Unknown Customer"}
+            </div>
+            <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
+              {subscription.customer?.email || "No email"}
+            </div>
+          </div>
+        </div>
+      ),
+      plan: (
+        <div>
+          <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
+            {subscription.plan?.name || "Unknown Plan"}
+          </div>
+          <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-flex u-items-center u-gap-1">
+            <Icon name="ArrowDown" size={12} />
+            {subscription.plan?.download_speed || 0}
+            <Icon name="ArrowUp" size={12} />
+            {subscription.plan?.upload_speed || 0}{" "}
+            {subscription.plan?.speed_unit?.toUpperCase() || "MBPS"}
+          </div>
+        </div>
+      ),
+      connection: (
+        <div>
+          <div className="u-mb-2">
+            {getAccessMethodBadge(subscription.access_method)}
+          </div>
+          <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-mb-1">
+            <strong>User:</strong> {subscription.username || "No username"}
+          </div>
+          {subscription.static_ip && (
+            <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
+              <strong>IP:</strong> {subscription.static_ip}
+            </div>
+          )}
+          {subscription.mac_address && (
+            <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
+              <strong>MAC:</strong> {subscription.mac_address}
+            </div>
+          )}
+        </div>
+      ),
+      dataUsage: getDataUsageProgress(subscription),
+      status: getStatusBadge(subscription.status),
+      billing: (
+        <div>
+          <div className="u-fw-medium u-text-primary-emphasis">
+            ${formatCurrency(subscription.monthly_fee)}
+          </div>
+          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
+            per month
+          </div>
+          {subscription.setup_fee > 0 && (
+            <div className="u-fs-xs u-text-warning-emphasis">
+              +${formatCurrency(subscription.setup_fee)} setup
+            </div>
+          )}
+        </div>
+      ),
+      router: (
+        <div>
+          <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
+            {subscription.router?.name || "Unknown Router"}
+          </div>
+          <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-mb-1">
+            {subscription.router?.location || "No location"}
+          </div>
+          <Badge
+            variant={
+              subscription.router?.status === "online" ? "success" : "error"
+            }
+            size="sm"
+            label={subscription.router?.status || "unknown"}
+          />
+        </div>
+      ),
+      dates: (
+        <div>
+          <div className="u-fs-sm u-text-primary-emphasis u-mb-1">
+            <strong>Started:</strong>{" "}
+            {subscription.start_date
+              ? new Date(subscription.start_date).toLocaleDateString()
+              : "No date"}
+          </div>
+          {subscription.end_date && (
+            <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
+              <strong>Ends:</strong>{" "}
+              {new Date(subscription.end_date).toLocaleDateString()}
+            </div>
+          )}
+        </div>
+      ),
+      actions: (
+        <Dropdown
+          menu={
+            <div>
+              <button
+                onClick={() => onView(subscription)}
+                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+              >
+                <Icon name="Eye" size={16} />
+                View Details
+              </button>
+              <button
+                onClick={() => onEdit(subscription)}
+                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+              >
+                <Icon name="Pencil" size={16} />
+                Edit
+              </button>
+              <div className="u-border-top u-border-light u-my-1"></div>
+              {getStatusActions(subscription)}
+
+              <div className="u-border-top u-border-light u-my-1"></div>
+              <button
+                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+                onClick={() => onView(subscription)}
+              >
+                <Icon name="Receipt" size={16} />
+                Billing History
+              </button>
+              <button
+                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+                onClick={() => onView(subscription)}
+              >
+                <Icon name="ChartBar" size={16} />
+                Usage Analytics
+              </button>
+              <button
+                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+                onClick={() => onView(subscription)}
+              >
+                <Icon name="Wrench" size={16} />
+                Router Settings
+              </button>
+
+              <div className="u-border-top u-border-light u-my-1"></div>
+              <button
+                onClick={() => onDelete(subscription)}
+                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
+              >
+                <Icon name="Trash" size={16} />
+                Delete
+              </button>
+            </div>
+          }
+        >
+          <Button variant="ghost" size="sm">
+            <Icon name="DotsThreeVertical" size={16} />
+          </Button>
+        </Dropdown>
+      ),
+    }));
+  }, [
+    subscriptions,
+    onView,
+    onEdit,
+    onDelete,
+    getDataUsageProgress,
+    getStatusActions,
+  ]);
+
+  const tableData = useMemo(() => {
+    return baseTableData.map((row) => ({
+      ...row,
+      select: (
+        <Checkbox
+          checked={selectedIds.includes(row.id)}
+          onChange={(event) => handleSelectOne(row.id, event)}
+        />
+      ),
+    }));
+  }, [baseTableData, selectedIds, handleSelectOne]);
 
   if (isLoading) {
     return (
@@ -298,176 +484,6 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       </Card>
     );
   }
-
-  const tableData = subscriptions.map((subscription) => ({
-    id: subscription.id,
-    select: (
-      <Checkbox
-        checked={selectedIds.includes(subscription.id)}
-        onChange={(event) => handleSelectOne(subscription.id, event)}
-      />
-    ),
-    customer: (
-      <div className="u-flex u-items-center u-gap-3">
-        <Avatar
-          initials={subscription.customer?.name?.charAt(0) || "?"}
-          className="u-w-6 u-h-6"
-        />
-        <div>
-          <div className="u-fw-medium u-text-primary-emphasis">
-            {subscription.customer?.name || "Unknown Customer"}
-          </div>
-          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
-            {subscription.customer?.email || "No email"}
-          </div>
-        </div>
-      </div>
-    ),
-    plan: (
-      <div>
-        <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
-          {subscription.plan?.name || "Unknown Plan"}
-        </div>
-        <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-flex u-items-center u-gap-1">
-          <Icon name="ArrowDown" size={12} />
-          {subscription.plan?.download_speed || 0}
-          <Icon name="ArrowUp" size={12} />
-          {subscription.plan?.upload_speed || 0}{" "}
-          {subscription.plan?.speed_unit?.toUpperCase() || "MBPS"}
-        </div>
-      </div>
-    ),
-    connection: (
-      <div>
-        <div className="u-mb-2">
-          {getAccessMethodBadge(subscription.access_method)}
-        </div>
-        <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-mb-1">
-          <strong>User:</strong> {subscription.username || "No username"}
-        </div>
-        {subscription.static_ip && (
-          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
-            <strong>IP:</strong> {subscription.static_ip}
-          </div>
-        )}
-        {subscription.mac_address && (
-          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
-            <strong>MAC:</strong> {subscription.mac_address}
-          </div>
-        )}
-      </div>
-    ),
-    dataUsage: getDataUsageProgress(subscription),
-    status: getStatusBadge(subscription.status),
-    billing: (
-      <div>
-        <div className="u-fw-medium u-text-primary-emphasis">
-          ${formatCurrency(subscription.monthly_fee)}
-        </div>
-        <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
-          per month
-        </div>
-        {subscription.setup_fee > 0 && (
-          <div className="u-fs-xs u-text-warning-emphasis">
-            +${formatCurrency(subscription.setup_fee)} setup
-          </div>
-        )}
-      </div>
-    ),
-    router: (
-      <div>
-        <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
-          {subscription.router?.name || "Unknown Router"}
-        </div>
-        <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-mb-1">
-          {subscription.router?.location || "No location"}
-        </div>
-        <Badge
-          variant={
-            subscription.router?.status === "online" ? "success" : "error"
-          }
-          size="sm"
-          label={subscription.router?.status || "unknown"}
-        />
-      </div>
-    ),
-    dates: (
-      <div>
-        <div className="u-fs-sm u-text-primary-emphasis u-mb-1">
-          <strong>Started:</strong>{" "}
-          {subscription.start_date
-            ? new Date(subscription.start_date).toLocaleDateString()
-            : "No date"}
-        </div>
-        {subscription.end_date && (
-          <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
-            <strong>Ends:</strong>{" "}
-            {new Date(subscription.end_date).toLocaleDateString()}
-          </div>
-        )}
-      </div>
-    ),
-    actions: (
-      <Dropdown
-        menu={
-          <div>
-            <button
-              onClick={() => onView(subscription)}
-              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
-            >
-              <Icon name="Eye" size={16} />
-              View Details
-            </button>
-            <button
-              onClick={() => onEdit(subscription)}
-              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
-            >
-              <Icon name="Pencil" size={16} />
-              Edit
-            </button>
-            <div className="u-border-top u-border-light u-my-1"></div>
-            {getStatusActions(subscription)}
-
-            <div className="u-border-top u-border-light u-my-1"></div>
-            <button
-              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
-              onClick={() => onView(subscription)}
-            >
-              <Icon name="Receipt" size={16} />
-              Billing History
-            </button>
-            <button
-              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
-              onClick={() => onView(subscription)}
-            >
-              <Icon name="ChartBar" size={16} />
-              Usage Analytics
-            </button>
-            <button
-              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
-              onClick={() => onView(subscription)}
-            >
-              <Icon name="Wrench" size={16} />
-              Router Settings
-            </button>
-
-            <div className="u-border-top u-border-light u-my-1"></div>
-            <button
-              onClick={() => onDelete(subscription)}
-              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
-            >
-              <Icon name="Trash" size={16} />
-              Delete
-            </button>
-          </div>
-        }
-      >
-        <Button variant="ghost" size="sm">
-          <Icon name="DotsThreeVertical" size={16} />
-        </Button>
-      </Dropdown>
-    ),
-  }));
 
   return (
     <>
