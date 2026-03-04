@@ -1,5 +1,5 @@
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import api_view, action, permission_classes
 from rest_framework.response import Response
 from django.db.models import Count, Avg, Sum, Q
 from django.db.models.functions import Coalesce
@@ -15,6 +15,7 @@ from .serializers import (
     RouterCreateSerializer, RouterUpdateSerializer, RouterSessionSerializer
 )
 from .services import MikroTikService
+from .permissions import IsNetworkAdmin
 
 logger = logging.getLogger(__name__)
 
@@ -753,6 +754,7 @@ def main_router_alerts(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsNetworkAdmin])
 def main_router_execute_command(request):
     """Execute command on main router."""
     try:
@@ -814,6 +816,7 @@ def main_router_test_connection(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsNetworkAdmin])
 def main_router_restart(request):
     """Restart main router."""
     try:
