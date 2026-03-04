@@ -247,15 +247,15 @@ class BillingService:
         generated_invoices = []
         errors = []
 
+        # Check if invoice already exists for this billing period
+        existing_invoices_ids = set(Invoice.objects.filter(
+            subscription__in=subscriptions,
+            billing_period_start=billing_date
+        ).values_list('subscription_id', flat=True))
+
         for subscription in subscriptions:
             try:
-                # Check if invoice already exists for this billing period
-                existing_invoice = Invoice.objects.filter(
-                    subscription=subscription,
-                    billing_period_start=billing_date
-                ).first()
-
-                if existing_invoice:
+                if subscription.id in existing_invoices_ids:
                     errors.append({
                         'subscription_id': subscription.id,
                         'customer_name': subscription.customer.name,
@@ -308,17 +308,23 @@ class BillingService:
             due_date__lt=timezone.now().date()
         )
 
-        updated_count = 0
-        for invoice in overdue_invoices:
-            invoice.mark_as_overdue()
-            updated_count += 1
+        # Fetch invoices to log details later
+        invoices_to_update = list(overdue_invoices)
 
+        if not invoices_to_update:
+            logger.info("Marked 0 invoices as overdue")
+            return 0
+
+        # Bulk update status
+        updated_count = overdue_invoices.update(status=Invoice.Status.OVERDUE)
+
+        for invoice in invoices_to_update:
             logger.warning(
                 "Invoice marked as overdue",
                 extra={
                     'invoice_id': invoice.id,
                     'invoice_number': invoice.invoice_number,
-                    'customer_id': invoice.customer.id,
+                    'customer_id': invoice.customer_id,
                     'days_overdue': invoice.days_overdue,
                     'amount': str(invoice.total_amount)
                 }

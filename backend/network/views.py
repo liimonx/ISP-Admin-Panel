@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import api_view, action, permission_classes
+from rest_framework.permissions import IsAdminUser
 from rest_framework.response import Response
 from django.db.models import Count, Avg, Sum, Q
 from django.db.models.functions import Coalesce
@@ -7,6 +8,7 @@ from django.db import models
 from django.utils import timezone
 from datetime import datetime, timedelta
 import logging
+import re
 from core.responses import APIResponse
 
 from .models import Router, RouterSession
@@ -15,6 +17,7 @@ from .serializers import (
     RouterCreateSerializer, RouterUpdateSerializer, RouterSessionSerializer
 )
 from .services import MikroTikService
+from .permissions import IsNetworkAdmin
 
 logger = logging.getLogger(__name__)
 
@@ -439,6 +442,7 @@ def main_router_status(request):
                 'use_tls': True,
                 'status': 'online',
                 'location': 'Main Data Center',
+                'snmp_community': 'public',
             }
         )
         
@@ -527,6 +531,7 @@ def main_router_bandwidth(request):
                 'use_tls': True,
                 'status': 'online',
                 'location': 'Main Data Center',
+                'snmp_community': 'public',
             }
         )
         
@@ -753,6 +758,7 @@ def main_router_alerts(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsAdminUser])
 def main_router_execute_command(request):
     """Execute command on main router."""
     try:
@@ -764,6 +770,16 @@ def main_router_execute_command(request):
                 'timestamp': timezone.now().isoformat(),
             }, status=status.HTTP_400_BAD_REQUEST)
         
+        # Security validation: Allow only alphanumeric characters, spaces, and safe symbols
+        # Disallow shell metacharacters like ;, |, &, $, `, >, <, etc.
+        if not re.match(r'^[a-zA-Z0-9\s\.\-_]+$', command):
+            logger.warning(f"Potential command injection attempt: {command}")
+            return Response({
+                'success': False,
+                'message': 'Invalid command format. Only alphanumeric characters, spaces, dots, underscores, and dashes are allowed.',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_400_BAD_REQUEST)
+
         # Mock command execution (replace with actual MikroTik API call)
         result = f"Command executed: {command}\nResult: Mock response for {command}"
         
@@ -814,6 +830,7 @@ def main_router_test_connection(request):
 
 
 @api_view(['POST'])
+@permission_classes([IsNetworkAdmin])
 def main_router_restart(request):
     """Restart main router."""
     try:

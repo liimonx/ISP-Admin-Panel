@@ -1,5 +1,6 @@
 from decimal import Decimal
 from datetime import date, timedelta
+<<<<<<< perf-billing-payment-stats-n-plus-one-10420951534994094791
 import time
 
 from django.test import TestCase
@@ -9,14 +10,33 @@ from django.db import connection
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
+=======
+import random
+
+from django.test import TestCase
+from django.urls import reverse
+from django.utils import timezone
+from django.contrib.auth import get_user_model
+from django.db import connection
+from django.test.utils import CaptureQueriesContext
+
+from dateutil.relativedelta import relativedelta
+from rest_framework.test import APIClient
+>>>>>>> main
 from rest_framework import status
 
 from plans.models import Plan
 from billing.services import BillingService
+<<<<<<< perf-billing-payment-stats-n-plus-one-10420951534994094791
 from billing.models import Payment, Invoice
 from customers.models import Customer
 
 User = get_user_model()
+=======
+from billing.models import Invoice
+from customers.models import Customer
+
+>>>>>>> main
 
 class BillingServiceTest(TestCase):
 
@@ -125,6 +145,7 @@ class BillingServiceTest(TestCase):
         self.assertEqual(calculated_amount, expected_amount)
 
 
+<<<<<<< perf-billing-payment-stats-n-plus-one-10420951534994094791
 class PaymentStatsPerformanceTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -207,3 +228,81 @@ class PaymentStatsPerformanceTest(APITestCase):
             self.assertEqual(day_stat['successful_count'], 1)
             # Use Decimal comparison to be robust against SQLite/Postgres differences in Sum return type stringification
             self.assertEqual(Decimal(day_stat['total_amount']), Decimal('200.00'))
+=======
+class InvoiceStatsPerformanceTest(TestCase):
+    def setUp(self):
+        self.client = APIClient()
+
+        # Create user and authenticate
+        User = get_user_model()
+        self.user = User.objects.create_user(username='testuser', password='password', email='test@example.com')
+        self.client.force_authenticate(user=self.user)
+
+        # Create customer
+        self.customer = Customer.objects.create(
+            name="Test Customer",
+            email="test@example.com",
+            phone="1234567890",
+            address="Test Address"
+        )
+
+        # Create invoices for the last 12 months
+        now = timezone.now()
+        for i in range(12):
+            month_date = now - relativedelta(months=i)
+            # Create a paid invoice
+            inv1 = Invoice.objects.create(
+                customer=self.customer,
+                invoice_number=f"INV-{i}-PAID",
+                billing_period_start=month_date.date(),
+                billing_period_end=(month_date + relativedelta(months=1)).date(),
+                due_date=(month_date + relativedelta(days=7)).date(),
+                subtotal=Decimal('100.00'),
+                total_amount=Decimal('100.00'),
+                paid_amount=Decimal('100.00'),
+                status='paid',
+            )
+            inv1.created_at = month_date
+            inv1.save(update_fields=['created_at'])
+
+            # Create a pending invoice
+            inv2 = Invoice.objects.create(
+                customer=self.customer,
+                invoice_number=f"INV-{i}-PENDING",
+                billing_period_start=month_date.date(),
+                billing_period_end=(month_date + relativedelta(months=1)).date(),
+                due_date=(month_date + relativedelta(days=7)).date(),
+                subtotal=Decimal('200.00'),
+                total_amount=Decimal('200.00'),
+                paid_amount=Decimal('0.00'),
+                status='pending',
+            )
+            inv2.created_at = month_date
+            inv2.save(update_fields=['created_at'])
+
+    def test_invoice_stats_performance(self):
+        url = reverse('billing:invoice_stats')
+
+        with CaptureQueriesContext(connection) as captured:
+            response = self.client.get(url)
+
+        print(f"Queries executed: {len(captured)}")
+
+        # Currently it should be around 36 + overhead.
+        # We expect it to be much lower after optimization (around 10-15 queries)
+        self.assertLess(len(captured), 20)
+
+        if response.status_code != status.HTTP_200_OK:
+            print(response.data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.data['data']
+
+        # Verify correctness
+        monthly_trends = data['monthly_trends']
+        self.assertEqual(len(monthly_trends), 12)
+
+        for month_data in monthly_trends:
+            self.assertEqual(month_data['invoice_count'], 2, f"Failed for month {month_data['month']}")
+            self.assertEqual(Decimal(month_data['total_amount']), Decimal('300.00'))
+            self.assertEqual(Decimal(month_data['paid_amount']), Decimal('100.00'))
+>>>>>>> main
