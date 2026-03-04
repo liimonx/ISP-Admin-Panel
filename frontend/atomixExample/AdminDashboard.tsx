@@ -29,6 +29,7 @@ import {
   Grid,
   GridCol,
 } from "@shohojdhara/atomix";
+import { useNotifications } from "@/utils/notifications";
 
 // Types for our admin dashboard
 interface User {
@@ -127,6 +128,7 @@ const userDistributionDatasets = [
 ];
 
 export const AdminDashboard: React.FC = () => {
+  const { success } = useNotifications();
   const [activeView, setActiveView] = useState("dashboard");
   const [isAddUserModalOpen, setIsAddUserModalOpen] = useState(false);
   const [isEditUserModalOpen, setIsEditUserModalOpen] = useState(false);
