@@ -67,7 +67,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
         {/* Plan Header */}
         <div className="u-flex u-justify-between u-items-start">
           <div className="u-flex-1">
-            <h2 className="u-text-xl u-fw-bold u-mb-2">{plan.name}</h2>
+            <h2 className="u-fs-xl u-fw-bold u-mb-2">{plan.name}</h2>
             {plan.description && (
               <p className="u-text-secondary-emphasis u-mb-3">
                 {plan.description}
@@ -101,26 +101,26 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-bg-light u-p-4 u-rounded-md">
-              <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
+              <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                 Monthly Price
               </div>
               <div className="u-text-2xl u-fw-bold u-text-primary">
                 {formatPrice(plan.price)}
               </div>
-              <div className="u-text-sm u-text-secondary-emphasis">
+              <div className="u-fs-sm u-text-secondary-emphasis">
                 per {getBillingCycleLabel(plan.billing_cycle).toLowerCase()}
               </div>
             </div>
 
             {plan.setup_fee && plan.setup_fee > 0 && (
               <div className="u-bg-light u-p-4 u-rounded-md">
-                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
+                <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Setup Fee
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-fs-xl u-fw-bold">
                   {formatPrice(plan.setup_fee)}
                 </div>
-                <div className="u-text-sm u-text-secondary-emphasis">
+                <div className="u-fs-sm u-text-secondary-emphasis">
                   one-time
                 </div>
               </div>

@@ -1,4 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { coreService } from "../services/api/index";
 import {
   Card,
   Button,
@@ -75,12 +77,84 @@ const defaultSettings: SystemSettings = {
 };
 
 const Settings: React.FC = () => {
+  const queryClient = useQueryClient();
   const [settings, setSettings] = useState<SystemSettings>(defaultSettings);
-  const [isLoading, setIsLoading] = useState(false);
   const [saveStatus, setSaveStatus] = useState<{
     type: "success" | "error" | null;
     message: string;
   }>({ type: null, message: "" });
+
+  const { data: fetchedSettings, isLoading: isFetching } = useQuery({
+    queryKey: ["settings"],
+    queryFn: () => coreService.getSettings(),
+  });
+
+  useEffect(() => {
+    if (fetchedSettings) {
+      setSettings((prev) => ({
+        ...prev,
+        // Map the snake_case keys from the API to camelCase where necessary
+        companyName: fetchedSettings.company_name || prev.companyName,
+        contactEmail: fetchedSettings.contact_email || prev.contactEmail,
+        supportPhone: fetchedSettings.support_phone || prev.supportPhone,
+        timezone: fetchedSettings.timezone || prev.timezone,
+        dateFormat: fetchedSettings.date_format || prev.dateFormat,
+        currency: fetchedSettings.currency || prev.currency,
+        language: fetchedSettings.language || prev.language,
+        maintenanceMode:
+          fetchedSettings.maintenance_mode ?? prev.maintenanceMode,
+        autoBackup: fetchedSettings.auto_backup ?? prev.autoBackup,
+        backupFrequency:
+          fetchedSettings.backup_frequency || prev.backupFrequency,
+        emailNotifications:
+          fetchedSettings.email_notifications ?? prev.emailNotifications,
+        smsNotifications:
+          fetchedSettings.sms_notifications ?? prev.smsNotifications,
+        apiRateLimit: fetchedSettings.api_rate_limit ?? prev.apiRateLimit,
+        sessionTimeout: fetchedSettings.session_timeout ?? prev.sessionTimeout,
+        maxLoginAttempts:
+          fetchedSettings.max_login_attempts ?? prev.maxLoginAttempts,
+        passwordPolicy: {
+          minLength:
+            fetchedSettings.password_policy?.min_length ??
+            prev.passwordPolicy.minLength,
+          requireUppercase:
+            fetchedSettings.password_policy?.require_uppercase ??
+            prev.passwordPolicy.requireUppercase,
+          requireLowercase:
+            fetchedSettings.password_policy?.require_lowercase ??
+            prev.passwordPolicy.requireLowercase,
+          requireNumbers:
+            fetchedSettings.password_policy?.require_numbers ??
+            prev.passwordPolicy.requireNumbers,
+          requireSpecialChars:
+            fetchedSettings.password_policy?.require_special_chars ??
+            prev.passwordPolicy.requireSpecialChars,
+        },
+        logLevel: fetchedSettings.log_level || prev.logLevel,
+        dbPoolSize: fetchedSettings.database_pool_size ?? prev.dbPoolSize,
+        cacheTTL: fetchedSettings.cache_ttl ?? prev.cacheTTL,
+        customCSS: fetchedSettings.custom_css || prev.customCSS,
+      }));
+    }
+  }, [fetchedSettings]);
+
+  const updateSettingsMutation = useMutation({
+    mutationFn: (newSettings: any) => coreService.updateSettings(newSettings),
+    onSuccess: () => {
+      setSaveStatus({
+        type: "success",
+        message: "Settings saved successfully!",
+      });
+      queryClient.invalidateQueries({ queryKey: ["settings"] });
+    },
+    onError: (error) => {
+      setSaveStatus({
+        type: "error",
+        message: "Failed to save settings. Please try again.",
+      });
+    },
+  });
 
   // Custom Toggle wrapper component
   const CustomToggle: React.FC<{
@@ -121,26 +195,37 @@ const Settings: React.FC = () => {
     }));
   };
 
-  const handleSave = async () => {
-    setIsLoading(true);
+  const handleSave = () => {
     setSaveStatus({ type: null, message: "" });
-
-    try {
-      // Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1000));
-
-      setSaveStatus({
-        type: "success",
-        message: "Settings saved successfully!",
-      });
-    } catch (error) {
-      setSaveStatus({
-        type: "error",
-        message: "Failed to save settings. Please try again.",
-      });
-    } finally {
-      setIsLoading(false);
-    }
+    const payload = {
+      company_name: settings.companyName,
+      contact_email: settings.contactEmail,
+      support_phone: settings.supportPhone,
+      timezone: settings.timezone,
+      date_format: settings.dateFormat,
+      currency: settings.currency,
+      language: settings.language,
+      maintenance_mode: settings.maintenanceMode,
+      auto_backup: settings.autoBackup,
+      backup_frequency: settings.backupFrequency,
+      email_notifications: settings.emailNotifications,
+      sms_notifications: settings.smsNotifications,
+      api_rate_limit: settings.apiRateLimit,
+      session_timeout: settings.sessionTimeout,
+      max_login_attempts: settings.maxLoginAttempts,
+      password_policy: {
+        min_length: settings.passwordPolicy.minLength,
+        require_uppercase: settings.passwordPolicy.requireUppercase,
+        require_lowercase: settings.passwordPolicy.requireLowercase,
+        require_numbers: settings.passwordPolicy.requireNumbers,
+        require_special_chars: settings.passwordPolicy.requireSpecialChars,
+      },
+      log_level: settings.logLevel,
+      database_pool_size: settings.dbPoolSize,
+      cache_ttl: settings.cacheTTL,
+      custom_css: settings.customCSS,
+    };
+    updateSettingsMutation.mutate(payload);
   };
 
   const handleReset = () => {
@@ -179,7 +264,7 @@ const Settings: React.FC = () => {
               </div>
             </div>
             <div className="u-mb-3">
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Company Name
               </label>
               <Input
@@ -193,7 +278,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Contact Email
               </label>
               <Input
@@ -208,7 +293,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Support Phone
               </label>
               <Input
@@ -222,7 +307,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Timezone
               </label>
               <Select
@@ -240,7 +325,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Currency
               </label>
               <Select
@@ -269,7 +354,7 @@ const Settings: React.FC = () => {
             </div>
             <div className="u-p-4">
               <div className="u-mb-3">
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   API Rate Limit (requests/hour)
                 </label>
                 <Input
@@ -285,7 +370,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   Session Timeout (minutes)
                 </label>
                 <Input
@@ -304,7 +389,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   Max Login Attempts
                 </label>
                 <Input
@@ -323,12 +408,12 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   Password Policy
                 </label>
                 <div className="u-p-3 u-bg-light u-rounded">
                   <div className="u-flex u-items-center u-justify-between u-mb-2">
-                    <span className="u-text-sm">Minimum Length</span>
+                    <span className="u-fs-sm">Minimum Length</span>
                     <Input
                       type="number"
                       value={settings.passwordPolicy.minLength}
@@ -344,7 +429,7 @@ const Settings: React.FC = () => {
                     />
                   </div>
                   <div className="u-flex u-items-center u-justify-between u-mb-2">
-                    <span className="u-text-sm">Require Uppercase</span>
+                    <span className="u-fs-sm">Require Uppercase</span>
                     <CustomToggle
                       isOn={settings.passwordPolicy.requireUppercase}
                       onToggle={(isOn) =>
@@ -353,7 +438,7 @@ const Settings: React.FC = () => {
                     />
                   </div>
                   <div className="u-flex u-items-center u-justify-between u-mb-2">
-                    <span className="u-text-sm">Require Lowercase</span>
+                    <span className="u-fs-sm">Require Lowercase</span>
                     <CustomToggle
                       isOn={settings.passwordPolicy.requireLowercase}
                       onToggle={(isOn) =>
@@ -362,7 +447,7 @@ const Settings: React.FC = () => {
                     />
                   </div>
                   <div className="u-flex u-items-center u-justify-between u-mb-2">
-                    <span className="u-text-sm">Require Numbers</span>
+                    <span className="u-fs-sm">Require Numbers</span>
                     <CustomToggle
                       isOn={settings.passwordPolicy.requireNumbers}
                       onToggle={(isOn) =>
@@ -371,9 +456,7 @@ const Settings: React.FC = () => {
                     />
                   </div>
                   <div className="u-flex u-items-center u-justify-between">
-                    <span className="u-text-sm">
-                      Require Special Characters
-                    </span>
+                    <span className="u-fs-sm">Require Special Characters</span>
                     <CustomToggle
                       isOn={settings.passwordPolicy.requireSpecialChars}
                       onToggle={(isOn) =>
@@ -399,10 +482,10 @@ const Settings: React.FC = () => {
             <div className="u-p-4">
               <div className="u-flex u-items-center u-justify-between u-mb-3">
                 <div>
-                  <label className="u-text-sm u-fw-medium">
+                  <label className="u-fs-sm u-fw-medium">
                     Maintenance Mode
                   </label>
-                  <p className="u-text-xs u-text-secondary-emphasis">
+                  <p className="u-fs-xs u-text-secondary-emphasis">
                     Enable maintenance mode to restrict access
                   </p>
                 </div>
@@ -416,8 +499,8 @@ const Settings: React.FC = () => {
 
               <div className="u-flex u-items-center u-justify-between u-mb-3">
                 <div>
-                  <label className="u-text-sm u-fw-medium">Auto Backup</label>
-                  <p className="u-text-xs u-text-secondary-emphasis">
+                  <label className="u-fs-sm u-fw-medium">Auto Backup</label>
+                  <p className="u-fs-xs u-text-secondary-emphasis">
                     Automatically backup system data
                   </p>
                 </div>
@@ -429,7 +512,7 @@ const Settings: React.FC = () => {
 
               {settings.autoBackup && (
                 <div className="u-mb-3">
-                  <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                  <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                     Backup Frequency
                   </label>
                   <Select
@@ -450,10 +533,10 @@ const Settings: React.FC = () => {
 
               <div className="u-flex u-items-center u-justify-between u-mb-3">
                 <div>
-                  <label className="u-text-sm u-fw-medium">
+                  <label className="u-fs-sm u-fw-medium">
                     Email Notifications
                   </label>
-                  <p className="u-text-xs u-text-secondary-emphasis">
+                  <p className="u-fs-xs u-text-secondary-emphasis">
                     Send email notifications for system events
                   </p>
                 </div>
@@ -467,10 +550,10 @@ const Settings: React.FC = () => {
 
               <div className="u-flex u-items-center u-justify-between">
                 <div>
-                  <label className="u-text-sm u-fw-medium">
+                  <label className="u-fs-sm u-fw-medium">
                     SMS Notifications
                   </label>
-                  <p className="u-text-xs u-text-secondary-emphasis">
+                  <p className="u-fs-xs u-text-secondary-emphasis">
                     Send SMS notifications for critical alerts
                   </p>
                 </div>
@@ -496,7 +579,7 @@ const Settings: React.FC = () => {
             </div>
             <div className="u-p-4">
               <div className="u-mb-3">
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   System Log Level
                 </label>
                 <Select
@@ -515,7 +598,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   Database Connection Pool Size
                 </label>
                 <Input
@@ -531,7 +614,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   Cache TTL (seconds)
                 </label>
                 <Input
@@ -547,7 +630,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div>
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   Custom CSS
                 </label>
                 <Textarea
@@ -557,7 +640,7 @@ const Settings: React.FC = () => {
                   }
                   placeholder="Enter custom CSS styles..."
                   rows={4}
-                  className="u-text-xs u-w-100"
+                  className="u-fs-xs u-w-100"
                 />
               </div>
             </div>
@@ -567,16 +650,27 @@ const Settings: React.FC = () => {
 
       {/* Action Buttons */}
       <Row className="u-mt-8">
-        <div className="u-flex u-gap-3 u-justify-end u-w-100">
+        <div className="u-flex u-gap-3 u-justify-end u-w-100 u-items-center">
+          {updateSettingsMutation.isPending && (
+            <span className="u-fs-sm u-text-secondary-emphasis u-mr-2">
+              Saving...
+            </span>
+          )}
           <Button
             variant="secondary"
             onClick={handleReset}
-            disabled={isLoading}
+            disabled={updateSettingsMutation.isPending || isFetching}
           >
             Reset to Defaults
           </Button>
-          <Button variant="primary" onClick={handleSave} disabled={isLoading}>
-            Save Settings
+          <Button
+            variant="primary"
+            onClick={handleSave}
+            disabled={updateSettingsMutation.isPending || isFetching}
+          >
+            {updateSettingsMutation.isPending
+              ? "Saving Settings..."
+              : "Save Settings"}
           </Button>
         </div>
       </Row>

@@ -74,7 +74,7 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
     <Card className={`u-h-100 ${className}`}>
       <div className="u-flex u-justify-between u-align-items-start">
         <div className="u-flex-1">
-          <div className="u-text-sm u-mb-2 u-text-muted">{title}</div>
+          <div className="u-fs-sm u-mb-2 u-text-muted">{title}</div>
           <div
             className={`u-text-2xl u-fw-bold u-mb-2 ${getColorClasses(color)}`}
           >
@@ -88,7 +88,7 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
                 className={trend.isPositive ? "u-text-success" : "u-text-error"}
               />
               <span
-                className={`u-text-sm u-ms-1 ${
+                className={`u-fs-sm u-ms-1 ${
                   trend.isPositive ? "u-text-success" : "u-text-error"
                 }`}
               >
@@ -96,7 +96,7 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
               </span>
             </div>
           )}
-          {subtitle && <div className="u-text-xs u-text-muted">{subtitle}</div>}
+          {subtitle && <div className="u-fs-xs u-text-muted">{subtitle}</div>}
         </div>
 
         {icon && (

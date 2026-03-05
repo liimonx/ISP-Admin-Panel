@@ -79,115 +79,120 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     return calculateSubscriptionStats(subscriptions);
   }, [subscriptions]);
 
-  const getDataUsageProgress = useCallback((subscription: Subscription) => {
-    const used = Number(subscription.data_used) || 0;
-    const quota = subscription.plan?.data_quota;
+  const getDataUsageProgress = useCallback(
+    (subscription: Subscription) => {
+      const used = Number(subscription.data_used) || 0;
+      const quota = subscription.plan?.data_quota;
 
-    if (!quota || quota === 0) {
-      return (
-        <div className="u-text-center u-min-w-36">
-          <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
-            {used.toFixed(1)} GB
+      if (!quota || quota === 0) {
+        return (
+          <div className="u-text-center u-min-w-36">
+            <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
+              {used.toFixed(1)} GB
+            </div>
+            <Badge variant="info" size="sm" label="Unlimited" />
+            {onUpdateDataUsage && (
+              <button
+                onClick={() => onUpdateDataUsage(subscription, used)}
+                className="u-btn u-btn-sm u-btn-ghost u-mt-1"
+                title="Update data usage"
+              >
+                <Icon name="Pencil" size={12} />
+              </button>
+            )}
           </div>
-          <Badge variant="info" size="sm" label="Unlimited" />
-          {onUpdateDataUsage && (
-            <button
-              onClick={() => onUpdateDataUsage(subscription, used)}
-              className="u-btn u-btn-sm u-btn-ghost u-mt-1"
-              title="Update data usage"
+        );
+      }
+
+      const percentage = Math.min((used / quota) * 100, 100);
+      const isHigh = percentage > 90;
+      const isMedium = percentage > 75;
+      const isNearLimit = percentage > 80;
+
+      return (
+        <div className="u-min-w-36">
+          <div className="u-flex u-justify-between u-items-center u-mb-2">
+            <span className="u-fs-xs u-text-secondary-emphasis">
+              {used.toFixed(1)} / {quota} GB
+            </span>
+            <span
+              className={`u-fs-xs u-fw-medium ${
+                isHigh
+                  ? "u-text-error"
+                  : isMedium
+                    ? "u-text-warning"
+                    : "u-text-success"
+              }`}
             >
-              <Icon name="Pencil" size={12} />
-            </button>
+              {percentage.toFixed(0)}%
+            </span>
+          </div>
+
+          <div
+            className="u-bg-secondary-subtle u-rounded-pill u-overflow-hidden u-mb-2"
+            style={{ height: "6px" }}
+          >
+            <div
+              className={`u-h-100 u-rounded-pill ${
+                isHigh
+                  ? "u-bg-danger"
+                  : isMedium
+                    ? "u-bg-warning"
+                    : "u-bg-success"
+              }`}
+              style={{
+                width: `${percentage}%`,
+                transition: "width 0.3s ease",
+              }}
+            />
+          </div>
+
+          {isNearLimit && (
+            <div className="u-fs-xs u-text-warning u-mb-1">
+              <Icon name="Warning" size={12} className="u-me-1" />
+              Near limit
+            </div>
           )}
+
+          <div className="u-flex u-gap-1">
+            {onResetDataUsage && (
+              <button
+                onClick={() => onResetDataUsage(subscription)}
+                className="u-btn u-btn-xs u-btn-outline-secondary"
+                title="Reset data usage"
+              >
+                <Icon name="ArrowCounterClockwise" size={10} />
+              </button>
+            )}
+            {onUpdateDataUsage && (
+              <button
+                onClick={() => onUpdateDataUsage(subscription, used)}
+                className="u-btn u-btn-xs u-btn-outline-secondary"
+                title="Update data usage"
+              >
+                <Icon name="Pencil" size={10} />
+              </button>
+            )}
+          </div>
         </div>
       );
-    }
+    },
+    [onUpdateDataUsage, onResetDataUsage],
+  );
 
-    const percentage = Math.min((used / quota) * 100, 100);
-    const isHigh = percentage > 90;
-    const isMedium = percentage > 75;
-    const isNearLimit = percentage > 80;
-
-    return (
-      <div className="u-min-w-36">
-        <div className="u-flex u-justify-between u-items-center u-mb-2">
-          <span className="u-fs-xs u-text-secondary-emphasis">
-            {used.toFixed(1)} / {quota} GB
-          </span>
-          <span
-            className={`u-fs-xs u-fw-medium ${
-              isHigh
-                ? "u-text-error"
-                : isMedium
-                  ? "u-text-warning"
-                  : "u-text-success"
-            }`}
-          >
-            {percentage.toFixed(0)}%
-          </span>
-        </div>
-
-        <div
-          className="u-bg-secondary-subtle u-rounded-pill u-overflow-hidden u-mb-2"
-          style={{ height: "6px" }}
-        >
-          <div
-            className={`u-h-100 u-rounded-pill ${
-              isHigh
-                ? "u-bg-danger"
-                : isMedium
-                  ? "u-bg-warning"
-                  : "u-bg-success"
-            }`}
-            style={{
-              width: `${percentage}%`,
-              transition: "width 0.3s ease",
-            }}
-          />
-        </div>
-
-        {isNearLimit && (
-          <div className="u-fs-xs u-text-warning u-mb-1">
-            <Icon name="Warning" size={12} className="u-me-1" />
-            Near limit
-          </div>
-        )}
-
-        <div className="u-flex u-gap-1">
-          {onResetDataUsage && (
-            <button
-              onClick={() => onResetDataUsage(subscription)}
-              className="u-btn u-btn-xs u-btn-outline-secondary"
-              title="Reset data usage"
-            >
-              <Icon name="ArrowCounterClockwise" size={10} />
-            </button>
-          )}
-          {onUpdateDataUsage && (
-            <button
-              onClick={() => onUpdateDataUsage(subscription, used)}
-              className="u-btn u-btn-xs u-btn-outline-secondary"
-              title="Update data usage"
-            >
-              <Icon name="Pencil" size={10} />
-            </button>
-          )}
-        </div>
-      </div>
-    );
-  }, [onUpdateDataUsage, onResetDataUsage]);
-
-  const handleSelectOne = useCallback((
-    id: number,
-    event: React.ChangeEvent<HTMLInputElement>,
-  ) => {
-    const checked = event.target.checked;
-    if (checked) {
-      setSelectedIds((prev) => [...prev, id]);
-    } else {
-      setSelectedIds((prev) => prev.filter((selectedId) => selectedId !== id));
-    }
-  }, []);
+  const handleSelectOne = useCallback(
+    (id: number, event: React.ChangeEvent<HTMLInputElement>) => {
+      const checked = event.target.checked;
+      if (checked) {
+        setSelectedIds((prev) => [...prev, id]);
+      } else {
+        setSelectedIds((prev) =>
+          prev.filter((selectedId) => selectedId !== id),
+        );
+      }
+    },
+    [],
+  );
 
   const handleBulkAction = useCallback(() => {
     if (selectedIds.length === 0 || !bulkActionStatus || !onBulkUpdateStatus) {
@@ -199,63 +204,66 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
     setBulkActionStatus("");
   }, [selectedIds, bulkActionStatus, onBulkUpdateStatus]);
 
-  const getStatusActions = useCallback((subscription: Subscription) => {
-    const actions = [];
+  const getStatusActions = useCallback(
+    (subscription: Subscription) => {
+      const actions = [];
 
-    if (subscription.status === "pending") {
-      actions.push(
-        <button
-          key="activate"
-          onClick={() => onUpdateStatus(subscription, "active")}
-          className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
-        >
-          <Icon name="Play" size={16} />
-          Activate
-        </button>,
-      );
-    }
+      if (subscription.status === "pending") {
+        actions.push(
+          <button
+            key="activate"
+            onClick={() => onUpdateStatus(subscription, "active")}
+            className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
+          >
+            <Icon name="Play" size={16} />
+            Activate
+          </button>,
+        );
+      }
 
-    if (subscription.status === "active") {
-      actions.push(
-        <button
-          key="suspend"
-          onClick={() => onUpdateStatus(subscription, "suspended")}
-          className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-warning u-cursor-pointer hover:u-bg-warning-subtle"
-        >
-          <Icon name="Pause" size={16} />
-          Suspend
-        </button>,
-      );
-    }
+      if (subscription.status === "active") {
+        actions.push(
+          <button
+            key="suspend"
+            onClick={() => onUpdateStatus(subscription, "suspended")}
+            className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-warning u-cursor-pointer hover:u-bg-warning-subtle"
+          >
+            <Icon name="Pause" size={16} />
+            Suspend
+          </button>,
+        );
+      }
 
-    if (subscription.status === "suspended") {
-      actions.push(
-        <button
-          key="reactivate"
-          onClick={() => onUpdateStatus(subscription, "active")}
-          className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
-        >
-          <Icon name="Play" size={16} />
-          Reactivate
-        </button>,
-      );
-    }
+      if (subscription.status === "suspended") {
+        actions.push(
+          <button
+            key="reactivate"
+            onClick={() => onUpdateStatus(subscription, "active")}
+            className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
+          >
+            <Icon name="Play" size={16} />
+            Reactivate
+          </button>,
+        );
+      }
 
-    if (!["cancelled", "inactive"].includes(subscription.status)) {
-      actions.push(
-        <button
-          key="cancel"
-          onClick={() => onUpdateStatus(subscription, "cancelled")}
-          className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
-        >
-          <Icon name="X" size={16} />
-          Cancel
-        </button>,
-      );
-    }
+      if (!["cancelled", "inactive"].includes(subscription.status)) {
+        actions.push(
+          <button
+            key="cancel"
+            onClick={() => onUpdateStatus(subscription, "cancelled")}
+            className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
+          >
+            <Icon name="X" size={16} />
+            Cancel
+          </button>,
+        );
+      }
 
-    return actions;
-  }, [onUpdateStatus]);
+      return actions;
+    },
+    [onUpdateStatus],
+  );
 
   const baseTableData = useMemo(() => {
     return subscriptions.map((subscription) => ({
@@ -354,9 +362,9 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           </div>
           {subscription.end_date && (
             <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
-            <strong>Ends:</strong>{" "}
-            {new Date(subscription.end_date).toLocaleDateString()}
-          </div>
+              <strong>Ends:</strong>{" "}
+              {new Date(subscription.end_date).toLocaleDateString()}
+            </div>
           )}
         </div>
       ),
@@ -514,7 +522,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                 <select
                   value={bulkActionStatus}
                   onChange={(e) => setBulkActionStatus(e.target.value)}
-                  className="u-w-100 u-py-1 u-px-2 u-border u-rounded u-bg-surface u-text-foreground u-text-sm"
+                  className="u-w-100 u-py-1 u-px-2 u-border u-rounded u-bg-surface u-text-foreground u-fs-sm"
                 >
                   <option value="">Select Action</option>
                   <option value="active">Activate</option>

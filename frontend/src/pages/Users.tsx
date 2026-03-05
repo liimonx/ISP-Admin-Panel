@@ -456,7 +456,7 @@ const Users: React.FC = () => {
                       />
                       <div>
                         <div className="u-fw-medium">{user.username}</div>
-                        <div className="u-text-secondary-emphasis u-text-sm">
+                        <div className="u-text-secondary-emphasis u-fs-sm">
                           {user.first_name} {user.last_name}
                         </div>
                       </div>
@@ -573,7 +573,7 @@ const Users: React.FC = () => {
                 className={formErrors.username ? "u-border-danger" : ""}
               />
               {formErrors.username && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.username}
                 </div>
               )}
@@ -588,7 +588,7 @@ const Users: React.FC = () => {
                 className={formErrors.email ? "u-border-danger" : ""}
               />
               {formErrors.email && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.email}
                 </div>
               )}
@@ -607,7 +607,7 @@ const Users: React.FC = () => {
                 className={formErrors.first_name ? "u-border-danger" : ""}
               />
               {formErrors.first_name && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.first_name}
                 </div>
               )}
@@ -621,7 +621,7 @@ const Users: React.FC = () => {
                 className={formErrors.last_name ? "u-border-danger" : ""}
               />
               {formErrors.last_name && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.last_name}
                 </div>
               )}
@@ -648,7 +648,7 @@ const Users: React.FC = () => {
                 className={formErrors.phone ? "u-border-danger" : ""}
               />
               {formErrors.phone && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.phone}
                 </div>
               )}
@@ -666,7 +666,7 @@ const Users: React.FC = () => {
                 className={formErrors.password ? "u-border-danger" : ""}
               />
               {formErrors.password && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.password}
                 </div>
               )}
@@ -685,7 +685,7 @@ const Users: React.FC = () => {
                 className={formErrors.confirm_password ? "u-border-danger" : ""}
               />
               {formErrors.confirm_password && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.confirm_password}
                 </div>
               )}
@@ -752,7 +752,7 @@ const Users: React.FC = () => {
                 className={formErrors.username ? "u-border-danger" : ""}
               />
               {formErrors.username && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.username}
                 </div>
               )}
@@ -767,7 +767,7 @@ const Users: React.FC = () => {
                 className={formErrors.email ? "u-border-danger" : ""}
               />
               {formErrors.email && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.email}
                 </div>
               )}
@@ -786,7 +786,7 @@ const Users: React.FC = () => {
                 className={formErrors.first_name ? "u-border-danger" : ""}
               />
               {formErrors.first_name && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.first_name}
                 </div>
               )}
@@ -800,7 +800,7 @@ const Users: React.FC = () => {
                 className={formErrors.last_name ? "u-border-danger" : ""}
               />
               {formErrors.last_name && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.last_name}
                 </div>
               )}
@@ -827,7 +827,7 @@ const Users: React.FC = () => {
                 className={formErrors.phone ? "u-border-danger" : ""}
               />
               {formErrors.phone && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.phone}
                 </div>
               )}
@@ -862,7 +862,7 @@ const Users: React.FC = () => {
                 className={formErrors.password ? "u-border-danger" : ""}
               />
               {formErrors.password && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.password}
                 </div>
               )}
@@ -881,7 +881,7 @@ const Users: React.FC = () => {
                 className={formErrors.confirm_password ? "u-border-danger" : ""}
               />
               {formErrors.confirm_password && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.confirm_password}
                 </div>
               )}

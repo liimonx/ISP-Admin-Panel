@@ -44,7 +44,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
             <h3 className="u-text-lg u-fw-semibold u-truncate">{title}</h3>
           </div>
           {description && (
-            <p className="u-text-sm u-text-secondary-emphasis u-line-clamp-2">
+            <p className="u-fs-sm u-text-secondary-emphasis u-line-clamp-2">
               {description}
             </p>
           )}
@@ -58,7 +58,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
           <div className="u-flex u-flex-column u-items-center u-justify-center u-py-8 u-text-center">
             <Icon name="Warning" size={32} className="u-text-error u-mb-3" />
             <p className="u-text-error u-mb-2">Error loading data</p>
-            <p className="u-text-sm u-text-secondary-emphasis">{error}</p>
+            <p className="u-fs-sm u-text-secondary-emphasis">{error}</p>
           </div>
         ) : loading ? (
           <div className="u-flex u-items-center u-justify-center u-py-8">

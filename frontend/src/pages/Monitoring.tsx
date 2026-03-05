@@ -279,7 +279,7 @@ const Monitoring: React.FC = () => {
               onChange={(checked) => setAutoRefresh(checked)}
               className="u-me-2"
             />
-            <label className="u-text-sm">Auto Refresh</label>
+            <label className="u-fs-sm">Auto Refresh</label>
           </div>
           <Select
             value={selectedTimeRange}
@@ -325,7 +325,7 @@ const Monitoring: React.FC = () => {
                     {monitoringStats.online_routers || 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">Online</p>
-                  <div className="u-text-sm u-text-success">
+                  <div className="u-fs-sm u-text-success">
                     {monitoringStats.total_routers > 0
                       ? `${((monitoringStats.online_routers / monitoringStats.total_routers) * 100).toFixed(1)}%`
                       : "0%"}{" "}
@@ -348,7 +348,7 @@ const Monitoring: React.FC = () => {
                   <p className="u-text-secondary-emphasis u-mb-0">
                     Active Alerts
                   </p>
-                  <div className="u-text-sm u-text-warning">
+                  <div className="u-fs-sm u-text-warning">
                     {monitoringStats.critical_alerts || 0} critical
                   </div>
                 </div>
@@ -368,7 +368,7 @@ const Monitoring: React.FC = () => {
                   <p className="u-text-secondary-emphasis u-mb-0">
                     Bandwidth Usage
                   </p>
-                  <div className="u-text-sm u-text-info">
+                  <div className="u-fs-sm u-text-info">
                     Peak: {monitoringStats.peak_bandwidth_usage || 0} Mbps
                   </div>
                 </div>
@@ -486,7 +486,7 @@ const Monitoring: React.FC = () => {
                           {sanitizeText(router.name)}
                         </div>
                         {router.description && (
-                          <div className="u-text-secondary-emphasis u-text-sm">
+                          <div className="u-text-secondary-emphasis u-fs-sm">
                             {sanitizeText(router.description)}
                           </div>
                         )}
@@ -495,7 +495,7 @@ const Monitoring: React.FC = () => {
                   ),
                   connection: (
                     <div>
-                      <div className="u-text-sm u-mb-1">
+                      <div className="u-fs-sm u-mb-1">
                         <Icon
                           name="Globe"
                           size={14}
@@ -503,7 +503,7 @@ const Monitoring: React.FC = () => {
                         />
                         {router.host}
                       </div>
-                      <div className="u-text-sm u-text-secondary-emphasis">
+                      <div className="u-fs-sm u-text-secondary-emphasis">
                         API: {router.api_port} | SSH: {router.ssh_port}
                       </div>
                     </div>
@@ -516,14 +516,14 @@ const Monitoring: React.FC = () => {
                         size="sm"
                         className="u-mb-1"
                       />
-                      <div className="u-text-sm u-text-secondary-emphasis">
+                      <div className="u-fs-sm u-text-secondary-emphasis">
                         {router.uptime ? formatUptime(router.uptime) : "N/A"}
                       </div>
                     </div>
                   ),
                   traffic: (
                     <div>
-                      <div className="u-text-sm">
+                      <div className="u-fs-sm">
                         <Icon
                           name="ArrowDown"
                           size={12}
@@ -533,7 +533,7 @@ const Monitoring: React.FC = () => {
                           ? formatBandwidth(router.rx_bytes)
                           : "0 Mbps"}
                       </div>
-                      <div className="u-text-sm">
+                      <div className="u-fs-sm">
                         <Icon
                           name="ArrowUp"
                           size={12}

@@ -89,6 +89,8 @@ export const ENDPOINTS = {
     TOP_USERS: "/reports/top-users",
     USAGE_TRENDS: "/reports/usage-trends",
     REVENUE: "/reports/revenue",
+    CUSTOMERS: "/reports/customers",
+    NETWORK: "/reports/network",
   },
   CORE: {
     DASHBOARD_STATS: "/core/dashboard/stats",
@@ -103,6 +105,8 @@ export const ENDPOINTS = {
     ANALYTICS_TOP_CUSTOMERS: "/core/analytics/top-customers",
     TRENDS_DAILY: "/core/trends/daily",
     TRENDS_MONTHLY: "/core/trends/monthly",
+    SETTINGS: "/core/settings",
+    SETTINGS_UPDATE: "/core/settings/update",
   },
 } as const;
 

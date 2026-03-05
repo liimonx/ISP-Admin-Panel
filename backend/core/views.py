@@ -10,9 +10,11 @@ from .serializers import (
     DashboardStatsSerializer, CustomerStatsSerializer, SubscriptionStatsSerializer,
     PlanStatsSerializer, RouterStatsSerializer, InvoiceStatsSerializer,
     PaymentStatsSerializer, MonthlyTrendSerializer, DailyTrendSerializer,
-    PaymentMethodStatsSerializer, TopCustomerSerializer
+    PaymentMethodStatsSerializer, TopCustomerSerializer,
+    SystemSettingsSerializer, SystemSettingsUpdateSerializer
 )
 from .responses import APIResponse
+from .models import SystemSettings
 
 
 @api_view(['GET'])
@@ -25,6 +27,69 @@ def dashboard_stats(request):
         return APIResponse.success(data=serializer.data)
     except Exception as e:
         return APIResponse.server_error(f"Failed to fetch dashboard stats: {str(e)}")
+
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def system_settings(request):
+    """Get or update system settings."""
+    try:
+        # Get or create system settings
+        settings_obj = SystemSettings.get_settings()
+        
+        if request.method == 'GET':
+            # Return current settings
+            serializer = SystemSettingsSerializer(settings_obj)
+            return APIResponse.success(
+                data=serializer.data,
+                message="System settings retrieved successfully"
+            )
+        
+        elif request.method == 'PUT':
+            # Update settings
+            serializer = SystemSettingsUpdateSerializer(
+                instance=settings_obj,
+                data=request.data,
+                partial=False
+            )
+            
+            if serializer.is_valid():
+                serializer.save()
+                return APIResponse.success(
+                    data=serializer.data,
+                    message="System settings updated successfully"
+                )
+            else:
+                return APIResponse.validation_error(serializer.errors)
+                
+    except Exception as e:
+        return APIResponse.server_error(f"Failed to manage system settings: {str(e)}")
+
+
+@api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
+def update_settings_partial(request):
+    """Partially update system settings."""
+    try:
+        settings_obj = SystemSettings.get_settings()
+        
+        serializer = SystemSettingsUpdateSerializer(
+            instance=settings_obj,
+            data=request.data,
+            partial=True
+        )
+        
+        if serializer.is_valid():
+            serializer.save()
+            return APIResponse.success(
+                data=serializer.data,
+                message="System settings updated successfully"
+            )
+        else:
+            return APIResponse.validation_error(serializer.errors)
+            
+    except Exception as e:
+        return APIResponse.server_error(f"Failed to update system settings: {str(e)}")
 
 
 @api_view(['GET'])
@@ -187,3 +252,29 @@ def all_stats(request):
         return APIResponse.success(data=serialized_data)
     except Exception as e:
         return APIResponse.server_error(f"Failed to fetch all stats: {str(e)}")
+
+@api_view(['GET', 'PUT'])
+@permission_classes([IsAuthenticated])
+def system_settings(request):
+    """Get or update system settings."""
+    try:
+        settings = SystemSettings.get_settings()
+        
+        if request.method == 'GET':
+            serializer = SystemSettingsSerializer(settings)
+            return APIResponse.success(data=serializer.data)
+            
+        elif request.method == 'PUT':
+            serializer = SystemSettingsSerializer(settings, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return APIResponse.success(
+                    data=serializer.data,
+                    message="Settings updated successfully"
+                )
+            return APIResponse.bad_request(
+                message="Invalid settings data",
+                errors=serializer.errors
+            )
+    except Exception as e:
+        return APIResponse.server_error(f"Failed to process settings request: {str(e)}")

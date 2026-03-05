@@ -17,6 +17,8 @@ import {
   Modal,
   Callout,
   Spinner,
+  Hero,
+  Block,
 } from "@shohojdhara/atomix";
 import { StatCard } from "../components/molecules/StatCard";
 import { QuickActions } from "../components/ui";
@@ -264,23 +266,23 @@ const Dashboard: React.FC = () => {
     {
       label: "Plan Distribution",
       data:
-        subscriptionsData && subscriptionsData.length > 0
+        subscriptionsData && subscriptionsData.results.length > 0
           ? [
               {
                 label: "Basic",
-                value: Math.floor(subscriptionsData.length * 0.15),
+                value: Math.floor(subscriptionsData.results.length * 0.15),
               },
               {
                 label: "Standard",
-                value: Math.floor(subscriptionsData.length * 0.35),
+                value: Math.floor(subscriptionsData.results.length * 0.35),
               },
               {
                 label: "Premium",
-                value: Math.floor(subscriptionsData.length * 0.25),
+                value: Math.floor(subscriptionsData.results.length * 0.25),
               },
               {
                 label: "Enterprise",
-                value: Math.floor(subscriptionsData.length * 0.25),
+                value: Math.floor(subscriptionsData.results.length * 0.25),
               },
             ]
           : [{ label: "No Data", value: 100 }],
@@ -333,7 +335,7 @@ const Dashboard: React.FC = () => {
     active_customers: customerStats?.active_customers || 0,
     total_subscriptions:
       stats?.total_subscriptions || subscriptionStats?.total_subscriptions || 0,
-    active_subscriptions: subscriptionsData?.length || 0,
+    active_subscriptions: subscriptionsData?.count || 0,
     total_routers: stats?.total_routers || routerStats?.total_routers || 0,
     online_routers: stats?.online_routers || routerStats?.online_routers || 0,
     total_monthly_revenue:
@@ -404,58 +406,38 @@ const Dashboard: React.FC = () => {
   return (
     <div>
       {/* Page Header */}
-      <div className="u-mb-8">
-        <div className="u-flex u-justify-between u-items-start u-mb-4">
-          <div>
-            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">
-              Dashboard
-            </h1>
-            <p className="u-text-secondary-emphasis u-text-lg">
-              Welcome back! Here's what's happening with your ISP operations
-              today.
-            </p>
-          </div>
-          <div className="u-flex u-gap-3 u-items-center">
+      <Hero
+        title="Dashboard"
+        text="Welcome back! Here's what's happening with your ISP operations today."
+        actions={
+          <>
             <Button
-              variant="outline"
-              size="md"
+              size="sm"
               onClick={() => refreshMutation.mutate()}
               disabled={refreshMutation.isPending}
             >
-              <Icon name="ArrowClockwise" size={16} />
-              <span className="u-none u-sm-block">
-                {refreshMutation.isPending ? "Refreshing..." : "Refresh"}
-              </span>
-            </Button>
-            <Button variant="outline" size="md">
-              <Icon name="Download" size={16} />
-              <span className="u-none u-sm-block">Export</span>
+              <Icon name="ArrowClockwise" size={16} className="u-me-2" />
+              {refreshMutation.isPending ? "Refreshing..." : "Refresh"}
             </Button>
             <Button
-              variant="primary"
-              size="md"
+              size="sm"
+              icon={<Icon name="Download" size={16} />}
+              label="Export"
+            />
+            <Button
+              size="sm"
+              icon={<Icon name="Plus" size={16} />}
+              label="Add Customer"
               onClick={() => (window.location.href = "/customers")}
-            >
-              <Icon name="Plus" size={16} />
-              <span className="u-none u-sm-block">Add Customer</span>
-            </Button>
-          </div>
-        </div>
-
-        {/* Quick Stats Summary */}
-        <div className="u-flex u-gap-4 u-text-sm u-text-secondary-emphasis u-items-center">
-          <span>Last updated: {new Date().toLocaleTimeString()}</span>
-          <span>•</span>
-          <span>Auto-refresh: 30s</span>
-          <span>•</span>
-          <span>Status: All systems operational</span>
-          <span>•</span>
-          <Badge variant="success" size="sm" label="Live Data" />
-        </div>
-      </div>
+            />
+          </>
+        }
+        contentWidth="full"
+        backgroundImageSrc="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=3134&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dß"
+      />
 
       {/* Stats Grid */}
-      <Grid className="u-mb-6">
+      <Grid className="u-my-6">
         <GridCol xs={12} md={6} lg={3}>
           <StatCard
             title="Total Customers"
@@ -509,20 +491,19 @@ const Dashboard: React.FC = () => {
           />
         </GridCol>
       </Grid>
-
       {/* Interactive Charts Section */}
       <Grid className="u-mb-8">
         <GridCol xs={12} lg={8}>
           <Card className="u-h-full">
             <div className="u-flex u-justify-between u-items-center u-mb-6">
               <div>
-                <h3 className="u-text-xl u-fw-semibold u-mb-1">
+                <h3 className="u-fs-xl u-fw-semibold u-mb-1">
                   {selectedChart === "revenue" && "Revenue Analytics"}
                   {selectedChart === "traffic" && "Network Traffic"}
                   {selectedChart === "customers" && "Customer Growth"}
                   {selectedChart === "network" && "Network Performance"}
                 </h3>
-                <p className="u-text-sm u-text-secondary-emphasis">
+                <p className="u-fs-sm u-text-secondary-emphasis">
                   Track your key metrics over time
                 </p>
               </div>
@@ -583,10 +564,10 @@ const Dashboard: React.FC = () => {
         <GridCol xs={12} lg={4}>
           <Card className="u-h-full">
             <div className="u-mb-4">
-              <h3 className="u-text-xl u-fw-semibold u-mb-1">
+              <h3 className="u-fs-xl u-fw-semibold u-mb-1">
                 Plan Distribution
               </h3>
-              <p className="u-text-sm u-text-secondary-emphasis">
+              <p className="u-fs-sm u-text-secondary-emphasis">
                 Customer subscription breakdown
               </p>
             </div>
@@ -597,7 +578,7 @@ const Dashboard: React.FC = () => {
               <div className="u-text-2xl u-fw-bold u-text-primary u-mb-1">
                 {enhancedStats.total_subscriptions}
               </div>
-              <p className="u-text-sm u-text-secondary-emphasis">
+              <p className="u-fs-sm u-text-secondary-emphasis">
                 Total Active Subscriptions
               </p>
             </div>
@@ -658,10 +639,8 @@ const Dashboard: React.FC = () => {
         <GridCol xs={12} lg={8}>
           <Card className="u-h-100">
             <div className="u-mb-4">
-              <h3 className="u-text-xl u-fw-semibold u-mb-1">
-                System Overview
-              </h3>
-              <p className="u-text-sm u-text-secondary-emphasis">
+              <h3 className="u-fs-xl u-fw-semibold u-mb-1">System Overview</h3>
+              <p className="u-fs-sm u-text-secondary-emphasis">
                 Key metrics and performance indicators
               </p>
             </div>
@@ -672,7 +651,7 @@ const Dashboard: React.FC = () => {
                   <div className="u-text-2xl u-fw-bold u-text-success u-mb-1">
                     {networkUptime}%
                   </div>
-                  <div className="u-text-sm u-text-secondary-emphasis">
+                  <div className="u-fs-sm u-text-secondary-emphasis">
                     Uptime
                   </div>
                 </div>
@@ -682,7 +661,7 @@ const Dashboard: React.FC = () => {
                   <div className="u-text-2xl u-fw-bold u-text-primary u-mb-1">
                     {enhancedStats.total_customers}
                   </div>
-                  <div className="u-text-sm u-text-secondary-emphasis">
+                  <div className="u-fs-sm u-text-secondary-emphasis">
                     Customers
                   </div>
                 </div>
@@ -692,7 +671,7 @@ const Dashboard: React.FC = () => {
                   <div className="u-text-2xl u-fw-bold u-text-warning u-mb-1">
                     {enhancedStats.total_routers}
                   </div>
-                  <div className="u-text-sm u-text-secondary-emphasis">
+                  <div className="u-fs-sm u-text-secondary-emphasis">
                     Routers
                   </div>
                 </div>
@@ -702,7 +681,7 @@ const Dashboard: React.FC = () => {
                   <div className="u-text-2xl u-fw-bold u-text-info u-mb-1">
                     ${enhancedStats.total_monthly_revenue.toLocaleString()}
                   </div>
-                  <div className="u-text-sm u-text-secondary-emphasis">
+                  <div className="u-fs-sm u-text-secondary-emphasis">
                     Revenue
                   </div>
                 </div>
@@ -718,10 +697,10 @@ const Dashboard: React.FC = () => {
           <Card className="u-h-100">
             <div className="u-flex u-justify-between u-items-center u-mb-6">
               <div>
-                <h3 className="u-text-xl u-fw-semibold u-mb-1">
+                <h3 className="u-fs-xl u-fw-semibold u-mb-1">
                   Recent Customers
                 </h3>
-                <p className="u-text-sm u-text-secondary-emphasis">
+                <p className="u-fs-sm u-text-secondary-emphasis">
                   Latest customer registrations and activity
                 </p>
               </div>
@@ -747,10 +726,10 @@ const Dashboard: React.FC = () => {
                     />
                     <div>
                       <div className="u-fw-medium">{customer.name}</div>
-                      <div className="u-text-sm u-text-secondary-emphasis">
+                      <div className="u-fs-sm u-text-secondary-emphasis">
                         {customer.email}
                       </div>
-                      <div className="u-text-xs u-text-secondary-emphasis">
+                      <div className="u-fs-xs u-text-secondary-emphasis">
                         Joined{" "}
                         {new Date(customer.created_at).toLocaleDateString()}
                       </div>
@@ -764,7 +743,7 @@ const Dashboard: React.FC = () => {
                       size="sm"
                       label={customer.status}
                     />
-                    <span className="u-text-sm">{customer.plan}</span>
+                    <span className="u-fs-sm">{customer.plan}</span>
                   </div>
                 </div>
               ))}
@@ -786,8 +765,8 @@ const Dashboard: React.FC = () => {
         <GridCol xs={12} lg={4}>
           <Card className="u-h-100">
             <div className="u-mb-6">
-              <h3 className="u-text-xl u-fw-semibold u-mb-1">System Health</h3>
-              <p className="u-text-sm u-text-secondary-emphasis">
+              <h3 className="u-fs-xl u-fw-semibold u-mb-1">System Health</h3>
+              <p className="u-fs-sm u-text-secondary-emphasis">
                 Real-time system performance metrics
               </p>
             </div>
@@ -797,9 +776,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Cpu" size={16} className="u-text-primary" />
-                    <span className="u-text-sm u-fw-medium">Server Load</span>
+                    <span className="u-fs-sm u-fw-medium">Server Load</span>
                   </div>
-                  <span className="u-text-sm u-fw-semibold">
+                  <span className="u-fs-sm u-fw-semibold">
                     {systemStatus.serverLoad}%
                   </span>
                 </div>
@@ -819,9 +798,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Memory" size={16} className="u-text-success" />
-                    <span className="u-text-sm u-fw-medium">Memory Usage</span>
+                    <span className="u-fs-sm u-fw-medium">Memory Usage</span>
                   </div>
-                  <span className="u-text-sm u-fw-semibold">
+                  <span className="u-fs-sm u-fw-semibold">
                     {systemStatus.memoryUsage}%
                   </span>
                 </div>
@@ -841,9 +820,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
                     <Icon name="HardDrive" size={16} className="u-text-info" />
-                    <span className="u-text-sm u-fw-medium">Storage</span>
+                    <span className="u-fs-sm u-fw-medium">Storage</span>
                   </div>
-                  <span className="u-text-sm u-fw-semibold">
+                  <span className="u-fs-sm u-fw-semibold">
                     {systemStatus.storage}%
                   </span>
                 </div>
@@ -863,9 +842,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Globe" size={16} className="u-text-warning" />
-                    <span className="u-text-sm u-fw-medium">Network Load</span>
+                    <span className="u-fs-sm u-fw-medium">Network Load</span>
                   </div>
-                  <span className="u-text-sm u-fw-semibold">
+                  <span className="u-fs-sm u-fw-semibold">
                     {systemStatus.networkLoad}%
                   </span>
                 </div>
@@ -884,9 +863,7 @@ const Dashboard: React.FC = () => {
 
             <div className="u-mt-6 u-pt-6 u-border-top">
               <div className="u-flex u-justify-between u-items-center u-mb-3">
-                <h4 className="u-text-sm u-fw-semibold">
-                  Active Administrators
-                </h4>
+                <h4 className="u-fs-sm u-fw-semibold">Active Administrators</h4>
                 <Badge variant="success" size="sm" label="3 online" />
               </div>
               <div className="u-flex u-gap-2">

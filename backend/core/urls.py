@@ -20,4 +20,8 @@ urlpatterns = [
     path('trends/daily/', views.daily_trends, name='daily-trends'),
     path('analytics/payment-methods/', views.payment_method_stats, name='payment-method-stats'),
     path('analytics/top-customers/', views.top_customers, name='top-customers'),
+    
+    # System Settings
+    path('settings/', views.system_settings, name='system-settings'),
+    path('settings/update/', views.update_settings_partial, name='update-settings-partial'),
 ]

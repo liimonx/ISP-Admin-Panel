@@ -1,5 +1,5 @@
-import React from 'react';
-import { Card, Badge, Avatar } from '@shohojdhara/atomix';
+import React from "react";
+import { Card, Badge, Avatar } from "@shohojdhara/atomix";
 
 export interface TopUser {
   id: number;
@@ -8,7 +8,7 @@ export interface TopUser {
   usage: number;
   usage_unit: string;
   plan_name?: string;
-  status: 'active' | 'inactive' | 'suspended';
+  status: "active" | "inactive" | "suspended";
 }
 
 export interface TopUsersWidgetProps {
@@ -21,29 +21,29 @@ export interface TopUsersWidgetProps {
 
 /**
  * TopUsersWidget Component
- * 
+ *
  * A widget component for displaying top users by usage.
  * Built using Atomix Card, Badge, and Avatar components.
  */
 export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
   users,
   isLoading = false,
-  className = '',
-  title = 'Top Users',
+  className = "",
+  title = "Top Users",
   limit = 10,
 }) => {
   const formatUsage = (usage: number, unit: string) => {
-    if (usage >= 1024 && unit === 'MB') {
+    if (usage >= 1024 && unit === "MB") {
       return `${(usage / 1024).toFixed(1)} GB`;
     }
     return `${usage.toFixed(1)} ${unit}`;
   };
 
-  const getStatusBadge = (status: TopUser['status']) => {
+  const getStatusBadge = (status: TopUser["status"]) => {
     const variants = {
-      active: 'success',
-      inactive: 'secondary',
-      suspended: 'warning',
+      active: "success",
+      inactive: "secondary",
+      suspended: "warning",
     } as const;
 
     return (
@@ -83,7 +83,7 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
     <Card className={`u-h-100 ${className}`}>
       <div className="u-p-4">
         <h3 className="u-text-lg u-fw-semibold u-mb-4">{title}</h3>
-        
+
         {displayUsers.length === 0 ? (
           <div className="u-text-center u-py-8">
             <p className="u-text-muted">No usage data available</p>
@@ -93,35 +93,37 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
             {displayUsers.map((user, index) => (
               <div key={user.id} className="u-flex u-items-center u-gap-3">
                 <div className="u-flex u-items-center u-gap-2">
-                  <span className="u-text-sm u-fw-bold u-text-muted u-min-w-6">
+                  <span className="u-fs-sm u-fw-bold u-text-muted u-min-w-6">
                     {index + 1}
                   </span>
-                  <Avatar 
-                    initials={user.name.split(' ').map(n => n[0]).join('').toUpperCase()} 
-                    size="sm" 
+                  <Avatar
+                    initials={user.name
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")
+                      .toUpperCase()}
+                    size="sm"
                   />
                 </div>
-                
+
                 <div className="u-flex-1 u-min-w-0">
-                  <div className="u-text-sm u-fw-medium u-truncate">
+                  <div className="u-fs-sm u-fw-medium u-truncate">
                     {user.name}
                   </div>
-                  <div className="u-text-xs u-text-muted u-truncate">
+                  <div className="u-fs-xs u-text-muted u-truncate">
                     {user.email}
                   </div>
                   {user.plan_name && (
-                    <div className="u-text-xs u-text-muted">
-                      {user.plan_name}
-                    </div>
+                    <div className="u-fs-xs u-text-muted">{user.plan_name}</div>
                   )}
                 </div>
-                
+
                 <div className="u-flex u-items-center u-gap-2">
                   <div className="u-text-right">
-                    <div className="u-text-sm u-fw-medium">
+                    <div className="u-fs-sm u-fw-medium">
                       {formatUsage(user.usage, user.usage_unit)}
                     </div>
-                    <div className="u-text-xs u-text-muted">usage</div>
+                    <div className="u-fs-xs u-text-muted">usage</div>
                   </div>
                   {getStatusBadge(user.status)}
                 </div>

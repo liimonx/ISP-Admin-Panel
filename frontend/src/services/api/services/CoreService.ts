@@ -123,4 +123,20 @@ export class CoreService extends BaseApiService {
   async getMonthlyTrends(params?: Record<string, any>): Promise<any> {
     return this.get<any>(ENDPOINTS.CORE.TRENDS_MONTHLY + "/", params);
   }
+
+  /**
+   * Get system settings.
+   * Endpoint: GET /api/core/settings/
+   */
+  async getSettings(): Promise<any> {
+    return this.get<any>(ENDPOINTS.CORE.SETTINGS + "/");
+  }
+
+  /**
+   * Update system settings.
+   * Endpoint: PUT /api/core/settings/
+   */
+  async updateSettings(data: any): Promise<any> {
+    return this.put<any>(ENDPOINTS.CORE.SETTINGS + "/", data);
+  }
 }

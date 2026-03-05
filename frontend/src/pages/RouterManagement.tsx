@@ -57,7 +57,7 @@ const RouterCard: React.FC<RouterCardProps> = ({
     <Card className="u-p-4 u-border u-rounded u-shadow-sm u-flex u-flex-col u-justify-between">
       <div>
         <h3 className="u-text-lg u-fw-semibold u-mb-2">{router.name}</h3>
-        <p className="u-text-sm u-text-secondary-emphasis u-mb-2">
+        <p className="u-fs-sm u-text-secondary-emphasis u-mb-2">
           {router.host}
         </p>
         <div className="u-flex u-items-center u-gap-2 u-mb-2">
@@ -330,7 +330,7 @@ const RouterManagement: React.FC = () => {
       >
         <div className="u-space-y-4">
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Router Name *
             </label>
             <Input
@@ -344,7 +344,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Host/IP Address *
             </label>
             <Input
@@ -358,7 +358,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Router Type
             </label>
             <Select
@@ -379,7 +379,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               SSH Port
             </label>
             <Input
@@ -395,7 +395,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Username *
             </label>
             <Input
@@ -409,7 +409,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Password
             </label>
             <Input
@@ -423,7 +423,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Use TLS/SSL
             </label>
             <div className="u-flex u-items-center u-gap-2">
@@ -435,14 +435,14 @@ const RouterManagement: React.FC = () => {
                 }
                 className="u-me-2"
               />
-              <span className="u-text-sm">
+              <span className="u-fs-sm">
                 Enable TLS/SSL for secure connections
               </span>
             </div>
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Location
             </label>
             <Input
@@ -455,7 +455,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Description
             </label>
             <textarea
@@ -495,7 +495,7 @@ const RouterManagement: React.FC = () => {
       >
         <div className="u-space-y-4">
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Router Name *
             </label>
             <Input
@@ -509,7 +509,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Host/IP Address *
             </label>
             <Input
@@ -523,7 +523,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Router Type
             </label>
             <Select
@@ -544,7 +544,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               SSH Port
             </label>
             <Input
@@ -560,7 +560,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Username *
             </label>
             <Input
@@ -574,7 +574,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Password (leave blank to keep current)
             </label>
             <Input
@@ -588,7 +588,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Use TLS/SSL
             </label>
             <div className="u-flex u-items-center u-gap-2">
@@ -600,14 +600,14 @@ const RouterManagement: React.FC = () => {
                 }
                 className="u-me-2"
               />
-              <span className="u-text-sm">
+              <span className="u-fs-sm">
                 Enable TLS/SSL for secure connections
               </span>
             </div>
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Location
             </label>
             <Input
@@ -620,7 +620,7 @@ const RouterManagement: React.FC = () => {
           </div>
 
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Description
             </label>
             <textarea
@@ -658,21 +658,17 @@ const RouterManagement: React.FC = () => {
         {selectedRouter && (
           <div className="u-space-y-4">
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
-                Name
-              </label>
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">Name</label>
               <p className="u-text-lg u-fw-semibold">{selectedRouter.name}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
-                Host
-              </label>
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">Host</label>
               <p className="u-text-lg">{selectedRouter.host}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Status
               </label>
               <Badge
@@ -682,7 +678,7 @@ const RouterManagement: React.FC = () => {
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Username
               </label>
               <p>{selectedRouter.username}</p>
@@ -690,7 +686,7 @@ const RouterManagement: React.FC = () => {
 
             {selectedRouter.location && (
               <div>
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   Location
                 </label>
                 <p>{selectedRouter.location}</p>
@@ -699,7 +695,7 @@ const RouterManagement: React.FC = () => {
 
             {selectedRouter.description && (
               <div>
-                <label className="u-block u-text-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                   Description
                 </label>
                 <p>{selectedRouter.description}</p>
@@ -707,14 +703,14 @@ const RouterManagement: React.FC = () => {
             )}
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Created
               </label>
               <p>{new Date(selectedRouter.created_at).toLocaleDateString()}</p>
             </div>
 
             <div>
-              <label className="u-block u-text-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
                 Last Updated
               </label>
               <p>{new Date(selectedRouter.updated_at).toLocaleDateString()}</p>

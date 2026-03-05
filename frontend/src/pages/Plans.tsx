@@ -113,7 +113,7 @@ const Plans: React.FC = () => {
     retry: 1,
     select: (data) => {
       // Ensure we're working with the correct data structure
-      if (data && typeof data === 'object' && !Array.isArray(data)) {
+      if (data && typeof data === "object" && !Array.isArray(data)) {
         return data as PlanStats;
       }
       return {
@@ -383,82 +383,92 @@ const Plans: React.FC = () => {
       </div>
 
       {/* Statistics Cards */}
-      {planStats && typeof planStats === 'object' && !Array.isArray(planStats) && (
-        <Grid className="u-mb-6">
-          <GridCol xs={6} lg={3}>
-            <Card className="u-p-4">
-              <div className="u-flex u-items-center">
-                <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Package" size={24} className="u-text-primary" />
+      {planStats &&
+        typeof planStats === "object" &&
+        !Array.isArray(planStats) && (
+          <Grid className="u-mb-6">
+            <GridCol xs={6} lg={3}>
+              <Card className="u-p-4">
+                <div className="u-flex u-items-center">
+                  <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
+                    <Icon name="Package" size={24} className="u-text-primary" />
+                  </div>
+                  <div>
+                    <h3 className="u-text-lg u-mb-1">
+                      {typeof planStats.total_plans === "number"
+                        ? planStats.total_plans
+                        : 0}
+                    </h3>
+                    <p className="u-text-secondary-emphasis u-mb-0">
+                      Total Plans
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="u-text-lg u-mb-1">
-                    {typeof planStats.total_plans === 'number' ? planStats.total_plans : 0}
-                  </h3>
-                  <p className="u-text-secondary-emphasis u-mb-0">
-                    Total Plans
-                  </p>
+              </Card>
+            </GridCol>
+            <GridCol xs={6} lg={3}>
+              <Card className="u-p-4">
+                <div className="u-flex u-items-center">
+                  <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
+                    <Icon
+                      name="CheckCircle"
+                      size={24}
+                      className="u-text-success"
+                    />
+                  </div>
+                  <div>
+                    <h3 className="u-text-lg u-mb-1">
+                      {typeof planStats.active_plans === "number"
+                        ? planStats.active_plans
+                        : 0}
+                    </h3>
+                    <p className="u-text-secondary-emphasis u-mb-0">
+                      Active Plans
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </GridCol>
-          <GridCol xs={6} lg={3}>
-            <Card className="u-p-4">
-              <div className="u-flex u-items-center">
-                <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
-                  <Icon
-                    name="CheckCircle"
-                    size={24}
-                    className="u-text-success"
-                  />
+              </Card>
+            </GridCol>
+            <GridCol xs={6} lg={3}>
+              <Card className="u-p-4">
+                <div className="u-flex u-items-center">
+                  <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
+                    <Icon name="Star" size={24} className="u-text-warning" />
+                  </div>
+                  <div>
+                    <h3 className="u-text-lg u-mb-1">
+                      {typeof planStats.featured_plans === "number"
+                        ? planStats.featured_plans
+                        : 0}
+                    </h3>
+                    <p className="u-text-secondary-emphasis u-mb-0">
+                      Featured Plans
+                    </p>
+                  </div>
                 </div>
-                <div>
-                  <h3 className="u-text-lg u-mb-1">
-                    {typeof planStats.active_plans === 'number' ? planStats.active_plans : 0}
-                  </h3>
-                  <p className="u-text-secondary-emphasis u-mb-0">
-                    Active Plans
-                  </p>
+              </Card>
+            </GridCol>
+            <GridCol xs={6} lg={3}>
+              <Card className="u-p-4">
+                <div className="u-flex u-items-center">
+                  <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
+                    <Icon name="TrendUp" size={24} className="u-text-info" />
+                  </div>
+                  <div>
+                    <h3 className="u-text-lg u-mb-1">
+                      {typeof planStats.popular_plans === "number"
+                        ? planStats.popular_plans
+                        : 0}
+                    </h3>
+                    <p className="u-text-secondary-emphasis u-mb-0">
+                      Popular Plans
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Card>
-          </GridCol>
-          <GridCol xs={6} lg={3}>
-            <Card className="u-p-4">
-              <div className="u-flex u-items-center">
-                <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Star" size={24} className="u-text-warning" />
-                </div>
-                <div>
-                  <h3 className="u-text-lg u-mb-1">
-                    {typeof planStats.featured_plans === 'number' ? planStats.featured_plans : 0}
-                  </h3>
-                  <p className="u-text-secondary-emphasis u-mb-0">
-                    Featured Plans
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </GridCol>
-          <GridCol xs={6} lg={3}>
-            <Card className="u-p-4">
-              <div className="u-flex u-items-center">
-                <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="TrendUp" size={24} className="u-text-info" />
-                </div>
-                <div>
-                  <h3 className="u-text-lg u-mb-1">
-                    {typeof planStats.popular_plans === 'number' ? planStats.popular_plans : 0}
-                  </h3>
-                  <p className="u-text-secondary-emphasis u-mb-0">
-                    Popular Plans
-                  </p>
-                </div>
-              </div>
-            </Card>
-          </GridCol>
-        </Grid>
-      )}
+              </Card>
+            </GridCol>
+          </Grid>
+        )}
 
       {/* Filters */}
       <Card className="u-p-4 u-mb-4">
@@ -514,7 +524,7 @@ const Plans: React.FC = () => {
                     <div>
                       <div className="u-fw-medium">{plan.name}</div>
                       {plan.description && (
-                        <div className="u-text-secondary-emphasis u-text-sm">
+                        <div className="u-text-secondary-emphasis u-fs-sm">
                           {plan.description.length > 50
                             ? `${plan.description.substring(0, 50)}...`
                             : plan.description}
@@ -535,7 +545,7 @@ const Plans: React.FC = () => {
                       <div className="u-fw-medium">
                         {formatPrice(plan.price, plan.billing_cycle)}
                       </div>
-                      <div className="u-text-secondary-emphasis u-text-sm">
+                      <div className="u-text-secondary-emphasis u-fs-sm">
                         {getBillingCycleLabel(plan.billing_cycle)}
                       </div>
                     </div>
@@ -643,7 +653,7 @@ const Plans: React.FC = () => {
                 className={formErrors.name ? "u-border-danger" : ""}
               />
               {formErrors.name && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.name}
                 </div>
               )}
@@ -686,7 +696,7 @@ const Plans: React.FC = () => {
                 className={formErrors.price ? "u-border-danger" : ""}
               />
               {formErrors.price && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.price}
                 </div>
               )}
@@ -706,7 +716,7 @@ const Plans: React.FC = () => {
                 className={formErrors.download_speed ? "u-border-danger" : ""}
               />
               {formErrors.download_speed && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.download_speed}
                 </div>
               )}
@@ -726,7 +736,7 @@ const Plans: React.FC = () => {
                 className={formErrors.upload_speed ? "u-border-danger" : ""}
               />
               {formErrors.upload_speed && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.upload_speed}
                 </div>
               )}
@@ -759,7 +769,7 @@ const Plans: React.FC = () => {
                 className={formErrors.setup_fee ? "u-border-danger" : ""}
               />
               {formErrors.setup_fee && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.setup_fee}
                 </div>
               )}
@@ -780,7 +790,7 @@ const Plans: React.FC = () => {
                 className={formErrors.data_quota ? "u-border-danger" : ""}
               />
               {formErrors.data_quota && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.data_quota}
                 </div>
               )}
@@ -892,7 +902,7 @@ const Plans: React.FC = () => {
                 className={formErrors.name ? "u-border-danger" : ""}
               />
               {formErrors.name && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.name}
                 </div>
               )}
@@ -935,7 +945,7 @@ const Plans: React.FC = () => {
                 className={formErrors.price ? "u-border-danger" : ""}
               />
               {formErrors.price && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.price}
                 </div>
               )}
@@ -955,7 +965,7 @@ const Plans: React.FC = () => {
                 className={formErrors.download_speed ? "u-border-danger" : ""}
               />
               {formErrors.download_speed && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.download_speed}
                 </div>
               )}
@@ -975,7 +985,7 @@ const Plans: React.FC = () => {
                 className={formErrors.upload_speed ? "u-border-danger" : ""}
               />
               {formErrors.upload_speed && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.upload_speed}
                 </div>
               )}
@@ -1008,7 +1018,7 @@ const Plans: React.FC = () => {
                 className={formErrors.setup_fee ? "u-border-danger" : ""}
               />
               {formErrors.setup_fee && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.setup_fee}
                 </div>
               )}
@@ -1029,7 +1039,7 @@ const Plans: React.FC = () => {
                 className={formErrors.data_quota ? "u-border-danger" : ""}
               />
               {formErrors.data_quota && (
-                <div className="u-text-danger u-text-sm u-mt-1">
+                <div className="u-text-danger u-fs-sm u-mt-1">
                   {formErrors.data_quota}
                 </div>
               )}

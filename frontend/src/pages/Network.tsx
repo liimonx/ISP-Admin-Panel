@@ -260,10 +260,10 @@ const Network: React.FC = () => {
           <Card>
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
+                <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Total Routers
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-fs-xl u-fw-bold">
                   {routersData?.count || 0}
                 </div>
               </div>
@@ -277,10 +277,10 @@ const Network: React.FC = () => {
           <Card>
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
+                <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Online Routers
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-fs-xl u-fw-bold">
                   {routersData?.results?.filter((r) => r.status === "online")
                     .length || 0}
                 </div>
@@ -295,10 +295,10 @@ const Network: React.FC = () => {
           <Card>
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
+                <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Offline Routers
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-fs-xl u-fw-bold">
                   {routersData?.results?.filter((r) => r.status === "offline")
                     .length || 0}
                 </div>
@@ -313,10 +313,10 @@ const Network: React.FC = () => {
           <Card>
             <div className="u-flex u-items-center u-justify-between">
               <div>
-                <div className="u-text-sm u-text-secondary-emphasis u-mb-1">
+                <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Maintenance
                 </div>
-                <div className="u-text-xl u-fw-bold">
+                <div className="u-fs-xl u-fw-bold">
                   {routersData?.results?.filter(
                     (r) => r.status === "maintenance",
                   ).length || 0}
@@ -389,7 +389,7 @@ const Network: React.FC = () => {
                     <div>
                       <div className="u-fw-medium">{router.name}</div>
                       {router.description && (
-                        <div className="u-text-sm u-text-secondary-emphasis">
+                        <div className="u-fs-sm u-text-secondary-emphasis">
                           {router.description}
                         </div>
                       )}
@@ -398,8 +398,8 @@ const Network: React.FC = () => {
                   type: getRouterTypeBadge(router.router_type),
                   host: (
                     <div>
-                      <div className="u-text-sm">{router.host}</div>
-                      <div className="u-text-xs u-text-secondary-emphasis">
+                      <div className="u-fs-sm">{router.host}</div>
+                      <div className="u-fs-xs u-text-secondary-emphasis">
                         API: {router.api_port} | SSH: {router.ssh_port}
                       </div>
                     </div>
@@ -412,13 +412,13 @@ const Network: React.FC = () => {
                         size="sm"
                         className="u-mb-1"
                       />
-                      <div className="u-text-xs u-text-secondary-emphasis">
+                      <div className="u-fs-xs u-text-secondary-emphasis">
                         {Math.floor(Math.random() * 30)} days
                       </div>
                     </div>
                   ),
                   location: (
-                    <div className="u-text-sm">
+                    <div className="u-fs-sm">
                       {router.location || "Not specified"}
                     </div>
                   ),

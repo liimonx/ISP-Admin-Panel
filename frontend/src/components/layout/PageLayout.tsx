@@ -31,7 +31,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
     <div className={`u-space-y-8 ${className}`}>
       {/* Breadcrumbs */}
       {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="u-flex u-items-center u-gap-2 u-text-sm u-text-secondary-emphasis">
+        <nav className="u-flex u-items-center u-gap-2 u-fs-sm u-text-secondary-emphasis">
           {breadcrumbs.map((crumb, index) => (
             <React.Fragment key={index}>
               {index > 0 && (
@@ -80,7 +80,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
 
         {/* Quick Stats */}
         {stats && stats.length > 0 && (
-          <div className="u-flex u-gap-6 u-text-sm u-flex-wrap">
+          <div className="u-flex u-gap-6 u-fs-sm u-flex-wrap">
             {stats.map((stat, index) => (
               <div key={index} className="u-flex u-items-center u-gap-2">
                 <div

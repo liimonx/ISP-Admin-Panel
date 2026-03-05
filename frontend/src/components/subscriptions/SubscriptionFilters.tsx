@@ -46,7 +46,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
         <div className="u-grid u-grid-cols-1 u-gap-4 md:u-grid-cols-2 lg:u-grid-cols-4">
           {/* Search */}
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">
               Search Subscriptions
             </label>
             <Input
@@ -59,9 +59,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Status Filter */}
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
-              Status
-            </label>
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">Status</label>
             <Select
               value={statusFilter}
               onChange={(e) => onStatusChange(e.target.value)}
@@ -78,7 +76,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Plan Filter */}
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">Plan</label>
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">Plan</label>
             <Select
               value={planFilter}
               onChange={(e) => onPlanChange(e.target.value)}
@@ -95,9 +93,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
 
           {/* Router Filter */}
           <div>
-            <label className="u-block u-text-sm u-fw-medium u-mb-1">
-              Router
-            </label>
+            <label className="u-block u-fs-sm u-fw-medium u-mb-1">Router</label>
             <Select
               value={routerFilter}
               onChange={(e) => onRouterChange(e.target.value)}

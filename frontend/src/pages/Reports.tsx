@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, Button, Icon, Callout, Select } from "@shohojdhara/atomix";
-import { apiService } from "../services/apiService";
+import { reportService } from "../services/apiService";
+import {
+  Card,
+  Button,
+  Icon,
+  Callout,
+  Select,
+  Grid,
+  GridCol,
+} from "@shohojdhara/atomix";
 import { UsageWidget, UsageChart, TopUsersWidget } from "../components/reports";
 
 const Reports: React.FC = () => {
@@ -22,7 +30,7 @@ const Reports: React.FC = () => {
   } = useQuery({
     queryKey: ["usage-reports", timeRange, dateRange],
     queryFn: () =>
-      apiService.getUsageReports({
+      reportService.getUsageReports({
         time_range: timeRange,
         start_date: dateRange.start,
         end_date: dateRange.end,
@@ -34,7 +42,7 @@ const Reports: React.FC = () => {
   const { data: topUsersData, isLoading: topUsersLoading } = useQuery({
     queryKey: ["top-users", timeRange, dateRange],
     queryFn: () =>
-      apiService.getTopUsers({
+      reportService.getTopUsers({
         time_range: timeRange,
         start_date: dateRange.start,
         end_date: dateRange.end,
@@ -47,7 +55,7 @@ const Reports: React.FC = () => {
   const { data: trendsData, isLoading: trendsLoading } = useQuery({
     queryKey: ["usage-trends", timeRange, dateRange],
     queryFn: () =>
-      apiService.getUsageTrends({
+      reportService.getUsageTrends({
         time_range: timeRange,
         start_date: dateRange.start,
         end_date: dateRange.end,
@@ -56,15 +64,53 @@ const Reports: React.FC = () => {
   });
 
   // Fetch revenue reports
-  const { data: revenueData, isLoading: revenueLoading } = useQuery({
+  const {
+    data: revenueData,
+    isLoading: revenueLoading,
+    error: revenueError,
+  } = useQuery({
     queryKey: ["revenue-reports", timeRange, dateRange],
     queryFn: () =>
-      apiService.getRevenueReports({
+      reportService.getRevenueReports({
         time_range: timeRange,
         start_date: dateRange.start,
         end_date: dateRange.end,
       }),
     staleTime: 60000,
+  });
+
+  // Fetch customer reports
+  const {
+    data: customerReportsData,
+    isLoading: customerReportsLoading,
+    error: customerReportsError,
+  } = useQuery({
+    queryKey: ["customer-reports", timeRange, dateRange],
+    queryFn: () =>
+      reportService.getCustomerReports({
+        time_range: timeRange,
+        start_date: dateRange.start,
+        end_date: dateRange.end,
+      }),
+    staleTime: 60000,
+    enabled: reportType === "customers",
+  });
+
+  // Fetch network reports
+  const {
+    data: networkReportsData,
+    isLoading: networkReportsLoading,
+    error: networkReportsError,
+  } = useQuery({
+    queryKey: ["network-reports", timeRange, dateRange],
+    queryFn: () =>
+      reportService.getNetworkReports({
+        time_range: timeRange,
+        start_date: dateRange.start,
+        end_date: dateRange.end,
+      }),
+    staleTime: 60000,
+    enabled: reportType === "network",
   });
 
   const formatCurrency = (amount: number) => {
@@ -74,7 +120,12 @@ const Reports: React.FC = () => {
     }).format(amount);
   };
 
-  if (usageError) {
+  const hasError =
+    usageError || revenueError || customerReportsError || networkReportsError;
+  const error =
+    usageError || revenueError || customerReportsError || networkReportsError;
+
+  if (hasError) {
     return (
       <div className="u-p-6">
         <Callout variant="error" className="u-mb-4">
@@ -83,7 +134,8 @@ const Reports: React.FC = () => {
             <div>
               <strong>Error loading reports</strong>
               <p className="u-mb-0 u-mt-1">
-                Please try refreshing the page or contact support.
+                {(error as any)?.message ||
+                  "Please try refreshing the page or contact support."}
               </p>
             </div>
           </div>
@@ -340,45 +392,196 @@ const Reports: React.FC = () => {
 
         {/* Customer Reports */}
         {reportType === "customers" && (
-          <Card className="u-border-0 u-shadow-sm">
-            <div className="u-p-6">
-              <div className="u-text-center u-py-8">
-                <Icon
-                  name="Users"
-                  size={48}
-                  className="u-text-secondary-emphasis u-mb-4"
-                />
-                <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">
-                  Customer Reports
-                </h3>
-                <p className="u-text-secondary-emphasis-emphasis">
-                  Detailed customer analytics and reports will be available soon
-                </p>
-              </div>
+          <div>
+            <div
+              className="u-grid u-gap-4 u-mb-6"
+              style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              }}
+            >
+              <UsageWidget
+                title="Total Customers"
+                icon="Users"
+                value={customerReportsData?.total_customers || 0}
+                subtitle="Total registered"
+                color="primary"
+                isLoading={customerReportsLoading}
+              />
+              <UsageWidget
+                title="Active Now"
+                icon="UserCheck"
+                value={customerReportsData?.active_customers || 0}
+                subtitle="Active status"
+                color="success"
+                isLoading={customerReportsLoading}
+              />
+              <UsageWidget
+                title="Churn Rate"
+                icon="UserMinus"
+                value={`${customerReportsData?.churn_rate || 0}%`}
+                subtitle="This period"
+                color="error"
+                isLoading={customerReportsLoading}
+              />
+              <UsageWidget
+                title="Growth Rate"
+                icon="TrendUp"
+                value={`${customerReportsData?.growth_rate || 0}%`}
+                subtitle="New vs Total"
+                color="info"
+                isLoading={customerReportsLoading}
+              />
             </div>
-          </Card>
+
+            <Grid>
+              <GridCol sm={8}>
+                <UsageChart
+                  title="Customer Signup Trends"
+                  data={customerReportsData?.trends || []}
+                  isLoading={customerReportsLoading}
+                />
+              </GridCol>
+              <GridCol sm={4}>
+                <Card className="u-h-100 u-border-0 u-shadow-sm">
+                  <div className="u-p-4">
+                    <h3 className="u-fs-5 u-fw-semibold u-mb-3">Top Cities</h3>
+                    <div className="u-flex u-flex-column u-gap-2">
+                      {customerReportsData?.top_cities?.map(
+                        (city: any, idx: number) => (
+                          <div
+                            key={idx}
+                            className="u-flex u-justify-between u-items-center u-p-2 u-bg-surface-subtle u-rounded"
+                          >
+                            <span className="u-fs-sm">
+                              {city.city || "Unknown"}
+                            </span>
+                            <span className="u-fs-sm u-fw-bold">
+                              {city.count}
+                            </span>
+                          </div>
+                        ),
+                      )}
+                      {customerReportsLoading && (
+                        <p className="u-text-center u-py-4">Loading...</p>
+                      )}
+                    </div>
+                  </div>
+                </Card>
+              </GridCol>
+            </Grid>
+          </div>
         )}
 
         {/* Network Reports */}
         {reportType === "network" && (
-          <Card className="u-border-0 u-shadow-sm">
-            <div className="u-p-6">
-              <div className="u-text-center u-py-8">
-                <Icon
-                  name="Globe"
-                  size={48}
-                  className="u-text-secondary-emphasis u-mb-4"
-                />
-                <h3 className="u-fs-3 u-fw-semibold u-mb-2 u-text-primary-emphasis">
-                  Network Reports
-                </h3>
-                <p className="u-text-secondary-emphasis-emphasis">
-                  Network performance and infrastructure reports will be
-                  available soon
-                </p>
-              </div>
+          <div>
+            <div
+              className="u-grid u-gap-4 u-mb-6"
+              style={{
+                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
+              }}
+            >
+              <UsageWidget
+                title="Total Routers"
+                icon="Globe"
+                value={networkReportsData?.total_routers || 0}
+                subtitle="Infrastructure"
+                color="primary"
+                isLoading={networkReportsLoading}
+              />
+              <UsageWidget
+                title="Online"
+                icon="CheckCircle"
+                value={networkReportsData?.online_routers || 0}
+                subtitle="Healthy nodes"
+                color="success"
+                isLoading={networkReportsLoading}
+              />
+              <UsageWidget
+                title="Bandwidth Util"
+                icon="Gauge"
+                value={`${networkReportsData?.bandwidth_utilization || 0}%`}
+                subtitle="Total capacity"
+                color={
+                  networkReportsData?.bandwidth_utilization > 80
+                    ? "error"
+                    : "info"
+                }
+                isLoading={networkReportsLoading}
+              />
+              <UsageWidget
+                title="Data Transferred"
+                icon="ArrowsLeftRight"
+                value={`${networkReportsData?.total_data_transferred_gb || 0} GB`}
+                subtitle="In + Out"
+                color="warning"
+                isLoading={networkReportsLoading}
+              />
             </div>
-          </Card>
+
+            <div
+              className="u-grid u-gap-6"
+              style={{ gridTemplateColumns: "2fr 1fr" }}
+            >
+              <UsageChart
+                title="Bandwidth Trends (Mbps)"
+                data={
+                  networkReportsData?.trends?.map((t: any) => ({
+                    date: t.date,
+                    usage: t.avg_download_mbps, // Using download as primary usage metric
+                  })) || []
+                }
+                isLoading={networkReportsLoading}
+              />
+              <Card className="u-h-100 u-border-0 u-shadow-sm">
+                <div className="u-p-4">
+                  <h3 className="u-fs-5 u-fw-semibold u-mb-3">
+                    Resource Usage
+                  </h3>
+                  <div className="u-flex u-flex-column u-gap-4">
+                    <div>
+                      <div className="u-flex u-justify-between u-mb-1">
+                        <span className="u-fs-xs u-fw-medium">CPU Usage</span>
+                        <span className="u-fs-xs">
+                          {networkReportsData?.resource_usage
+                            ?.avg_cpu_percent || 0}
+                          %
+                        </span>
+                      </div>
+                      <div className="u-w-100 u-h-2 u-bg-gray-200 u-rounded-full overflow-hidden">
+                        <div
+                          className="u-h-100 u-bg-primary"
+                          style={{
+                            width: `${networkReportsData?.resource_usage?.avg_cpu_percent || 0}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                    <div>
+                      <div className="u-flex u-justify-between u-mb-1">
+                        <span className="u-fs-xs u-fw-medium">
+                          Memory Usage
+                        </span>
+                        <span className="u-fs-xs">
+                          {networkReportsData?.resource_usage
+                            ?.avg_memory_percent || 0}
+                          %
+                        </span>
+                      </div>
+                      <div className="u-w-100 u-h-2 u-bg-gray-200 u-rounded-full overflow-hidden">
+                        <div
+                          className="u-h-100 u-bg-success"
+                          style={{
+                            width: `${networkReportsData?.resource_usage?.avg_memory_percent || 0}%`,
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
         )}
       </div>
     </div>

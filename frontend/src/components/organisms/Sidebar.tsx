@@ -311,9 +311,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <div
-      className={`u-min-vh-100 u-bg-surface u-border-right u-flex u-flex-column u-transition-all u-shadow-sm ${
-        collapsed ? "u-w-16" : "u-w-64"
-      } ${className}`}
+      className={`u-min-vh-100 ${collapsed ? "u-w-16" : "u-w-64"} ${className}`}
       data-testid={testId}
     >
       {/* Navigation Menu */}
@@ -343,11 +341,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <div className="u-p-4 u-border-top u-mt-auto">
         {!collapsed ? (
           <div className="u-flex u-flex-column u-gap-2">
-            <div className="u-flex u-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
+            <div className="u-flex u-items-center u-gap-2 u-fs-xs u-text-secondary-emphasis">
               <Icon name="Info" size={14} />
               <span>BCN ISP v1.0.0</span>
             </div>
-            <div className="u-flex u-items-center u-gap-2 u-text-xs u-text-secondary-emphasis">
+            <div className="u-flex u-items-center u-gap-2 u-fs-xs u-text-secondary-emphasis">
               <Icon name="Globe" size={12} />
               <span>System Online</span>
             </div>

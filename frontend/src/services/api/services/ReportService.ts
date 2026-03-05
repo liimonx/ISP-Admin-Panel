@@ -29,4 +29,18 @@ export class ReportService extends BaseApiService {
   async getRevenueReports(params?: Record<string, any>): Promise<any> {
     return this.get<any>(ENDPOINTS.REPORTS.REVENUE + '/', params);
   }
+
+  /**
+   * Get customer reports
+   */
+  async getCustomerReports(params?: Record<string, any>): Promise<any> {
+    return this.get<any>(ENDPOINTS.REPORTS.CUSTOMERS + '/', params);
+  }
+
+  /**
+   * Get network reports with router and bandwidth metrics
+   */
+  async getNetworkReports(params?: Record<string, any>): Promise<any> {
+    return this.get<any>(ENDPOINTS.REPORTS.NETWORK + '/', params);
+  }
 }

@@ -300,7 +300,7 @@ const MainRouterDashboard: React.FC = () => {
               onChange={(checked) => setAutoRefresh(checked)}
               className="u-me-2"
             />
-            <label className="u-text-sm">Auto Refresh</label>
+            <label className="u-fs-sm">Auto Refresh</label>
           </div>
           <Select
             value={selectedTimeRange}
@@ -413,7 +413,7 @@ const MainRouterDashboard: React.FC = () => {
                   <p className="u-text-secondary-emphasis u-mb-0">
                     Active Connections
                   </p>
-                  <div className="u-text-sm u-text-secondary-emphasis">
+                  <div className="u-fs-sm u-text-secondary-emphasis">
                     {dhcpLeases?.count || 0} DHCP leases
                   </div>
                 </div>
@@ -500,31 +500,43 @@ const MainRouterDashboard: React.FC = () => {
             </div>
           ) : (
             <DataTable
-              data={
-                interfaces?.map((iface: any) => ({
-                  id: iface.id,
-                  interface: (
+              data={interfaces || []}
+              columns={[
+                {
+                  key: "interface",
+                  title: "Interface",
+                  render: (_, iface: any) => (
                     <div>
                       <div className="u-fw-medium">{iface.name}</div>
-                      <div className="u-text-secondary-emphasis u-text-sm">
+                      <div className="u-text-secondary-emphasis u-fs-sm">
                         {iface.type}
                       </div>
                     </div>
                   ),
-                  status: getInterfaceStatusBadge(iface.status),
-                  address: (
+                },
+                {
+                  key: "status",
+                  title: "Status",
+                  render: (status: string) => getInterfaceStatusBadge(status),
+                },
+                {
+                  key: "address",
+                  title: "Address",
+                  render: (_, iface: any) => (
                     <div>
-                      <div className="u-text-sm">
-                        {iface.ip_address || "N/A"}
-                      </div>
-                      <div className="u-text-secondary-emphasis u-text-sm">
+                      <div className="u-fs-sm">{iface.ip_address || "N/A"}</div>
+                      <div className="u-text-secondary-emphasis u-fs-sm">
                         {iface.mac_address || "N/A"}
                       </div>
                     </div>
                   ),
-                  traffic: (
+                },
+                {
+                  key: "traffic",
+                  title: "Traffic",
+                  render: (_, iface: any) => (
                     <div>
-                      <div className="u-text-sm">
+                      <div className="u-fs-sm">
                         <Icon
                           name="ArrowDown"
                           size={12}
@@ -532,7 +544,7 @@ const MainRouterDashboard: React.FC = () => {
                         />
                         RX: {formatBytes(iface.rx_bytes || 0)}
                       </div>
-                      <div className="u-text-sm">
+                      <div className="u-fs-sm">
                         <Icon
                           name="ArrowUp"
                           size={12}
@@ -542,15 +554,12 @@ const MainRouterDashboard: React.FC = () => {
                       </div>
                     </div>
                   ),
-                  mtu: iface.mtu || "N/A",
-                })) || []
-              }
-              columns={[
-                { key: "interface", title: "Interface" },
-                { key: "status", title: "Status" },
-                { key: "address", title: "Address" },
-                { key: "traffic", title: "Traffic" },
-                { key: "mtu", title: "MTU" },
+                },
+                {
+                  key: "mtu",
+                  title: "MTU",
+                  render: (mtu: any) => mtu || "N/A",
+                },
               ]}
             />
           )}
@@ -572,48 +581,63 @@ const MainRouterDashboard: React.FC = () => {
           ) : (
             <>
               <DataTable
-                data={
-                  connectionsData?.results?.map((conn: any, index: number) => ({
-                    id: index,
-                    client: (
+                data={connectionsData?.results || []}
+                columns={[
+                  {
+                    key: "client",
+                    title: "Client",
+                    render: (_, conn: any) => (
                       <div>
                         <div className="u-fw-medium">
                           {conn.client_name || "Unknown"}
                         </div>
-                        <div className="u-text-secondary-emphasis u-text-sm">
+                        <div className="u-text-secondary-emphasis u-fs-sm">
                           {conn.mac_address || "N/A"}
                         </div>
                       </div>
                     ),
-                    address: conn.ip_address || "N/A",
-                    protocol: (
+                  },
+                  {
+                    key: "ip_address",
+                    title: "IP Address",
+                    render: (val: any) => val || "N/A",
+                  },
+                  {
+                    key: "protocol",
+                    title: "Protocol",
+                    render: (protocol: string) => (
                       <Badge
                         variant="secondary"
-                        label={conn.protocol || "TCP"}
+                        label={protocol || "TCP"}
                         size="sm"
                       />
                     ),
-                    port: `${conn.local_port || "N/A"} → ${conn.remote_port || "N/A"}`,
-                    duration: conn.duration || "N/A",
-                    traffic: (
+                  },
+                  {
+                    key: "ports",
+                    title: "Ports",
+                    render: (_, conn: any) =>
+                      `${conn.local_port || "N/A"} → ${conn.remote_port || "N/A"}`,
+                  },
+                  {
+                    key: "duration",
+                    title: "Duration",
+                    render: (val: any) => val || "N/A",
+                  },
+                  {
+                    key: "traffic",
+                    title: "Traffic",
+                    render: (_, conn: any) => (
                       <div>
-                        <div className="u-text-sm">
+                        <div className="u-fs-sm">
                           ↓ {formatBytes(conn.bytes_received || 0)}
                         </div>
-                        <div className="u-text-sm">
+                        <div className="u-fs-sm">
                           ↑ {formatBytes(conn.bytes_sent || 0)}
                         </div>
                       </div>
                     ),
-                  })) || []
-                }
-                columns={[
-                  { key: "client", title: "Client" },
-                  { key: "address", title: "IP Address" },
-                  { key: "protocol", title: "Protocol" },
-                  { key: "port", title: "Ports" },
-                  { key: "duration", title: "Duration" },
-                  { key: "traffic", title: "Traffic" },
+                  },
                 ]}
               />
 
@@ -648,41 +672,51 @@ const MainRouterDashboard: React.FC = () => {
             </div>
           ) : (
             <DataTable
-              data={
-                dhcpLeases?.results?.map((lease: any) => ({
-                  id: lease.id,
-                  client: (
+              data={dhcpLeases?.results || []}
+              columns={[
+                {
+                  key: "client",
+                  title: "Client",
+                  render: (_, lease: any) => (
                     <div>
                       <div className="u-fw-medium">
                         {lease.hostname || "Unknown"}
                       </div>
-                      <div className="u-text-secondary-emphasis u-text-sm">
+                      <div className="u-text-secondary-emphasis u-fs-sm">
                         {lease.mac_address}
                       </div>
                     </div>
                   ),
-                  address: lease.ip_address,
-                  status: (
+                },
+                {
+                  key: "ip_address",
+                  title: "IP Address",
+                  render: (val: any) => val || "N/A",
+                },
+                {
+                  key: "status",
+                  title: "Status",
+                  render: (status: string) => (
                     <Badge
-                      variant={
-                        lease.status === "active" ? "success" : "secondary"
-                      }
-                      label={lease.status === "active" ? "Active" : "Expired"}
+                      variant={status === "active" ? "success" : "secondary"}
+                      label={status === "active" ? "Active" : "Expired"}
                       size="sm"
                     />
                   ),
-                  lease_time: lease.lease_time || "N/A",
-                  expires: lease.expires_at
-                    ? new Date(lease.expires_at).toLocaleString()
-                    : "N/A",
-                })) || []
-              }
-              columns={[
-                { key: "client", title: "Client" },
-                { key: "address", title: "IP Address" },
-                { key: "status", title: "Status" },
-                { key: "lease_time", title: "Lease Time" },
-                { key: "expires", title: "Expires" },
+                },
+                {
+                  key: "lease_time",
+                  title: "Lease Time",
+                  render: (val: any) => val || "N/A",
+                },
+                {
+                  key: "expires",
+                  title: "Expires",
+                  render: (_, lease: any) =>
+                    lease.expires_at
+                      ? new Date(lease.expires_at).toLocaleString()
+                      : "N/A",
+                },
               ]}
             />
           )}
@@ -711,10 +745,10 @@ const MainRouterDashboard: React.FC = () => {
                       className="u-p-3 u-bg-gray-subtle u-rounded u-flex u-justify-between"
                     >
                       <div className="u-flex-1">
-                        <div className="u-text-sm u-fw-medium u-mb-1">
+                        <div className="u-fs-sm u-fw-medium u-mb-1">
                           {log.message || sanitizeText(log.log_entry)}
                         </div>
-                        <div className="u-text-secondary-emphasis u-text-sm">
+                        <div className="u-text-secondary-emphasis u-fs-sm">
                           {log.level && (
                             <Badge
                               variant={

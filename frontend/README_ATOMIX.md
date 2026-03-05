@@ -24,11 +24,13 @@ src/components/
 ### Atoms (Basic Building Blocks)
 
 #### Actions
+
 - `Button` - Flexible button with multiple variants
 - `Toggle` - Switch/toggle component
 - `ColorModeToggle` - Light/dark mode switcher
 
 #### Display Elements
+
 - `Badge` - Status/label indicators
 - `Icon` - Icon component with extensive icon set
 - `Avatar` - User profile pictures with fallbacks
@@ -37,6 +39,7 @@ src/components/
 - `Rating` - Star rating component
 
 #### Form Elements
+
 - `Input` - Text input fields
 - `Checkbox` - Checkbox inputs
 - `Radio` - Radio button inputs
@@ -49,17 +52,20 @@ src/components/
 ### Molecules (Simple Combinations)
 
 #### Navigation Elements
+
 - `Breadcrumb` - Navigation breadcrumbs
 - `NavItem` - Individual navigation items
 - `SideMenuItem` - Sidebar menu items
 
 #### Content Display
+
 - `AvatarGroup` - Multiple avatars grouped together
 - `List` - Structured list component
 - `Steps` - Step-by-step progress indicator
 - `FormGroup` - Form field groupings
 
 #### Interactive Elements
+
 - `Dropdown` - Dropdown menus with content
 - `Popover` - Floating content containers
 - `Tooltip` - Hover information displays
@@ -67,6 +73,7 @@ src/components/
 ### Organisms (Complex Components)
 
 #### Layout Components
+
 - `Card` - Content containers with styling
 - `Block` - Generic content blocks
 - `Accordion` - Collapsible content sections
@@ -74,20 +81,24 @@ src/components/
 - `EdgePanel` - Side panels
 
 #### Navigation Organisms
+
 - `Nav` - Main navigation component
 - `Navbar` - Top navigation bars
 - `SideMenu` - Sidebar navigation
 - `SideMenuList` - Sidebar menu containers
 
 #### Form Organisms
+
 - `Form` - Complete form components
 
 #### Data Display
+
 - `DataTable` - Advanced data tables
 - `Pagination` - Page navigation controls
 - `Tab` - Tabbed content interface
 
 #### Charts & Visualization
+
 - `Chart` - Base chart component
 - `AreaChart` - Area/line charts
 - `BarChart` - Bar and column charts
@@ -109,12 +120,14 @@ src/components/
 - `MultiAxisChart` - Multiple axis support
 
 #### Communication & Feedback
+
 - `Callout` - Highlighted information blocks
 - `Messages` - Message/chat components
 - `Todo` - Task list components
 - `Countdown` - Countdown timers
 
 #### Media & Rich Content
+
 - `PhotoViewer` - Image gallery viewer
 - `VideoPlayer` - Video playback component
 - `ProductReview` - Product review display
@@ -123,6 +136,7 @@ src/components/
 ### Templates (Layout Structures)
 
 #### Grid System
+
 - `Grid` - CSS Grid layout system
 - `GridCol` - Grid column component
 - `Container` - Content containers
@@ -131,10 +145,12 @@ src/components/
 - `MasonryGridItem` - Masonry grid items
 
 #### Page Templates
+
 - `Hero` - Hero section component
 - `SectionIntro` - Section introduction component
 
 #### Special Components
+
 - `AtomixLogo` - Atomix branding component
 - `River` - Flow layout component
 
@@ -143,7 +159,9 @@ src/components/
 ### Molecules
 
 #### `SearchBar`
+
 Combines Input, Button, and Icon atoms for search functionality.
+
 ```tsx
 <SearchBar
   placeholder="Search customers, plans, or network devices..."
@@ -154,7 +172,9 @@ Combines Input, Button, and Icon atoms for search functionality.
 ```
 
 #### `StatCard`
+
 Combines Card, Icon, and text elements for displaying statistics.
+
 ```tsx
 <StatCard
   title="Total Customers"
@@ -167,7 +187,9 @@ Combines Card, Icon, and text elements for displaying statistics.
 ```
 
 #### `UserAvatar`
+
 Enhanced Avatar with status indicators and dropdown menu.
+
 ```tsx
 <UserAvatar
   user={user}
@@ -181,7 +203,9 @@ Enhanced Avatar with status indicators and dropdown menu.
 ### Organisms
 
 #### `Header`
+
 Complete navigation header with search, notifications, and user menu.
+
 ```tsx
 <Header
   user={user}
@@ -195,18 +219,17 @@ Complete navigation header with search, notifications, and user menu.
 ```
 
 #### `Sidebar`
+
 Collapsible navigation sidebar with nested menu items.
+
 ```tsx
-<Sidebar
-  collapsed={false}
-  onToggle={handleToggle}
-  user={user}
-/>
+<Sidebar collapsed={false} onToggle={handleToggle} user={user} />
 ```
 
 ## Usage Examples
 
 ### Basic Component Usage
+
 ```tsx
 import {
   Button,
@@ -246,8 +269,9 @@ import {
 ```
 
 ### Advanced Dashboard Implementation
+
 ```tsx
-import React from 'react';
+import React from "react";
 import {
   Grid,
   GridCol,
@@ -259,9 +283,9 @@ import {
   Icon,
   Badge,
   Progress,
-  Avatar
-} from '@shohojdhara/atomix';
-import { StatCard } from '../components/molecules/StatCard';
+  Avatar,
+} from "@shohojdhara/atomix";
+import { StatCard } from "../components/molecules/StatCard";
 
 const Dashboard = () => {
   const stats = [
@@ -270,21 +294,21 @@ const Dashboard = () => {
       value: 1247,
       icon: "Users",
       iconColor: "#7AFFD7",
-      trend: { value: 12, isPositive: true }
+      trend: { value: 12, isPositive: true },
     },
     {
-      title: "Active Subscriptions", 
+      title: "Active Subscriptions",
       value: 1089,
       icon: "Link",
       iconColor: "#1AFFD2",
-      trend: { value: 8, isPositive: true }
-    }
+      trend: { value: 8, isPositive: true },
+    },
   ];
 
   return (
     <div>
       <h1>Dashboard</h1>
-      
+
       {/* Stats Grid */}
       <Grid className="u-mb-6">
         {stats.map((stat, index) => (
@@ -317,17 +341,20 @@ const Dashboard = () => {
 ## Styling System
 
 ### Utility Classes
+
 Atomix provides comprehensive utility classes following a consistent naming convention based on the ITCSS methodology. These classes enable quick styling without writing custom CSS.
 
 #### Naming Convention
+
 ```
 .u-{property}-{value}
 .u-{property}-{breakpoint}-{value}
 ```
 
 Examples:
-- `.u-m-4` - Margin 1rem (4 * 0.25rem)
-- `.u-p-8` - Padding 2rem (8 * 0.25rem)
+
+- `.u-m-4` - Margin 1rem (4 \* 0.25rem)
+- `.u-p-8` - Padding 2rem (8 \* 0.25rem)
 - `.u-text-center` - Center text alignment
 - `.u-flex` - Display flex
 - `.u-justify-center` - Justify content center
@@ -335,6 +362,7 @@ Examples:
 #### Spacing Utilities
 
 ##### Margin Classes
+
 ```css
 /* All sides - Numeric scale (0.25rem increments) */
 .u-m-0      /* 0 */
@@ -366,6 +394,7 @@ Examples:
 ```
 
 ##### Padding Classes
+
 ```css
 /* All sides - Numeric scale (0.25rem increments) */
 .u-p-0      /* 0 */
@@ -392,6 +421,7 @@ Examples:
 ```
 
 ##### Usage Examples
+
 ```html
 <!-- Card with consistent spacing -->
 <div class="c-card u-p-6 u-mb-4">
@@ -404,7 +434,7 @@ Examples:
 <form class="u-my-8">
   <div class="u-mb-4">
     <label class="u-mb-1">Email</label>
-    <input class="c-input" type="email">
+    <input class="c-input" type="email" />
   </div>
   <button class="c-button u-mt-4">Submit</button>
 </form>
@@ -413,6 +443,7 @@ Examples:
 #### Layout Utilities
 
 ##### Display Classes
+
 ```css
 .u-block
 .u-inline
@@ -425,6 +456,7 @@ Examples:
 ```
 
 ##### Flexbox Utilities
+
 ```css
 /* Flex container */
 .u-flex
@@ -473,6 +505,7 @@ Examples:
 ```
 
 ##### Grid Utilities
+
 ```css
 .u-grid
 .u-inline-grid
@@ -515,6 +548,7 @@ Examples:
 ```
 
 ##### Position Utilities
+
 ```css
 .u-pos-static
 .u-pos-relative
@@ -534,6 +568,7 @@ Examples:
 ```
 
 ##### Usage Examples
+
 ```html
 <!-- Flex layout -->
 <div class="u-flex u-justify-between u-items-center u-p-4">
@@ -559,6 +594,7 @@ Examples:
 #### Typography Utilities
 
 ##### Text Alignment
+
 ```css
 .u-text-start    /* text-align: left */
 .u-text-center   /* text-align: center */
@@ -566,6 +602,7 @@ Examples:
 ```
 
 ##### Font Weight
+
 ```css
 .u-font-light      /* 300 */
 .u-font-normal     /* 400 */
@@ -577,12 +614,14 @@ Examples:
 ```
 
 ##### Font Style
+
 ```css
 .u-fst-normal    /* normal */
 .u-fst-italic    /* italic */
 ```
 
 ##### Font Size
+
 ```css
 /* Heading sizes */
 .u-text-1         /* 2.5rem */
@@ -593,14 +632,15 @@ Examples:
 .u-text-6         /* 1rem */
 
 /* Named sizes */
-.u-text-xs        /* 0.75rem */
-.u-text-sm        /* 0.875rem */
+.u-fs-xs        /* 0.75rem */
+.u-fs-sm        /* 0.875rem */
 .u-text-base      /* 1rem */
 .u-text-md        /* 1.125rem */
 .u-text-lg        /* 1.25rem */
 ```
 
 ##### Line Height
+
 ```css
 .u-lh-1        /* 1 */
 .u-lh-sm       /* 1.43 */
@@ -609,6 +649,7 @@ Examples:
 ```
 
 ##### Text Transform
+
 ```css
 .u-text-uppercase
 .u-text-lowercase
@@ -616,6 +657,7 @@ Examples:
 ```
 
 ##### Text Decoration
+
 ```css
 .u-td-none
 .u-td-underline
@@ -623,6 +665,7 @@ Examples:
 ```
 
 ##### White Space
+
 ```css
 .u-text-wrap      /* normal */
 .u-text-nowrap    /* nowrap */
@@ -630,6 +673,7 @@ Examples:
 ```
 
 ##### Usage Examples
+
 ```html
 <!-- Typography hierarchy -->
 <article class="u-p-6">
@@ -641,13 +685,14 @@ Examples:
 <!-- Text utilities -->
 <div class="u-text-center">
   <h2 class="u-text-2 u-font-semibold u-text-uppercase">Centered Title</h2>
-  <p class="u-text-sm u-font-light u-text-secondary">Subtitle text</p>
+  <p class="u-fs-sm u-font-light u-text-secondary">Subtitle text</p>
 </div>
 ```
 
 #### Color Utilities
 
 ##### Text Colors
+
 ```css
 /* Theme colors */
 .u-text-primary    /* #7c3aed */
@@ -668,6 +713,7 @@ Examples:
 ```
 
 ##### Background Colors
+
 ```css
 /* Theme colors */
 .u-bg-primary      /* #7c3aed */
@@ -697,6 +743,7 @@ Examples:
 ```
 
 ##### Border Colors
+
 ```css
 .u-border-primary    /* #7c3aed */
 .u-border-secondary  /* #6b7280 */
@@ -716,9 +763,12 @@ Examples:
 ```
 
 ##### Usage Examples
+
 ```html
 <!-- Status indicators -->
-<div class="u-bg-success-50 u-text-success u-p-md u-border u-border-success-200">
+<div
+  class="u-bg-success-50 u-text-success u-p-md u-border u-border-success-200"
+>
   <p class="u-font-medium">Success message</p>
 </div>
 
@@ -736,6 +786,7 @@ Examples:
 #### Border Utilities
 
 ##### Border Width
+
 ```css
 .u-border      /* default border */
 .u-border-0    /* no border */
@@ -759,6 +810,7 @@ Examples:
 ```
 
 ##### Border Radius
+
 ```css
 .u-rounded-0     /* 0 */
 .u-rounded-sm    /* var(--atomix-border-radius-sm) */
@@ -784,6 +836,7 @@ Examples:
 ```
 
 ### Color System
+
 ```css
 /* Primary Colors */
 #7AFFD7  /* Bright mint green */
@@ -801,31 +854,34 @@ Examples:
 ## Component Props Reference
 
 ### Common Props Pattern
+
 Most Atomix components follow these common patterns:
 
 ```tsx
 interface CommonProps {
-  variant?: 'primary' | 'secondary' | 'success' | 'warning' | 'error';
-  size?: 'sm' | 'md' | 'lg';
+  variant?: "primary" | "secondary" | "success" | "warning" | "error";
+  size?: "sm" | "md" | "lg";
   disabled?: boolean;
   className?: string;
   children?: React.ReactNode;
-  'data-testid'?: string;
+  "data-testid"?: string;
 }
 ```
 
 ### Grid System Props
+
 ```tsx
 interface GridColProps {
-  xs?: number;    // Extra small screens (0-576px)
-  sm?: number;    // Small screens (576-768px) 
-  md?: number;    // Medium screens (768-992px)
-  lg?: number;    // Large screens (992-1200px)
-  xl?: number;    // Extra large screens (1200px+)
+  xs?: number; // Extra small screens (0-576px)
+  sm?: number; // Small screens (576-768px)
+  md?: number; // Medium screens (768-992px)
+  lg?: number; // Large screens (992-1200px)
+  xl?: number; // Extra large screens (1200px+)
 }
 ```
 
 ### Chart Props
+
 ```tsx
 interface ChartDataset {
   label: string;
@@ -835,7 +891,7 @@ interface ChartDataset {
 
 interface ChartProps {
   datasets: ChartDataset[];
-  size?: 'sm' | 'md' | 'lg';
+  size?: "sm" | "md" | "lg";
   showGrid?: boolean;
   showLegend?: boolean;
   showLabels?: boolean;
@@ -845,17 +901,19 @@ interface ChartProps {
 ## Best Practices
 
 ### 1. Component Organization
+
 ```tsx
 // ✅ Good - Import from organized locations
-import { Button, Card, Icon } from '@shohojdhara/atomix';
-import { StatCard } from '../molecules/StatCard';
-import { Header } from '../organisms/Header';
+import { Button, Card, Icon } from "@shohojdhara/atomix";
+import { StatCard } from "../molecules/StatCard";
+import { Header } from "../organisms/Header";
 
 // ❌ Avoid - Direct imports from deep paths
-import Button from '@shohojdhara/atomix/dist/Button/Button';
+import Button from "@shohojdhara/atomix/dist/Button/Button";
 ```
 
 ### 2. Prop Usage
+
 ```tsx
 // ✅ Good - Use semantic variants and sizes
 <Button variant="primary" size="md">
@@ -871,6 +929,7 @@ import Button from '@shohojdhara/atomix/dist/Button/Button';
 ```
 
 ### 3. Grid Layout
+
 ```tsx
 // ✅ Good - Responsive grid with proper breakpoints
 <Grid>
@@ -891,9 +950,10 @@ import Button from '@shohojdhara/atomix/dist/Button/Button';
 ```
 
 ### 4. Accessibility
+
 ```tsx
 // ✅ Good - Proper accessibility attributes
-<Button 
+<Button
   variant="ghost"
   aria-label="Toggle navigation menu"
   onClick={handleToggle}
@@ -908,6 +968,7 @@ import Button from '@shohojdhara/atomix/dist/Button/Button';
 ```
 
 ### 5. Color Consistency
+
 ```tsx
 // ✅ Good - Use design system colors
 <StatCard
@@ -924,30 +985,37 @@ import Button from '@shohojdhara/atomix/dist/Button/Button';
 ## Performance Tips
 
 ### 1. Tree Shaking
+
 Atomix supports tree shaking. Import only what you need:
+
 ```tsx
 // ✅ Good - Tree-shakeable imports
-import { Button, Card } from '@shohojdhara/atomix';
+import { Button, Card } from "@shohojdhara/atomix";
 
 // ❌ Avoid - Importing entire library
-import * as Atomix from '@shohojdhara/atomix';
+import * as Atomix from "@shohojdhara/atomix";
 ```
 
 ### 2. Chart Performance
+
 ```tsx
 // ✅ Good - Memoize chart data
-const chartData = useMemo(() => [
-  {
-    label: "Revenue",
-    data: processedData,
-    color: "#1AFFD2"
-  }
-], [processedData]);
+const chartData = useMemo(
+  () => [
+    {
+      label: "Revenue",
+      data: processedData,
+      color: "#1AFFD2",
+    },
+  ],
+  [processedData],
+);
 
-<AreaChart datasets={chartData} size="lg" />
+<AreaChart datasets={chartData} size="lg" />;
 ```
 
 ### 3. Component Memoization
+
 ```tsx
 // ✅ Good - Memoize expensive components
 const ExpensiveChart = React.memo(({ data }) => (
@@ -960,6 +1028,7 @@ const ExpensiveChart = React.memo(({ data }) => (
 ### From Custom Components to Atomix
 
 1. **Replace Custom Buttons**
+
 ```tsx
 // Before
 <button className="btn btn-primary">Click Me</button>
@@ -969,6 +1038,7 @@ const ExpensiveChart = React.memo(({ data }) => (
 ```
 
 2. **Replace Custom Cards**
+
 ```tsx
 // Before
 <div className="card">
@@ -986,6 +1056,7 @@ const ExpensiveChart = React.memo(({ data }) => (
 ```
 
 3. **Replace Custom Grids**
+
 ```tsx
 // Before
 <div className="row">
@@ -1005,18 +1076,22 @@ const ExpensiveChart = React.memo(({ data }) => (
 ### Common Issues
 
 1. **Component Not Found**
+
 ```bash
 Error: Module '"@shohojdhara/atomix"' has no exported member 'ComponentName'
 ```
+
 Solution: Check the component name in the Atomix documentation and ensure it's properly exported.
 
 2. **Styling Not Applied**
+
 ```tsx
 // Ensure you import the CSS
-import '@shohojdhara/atomix/css';
+import "@shohojdhara/atomix/css";
 ```
 
 3. **Grid Layout Issues**
+
 ```tsx
 // ✅ Correct - Use xs, sm, md, lg, xl
 <GridCol xs={12} md={6} lg={4}>
@@ -1026,16 +1101,19 @@ import '@shohojdhara/atomix/css';
 ```
 
 4. **Chart Data Format**
+
 ```tsx
 // ✅ Correct format
-const datasets = [{
-  label: "Revenue",
-  data: [
-    { label: "Jan", value: 100 },
-    { label: "Feb", value: 150 }
-  ],
-  color: "#7AFFD7"
-}];
+const datasets = [
+  {
+    label: "Revenue",
+    data: [
+      { label: "Jan", value: 100 },
+      { label: "Feb", value: 150 },
+    ],
+    color: "#7AFFD7",
+  },
+];
 ```
 
 ## Resources

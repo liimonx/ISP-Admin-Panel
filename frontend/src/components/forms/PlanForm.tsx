@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Modal,
   Button,
@@ -8,8 +8,8 @@ import {
   Spinner,
   Select,
   Checkbox,
-} from '@shohojdhara/atomix';
-import { Plan } from '@/types';
+} from "@shohojdhara/atomix";
+import { Plan } from "@/types";
 
 interface PlanFormProps {
   isOpen: boolean;
@@ -27,37 +27,37 @@ const PlanForm: React.FC<PlanFormProps> = ({
   isLoading = false,
 }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
+    name: "",
+    description: "",
     download_speed: 0,
     upload_speed: 0,
-    speed_unit: 'mbps' as 'mbps' | 'gbps',
+    speed_unit: "mbps" as "mbps" | "gbps",
     data_quota: 0,
-    quota_unit: 'gb' as 'gb' | 'tb' | 'unlimited',
+    quota_unit: "gb" as "gb" | "tb" | "unlimited",
     price: 0,
     setup_fee: 0,
-    billing_cycle: 'monthly' as 'monthly' | 'quarterly' | 'yearly',
+    billing_cycle: "monthly" as "monthly" | "quarterly" | "yearly",
     is_active: true,
     is_featured: false,
     is_popular: false,
     features: [] as string[],
   });
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [newFeature, setNewFeature] = useState('');
+  const [newFeature, setNewFeature] = useState("");
 
   useEffect(() => {
     if (plan) {
       setFormData({
-        name: plan.name || '',
-        description: plan.description || '',
+        name: plan.name || "",
+        description: plan.description || "",
         download_speed: plan.download_speed || 0,
         upload_speed: plan.upload_speed || 0,
-        speed_unit: plan.speed_unit || 'mbps',
+        speed_unit: plan.speed_unit || "mbps",
         data_quota: plan.data_quota || 0,
-        quota_unit: plan.quota_unit || 'gb',
+        quota_unit: plan.quota_unit || "gb",
         price: plan.price || 0,
         setup_fee: plan.setup_fee || 0,
-        billing_cycle: plan.billing_cycle || 'monthly',
+        billing_cycle: plan.billing_cycle || "monthly",
         is_active: plan.is_active ?? true,
         is_featured: plan.is_featured ?? false,
         is_popular: plan.is_popular ?? false,
@@ -65,16 +65,16 @@ const PlanForm: React.FC<PlanFormProps> = ({
       });
     } else {
       setFormData({
-        name: '',
-        description: '',
+        name: "",
+        description: "",
         download_speed: 0,
         upload_speed: 0,
-        speed_unit: 'mbps',
+        speed_unit: "mbps",
         data_quota: 0,
-        quota_unit: 'gb',
+        quota_unit: "gb",
         price: 0,
         setup_fee: 0,
-        billing_cycle: 'monthly',
+        billing_cycle: "monthly",
         is_active: true,
         is_featured: false,
         is_popular: false,
@@ -88,27 +88,28 @@ const PlanForm: React.FC<PlanFormProps> = ({
     const newErrors: Record<string, string> = {};
 
     if (!formData.name.trim()) {
-      newErrors.name = 'Plan name is required';
+      newErrors.name = "Plan name is required";
     }
 
     if (formData.download_speed <= 0) {
-      newErrors.download_speed = 'Download speed must be greater than 0';
+      newErrors.download_speed = "Download speed must be greater than 0";
     }
 
     if (formData.upload_speed <= 0) {
-      newErrors.upload_speed = 'Upload speed must be greater than 0';
+      newErrors.upload_speed = "Upload speed must be greater than 0";
     }
 
-    if (formData.quota_unit !== 'unlimited' && formData.data_quota <= 0) {
-      newErrors.data_quota = 'Data quota must be greater than 0 or set to unlimited';
+    if (formData.quota_unit !== "unlimited" && formData.data_quota <= 0) {
+      newErrors.data_quota =
+        "Data quota must be greater than 0 or set to unlimited";
     }
 
     if (formData.price < 0) {
-      newErrors.price = 'Price cannot be negative';
+      newErrors.price = "Price cannot be negative";
     }
 
     if (formData.setup_fee < 0) {
-      newErrors.setup_fee = 'Setup fee cannot be negative';
+      newErrors.setup_fee = "Setup fee cannot be negative";
     }
 
     setErrors(newErrors);
@@ -117,14 +118,15 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     const planData = {
       ...formData,
       name: formData.name.trim(),
       description: formData.description.trim() || undefined,
-      data_quota: formData.quota_unit === 'unlimited' ? undefined : formData.data_quota,
+      data_quota:
+        formData.quota_unit === "unlimited" ? undefined : formData.data_quota,
     };
 
     onSubmit(planData);
@@ -132,45 +134,45 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
   const handleClose = () => {
     setFormData({
-      name: '',
-      description: '',
+      name: "",
+      description: "",
       download_speed: 0,
       upload_speed: 0,
-      speed_unit: 'mbps',
+      speed_unit: "mbps",
       data_quota: 0,
-      quota_unit: 'gb',
+      quota_unit: "gb",
       price: 0,
       setup_fee: 0,
-      billing_cycle: 'monthly',
+      billing_cycle: "monthly",
       is_active: true,
       is_featured: false,
       is_popular: false,
       features: [],
     });
     setErrors({});
-    setNewFeature('');
+    setNewFeature("");
     onClose();
   };
 
   const addFeature = () => {
     if (newFeature.trim() && !formData.features.includes(newFeature.trim())) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
         features: [...prev.features, newFeature.trim()],
       }));
-      setNewFeature('');
+      setNewFeature("");
     }
   };
 
   const removeFeature = (index: number) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       features: prev.features.filter((_, i) => i !== index),
     }));
   };
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    if (e.key === 'Enter') {
+    if (e.key === "Enter") {
       e.preventDefault();
       addFeature();
     }
@@ -180,20 +182,22 @@ const PlanForm: React.FC<PlanFormProps> = ({
     <Modal
       isOpen={isOpen}
       onClose={handleClose}
-      title={plan ? 'Edit Plan' : 'Create New Plan'}
+      title={plan ? "Edit Plan" : "Create New Plan"}
       size="lg"
     >
       <form onSubmit={handleSubmit} className="u-space-y-6">
         {/* Basic Information */}
         <div className="u-space-y-4">
           <h3 className="u-text-lg u-fw-semibold">Basic Information</h3>
-          
+
           <div>
             <label className="u-block u-mb-2 u-fw-medium">Plan Name *</label>
             <Input
               type="text"
               value={formData.name}
-              onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({ ...prev, name: e.target.value }))
+              }
               placeholder="Enter plan name"
               error={errors.name}
             />
@@ -203,7 +207,12 @@ const PlanForm: React.FC<PlanFormProps> = ({
             <label className="u-block u-mb-2 u-fw-medium">Description</label>
             <Textarea
               value={formData.description}
-              onChange={(e) => setFormData(prev => ({ ...prev, description: e.target.value }))}
+              onChange={(e) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  description: e.target.value,
+                }))
+              }
               placeholder="Enter plan description"
               rows={3}
             />
@@ -213,14 +222,21 @@ const PlanForm: React.FC<PlanFormProps> = ({
         {/* Speed Configuration */}
         <div className="u-space-y-4">
           <h3 className="u-text-lg u-fw-semibold">Speed Configuration</h3>
-          
+
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">Download Speed *</label>
+              <label className="u-block u-mb-2 u-fw-medium">
+                Download Speed *
+              </label>
               <Input
                 type="number"
                 value={formData.download_speed}
-                onChange={(e) => setFormData(prev => ({ ...prev, download_speed: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    download_speed: Number(e.target.value),
+                  }))
+                }
                 placeholder="0"
                 min="0"
                 step="0.1"
@@ -228,11 +244,18 @@ const PlanForm: React.FC<PlanFormProps> = ({
               />
             </div>
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">Upload Speed *</label>
+              <label className="u-block u-mb-2 u-fw-medium">
+                Upload Speed *
+              </label>
               <Input
                 type="number"
                 value={formData.upload_speed}
-                onChange={(e) => setFormData(prev => ({ ...prev, upload_speed: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    upload_speed: Number(e.target.value),
+                  }))
+                }
                 placeholder="0"
                 min="0"
                 step="0.1"
@@ -245,10 +268,15 @@ const PlanForm: React.FC<PlanFormProps> = ({
             <label className="u-block u-mb-2 u-fw-medium">Speed Unit</label>
             <Select
               value={formData.speed_unit}
-              onChange={(value) => setFormData(prev => ({ ...prev, speed_unit: value as 'mbps' | 'gbps' }))}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  speed_unit: value as "mbps" | "gbps",
+                }))
+              }
               options={[
-                { value: 'mbps', label: 'Mbps' },
-                { value: 'gbps', label: 'Gbps' },
+                { value: "mbps", label: "Mbps" },
+                { value: "gbps", label: "Gbps" },
               ]}
             />
           </div>
@@ -257,18 +285,23 @@ const PlanForm: React.FC<PlanFormProps> = ({
         {/* Data Configuration */}
         <div className="u-space-y-4">
           <h3 className="u-text-lg u-fw-semibold">Data Configuration</h3>
-          
+
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
               <label className="u-block u-mb-2 u-fw-medium">Data Quota</label>
               <Input
                 type="number"
                 value={formData.data_quota}
-                onChange={(e) => setFormData(prev => ({ ...prev, data_quota: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    data_quota: Number(e.target.value),
+                  }))
+                }
                 placeholder="0"
                 min="0"
                 step="0.1"
-                disabled={formData.quota_unit === 'unlimited'}
+                disabled={formData.quota_unit === "unlimited"}
                 error={errors.data_quota}
               />
             </div>
@@ -276,11 +309,16 @@ const PlanForm: React.FC<PlanFormProps> = ({
               <label className="u-block u-mb-2 u-fw-medium">Quota Unit</label>
               <Select
                 value={formData.quota_unit}
-                onChange={(value) => setFormData(prev => ({ ...prev, quota_unit: value as 'gb' | 'tb' | 'unlimited' }))}
+                onChange={(value) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    quota_unit: value as "gb" | "tb" | "unlimited",
+                  }))
+                }
                 options={[
-                  { value: 'gb', label: 'GB' },
-                  { value: 'tb', label: 'TB' },
-                  { value: 'unlimited', label: 'Unlimited' },
+                  { value: "gb", label: "GB" },
+                  { value: "tb", label: "TB" },
+                  { value: "unlimited", label: "Unlimited" },
                 ]}
               />
             </div>
@@ -290,14 +328,21 @@ const PlanForm: React.FC<PlanFormProps> = ({
         {/* Pricing */}
         <div className="u-space-y-4">
           <h3 className="u-text-lg u-fw-semibold">Pricing</h3>
-          
+
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">Monthly Price</label>
+              <label className="u-block u-mb-2 u-fw-medium">
+                Monthly Price
+              </label>
               <Input
                 type="number"
                 value={formData.price}
-                onChange={(e) => setFormData(prev => ({ ...prev, price: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    price: Number(e.target.value),
+                  }))
+                }
                 placeholder="0.00"
                 min="0"
                 step="0.01"
@@ -309,7 +354,12 @@ const PlanForm: React.FC<PlanFormProps> = ({
               <Input
                 type="number"
                 value={formData.setup_fee}
-                onChange={(e) => setFormData(prev => ({ ...prev, setup_fee: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    setup_fee: Number(e.target.value),
+                  }))
+                }
                 placeholder="0.00"
                 min="0"
                 step="0.01"
@@ -322,11 +372,16 @@ const PlanForm: React.FC<PlanFormProps> = ({
             <label className="u-block u-mb-2 u-fw-medium">Billing Cycle</label>
             <Select
               value={formData.billing_cycle}
-              onChange={(value) => setFormData(prev => ({ ...prev, billing_cycle: value as 'monthly' | 'quarterly' | 'yearly' }))}
+              onChange={(value) =>
+                setFormData((prev) => ({
+                  ...prev,
+                  billing_cycle: value as "monthly" | "quarterly" | "yearly",
+                }))
+              }
               options={[
-                { value: 'monthly', label: 'Monthly' },
-                { value: 'quarterly', label: 'Quarterly' },
-                { value: 'yearly', label: 'Yearly' },
+                { value: "monthly", label: "Monthly" },
+                { value: "quarterly", label: "Quarterly" },
+                { value: "yearly", label: "Yearly" },
               ]}
             />
           </div>
@@ -335,21 +390,27 @@ const PlanForm: React.FC<PlanFormProps> = ({
         {/* Plan Status */}
         <div className="u-space-y-4">
           <h3 className="u-text-lg u-fw-semibold">Plan Status</h3>
-          
+
           <div className="u-space-y-3">
             <Checkbox
               checked={formData.is_active}
-              onChange={(checked) => setFormData(prev => ({ ...prev, is_active: checked }))}
+              onChange={(checked) =>
+                setFormData((prev) => ({ ...prev, is_active: checked }))
+              }
               label="Active Plan"
             />
             <Checkbox
               checked={formData.is_featured}
-              onChange={(checked) => setFormData(prev => ({ ...prev, is_featured: checked }))}
+              onChange={(checked) =>
+                setFormData((prev) => ({ ...prev, is_featured: checked }))
+              }
               label="Featured Plan"
             />
             <Checkbox
               checked={formData.is_popular}
-              onChange={(checked) => setFormData(prev => ({ ...prev, is_popular: checked }))}
+              onChange={(checked) =>
+                setFormData((prev) => ({ ...prev, is_popular: checked }))
+              }
               label="Popular Plan"
             />
           </div>
@@ -358,7 +419,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
         {/* Features */}
         <div className="u-space-y-4">
           <h3 className="u-text-lg u-fw-semibold">Features</h3>
-          
+
           <div className="u-space-y-3">
             <div className="u-flex u-gap-2">
               <Input
@@ -385,7 +446,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
                 {formData.features.map((feature, index) => (
                   <div
                     key={index}
-                    className="u-flex u-items-center u-gap-2 u-bg-primary  u-px-3 u-py-1 u-rounded-full u-text-sm"
+                    className="u-flex u-items-center u-gap-2 u-bg-primary  u-px-3 u-py-1 u-rounded-full u-fs-sm"
                   >
                     <span>{feature}</span>
                     <button
@@ -412,18 +473,16 @@ const PlanForm: React.FC<PlanFormProps> = ({
           >
             Cancel
           </Button>
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={isLoading}
-          >
+          <Button type="submit" variant="primary" disabled={isLoading}>
             {isLoading ? (
               <>
                 <Spinner size="sm" />
-                {plan ? 'Updating...' : 'Creating...'}
+                {plan ? "Updating..." : "Creating..."}
               </>
+            ) : plan ? (
+              "Update Plan"
             ) : (
-              plan ? 'Update Plan' : 'Create Plan'
+              "Create Plan"
             )}
           </Button>
         </div>

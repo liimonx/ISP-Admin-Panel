@@ -112,9 +112,9 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
           <div className="u-py-2">
             {/* User Info Header */}
             <div className="u-px-4 u-py-2 u-border-bottom">
-              <div className="u-fw-medium u-text-sm">{user.name}</div>
+              <div className="u-fw-medium u-fs-sm">{user.name}</div>
               {user.email && (
-                <div className="u-text-xs u-text-muted">{user.email}</div>
+                <div className="u-fs-xs u-text-muted">{user.email}</div>
               )}
               {user.role && (
                 <Badge
@@ -139,7 +139,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
                     }}
                   >
                     {item.icon && <Icon name={item.icon as any} size={16} />}
-                    <span className="u-text-sm">{item.label}</span>
+                    <span className="u-fs-sm">{item.label}</span>
                   </button>
                 </React.Fragment>
               ))}

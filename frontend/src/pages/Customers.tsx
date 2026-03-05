@@ -316,7 +316,7 @@ const Customers: React.FC = () => {
         </div>
 
         {/* Quick Stats */}
-        <div className="u-flex u-gap-6 u-text-sm">
+        <div className="u-flex u-gap-6 u-fs-sm">
           <div className="u-flex u-items-center u-gap-2">
             <div className="u-w-3 u-h-3 u-bg-success-subtle u-rounded-circle"></div>
             <span className="u-text-secondary-emphasis">
@@ -396,10 +396,12 @@ const Customers: React.FC = () => {
         ) : (
           <>
             <DataTable
-              data={
-                customersData?.results?.map((customer) => ({
-                  id: customer.id,
-                  customer: (
+              data={customersData?.results || []}
+              columns={[
+                {
+                  key: "customer",
+                  title: "Customer",
+                  render: (_, customer: any) => (
                     <div className="u-flex u-items-center">
                       <Avatar
                         size="sm"
@@ -411,16 +413,20 @@ const Customers: React.FC = () => {
                           {sanitizeText(customer.name)}
                         </div>
                         {customer.company_name && (
-                          <div className="u-text-secondary-emphasis u-text-sm">
+                          <div className="u-text-secondary-emphasis u-fs-sm">
                             {sanitizeText(customer.company_name)}
                           </div>
                         )}
                       </div>
                     </div>
                   ),
-                  contact: (
+                },
+                {
+                  key: "contact",
+                  title: "Contact Info",
+                  render: (_, customer: any) => (
                     <div>
-                      <div className="u-text-sm u-mb-1">
+                      <div className="u-fs-sm u-mb-1">
                         <Icon
                           name="Envelope"
                           size={14}
@@ -428,7 +434,7 @@ const Customers: React.FC = () => {
                         />
                         {sanitizeEmail(customer.email)}
                       </div>
-                      <div className="u-text-sm">
+                      <div className="u-fs-sm">
                         <Icon
                           name="Phone"
                           size={14}
@@ -438,20 +444,36 @@ const Customers: React.FC = () => {
                       </div>
                     </div>
                   ),
-                  location: (
+                },
+                {
+                  key: "location",
+                  title: "Location",
+                  render: (_, customer: any) => (
                     <div>
-                      <div className="u-text-sm">
+                      <div className="u-fs-sm">
                         {sanitizeText(customer.city)},{" "}
                         {sanitizeText(customer.state)}
                       </div>
-                      <div className="u-text-secondary-emphasis u-text-sm">
+                      <div className="u-text-secondary-emphasis u-fs-sm">
                         {sanitizeText(customer.country)}
                       </div>
                     </div>
                   ),
-                  status: getStatusBadge(customer.status),
-                  joined: new Date(customer.created_at).toLocaleDateString(),
-                  actions: (
+                },
+                {
+                  key: "status",
+                  title: "Status",
+                  render: (status: any) => getStatusBadge(status),
+                },
+                {
+                  key: "created_at",
+                  title: "Joined",
+                  render: (val: any) => new Date(val).toLocaleDateString(),
+                },
+                {
+                  key: "actions",
+                  title: "Actions",
+                  render: (_, customer: any) => (
                     <div className="u-flex u-gap-2">
                       <Button
                         variant="outline"
@@ -477,15 +499,7 @@ const Customers: React.FC = () => {
                       </Button>
                     </div>
                   ),
-                })) || []
-              }
-              columns={[
-                { key: "customer", title: "Customer" },
-                { key: "contact", title: "Contact Info" },
-                { key: "location", title: "Location" },
-                { key: "status", title: "Status" },
-                { key: "joined", title: "Joined" },
-                { key: "actions", title: "Actions" },
+                },
               ]}
             />
 

@@ -35,7 +35,7 @@ export const LoadingOverlay: React.FC<LoadingOverlayProps> = ({
         <div className="u-absolute u-top-0 u-start-0 u-w-100 u-h-100 u-flex u-items-center u-justify-center u-bg-dark u-opacity-50 u-z-modal">
           <Card className="u-p-6 u-flex u-flex-column u-items-center u-gap-4">
             <LoadingSpinner size="lg" />
-            <p className="u-text-sm u-text-center">{message}</p>
+            <p className="u-fs-sm u-text-center">{message}</p>
           </Card>
         </div>
       )}

@@ -5,6 +5,8 @@ import {
   Icon,
   ColorModeToggle,
   Badge,
+  Nav,
+  NavItem,
 } from "@shohojdhara/atomix";
 import { UserAvatar } from "../molecules/UserAvatar";
 import { SearchBar } from "../molecules/SearchBar";
@@ -57,34 +59,30 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <Navbar
-      className={`u-bg-surface u-border-b u-shadow-sm ${className}`}
-      data-testid={testId}
-      position="fixed"
-      containerWidth="100%"
-    >
-      <div className="u-flex u-items-center u-justify-between u-w-100 u-px-4 u-py-3">
-        <div className="u-flex u-items-center u-gap-4">
-          {showSidebarToggle && (
+    <Navbar data-testid={testId} position="fixed" containerWidth="100%" glass>
+      <Nav>
+        {showSidebarToggle && (
+          <NavItem>
             <Button
               variant="ghost"
-              size="md"
-              glass
+              size="sm"
               onClick={onMenuToggle}
               aria-label="Toggle navigation menu"
             >
               <Icon name="List" size={20} />
             </Button>
-          )}
+          </NavItem>
+        )}
 
-          <div className="u-flex u-items-center u-gap-2">
-            <Icon name="Globe" size={24} className="u-text-primary" />
-            <span className="u-text-lg u-fw-bold u-text-primary">BCN ISP</span>
-          </div>
-        </div>
+        <NavItem>
+          <Icon name="Globe" size={24} className="u-text-primary" />
+          <span className="u-text-lg u-fw-bold u-text-primary">BCN ISP</span>
+        </NavItem>
+      </Nav>
 
+      <Nav alignment="end">
         {showSearch && (
-          <div className="u-none u-md-flex u-flex-1 u-max-w-lg u-mx-6">
+          <div className="u-none u-md-flex u-flex-1 u-max-w-lg u-mx-4">
             <SearchBar
               value={searchValue}
               onSearch={(value) => {
@@ -98,55 +96,53 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         )}
 
-        <div className="u-flex u-items-center u-gap-3">
-          {showSearch && (
-            <Button
-              variant="ghost"
-              size="md"
-              aria-label="Search"
-              className="u-md-none"
-            >
-              <Icon name="MagnifyingGlass" size={20} />
-            </Button>
-          )}
+        {showSearch && (
+          <Button
+            variant="ghost"
+            size="md"
+            aria-label="Search"
+            className="u-md-none"
+          >
+            <Icon name="MagnifyingGlass" size={20} />
+          </Button>
+        )}
 
-          {showNotifications && (
-            <Button
-              variant="ghost"
-              size="md"
-              onClick={onNotificationClick}
-              aria-label="Notifications"
-              className="u-relative"
-            >
-              <Icon name="Bell" size={20} />
-              {notifications > 0 && (
-                <Badge
-                  variant="error"
-                  size="sm"
-                  label={notifications.toString()}
-                  className="u-absolute u-top-0 u-end-0 u-transform u-translate-x--50 u-translate-y--50"
-                />
-              )}
-            </Button>
-          )}
+        {showNotifications && (
+          <Button
+            variant="ghost"
+            size="md"
+            onClick={onNotificationClick}
+            aria-label="Notifications"
+            className="u-relative"
+          >
+            <Icon name="Bell" size={20} />
+            {notifications > 0 && (
+              <Badge
+                variant="error"
+                size="sm"
+                label={notifications.toString()}
+                className="u-absolute u-top-0 u-end-0 u-transform u-translate-x--50 u-translate-y--50"
+              />
+            )}
+          </Button>
+        )}
 
-          <ColorModeToggle />
+        <ColorModeToggle defaultValue="dark" />
 
-          {showUserMenu && user && (
-            <UserAvatar
-              user={{
-                name: user.name,
-                email: user.email,
-                avatar: user.avatar,
-                role: user.role,
-                status: user.status,
-              }}
-              showDropdown
-              size="md"
-            />
-          )}
-        </div>
-      </div>
+        {showUserMenu && user && (
+          <UserAvatar
+            user={{
+              name: user.name,
+              email: user.email,
+              avatar: user.avatar,
+              role: user.role,
+              status: user.status,
+            }}
+            showDropdown
+            size="md"
+          />
+        )}
+      </Nav>
     </Navbar>
   );
 };

@@ -153,7 +153,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                   )}
                 </div>
                 {selectedPlan.description && (
-                  <p className="u-text-sm u-text-secondary-emphasis u-mt-2 u-mb-0">
+                  <p className="u-fs-sm u-text-secondary-emphasis u-mt-2 u-mb-0">
                     {selectedPlan.description}
                   </p>
                 )}
@@ -229,7 +229,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                     required={mode === "create"}
                   />
                   {mode === "edit" && (
-                    <small className="u-text-sm u-text-secondary-emphasis">
+                    <small className="u-fs-sm u-text-secondary-emphasis">
                       Leave empty to keep existing password
                     </small>
                   )}
@@ -362,7 +362,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
                       setFormData({ ...formData, end_date: e.target.value })
                     }
                   />
-                  <small className="u-text-sm u-text-secondary-emphasis">
+                  <small className="u-fs-sm u-text-secondary-emphasis">
                     Leave empty for ongoing subscription
                   </small>
                 </div>

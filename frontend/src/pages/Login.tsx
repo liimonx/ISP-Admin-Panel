@@ -173,7 +173,7 @@ const Login: React.FC = () => {
                   disabled={isSubmitting}
                 />
                 {errors.username && (
-                  <div className="u-text-error u-text-sm u-mt-1">
+                  <div className="u-text-error u-fs-sm u-mt-1">
                     {errors.username}
                   </div>
                 )}
@@ -212,7 +212,7 @@ const Login: React.FC = () => {
                   </Button>
                 </div>
                 {errors.password && (
-                  <div className="u-text-error u-text-sm u-mt-1">
+                  <div className="u-text-error u-fs-sm u-mt-1">
                     {errors.password}
                   </div>
                 )}
@@ -229,7 +229,7 @@ const Login: React.FC = () => {
                   />
                   <label
                     htmlFor="rememberMe"
-                    className="u-text-sm u-text-foreground"
+                    className="u-fs-sm u-text-foreground"
                   >
                     Remember me
                   </label>
@@ -267,7 +267,7 @@ const Login: React.FC = () => {
           </Card>
 
           {/* Footer */}
-          <div className="u-text-center u-mt-4 u-text-sm u-text-secondary-emphasis">
+          <div className="u-text-center u-mt-4 u-fs-sm u-text-secondary-emphasis">
             <p>
               © {new Date().getFullYear()} ISP Admin Panel. All rights reserved.
             </p>
