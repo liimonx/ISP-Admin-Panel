@@ -13,6 +13,7 @@ import {
   Pagination,
   Callout,
   Modal,
+  PhosphorIconsType,
 } from "@shohojdhara/atomix";
 import { apiService } from "../../services/apiService";
 import { formatCurrency } from "../../utils/formatters";
@@ -178,8 +179,8 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
     );
   };
 
-  const getResourceIcon = (resourceType: string) => {
-    const icons: Record<string, string> = {
+  const getResourceIcon = (resourceType: string): PhosphorIconsType => {
+    const icons: Record<string, PhosphorIconsType> = {
       invoice: "Receipt",
       payment: "CurrencyDollar",
       customer: "User",
@@ -212,7 +213,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
   const columns = [
     {
       key: "timestamp",
-      header: "Date & Time",
+      title: "Date & Time",
       render: (entry: AuditLogEntry) => (
         <div>
           <div className="u-font-normal u-fs-sm">
@@ -226,7 +227,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
     },
     {
       key: "user",
-      header: "User",
+      title: "User",
       render: (entry: AuditLogEntry) => (
         <div className="u-flex u-items-center u-gap-2">
           <Avatar initials={entry.user.name.charAt(0)} size="sm" />
@@ -241,12 +242,12 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
     },
     {
       key: "action",
-      header: "Action",
+      title: "Action",
       render: (entry: AuditLogEntry) => getActionBadge(entry.action),
     },
     {
       key: "resource",
-      header: "Resource",
+      title: "Resource",
       render: (entry: AuditLogEntry) => (
         <div className="u-flex u-items-center u-gap-2">
           <Icon name={getResourceIcon(entry.resource_type)} size={16} />
@@ -261,7 +262,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
     },
     {
       key: "details",
-      header: "Details",
+      title: "Details",
       render: (entry: AuditLogEntry) => (
         <div>
           {entry.details.amount && (
@@ -284,7 +285,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
     },
     {
       key: "actions",
-      header: "Actions",
+      title: "Actions",
       render: (entry: AuditLogEntry) => (
         <Button
           variant="outline"
@@ -363,7 +364,6 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
                 currentPage={currentPage}
                 totalPages={auditData.total_pages}
                 onPageChange={setCurrentPage}
-                showFirstLast
               />
             </div>
           </>
