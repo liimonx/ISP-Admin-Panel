@@ -543,7 +543,7 @@ const Billing: React.FC = () => {
 
           {/* Quick Actions */}
           <Card title="Quick Actions" className="u-mb-6">
-            <div className="u-flex u-gap-4 u-flex-wrap">
+            <div className="u-flex u-gap-4 u-flex-wrap u-mt-4">
               <Button
                 variant="primary"
                 onClick={() => setIsGenerateInvoiceModalOpen(true)}
@@ -588,7 +588,7 @@ const Billing: React.FC = () => {
                     <Spinner />
                   </div>
                 ) : invoicesData?.results?.length ? (
-                  <div className="u-flex u-flex-wrap u-gap-3">
+                  <div className="u-flex u-flex-wrap u-gap-3 u-mt-4">
                     {invoicesData.results?.slice(0, 5).map((invoice) => (
                       <div
                         key={invoice.id}

@@ -9,7 +9,6 @@ import {
   Badge,
   Pagination,
   Modal,
-  Form,
   Grid,
   GridCol,
   Callout,
@@ -17,6 +16,7 @@ import {
   Dropdown,
   Progress,
   Textarea,
+  Checkbox,
 } from "@shohojdhara/atomix";
 import { Router } from "../types";
 import { apiService } from "../services/apiService";
@@ -56,6 +56,7 @@ const Network: React.FC = () => {
     data: routersData,
     isLoading,
     error,
+    refetch,
   } = useQuery({
     queryKey: ["routers", currentPage, searchQuery, statusFilter],
     queryFn: () =>
@@ -104,7 +105,7 @@ const Network: React.FC = () => {
       setIsTestingConnection(id);
       return apiService.testRouterConnection(id);
     },
-    onSuccess: (data, id) => {
+    onSuccess: (data) => {
       setIsTestingConnection(null);
       if (data.success) {
         alert("Connection successful!");
@@ -112,7 +113,7 @@ const Network: React.FC = () => {
         alert(`Connection failed: ${data.error}`);
       }
     },
-    onError: (error, id) => {
+    onError: () => {
       setIsTestingConnection(null);
       alert("Connection test failed");
     },
@@ -210,21 +211,24 @@ const Network: React.FC = () => {
     );
   };
 
-  const getUptimePercentage = (lastSeen?: string) => {
-    if (!lastSeen) return 0;
-    const now = new Date().getTime();
-    const lastSeenTime = new Date(lastSeen).getTime();
-    const diffHours = (now - lastSeenTime) / (1000 * 60 * 60);
-    return Math.max(0, Math.min(100, 100 - diffHours));
-  };
-
   const totalPages = Math.ceil((routersData?.count || 0) / itemsPerPage);
 
   if (error) {
     return (
-      <Callout variant="error" className="u-mb-4">
-        Error loading network devices. Please try again.
-      </Callout>
+      <div className="u-p-4">
+        <Callout variant="error">
+          <strong>Error loading network devices:</strong>{" "}
+          {(error as Error).message || "Please try again."}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => refetch()}
+            className="u-ms-2"
+          >
+            Try Again
+          </Button>
+        </Callout>
+      </div>
     );
   }
 
@@ -239,16 +243,24 @@ const Network: React.FC = () => {
           </p>
         </div>
         <div className="u-flex u-gap-2">
-          <Button variant="outline" size="md">
-            <Icon name="ChartLine" size={16} />
+          <Button
+            variant="outline"
+            size="md"
+            iconName="ChartLine"
+            iconSize={16}
+          >
             Network Stats
           </Button>
-          <Button variant="outline" size="md">
-            <Icon name="Download" size={16} />
+          <Button variant="outline" size="md" iconName="Download" iconSize={16}>
             Export
           </Button>
-          <Button variant="primary" size="md" onClick={handleCreateRouter}>
-            <Icon name="Plus" size={16} />
+          <Button
+            variant="primary"
+            size="md"
+            onClick={handleCreateRouter}
+            iconName="Plus"
+            iconSize={16}
+          >
             Add Router
           </Button>
         </div>
@@ -354,8 +366,12 @@ const Network: React.FC = () => {
           </GridCol>
           <GridCol xs={12} md={12} lg={5}>
             <div className="u-flex u-justify-end u-gap-2">
-              <Button variant="outline" size="md">
-                <Icon name="Funnel" size={16} />
+              <Button
+                variant="outline"
+                size="md"
+                iconName="Funnel"
+                iconSize={16}
+              >
                 More Filters
               </Button>
               <Button variant="ghost" size="md">
@@ -429,12 +445,13 @@ const Network: React.FC = () => {
                         size="sm"
                         onClick={() => handleTestConnection(router)}
                         disabled={isTestingConnection === router.id}
+                        iconName={
+                          isTestingConnection === router.id
+                            ? "Spinner"
+                            : "XCircle"
+                        }
+                        iconSize={14}
                       >
-                        {isTestingConnection === router.id ? (
-                          <Icon name="Spinner" size={14} />
-                        ) : (
-                          <Icon name="XCircle" size={14} />
-                        )}
                         Test
                       </Button>
                       <Dropdown
@@ -465,9 +482,12 @@ const Network: React.FC = () => {
                           </div>
                         }
                       >
-                        <Button variant="ghost" size="sm">
-                          <Icon name="DotsThreeVertical" size={16} />
-                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          iconName="DotsThreeVertical"
+                          iconSize={16}
+                        />
                       </Dropdown>
                     </div>
                   ),
@@ -486,28 +506,12 @@ const Network: React.FC = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="u-flex u-justify-center u-mt-6">
-                <div className="pagination-controls">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={currentPage === 1}
-                    onClick={() => setCurrentPage(currentPage - 1)}
-                  >
-                    Previous
-                  </Button>
-                  <span className="u-mx-3">
-                    Page {currentPage} of {totalPages}
-                  </span>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    disabled={currentPage === totalPages}
-                    onClick={() => setCurrentPage(currentPage + 1)}
-                  >
-                    Next
-                  </Button>
-                </div>
+              <div className="u-p-4 u-border-top u-flex u-justify-end">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
               </div>
             )}
           </>
@@ -630,7 +634,9 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-font-normal u-mb-1">Username *</label>
+                <label className="u-block u-font-normal u-mb-1">
+                  Username *
+                </label>
                 <Input
                   className="u-w-100"
                   value={formData.username}
@@ -643,7 +649,9 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-font-normal u-mb-1">Password *</label>
+                <label className="u-block u-font-normal u-mb-1">
+                  Password *
+                </label>
                 <Input
                   className="u-w-100"
                   type="password"
@@ -659,12 +667,11 @@ const Network: React.FC = () => {
               </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <div className="u-mb-3">
-                <label className="u-block u-font-normal u-mb-1">
-                  <input
-                    type="checkbox"
+              <div className="u-mb-3 u-pt-4">
+                <label className="u-flex u-items-center u-gap-2 u-font-normal u-cursor-pointer">
+                  <Checkbox
                     checked={formData.use_tls}
-                    onChange={(e) =>
+                    onChange={(e: any) =>
                       setFormData({ ...formData, use_tls: e.target.checked })
                     }
                   />
@@ -716,7 +723,9 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-font-normal u-mb-1">SNMP Port</label>
+                <label className="u-block u-font-normal u-mb-1">
+                  SNMP Port
+                </label>
                 <Input
                   className="u-w-100"
                   type="number"
@@ -745,10 +754,11 @@ const Network: React.FC = () => {
             </GridCol>
           </Grid>
 
-          <div className="u-flex u-justify-end u-gap-2 u-mt-6">
+          <div className="u-flex u-justify-end u-gap-3 u-mt-6">
             <Button
               type="button"
               variant="outline"
+              disabled={createMutation.isPending || updateMutation.isPending}
               onClick={() => {
                 setIsCreateModalOpen(false);
                 setIsEditModalOpen(false);
@@ -763,7 +773,11 @@ const Network: React.FC = () => {
               variant="primary"
               disabled={createMutation.isPending || updateMutation.isPending}
             >
-              {selectedRouter ? "Update Router" : "Create Router"}
+              {createMutation.isPending || updateMutation.isPending
+                ? "Saving..."
+                : selectedRouter
+                  ? "Update Router"
+                  : "Create Router"}
             </Button>
           </div>
         </form>

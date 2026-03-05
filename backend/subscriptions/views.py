@@ -8,7 +8,7 @@ from core.responses import APIResponse
 from .models import Subscription
 from .serializers import (
     SubscriptionSerializer, SubscriptionCreateSerializer, SubscriptionUpdateSerializer,
-    SubscriptionDetailSerializer,
+    SubscriptionDetailSerializer, SubscriptionListSerializer,
     SubscriptionStatusUpdateSerializer, DataUsageUpdateSerializer, DataUsageResetSerializer
 )
 import logging
@@ -202,15 +202,19 @@ def reset_data_usage_view(request, pk):
 def active_subscriptions_view(request):
     """Get active subscriptions."""
     try:
-        subscriptions = Subscription.objects.filter(status='active')
+        subscriptions = Subscription.objects.filter(
+            status='active'
+        ).select_related('customer', 'plan', 'router')
         serializer = SubscriptionListSerializer(subscriptions, many=True)
         return APIResponse.success(
             data=serializer.data,
             message="Active subscriptions retrieved successfully"
         )
     except Exception as e:
+        logger.error(f"Failed to retrieve active subscriptions: {str(e)}", exc_info=True)
         return APIResponse.error(
-            message=f"Failed to retrieve active subscriptions: {str(e)}"
+            message=f"Failed to retrieve active subscriptions: {str(e)}",
+            status_code=500
         )
 
 
@@ -224,15 +228,19 @@ def active_subscriptions_view(request):
 def suspended_subscriptions_view(request):
     """Get suspended subscriptions."""
     try:
-        subscriptions = Subscription.objects.filter(status='suspended')
+        subscriptions = Subscription.objects.filter(
+            status='suspended'
+        ).select_related('customer', 'plan', 'router')
         serializer = SubscriptionListSerializer(subscriptions, many=True)
         return APIResponse.success(
             data=serializer.data,
             message="Suspended subscriptions retrieved successfully"
         )
     except Exception as e:
+        logger.error(f"Failed to retrieve suspended subscriptions: {str(e)}", exc_info=True)
         return APIResponse.error(
-            message=f"Failed to retrieve suspended subscriptions: {str(e)}"
+            message=f"Failed to retrieve suspended subscriptions: {str(e)}",
+            status_code=500
         )
 
 

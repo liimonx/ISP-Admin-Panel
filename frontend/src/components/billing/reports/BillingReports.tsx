@@ -268,7 +268,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
       >
         <div className="u-flex u-gap-4 u-items-end u-flex-wrap">
           <div>
-            <label className="u-fs-sm u-font-normal u-mb-1 u-block">
+            <label className="u-fs-sm u-font-normal u-mb-4 u-block">
               Report Type
             </label>
             <Select
@@ -278,7 +278,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
             />
           </div>
           <div>
-            <label className="u-fs-sm u-font-normal u-mb-1 u-block">
+            <label className="u-fs-sm u-font-normal u-mb-4 u-block">
               Period
             </label>
             <Select
@@ -290,7 +290,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
           {selectedPeriod === "custom" && (
             <>
               <div>
-                <label className="u-fs-sm u-font-normal u-mb-1 u-block">
+                <label className="u-fs-sm u-font-normal u-mb-4 u-block">
                   Start Date
                 </label>
                 <Input
@@ -426,12 +426,11 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                     <Spinner size="lg" />
                   </div>
                 ) : (
-                  <div className="u-h-75">
-                    <DonutChart
-                      data={preparePaymentMethodChartData()}
-                      size="md"
-                    />
-                  </div>
+                  <DonutChart
+                    className="u-mt-4"
+                    data={preparePaymentMethodChartData()}
+                    size="md"
+                  />
                 )}
               </Card>
             </GridCol>
@@ -442,12 +441,12 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                     <Spinner />
                   </div>
                 ) : (
-                  <div className="u-space-y-3">
+                  <div className="u-my-3">
                     {paymentMethodData?.map(
                       (method: PaymentMethodData, index: number) => (
                         <div
                           key={index}
-                          className="u-flex u-justify-between u-items-center u-p-3 u-border u-rounded"
+                          className="u-flex u-justify-between u-items-center u-p-3 u-border u-rounded u-mb-2"
                         >
                           <div>
                             <div className="u-font-normal">{method.method}</div>
@@ -483,14 +482,14 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                 <Spinner size="lg" />
               </div>
             ) : (
-              <div className="u-space-y-4">
+              <div className="u-my-4">
                 {topCustomersData?.map(
                   (customer: CustomerPaymentData, index: number) => (
                     <div
                       key={index}
                       className="u-flex u-items-center u-p-4 u-border u-rounded u-bg-subtle"
                     >
-                      <div className="u-flex u-items-center u-justify-center u-bg-primary u-text-white u-rounded-circle u-me-3 u-w-10 u-h-10">
+                      <div className="u-flex u-items-center u-justify-center u-bg-primary u-text-white u-rounded-circle u-me-3 u-w-8 u-h-8">
                         {index + 1}
                       </div>
                       <div className="u-flex-fill">

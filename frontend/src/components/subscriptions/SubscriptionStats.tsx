@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { Card, Grid, GridCol, Icon } from "@shohojdhara/atomix";
+import { Card, Grid, GridCol, Icon, Button } from "@shohojdhara/atomix";
 import { subscriptionService } from "../../services/api";
 import { SubscriptionStats as SubscriptionStatsType } from "../../types";
 import { StatCard } from "../molecules/StatCard";
@@ -212,22 +212,14 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
                 >
                   <Icon name="ArrowClockwise" size={24} />
                 </div>
-                <button
+                <Button
+                  variant="outline"
+                  size="sm"
                   onClick={() => refetchStats()}
-                  className="u-btn u-btn-sm u-btn-outline-secondary"
                   disabled={isLoading}
-                >
-                  {isLoading ? (
-                    <div
-                      className="u-spinner-border u-spinner-border-sm"
-                      role="status"
-                    >
-                      <span className="u-visually-hidden">Loading...</span>
-                    </div>
-                  ) : (
-                    <Icon name="ArrowClockwise" size={16} />
-                  )}
-                </button>
+                  iconName={isLoading ? "Spinner" : "ArrowClockwise"}
+                  iconSize={16}
+                />
               </div>
 
               <div className="u-mb-2">

@@ -266,6 +266,8 @@ const Customers: React.FC = () => {
     );
   };
 
+  const totalPages = Math.ceil((customersData?.count || 0) / itemsPerPage);
+
   if (error) {
     console.error("Customers loading error:", error);
     const errorMessage =
@@ -278,8 +280,13 @@ const Customers: React.FC = () => {
             <div>
               <h3 className="u-mb-2">Failed to Load Customers</h3>
               <p className="u-mb-3">Error: {errorMessage}</p>
-              <Button variant="outline" size="sm" onClick={() => refetch()}>
-                <Icon name="ArrowClockwise" size={16} />
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => refetch()}
+                iconName="ArrowClockwise"
+                iconSize={16}
+              >
                 Retry
               </Button>
             </div>
@@ -295,93 +302,174 @@ const Customers: React.FC = () => {
       <div className="u-mb-8">
         <div className="u-flex u-justify-between u-items-start u-mb-4">
           <div>
-            <h1 className="u-text-3xl u-font-bold u-mb-2 u-text-foreground">
+            <h1 className="u-fs-2xl u-font-bold u-mb-2 u-text-foreground">
               Customer Management
             </h1>
-            <p className="u-text-secondary-emphasis u-sm-lg">
+            <p className="u-text-secondary-emphasis u-fs-base">
               Manage your customer accounts, subscriptions, and billing
               information
             </p>
           </div>
           <div className="u-flex u-gap-3">
-            <Button variant="outline" size="md" onClick={handleExport}>
-              <Icon name="Download" size={16} />
-              <span className="u-none u-sm-inline">Export</span>
+            <Button
+              variant="outline"
+              size="md"
+              onClick={handleExport}
+              iconName="Download"
+              iconSize={16}
+            >
+              Export
             </Button>
-            <Button variant="primary" size="md" onClick={handleCreateCustomer}>
-              <Icon name="Plus" size={16} />
-              <span className="u-none u-sm-inline">Add Customer</span>
+            <Button
+              variant="primary"
+              size="md"
+              onClick={handleCreateCustomer}
+              iconName="Plus"
+              iconSize={16}
+            >
+              Add Customer
             </Button>
           </div>
         </div>
 
         {/* Quick Stats */}
-        <div className="u-flex u-gap-6 u-fs-sm">
-          <div className="u-flex u-items-center u-gap-2">
-            <div className="u-w-3 u-h-3 u-bg-success-subtle u-rounded-circle"></div>
-            <span className="u-text-secondary-emphasis">
-              Total:{" "}
-              {customersData?.count || customerStats?.total_customers || 0}{" "}
-              customers
-            </span>
-          </div>
-          <div className="u-flex u-items-center u-gap-2">
-            <div className="u-w-3 u-h-3 u-bg-primary-subtle u-rounded-circle"></div>
-            <span className="u-text-secondary-emphasis">
-              Active:{" "}
-              {customersData?.results?.filter((c) => c.status === "active")
-                .length ||
-                customerStats?.active_customers ||
-                0}
-            </span>
-          </div>
-          <div className="u-flex u-items-center u-gap-2">
-            <div className="u-w-3 u-h-3 u-bg-warning-subtle u-rounded-circle"></div>
-            <span className="u-text-secondary-emphasis">
-              Suspended:{" "}
-              {customersData?.results?.filter((c) => c.status === "suspended")
-                .length || 0}
-            </span>
-          </div>
-        </div>
+        <Grid>
+          <GridCol xs={12} md={3}>
+            <Card>
+              <div className="u-flex u-items-center u-justify-between">
+                <div>
+                  <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Total Customers
+                  </div>
+                  <div className="u-fs-xl u-font-bold">
+                    {customersData?.count ||
+                      customerStats?.total_customers ||
+                      0}
+                  </div>
+                </div>
+                <div className="u-bg-primary-subtle u-p-3 u-rounded">
+                  <Icon name="Users" size={24} className="u-text-primary" />
+                </div>
+              </div>
+            </Card>
+          </GridCol>
+          <GridCol xs={12} md={3}>
+            <Card>
+              <div className="u-flex u-items-center u-justify-between">
+                <div>
+                  <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Active
+                  </div>
+                  <div className="u-fs-xl u-font-bold">
+                    {customerStats?.active_customers ||
+                      customersData?.results?.filter(
+                        (c) => c.status === "active",
+                      ).length ||
+                      0}
+                  </div>
+                </div>
+                <div className="u-bg-success-subtle u-p-3 u-rounded">
+                  <Icon
+                    name="CheckCircle"
+                    size={24}
+                    className="u-text-success"
+                  />
+                </div>
+              </div>
+            </Card>
+          </GridCol>
+          <GridCol xs={12} md={3}>
+            <Card>
+              <div className="u-flex u-items-center u-justify-between">
+                <div>
+                  <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Suspended
+                  </div>
+                  <div className="u-fs-xl u-font-bold">
+                    {customersData?.results?.filter(
+                      (c) => c.status === "suspended",
+                    ).length || 0}
+                  </div>
+                </div>
+                <div className="u-bg-warning-subtle u-p-3 u-rounded">
+                  <Icon name="Warning" size={24} className="u-text-warning" />
+                </div>
+              </div>
+            </Card>
+          </GridCol>
+          <GridCol xs={12} md={3}>
+            <Card>
+              <div className="u-flex u-items-center u-justify-between">
+                <div>
+                  <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+                    Inactive
+                  </div>
+                  <div className="u-fs-xl u-font-bold">
+                    {customersData?.results?.filter(
+                      (c) => c.status === "inactive",
+                    ).length || 0}
+                  </div>
+                </div>
+                <div className="u-bg-secondary-subtle u-p-3 u-rounded">
+                  <Icon
+                    name="UserMinus"
+                    size={24}
+                    className="u-text-secondary-emphasis"
+                  />
+                </div>
+              </div>
+            </Card>
+          </GridCol>
+        </Grid>
       </div>
 
       {/* Search and Filters */}
-      <Card className="u-mb-8">
-        <div className="u-flex u-gap-4 u-items-center u-flex-wrap">
-          <div className="u-flex-1 u-min-w-300">
-            <div className="u-relative">
-              <Icon
-                name="MagnifyingGlass"
-                size={18}
-                className="u-absolute u-left-3 u-top-50 u-transform-translate-y--50 u-text-secondary-emphasis"
-              />
-              <Input
-                type="text"
-                placeholder="Search by name, email, phone, or company..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="u-ps-10"
-              />
+      <Card className="u-mb-6">
+        <Grid>
+          <GridCol xs={12} md={6} lg={4}>
+            <Input
+              placeholder="Search by name, email, phone, or company..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </GridCol>
+          <GridCol xs={12} md={6} lg={3}>
+            <Select
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value)}
+              options={[
+                { value: "all", label: "All Status" },
+                { value: "active", label: "Active" },
+                { value: "inactive", label: "Inactive" },
+                { value: "suspended", label: "Suspended" },
+                { value: "cancelled", label: "Cancelled" },
+              ]}
+            />
+          </GridCol>
+          <GridCol xs={12} md={12} lg={5}>
+            <div className="u-flex u-justify-end u-gap-2">
+              <Button
+                variant="outline"
+                size="md"
+                iconName="Funnel"
+                iconSize={16}
+              >
+                Advanced Filters
+              </Button>
+              <Button
+                variant="ghost"
+                size="md"
+                onClick={() => {
+                  setSearchQuery("");
+                  setStatusFilter("all");
+                  setCurrentPage(1);
+                }}
+              >
+                Clear
+              </Button>
             </div>
-          </div>
-          <Select
-            value={statusFilter}
-            onChange={(e) => setStatusFilter(e.target.value)}
-            className="u-min-w-150"
-            options={[
-              { value: "all", label: "All Status" },
-              { value: "active", label: "Active" },
-              { value: "inactive", label: "Inactive" },
-              { value: "suspended", label: "Suspended" },
-              { value: "cancelled", label: "Cancelled" },
-            ]}
-          />
-          <Button variant="outline" size="md">
-            <Icon name="Funnel" size={16} />
-            <span className="u-none u-md-inline">Advanced Filters</span>
-          </Button>
-        </div>
+          </GridCol>
+        </Grid>
       </Card>
 
       {/* Customers DataTable */}
@@ -476,27 +564,30 @@ const Customers: React.FC = () => {
                   render: (_, customer: any) => (
                     <div className="u-flex u-gap-2">
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => handleViewCustomer(customer)}
-                      >
-                        <Icon name="Eye" size={14} />
-                      </Button>
+                        iconName="Eye"
+                        iconSize={14}
+                        iconOnly
+                      />
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => handleEditCustomer(customer)}
-                      >
-                        <Icon name="Pencil" size={14} />
-                      </Button>
+                        iconName="Pencil"
+                        iconSize={14}
+                        iconOnly
+                      />
                       <Button
-                        variant="outline"
+                        variant="ghost"
                         size="sm"
                         onClick={() => handleDeleteCustomer(customer)}
                         disabled={deleteMutation.isPending}
-                      >
-                        <Icon name="Trash" size={14} />
-                      </Button>
+                        iconName="Trash"
+                        iconSize={14}
+                        iconOnly
+                      />
                     </div>
                   ),
                 },
@@ -504,18 +595,15 @@ const Customers: React.FC = () => {
             />
 
             {/* Pagination */}
-            {customersData &&
-              Math.ceil((customersData.count || 0) / itemsPerPage) > 1 && (
-                <div className="u-p-4 u-border-top">
-                  <Pagination
-                    currentPage={currentPage}
-                    totalPages={Math.ceil(
-                      (customersData.count || 0) / itemsPerPage,
-                    )}
-                    onPageChange={setCurrentPage}
-                  />
-                </div>
-              )}
+            {totalPages > 1 && (
+              <div className="u-p-4 u-border-top u-flex u-justify-end">
+                <Pagination
+                  currentPage={currentPage}
+                  totalPages={totalPages}
+                  onPageChange={setCurrentPage}
+                />
+              </div>
+            )}
 
             {customersData?.results?.length === 0 && (
               <div className="u-text-center u-p-6">
@@ -524,14 +612,20 @@ const Customers: React.FC = () => {
                   size={48}
                   className="u-text-secondary-emphasis u-mb-3"
                 />
-                <h3 className="u-h5 u-mb-2">No customers found</h3>
+                <h3 className="u-fs-lg u-font-bold u-mb-2">
+                  No customers found
+                </h3>
                 <p className="u-text-secondary-emphasis u-mb-4">
                   {searchQuery || statusFilter !== "all"
                     ? "Try adjusting your filters"
                     : "Get started by creating your first customer"}
                 </p>
-                <Button variant="primary" onClick={handleCreateCustomer}>
-                  <Icon name="Plus" size={16} className="u-me-2" />
+                <Button
+                  variant="primary"
+                  onClick={handleCreateCustomer}
+                  iconName="Plus"
+                  iconSize={16}
+                >
                   Add Customer
                 </Button>
               </div>
@@ -663,6 +757,8 @@ const Customers: React.FC = () => {
                   setIsViewModalOpen(false);
                   handleEditCustomer(selectedCustomer);
                 }}
+                iconName="Pencil"
+                iconSize={16}
               >
                 Edit Customer
               </Button>
@@ -690,80 +786,100 @@ const Customers: React.FC = () => {
         size="lg"
       >
         <form onSubmit={handleSubmit}>
+          {(createMutation.isError || updateMutation.isError) && (
+            <Callout variant="error" className="u-mb-4">
+              {selectedCustomer
+                ? "Failed to update customer. Please check your inputs and try again."
+                : "Failed to create customer. Please check your inputs and try again."}
+            </Callout>
+          )}
+
           <Grid>
             <GridCol xs={12} md={6}>
-              <label
-                htmlFor="name"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                Full Name *
-              </label>
-              <Input
-                id="name"
-                type="text"
-                value={formData.name}
-                onChange={(e) =>
-                  setFormData({ ...formData, name: e.target.value })
-                }
-                required
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="name"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  Full Name *
+                </label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, name: e.target.value })
+                  }
+                  required
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label
-                htmlFor="email"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                Email *
-              </label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
-                required
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="email"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  Email *
+                </label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={formData.email}
+                  onChange={(e) =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  required
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
           </Grid>
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label
-                htmlFor="phone"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                Phone *
-              </label>
-              <Input
-                id="phone"
-                type="tel"
-                value={formData.phone}
-                onChange={(e) =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
-                required
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="phone"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  Phone *
+                </label>
+                <Input
+                  id="phone"
+                  type="tel"
+                  value={formData.phone}
+                  onChange={(e) =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  required
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label
-                htmlFor="company_name"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                Company Name
-              </label>
-              <Input
-                id="company_name"
-                type="text"
-                value={formData.company_name}
-                onChange={(e) =>
-                  setFormData({ ...formData, company_name: e.target.value })
-                }
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="company_name"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  Company Name
+                </label>
+                <Input
+                  id="company_name"
+                  type="text"
+                  value={formData.company_name}
+                  onChange={(e) =>
+                    setFormData({ ...formData, company_name: e.target.value })
+                  }
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
           </Grid>
 
-          <div className="u-mb-4">
+          <div className="u-mb-3">
             <label
               htmlFor="address"
               className="u-block u-fs-sm u-font-normal u-mb-1"
@@ -778,125 +894,143 @@ const Customers: React.FC = () => {
               }
               required
               rows={3}
+              className="u-w-100"
             />
           </div>
 
           <Grid>
             <GridCol xs={12} md={4}>
-              <label
-                htmlFor="city"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                City *
-              </label>
-              <Input
-                id="city"
-                type="text"
-                value={formData.city}
-                onChange={(e) =>
-                  setFormData({ ...formData, city: e.target.value })
-                }
-                required
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="city"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  City *
+                </label>
+                <Input
+                  id="city"
+                  type="text"
+                  value={formData.city}
+                  onChange={(e) =>
+                    setFormData({ ...formData, city: e.target.value })
+                  }
+                  required
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
             <GridCol xs={12} md={4}>
-              <label
-                htmlFor="state"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                State *
-              </label>
-              <Input
-                id="state"
-                type="text"
-                value={formData.state}
-                onChange={(e) =>
-                  setFormData({ ...formData, state: e.target.value })
-                }
-                required
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="state"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  State *
+                </label>
+                <Input
+                  id="state"
+                  type="text"
+                  value={formData.state}
+                  onChange={(e) =>
+                    setFormData({ ...formData, state: e.target.value })
+                  }
+                  required
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
             <GridCol xs={12} md={4}>
-              <label
-                htmlFor="postal_code"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                Postal Code *
-              </label>
-              <Input
-                id="postal_code"
-                type="text"
-                value={formData.postal_code}
-                onChange={(e) =>
-                  setFormData({ ...formData, postal_code: e.target.value })
-                }
-                required
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="postal_code"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  Postal Code *
+                </label>
+                <Input
+                  id="postal_code"
+                  type="text"
+                  value={formData.postal_code}
+                  onChange={(e) =>
+                    setFormData({ ...formData, postal_code: e.target.value })
+                  }
+                  required
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
           </Grid>
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label
-                htmlFor="country"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                Country *
-              </label>
-              <Input
-                id="country"
-                type="text"
-                value={formData.country}
-                onChange={(e) =>
-                  setFormData({ ...formData, country: e.target.value })
-                }
-                required
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="country"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  Country *
+                </label>
+                <Input
+                  id="country"
+                  type="text"
+                  value={formData.country}
+                  onChange={(e) =>
+                    setFormData({ ...formData, country: e.target.value })
+                  }
+                  required
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label
-                htmlFor="tax_id"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                Tax ID
-              </label>
-              <Input
-                id="tax_id"
-                type="text"
-                value={formData.tax_id}
-                onChange={(e) =>
-                  setFormData({ ...formData, tax_id: e.target.value })
-                }
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="tax_id"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  Tax ID
+                </label>
+                <Input
+                  id="tax_id"
+                  type="text"
+                  value={formData.tax_id}
+                  onChange={(e) =>
+                    setFormData({ ...formData, tax_id: e.target.value })
+                  }
+                  className="u-w-100"
+                />
+              </div>
             </GridCol>
           </Grid>
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label
-                htmlFor="status"
-                className="u-block u-fs-sm u-font-normal u-mb-1"
-              >
-                Status *
-              </label>
-              <Select
-                id="status"
-                value={formData.status}
-                onChange={(e) =>
-                  setFormData({
-                    ...formData,
-                    status: e.target.value as Customer["status"],
-                  })
-                }
-                required
-                className="u-w-100"
-                options={[
-                  { value: "active", label: "Active" },
-                  { value: "inactive", label: "Inactive" },
-                  { value: "suspended", label: "Suspended" },
-                  { value: "cancelled", label: "Cancelled" },
-                ]}
-              />
+              <div className="u-mb-3">
+                <label
+                  htmlFor="status"
+                  className="u-block u-fs-sm u-font-normal u-mb-1"
+                >
+                  Status *
+                </label>
+                <Select
+                  id="status"
+                  value={formData.status}
+                  onChange={(e) =>
+                    setFormData({
+                      ...formData,
+                      status: e.target.value as Customer["status"],
+                    })
+                  }
+                  required
+                  className="u-w-100"
+                  options={[
+                    { value: "active", label: "Active" },
+                    { value: "inactive", label: "Inactive" },
+                    { value: "suspended", label: "Suspended" },
+                    { value: "cancelled", label: "Cancelled" },
+                  ]}
+                />
+              </div>
             </GridCol>
           </Grid>
 
@@ -914,13 +1048,15 @@ const Customers: React.FC = () => {
                 setFormData({ ...formData, notes: e.target.value })
               }
               rows={3}
+              className="u-w-100"
             />
           </div>
 
-          <div className="u-flex u-justify-end u-gap-2 u-mt-6">
+          <div className="u-flex u-justify-end u-gap-3 u-mt-6">
             <Button
               type="button"
               variant="outline"
+              disabled={createMutation.isPending || updateMutation.isPending}
               onClick={() => {
                 setIsCreateModalOpen(false);
                 setIsEditModalOpen(false);

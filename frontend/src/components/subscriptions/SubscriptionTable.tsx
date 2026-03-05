@@ -10,6 +10,7 @@ import {
   Checkbox,
   Grid,
   GridCol,
+  Select,
 } from "@shohojdhara/atomix";
 import { Subscription } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
@@ -94,13 +95,15 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             </div>
             <Badge variant="info" size="sm" label="Unlimited" />
             {onUpdateDataUsage && (
-              <button
+              <Button
+                variant="ghost"
+                size="sm"
                 onClick={() => onUpdateDataUsage(subscription, used)}
-                className="u-btn u-btn-sm u-btn-ghost u-mt-1"
+                className="u-mt-1"
+                iconName="Pencil"
+                iconSize={12}
                 title="Update data usage"
-              >
-                <Icon name="Pencil" size={12} />
-              </button>
+              />
             )}
           </div>
         );
@@ -158,22 +161,24 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
 
           <div className="u-flex u-gap-1">
             {onResetDataUsage && (
-              <button
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => onResetDataUsage(subscription)}
-                className="u-btn u-btn-xs u-btn-outline-secondary"
+                iconName="ArrowCounterClockwise"
+                iconSize={10}
                 title="Reset data usage"
-              >
-                <Icon name="ArrowCounterClockwise" size={10} />
-              </button>
+              />
             )}
             {onUpdateDataUsage && (
-              <button
+              <Button
+                variant="outline"
+                size="sm"
                 onClick={() => onUpdateDataUsage(subscription, used)}
-                className="u-btn u-btn-xs u-btn-outline-secondary"
+                iconName="Pencil"
+                iconSize={10}
                 title="Update data usage"
-              >
-                <Icon name="Pencil" size={10} />
-              </button>
+              />
             )}
           </div>
         </div>
@@ -529,16 +534,16 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                 </Button>
               </div>
               <div className="u-flex u-items-center u-gap-2">
-                <select
+                <Select
                   value={bulkActionStatus}
                   onChange={(e) => setBulkActionStatus(e.target.value)}
-                  className="u-w-100 u-py-1 u-px-2 u-border u-rounded u-bg-surface u-text-foreground u-fs-sm"
-                >
-                  <option value="">Select Action</option>
-                  <option value="active">Activate</option>
-                  <option value="suspended">Suspend</option>
-                  <option value="cancelled">Cancel</option>
-                </select>
+                  options={[
+                    { value: "", label: "Select Action" },
+                    { value: "active", label: "Activate" },
+                    { value: "suspended", label: "Suspend" },
+                    { value: "cancelled", label: "Cancel" },
+                  ]}
+                />
                 <Button
                   variant="primary"
                   size="sm"

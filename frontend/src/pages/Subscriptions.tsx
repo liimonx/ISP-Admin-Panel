@@ -1,6 +1,6 @@
 import React, { useState, useMemo, useCallback } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { Button, Icon, Callout } from "@shohojdhara/atomix";
+import { Button, Icon, Callout, Pagination } from "@shohojdhara/atomix";
 import { Toast } from "../components/ui/Toast";
 import { Subscription, SubscriptionFormData } from "../types";
 import {
@@ -515,23 +515,10 @@ const Subscriptions: React.FC = () => {
                   size="sm"
                   onClick={() => refetchSubscriptions()}
                   disabled={subscriptionsLoading}
+                  iconName={subscriptionsLoading ? "Spinner" : "ArrowClockwise"}
+                  iconSize={16}
                 >
-                  {subscriptionsLoading ? (
-                    <>
-                      <div
-                        className="u-spinner-border u-spinner-border-sm u-me-2"
-                        role="status"
-                      >
-                        <span className="u-visually-hidden">Loading...</span>
-                      </div>
-                      Retrying...
-                    </>
-                  ) : (
-                    <>
-                      <Icon name="ArrowClockwise" size={16} />
-                      Retry
-                    </>
-                  )}
+                  {subscriptionsLoading ? "Retrying..." : "Retry"}
                 </Button>
               </div>
             </div>
@@ -554,13 +541,13 @@ const Subscriptions: React.FC = () => {
       )}
 
       {/* Page Header */}
-      <div className="u-flex u-justify-between u-items-start u-mb-6">
+      <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
-          <h1 className="u-fs-1 u-font-bold u-text-primary-emphasis u-mb-2">
+          <h1 className="u-flex u-items-center u-mb-2">
             <Icon name="Users" size={32} className="u-me-3" />
             Subscriptions
           </h1>
-          <p className="u-text-secondary-emphasis u-fs-5 u-mb-0">
+          <p className="u-text-secondary-emphasis u-mb-0">
             Manage customer subscriptions, service connections, and billing
           </p>
         </div>
@@ -570,8 +557,9 @@ const Subscriptions: React.FC = () => {
             size="md"
             onClick={handleExport}
             disabled={isLoading}
+            iconName="Download"
+            iconSize={16}
           >
-            <Icon name="Download" size={16} />
             Export
           </Button>
           <Button
@@ -579,8 +567,9 @@ const Subscriptions: React.FC = () => {
             size="md"
             onClick={handleCreateSubscription}
             disabled={anyLoading}
+            iconName="Plus"
+            iconSize={16}
           >
-            <Icon name="Plus" size={16} />
             Add Subscription
           </Button>
         </div>
@@ -635,38 +624,12 @@ const Subscriptions: React.FC = () => {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="u-flex u-justify-center u-items-center u-mt-6">
-          <div className="u-flex u-items-center u-gap-3">
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage === 1}
-              onClick={() => setCurrentPage(currentPage - 1)}
-            >
-              <Icon name="ArrowLeft" size={16} />
-              Previous
-            </Button>
-
-            <div className="u-flex u-items-center u-gap-2">
-              <span className="u-text-secondary-emphasis u-fs-sm">
-                Page {currentPage} of {totalPages}
-              </span>
-              <span className="u-text-secondary-emphasis u-fs-sm">•</span>
-              <span className="u-text-secondary-emphasis u-fs-sm">
-                {subscriptionsData?.count || 0} total subscriptions
-              </span>
-            </div>
-
-            <Button
-              variant="outline"
-              size="sm"
-              disabled={currentPage === totalPages}
-              onClick={() => setCurrentPage(currentPage + 1)}
-            >
-              Next
-              <Icon name="ArrowRight" size={16} />
-            </Button>
-          </div>
+        <div className="u-flex u-justify-end u-mt-6">
+          <Pagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={setCurrentPage}
+          />
         </div>
       )}
 
