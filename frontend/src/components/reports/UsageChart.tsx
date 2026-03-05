@@ -34,7 +34,7 @@ export const UsageChart: React.FC<UsageChartProps> = ({
         >
           <div className="u-text-center">
             <div className="u-spinner u-mx-auto u-mb-2"></div>
-            <p className="u-text-muted">Loading chart data...</p>
+            <p className="u-text-secondary">Loading chart data...</p>
           </div>
         </div>
       </Card>

@@ -267,7 +267,7 @@ const Monitoring: React.FC = () => {
       {/* Header */}
       <div className="u-flex u-justify-between u-items-center u-mb-6">
         <div>
-          <h1 className="u-text-2xl u-mb-2">Network Monitoring</h1>
+          <h1 className="u-fs-2xl u-mb-2">Network Monitoring</h1>
           <p className="u-text-secondary-emphasis">
             Real-time monitoring of network infrastructure and performance
           </p>

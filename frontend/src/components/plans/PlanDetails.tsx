@@ -109,7 +109,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
               <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                 Monthly Price
               </div>
-              <div className="u-text-2xl u-font-bold u-text-primary">
+              <div className="u-fs-2xl u-font-bold u-text-primary">
                 {formatPrice(plan.price)}
               </div>
               <div className="u-fs-sm u-text-secondary-emphasis">

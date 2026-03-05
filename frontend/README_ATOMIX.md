@@ -848,7 +848,7 @@ Examples:
 .u-text-success       /* Green for success */
 .u-text-error         /* Red for errors */
 .u-text-warning       /* Yellow for warnings */
-.u-text-muted         /* Gray for secondary text */
+.u-text-secondary         /* Gray for secondary text */
 ```
 
 ## Component Props Reference

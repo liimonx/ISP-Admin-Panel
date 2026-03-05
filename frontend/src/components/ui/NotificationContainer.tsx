@@ -59,7 +59,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({
         )}
         <button
           onClick={handleDismiss}
-          className="u-absolute u-top-0 u-end-0 u-p-2 u-bg-transparent u-border-0 u-text-muted"
+          className="u-absolute u-top-0 u-end-0 u-p-2 u-bg-transparent u-border-0 u-text-secondary"
         >
           ×
         </button>

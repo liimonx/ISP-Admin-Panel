@@ -267,7 +267,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <Icon
             name={isExpanded ? "CaretDown" : "CaretRight"}
             size={16}
-            className="u-text-muted"
+            className="u-text-secondary"
           />
         )}
         {!collapsed && item.badge && (

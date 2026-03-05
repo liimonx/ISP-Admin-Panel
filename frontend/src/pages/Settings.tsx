@@ -236,7 +236,7 @@ const Settings: React.FC = () => {
   return (
     <Container className="u-p-6">
       <div className="u-mb-6">
-        <h1 className="u-text-2xl u-font-bold u-mb-2">System Settings</h1>
+        <h1 className="u-fs-2xl u-font-bold u-mb-2">System Settings</h1>
         <p className="u-text-secondary-emphasis">
           Configure system-wide settings and preferences for your ISP admin
           panel.

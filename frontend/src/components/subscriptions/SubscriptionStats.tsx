@@ -240,7 +240,7 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
                 <p className="u-fs-sm u-font-normal u-mb-1 u-text-secondary-emphasis">
                   Real-time Stats
                 </p>
-                <p className="u-fs-xs u-mb-0 u-text-muted">
+                <p className="u-fs-xs u-mb-0 u-text-secondary">
                   Auto-refresh every {refreshInterval / 1000}s
                 </p>
               </div>

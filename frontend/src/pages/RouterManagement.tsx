@@ -252,8 +252,8 @@ const RouterManagement: React.FC = () => {
   return (
     <div className="u-p-6 u-max-w-7xl u-mx-auto">
       <div className="u-mb-6">
-        <h1 className="u-text-2xl u-font-bold u-mb-2">Router Management</h1>
-        <p className="u-text-muted">
+        <h1 className="u-fs-2xl u-font-bold u-mb-2">Router Management</h1>
+        <p className="u-text-secondary">
           Manage your network routers and their configurations.
         </p>
       </div>
@@ -294,7 +294,7 @@ const RouterManagement: React.FC = () => {
       {isLoading ? (
         <div className="u-text-center u-py-8">
           <div className="u-spinner u-mx-auto"></div>
-          <p className="u-text-muted u-mt-4">Loading routers...</p>
+          <p className="u-text-secondary u-mt-4">Loading routers...</p>
         </div>
       ) : error ? (
         <Card>
@@ -303,7 +303,7 @@ const RouterManagement: React.FC = () => {
             <h3 className="u-sm-lg u-font-bold u-mb-2">
               Error Loading Routers
             </h3>
-            <p className="u-text-muted">
+            <p className="u-text-secondary">
               Failed to load router data. Please try again.
             </p>
           </div>

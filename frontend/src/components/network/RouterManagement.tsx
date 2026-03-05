@@ -75,7 +75,7 @@ const RouterManagement: React.FC = () => {
 
   return (
     <div className="u-p-6">
-      <h2 className="u-text-2xl u-font-bold u-mb-6">Router Management</h2>
+      <h2 className="u-fs-2xl u-font-bold u-mb-6">Router Management</h2>
 
       <div className="u-bg-surface u-rounded u-shadow u-overflow-hidden">
         <table className="u-w-100 uivide-y uivide-gray-200">
