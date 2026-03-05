@@ -247,11 +247,16 @@ const Network: React.FC = () => {
             variant="outline"
             size="md"
             iconName="ChartLine"
-            iconSize={16}
+            iconSize={"sm"}
           >
             Network Stats
           </Button>
-          <Button variant="outline" size="md" iconName="Download" iconSize={16}>
+          <Button
+            variant="outline"
+            size="md"
+            iconName="Download"
+            iconSize={"sm"}
+          >
             Export
           </Button>
           <Button
@@ -259,7 +264,7 @@ const Network: React.FC = () => {
             size="md"
             onClick={handleCreateRouter}
             iconName="Plus"
-            iconSize={16}
+            iconSize={"sm"}
           >
             Add Router
           </Button>
@@ -280,7 +285,7 @@ const Network: React.FC = () => {
                 </div>
               </div>
               <div className="u-bg-primary-subtle u-p-3 u-rounded">
-                <Icon name="Globe" size={24} className="u-text-primary" />
+                <Icon name="Globe" size={"lg"} className="u-text-primary" />
               </div>
             </div>
           </Card>
@@ -298,7 +303,11 @@ const Network: React.FC = () => {
                 </div>
               </div>
               <div className="u-bg-success-subtle u-p-3 u-rounded">
-                <Icon name="CheckCircle" size={24} className="u-text-success" />
+                <Icon
+                  name="CheckCircle"
+                  size={"lg"}
+                  className="u-text-success"
+                />
               </div>
             </div>
           </Card>
@@ -316,7 +325,7 @@ const Network: React.FC = () => {
                 </div>
               </div>
               <div className="u-bg-error-subtle u-p-3 u-rounded">
-                <Icon name="XCircle" size={24} className="u-text-error" />
+                <Icon name="XCircle" size={"lg"} className="u-text-error" />
               </div>
             </div>
           </Card>
@@ -335,7 +344,7 @@ const Network: React.FC = () => {
                 </div>
               </div>
               <div className="u-bg-warning-subtle u-p-3 u-rounded">
-                <Icon name="Wrench" size={24} className="u-text-warning" />
+                <Icon name="Wrench" size={"lg"} className="u-text-warning" />
               </div>
             </div>
           </Card>
@@ -370,7 +379,7 @@ const Network: React.FC = () => {
                 variant="outline"
                 size="md"
                 iconName="Funnel"
-                iconSize={16}
+                iconSize={"sm"}
               >
                 More Filters
               </Button>
@@ -461,22 +470,22 @@ const Network: React.FC = () => {
                               onClick={() => handleEditRouter(router)}
                               className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
                             >
-                              <Icon name="Pencil" size={16} />
+                              <Icon name="Pencil" size={"sm"} />
                               Edit
                             </button>
                             <button className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle">
-                              <Icon name="Eye" size={16} />
+                              <Icon name="Eye" size={"sm"} />
                               View Details
                             </button>
                             <button className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle">
-                              <Icon name="GearSix" size={16} />
+                              <Icon name="GearSix" size={"sm"} />
                               Configure
                             </button>
                             <button
                               onClick={() => handleDeleteRouter(router)}
                               className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle u-text-error"
                             >
-                              <Icon name="Trash" size={16} />
+                              <Icon name="Trash" size={"sm"} />
                               Delete
                             </button>
                           </div>
@@ -486,7 +495,7 @@ const Network: React.FC = () => {
                           variant="ghost"
                           size="sm"
                           iconName="DotsThreeVertical"
-                          iconSize={16}
+                          iconSize={"sm"}
                         />
                       </Dropdown>
                     </div>

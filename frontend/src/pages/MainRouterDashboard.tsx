@@ -308,20 +308,22 @@ const MainRouterDashboard: React.FC = () => {
             options={TIME_RANGES}
             className="u-min-w-150"
           />
-          <Button variant="outline" onClick={() => setIsCommandModalOpen(true)}>
-            <Icon name="Terminal" size={16} className="u-me-2" />
+          <Button
+            variant="outline"
+            onClick={() => setIsCommandModalOpen(true)}
+            iconName="Terminal"
+            iconSize="sm"
+          >
             Console
           </Button>
           <Button
             variant="error"
             onClick={() => restartMutation.mutate()}
             disabled={restartMutation.isPending}
+            loading={restartMutation.isPending}
+            iconName="ArrowClockwise"
+            iconSize="sm"
           >
-            {restartMutation.isPending ? (
-              <Spinner size="sm" className="u-me-2" />
-            ) : (
-              <Icon name="ArrowClockwise" size={16} className="u-me-2" />
-            )}
             Restart
           </Button>
         </div>
@@ -336,7 +338,7 @@ const MainRouterDashboard: React.FC = () => {
                 <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
                   <Icon
                     name="CheckCircle"
-                    size={24}
+                    size={"lg"}
                     className="u-text-success"
                   />
                 </div>
@@ -356,7 +358,7 @@ const MainRouterDashboard: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Cpu" size={24} />
+                  <Icon name="Cpu" size={"lg"} />
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{resources?.cpu_usage || 0}%</h3>
@@ -380,7 +382,7 @@ const MainRouterDashboard: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="HardDrive" size={24} className="u-text-info" />
+                  <Icon name="HardDrive" size={"lg"} className="u-text-info" />
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">
@@ -406,7 +408,7 @@ const MainRouterDashboard: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Users" size={24} className="u-text-warning" />
+                  <Icon name="Users" size={"lg"} className="u-text-warning" />
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{connectionsData?.count || 0}</h3>
@@ -425,7 +427,7 @@ const MainRouterDashboard: React.FC = () => {
 
       {/* Tabs */}
       <div className="u-mb-6">
-        <div className="u-flex u-gap-1 u-border-bottom">
+        <div className="u-flex u-gap-1 u-border-b">
           {[
             { id: "overview", label: "Overview", icon: "ChartLine" },
             { id: "interfaces", label: "Interfaces", icon: "Globe" },
@@ -439,8 +441,9 @@ const MainRouterDashboard: React.FC = () => {
               size="sm"
               onClick={() => setSelectedTab(tab.id)}
               className="u-rounded-bottom-0"
+              iconName={tab.icon}
+              iconSize="sm"
             >
-              <Icon name={tab.icon as any} size={16} className="u-me-2" />
               {tab.label}
             </Button>
           ))}
@@ -488,7 +491,7 @@ const MainRouterDashboard: React.FC = () => {
 
       {selectedTab === "interfaces" && (
         <Card>
-          <div className="u-p-4 u-border-bottom">
+          <div className="u-p-4 u-border-b">
             <h3 className="u-h5 u-mb-0">Network Interfaces</h3>
           </div>
           {interfacesLoading ? (
@@ -568,7 +571,7 @@ const MainRouterDashboard: React.FC = () => {
 
       {selectedTab === "connections" && (
         <Card>
-          <div className="u-p-4 u-border-bottom">
+          <div className="u-p-4 u-border-b">
             <h3 className="u-h5 u-mb-0">Active Connections</h3>
           </div>
           {connectionsLoading ? (
@@ -643,7 +646,7 @@ const MainRouterDashboard: React.FC = () => {
 
               {connectionsData &&
                 Math.ceil((connectionsData.count || 0) / itemsPerPage) > 1 && (
-                  <div className="u-p-4 u-border-top">
+                  <div className="u-p-4 u-border-t">
                     <Pagination
                       currentPage={currentPage}
                       totalPages={Math.ceil(
@@ -660,7 +663,7 @@ const MainRouterDashboard: React.FC = () => {
 
       {selectedTab === "dhcp" && (
         <Card>
-          <div className="u-p-4 u-border-bottom">
+          <div className="u-p-4 u-border-b">
             <h3 className="u-h5 u-mb-0">DHCP Leases</h3>
           </div>
           {dhcpLoading ? (
@@ -725,7 +728,7 @@ const MainRouterDashboard: React.FC = () => {
 
       {selectedTab === "logs" && (
         <Card>
-          <div className="u-p-4 u-border-bottom">
+          <div className="u-p-4 u-border-b">
             <h3 className="u-h5 u-mb-0">System Logs</h3>
           </div>
           {logsLoading ? (
@@ -738,11 +741,11 @@ const MainRouterDashboard: React.FC = () => {
           ) : (
             <div className="u-p-4">
               {logs && logs.length > 0 ? (
-                <div className="u-space-y-2 u-max-h-125 u-overflow-y-auto">
+                <div className="u-flex u-flex-column u-gap-2 u-max-h-125 u-overflow-y-auto">
                   {logs.map((log: any, index: number) => (
                     <div
                       key={index}
-                      className="u-p-3 u-bg-gray-subtle u-rounded u-flex u-justify-between"
+                      className="u-p-3 u-bg-secondary-subtle u-rounded u-flex u-justify-between"
                     >
                       <div className="u-flex-1">
                         <div className="u-fs-sm u-font-normal u-mb-1">
@@ -800,7 +803,7 @@ const MainRouterDashboard: React.FC = () => {
         title="Router Console"
         size="lg"
       >
-        <div className="u-space-y-4">
+        <div className="u-flex u-flex-column u-gap-4">
           <div>
             <label className="u-block u-mb-2 u-font-normal">Command</label>
             <Input
@@ -817,7 +820,7 @@ const MainRouterDashboard: React.FC = () => {
                 value={commandResult}
                 readOnly
                 rows={10}
-                className="u-bg-gray-subtle"
+                className="u-bg-secondary-subtle"
               />
             </div>
           )}
@@ -839,15 +842,10 @@ const MainRouterDashboard: React.FC = () => {
             variant="primary"
             onClick={handleExecuteCommand}
             disabled={executeCommandMutation.isPending || !command.trim()}
+            loading={executeCommandMutation.isPending}
+            loadingText="Executing..."
           >
-            {executeCommandMutation.isPending ? (
-              <>
-                <Spinner size="sm" className="u-me-2" />
-                Executing...
-              </>
-            ) : (
-              "Execute"
-            )}
+            Execute
           </Button>
         </div>
       </Modal>

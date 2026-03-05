@@ -327,7 +327,7 @@ const Users: React.FC = () => {
           onClick={() => setIsCreateModalOpen(true)}
           disabled={isLoading}
         >
-          <Icon name="Plus" size={16} className="u-me-2" />
+          <Icon name="Plus" size={"sm"} className="u-me-2" />
           Add User
         </Button>
       </div>
@@ -339,7 +339,7 @@ const Users: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-primary-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Users" size={24} className="u-text-primary" />
+                  <Icon name="Users" size={"lg"} className="u-text-primary" />
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{userStats.total_users || 0}</h3>
@@ -354,7 +354,11 @@ const Users: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="UserCheck" size={24} className="u-text-success" />
+                  <Icon
+                    name="UserCheck"
+                    size={"lg"}
+                    className="u-text-success"
+                  />
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{userStats.active_users || 0}</h3>
@@ -369,7 +373,7 @@ const Users: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-danger-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Shield" size={24} className="u-text-danger" />
+                  <Icon name="Shield" size={"lg"} className="u-text-danger" />
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">{userStats.admin_users || 0}</h3>
@@ -384,7 +388,7 @@ const Users: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Clock" size={24} className="u-text-warning" />
+                  <Icon name="Clock" size={"lg"} className="u-text-warning" />
                 </div>
                 <div>
                   <h3 className="u-h4 u-mb-1">
@@ -543,7 +547,7 @@ const Users: React.FC = () => {
                   variant="primary"
                   onClick={() => setIsCreateModalOpen(true)}
                 >
-                  <Icon name="Plus" size={16} className="u-me-2" />
+                  <Icon name="Plus" size={"sm"} className="u-me-2" />
                   Add User
                 </Button>
               </div>
@@ -597,7 +601,9 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-font-normal">First Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">
+                First Name *
+              </label>
               <Input
                 value={formData.first_name}
                 onChange={(e) =>
@@ -613,7 +619,9 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-font-normal">Last Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">
+                Last Name *
+              </label>
               <Input
                 value={formData.last_name}
                 onChange={(e) => handleInputChange("last_name", e.target.value)}
@@ -776,7 +784,9 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-font-normal">First Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">
+                First Name *
+              </label>
               <Input
                 value={formData.first_name}
                 onChange={(e) =>
@@ -792,7 +802,9 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-font-normal">Last Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">
+                Last Name *
+              </label>
               <Input
                 value={formData.last_name}
                 onChange={(e) => handleInputChange("last_name", e.target.value)}
@@ -930,7 +942,7 @@ const Users: React.FC = () => {
       >
         <div className="u-text-center">
           <div className="u-bg-danger-subtle u-p-4 u-rounded-circle u-inline-flex u-mb-4">
-            <Icon name="Trash" size={24} className="u-text-danger" />
+            <Icon name="Trash" size={"lg"} className="u-text-danger" />
           </div>
           <h3 className="u-h5 u-mb-3">Delete User</h3>
           <p className="u-text-secondary-emphasis u-mb-4">

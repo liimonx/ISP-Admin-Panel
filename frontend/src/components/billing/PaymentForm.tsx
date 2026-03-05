@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Modal,
-  Button,
-  Input,
-  Textarea,
-  Callout,
-  Spinner,
-  Select,
-} from "@shohojdhara/atomix";
+import { Modal, Button, Input, Textarea, Select } from "@shohojdhara/atomix";
 import { Invoice, Payment } from "../../types";
 import { formatCurrency, toNumber } from "../../utils/formatters";
 
@@ -16,7 +8,7 @@ interface PaymentFormProps {
   onClose: () => void;
   invoice: Invoice | null;
   onSubmit: (data: {
-    invoice_id: number;
+    invoice: number;
     amount: number;
     payment_method: Payment["payment_method"];
     transaction_id?: string;
@@ -97,7 +89,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
     if (!validateForm() || !invoice) return;
 
     const paymentData = {
-      invoice_id: invoice.id,
+      invoice: invoice.id,
       amount: formData.amount,
       payment_method: formData.payment_method,
       transaction_id: formData.transaction_id.trim() || undefined,
@@ -258,7 +250,10 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         )}
 
         <div className="u-mb-4">
-          <label htmlFor="notes" className="u-block u-fs-sm u-font-normal u-mb-1">
+          <label
+            htmlFor="notes"
+            className="u-block u-fs-sm u-font-normal u-mb-1"
+          >
             Notes
           </label>
           <Textarea

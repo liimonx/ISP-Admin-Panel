@@ -516,7 +516,7 @@ const Subscriptions: React.FC = () => {
                   onClick={() => refetchSubscriptions()}
                   disabled={subscriptionsLoading}
                   iconName={subscriptionsLoading ? "Spinner" : "ArrowClockwise"}
-                  iconSize={16}
+                  iconSize={"sm"}
                 >
                   {subscriptionsLoading ? "Retrying..." : "Retry"}
                 </Button>
@@ -558,7 +558,7 @@ const Subscriptions: React.FC = () => {
             onClick={handleExport}
             disabled={isLoading}
             iconName="Download"
-            iconSize={16}
+            iconSize={"sm"}
           >
             Export
           </Button>
@@ -568,7 +568,7 @@ const Subscriptions: React.FC = () => {
             onClick={handleCreateSubscription}
             disabled={anyLoading}
             iconName="Plus"
-            iconSize={16}
+            iconSize={"sm"}
           >
             Add Subscription
           </Button>

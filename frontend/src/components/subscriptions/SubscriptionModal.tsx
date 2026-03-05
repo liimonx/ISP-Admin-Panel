@@ -70,7 +70,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         {/* Customer and Plan Selection */}
         <div className="u-bg-secondary-subtle u-p-4 u-rounded">
           <h4 className="u-text-base u-font-bold u-mb-3 u-text-primary">
-            <Icon name="User" size={16} className="u-me-2" />
+            <Icon name="User" size={"sm"} className="u-me-2" />
             Customer & Plan Details
           </h4>
 
@@ -162,7 +162,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         {/* Network Configuration */}
         <div className="u-bg-info-subtle u-p-4 u-rounded">
           <h4 className="u-text-base u-font-bold u-mb-3 u-text-primary">
-            <Icon name="Globe" size={16} className="u-me-2" />
+            <Icon name="Globe" size={"sm"} className="u-me-2" />
             Network Configuration
           </h4>
 
@@ -302,7 +302,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         {/* Subscription Details */}
         <div className="u-bg-success-subtle u-p-4 u-rounded">
           <h4 className="u-text-base u-font-bold u-mb-3 u-text-primary">
-            <Icon name="Calendar" size={16} className="u-me-2" />
+            <Icon name="Calendar" size={"sm"} className="u-me-2" />
             Subscription Details
           </h4>
 
@@ -372,7 +372,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
         {/* Billing Information */}
         <div className="u-bg-warning-subtle u-p-4 u-rounded">
           <h4 className="u-text-base u-font-bold u-mb-3 u-text-primary">
-            <Icon name="CurrencyDollar" size={16} className="u-me-2" />
+            <Icon name="CurrencyDollar" size={"sm"} className="u-me-2" />
             Billing Information
           </h4>
 
@@ -451,7 +451,7 @@ const SubscriptionModal: React.FC<SubscriptionModalProps> = ({
             iconName={
               isSubmitting ? "Spinner" : mode === "create" ? "Plus" : "Check"
             }
-            iconSize={16}
+            iconSize={"sm"}
             className={isSubmitting ? "u-spin" : ""}
           >
             {isSubmitting

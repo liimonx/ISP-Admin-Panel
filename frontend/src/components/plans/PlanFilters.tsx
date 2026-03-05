@@ -54,7 +54,7 @@ export const PlanFilters: React.FC<PlanFiltersProps> = ({
             size="sm"
             onClick={onReset}
             iconName="X"
-            iconSize={16}
+            iconSize={"sm"}
           >
             Clear Filters
           </Button>

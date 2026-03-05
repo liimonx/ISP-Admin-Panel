@@ -90,7 +90,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
             className="u-absolute u-top-50 u-end-2 u-transform u-translate-y--50 u-p-1 u-h-auto"
             aria-label="Clear search"
             iconName="XCircle"
-            iconSize={16}
+            iconSize={"sm"}
           />
         )}
       </div>

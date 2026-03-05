@@ -129,7 +129,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
           className="u-flex-fill"
           onClick={() => onView(payment)}
           iconName="Eye"
-          iconSize={16}
+          iconSize={"sm"}
         >
           View
         </Button>
@@ -140,7 +140,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
           className="u-flex-fill"
           onClick={() => onDownload(payment)}
           iconName="Download"
-          iconSize={16}
+          iconSize={"sm"}
         >
           Receipt
         </Button>
@@ -151,7 +151,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
             size="sm"
             onClick={() => onRefund(payment)}
             iconName="Refresh"
-            iconSize={16}
+            iconSize={"sm"}
           />
         )}
       </div>

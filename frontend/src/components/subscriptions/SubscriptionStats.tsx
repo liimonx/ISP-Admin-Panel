@@ -210,7 +210,7 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
                     color: "#10B981",
                   }}
                 >
-                  <Icon name="ArrowClockwise" size={24} />
+                  <Icon name="ArrowClockwise" size={"lg"} />
                 </div>
                 <Button
                   variant="outline"
@@ -218,7 +218,7 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
                   onClick={() => refetchStats()}
                   disabled={isLoading}
                   iconName={isLoading ? "Spinner" : "ArrowClockwise"}
-                  iconSize={16}
+                  iconSize={"sm"}
                 />
               </div>
 

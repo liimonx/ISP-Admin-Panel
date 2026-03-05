@@ -285,7 +285,7 @@ const Customers: React.FC = () => {
                 size="sm"
                 onClick={() => refetch()}
                 iconName="ArrowClockwise"
-                iconSize={16}
+                iconSize={"sm"}
               >
                 Retry
               </Button>
@@ -316,7 +316,7 @@ const Customers: React.FC = () => {
               size="md"
               onClick={handleExport}
               iconName="Download"
-              iconSize={16}
+              iconSize={"sm"}
             >
               Export
             </Button>
@@ -325,7 +325,7 @@ const Customers: React.FC = () => {
               size="md"
               onClick={handleCreateCustomer}
               iconName="Plus"
-              iconSize={16}
+              iconSize={"sm"}
             >
               Add Customer
             </Button>
@@ -348,7 +348,7 @@ const Customers: React.FC = () => {
                   </div>
                 </div>
                 <div className="u-bg-primary-subtle u-p-3 u-rounded">
-                  <Icon name="Users" size={24} className="u-text-primary" />
+                  <Icon name="Users" size={"lg"} className="u-text-primary" />
                 </div>
               </div>
             </Card>
@@ -371,7 +371,7 @@ const Customers: React.FC = () => {
                 <div className="u-bg-success-subtle u-p-3 u-rounded">
                   <Icon
                     name="CheckCircle"
-                    size={24}
+                    size={"lg"}
                     className="u-text-success"
                   />
                 </div>
@@ -392,7 +392,7 @@ const Customers: React.FC = () => {
                   </div>
                 </div>
                 <div className="u-bg-warning-subtle u-p-3 u-rounded">
-                  <Icon name="Warning" size={24} className="u-text-warning" />
+                  <Icon name="Warning" size={"lg"} className="u-text-warning" />
                 </div>
               </div>
             </Card>
@@ -413,7 +413,7 @@ const Customers: React.FC = () => {
                 <div className="u-bg-secondary-subtle u-p-3 u-rounded">
                   <Icon
                     name="UserMinus"
-                    size={24}
+                    size={"lg"}
                     className="u-text-secondary-emphasis"
                   />
                 </div>
@@ -452,7 +452,7 @@ const Customers: React.FC = () => {
                 variant="outline"
                 size="md"
                 iconName="Funnel"
-                iconSize={16}
+                iconSize={"sm"}
               >
                 Advanced Filters
               </Button>
@@ -624,7 +624,7 @@ const Customers: React.FC = () => {
                   variant="primary"
                   onClick={handleCreateCustomer}
                   iconName="Plus"
-                  iconSize={16}
+                  iconSize={"sm"}
                 >
                   Add Customer
                 </Button>
@@ -758,7 +758,7 @@ const Customers: React.FC = () => {
                   handleEditCustomer(selectedCustomer);
                 }}
                 iconName="Pencil"
-                iconSize={16}
+                iconSize={"sm"}
               >
                 Edit Customer
               </Button>

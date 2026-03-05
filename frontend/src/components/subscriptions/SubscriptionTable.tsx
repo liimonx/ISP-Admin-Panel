@@ -222,7 +222,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             onClick={() => onUpdateStatus(subscription, "active")}
             className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
           >
-            <Icon name="Play" size={16} />
+            <Icon name="Play" size={"sm"} />
             Activate
           </button>,
         );
@@ -235,7 +235,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             onClick={() => onUpdateStatus(subscription, "suspended")}
             className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-warning u-cursor-pointer hover:u-bg-warning-subtle"
           >
-            <Icon name="Pause" size={16} />
+            <Icon name="Pause" size={"sm"} />
             Suspend
           </button>,
         );
@@ -248,7 +248,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             onClick={() => onUpdateStatus(subscription, "active")}
             className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
           >
-            <Icon name="Play" size={16} />
+            <Icon name="Play" size={"sm"} />
             Reactivate
           </button>,
         );
@@ -261,7 +261,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             onClick={() => onUpdateStatus(subscription, "cancelled")}
             className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
           >
-            <Icon name="X" size={16} />
+            <Icon name="X" size={"sm"} />
             Cancel
           </button>,
         );
@@ -383,14 +383,14 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                 onClick={() => onView(subscription)}
                 className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
               >
-                <Icon name="Eye" size={16} />
+                <Icon name="Eye" size={"sm"} />
                 View Details
               </button>
               <button
                 onClick={() => onEdit(subscription)}
                 className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
               >
-                <Icon name="Pencil" size={16} />
+                <Icon name="Pencil" size={"sm"} />
                 Edit
               </button>
               <div className="u-border-top u-border-light u-my-1"></div>
@@ -401,21 +401,21 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                 className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
                 onClick={() => onView(subscription)}
               >
-                <Icon name="Receipt" size={16} />
+                <Icon name="Receipt" size={"sm"} />
                 Billing History
               </button>
               <button
                 className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
                 onClick={() => onView(subscription)}
               >
-                <Icon name="ChartBar" size={16} />
+                <Icon name="ChartBar" size={"sm"} />
                 Usage Analytics
               </button>
               <button
                 className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
                 onClick={() => onView(subscription)}
               >
-                <Icon name="Wrench" size={16} />
+                <Icon name="Wrench" size={"sm"} />
                 Router Settings
               </button>
 
@@ -424,7 +424,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
                 onClick={() => onDelete(subscription)}
                 className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
               >
-                <Icon name="Trash" size={16} />
+                <Icon name="Trash" size={"sm"} />
                 Delete
               </button>
             </div>
@@ -434,7 +434,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             variant="ghost"
             size="sm"
             iconName="DotsThreeVertical"
-            iconSize={16}
+            iconSize={"sm"}
           />
         </Dropdown>
       ),
@@ -504,7 +504,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             size="md"
             onClick={onCreate}
             iconName="Plus"
-            iconSize={16}
+            iconSize={"sm"}
           >
             Add First Subscription
           </Button>

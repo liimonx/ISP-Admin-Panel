@@ -266,7 +266,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
         {!collapsed && hasChildren && (
           <Icon
             name={isExpanded ? "CaretDown" : "CaretRight"}
-            size={16}
+            size={"sm"}
             className="u-text-secondary"
           />
         )}
@@ -355,7 +355,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <Tooltip content="BCN ISP v1.0.0 - System Online">
               <Icon
                 name="Info"
-                size={16}
+                size={"sm"}
                 className="u-text-secondary-emphasis"
               />
             </Tooltip>

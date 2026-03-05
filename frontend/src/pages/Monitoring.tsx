@@ -316,7 +316,7 @@ const Monitoring: React.FC = () => {
                 <div className="u-bg-success-subtle u-p-3 u-rounded u-me-3">
                   <Icon
                     name="CheckCircle"
-                    size={24}
+                    size={"lg"}
                     className="u-text-success"
                   />
                 </div>
@@ -339,7 +339,7 @@ const Monitoring: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Warning" size={24} className="u-text-warning" />
+                  <Icon name="Warning" size={"lg"} className="u-text-warning" />
                 </div>
                 <div>
                   <h3 className="u-sm-lg u-mb-1">
@@ -426,7 +426,7 @@ const Monitoring: React.FC = () => {
               onClick={() => refetchRouters()}
               disabled={routersLoading}
             >
-              <Icon name="ArrowClockwise" size={16} className="u-me-2" />
+              <Icon name="ArrowClockwise" size={"sm"} className="u-me-2" />
               Refresh
             </Button>
           </div>
@@ -608,7 +608,7 @@ const Monitoring: React.FC = () => {
                   variant="primary"
                   onClick={() => (window.location.href = "/network")}
                 >
-                  <Icon name="Plus" size={16} className="u-me-2" />
+                  <Icon name="Plus" size={"sm"} className="u-me-2" />
                   Add Router
                 </Button>
               </div>

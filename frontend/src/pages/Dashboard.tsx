@@ -381,7 +381,7 @@ const Dashboard: React.FC = () => {
             onClick={() => refreshMutation.mutate()}
             disabled={refreshMutation.isPending}
           >
-            <Icon name="ArrowClockwise" size={16} />
+            <Icon name="ArrowClockwise" size={"sm"} />
             {refreshMutation.isPending ? "Retrying..." : "Retry"}
           </Button>
         </div>
@@ -414,17 +414,17 @@ const Dashboard: React.FC = () => {
               onClick={() => refreshMutation.mutate()}
               disabled={refreshMutation.isPending}
             >
-              <Icon name="ArrowClockwise" size={16} className="u-me-2" />
+              <Icon name="ArrowClockwise" size={"sm"} className="u-me-2" />
               {refreshMutation.isPending ? "Refreshing..." : "Refresh"}
             </Button>
             <Button
               size="sm"
-              icon={<Icon name="Download" size={16} />}
+              icon={<Icon name="Download" size={"sm"} />}
               label="Export"
             />
             <Button
               size="sm"
-              icon={<Icon name="Plus" size={16} />}
+              icon={<Icon name="Plus" size={"sm"} />}
               label="Add Customer"
               onClick={() => (window.location.href = "/customers")}
             />
@@ -537,7 +537,7 @@ const Dashboard: React.FC = () => {
                   size="sm"
                   onClick={() => handleChartChange(chart.key)}
                 >
-                  <Icon name={chart.icon as any} size={16} />
+                  <Icon name={chart.icon as any} size={"sm"} />
                   {chart.label}
                 </Button>
               ))}
@@ -756,7 +756,7 @@ const Dashboard: React.FC = () => {
               <div>
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
-                    <Icon name="Cpu" size={16} className="u-text-primary" />
+                    <Icon name="Cpu" size={"sm"} className="u-text-primary" />
                     <span className="u-fs-sm u-font-normal">Server Load</span>
                   </div>
                   <span className="u-fs-sm u-font-bold">
@@ -778,7 +778,11 @@ const Dashboard: React.FC = () => {
               <div>
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
-                    <Icon name="Memory" size={16} className="u-text-success" />
+                    <Icon
+                      name="Memory"
+                      size={"sm"}
+                      className="u-text-success"
+                    />
                     <span className="u-fs-sm u-font-normal">Memory Usage</span>
                   </div>
                   <span className="u-fs-sm u-font-bold">
@@ -800,7 +804,11 @@ const Dashboard: React.FC = () => {
               <div>
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
-                    <Icon name="HardDrive" size={16} className="u-text-info" />
+                    <Icon
+                      name="HardDrive"
+                      size={"sm"}
+                      className="u-text-info"
+                    />
                     <span className="u-fs-sm u-font-normal">Storage</span>
                   </div>
                   <span className="u-fs-sm u-font-bold">
@@ -822,7 +830,7 @@ const Dashboard: React.FC = () => {
               <div>
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
-                    <Icon name="Globe" size={16} className="u-text-warning" />
+                    <Icon name="Globe" size={"sm"} className="u-text-warning" />
                     <span className="u-fs-sm u-font-normal">Network Load</span>
                   </div>
                   <span className="u-fs-sm u-font-bold">

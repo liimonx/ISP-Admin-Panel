@@ -82,7 +82,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <NavItem className="u-flex u-items-center u-gap-2 u-ms-2">
           <div className="u-bg-primary-subtle u-p-1 u-rounded-sm u-flex u-items-center u-justify-center">
-            <Icon name="Globe" size={24} className="u-text-primary" />
+            <Icon name="Globe" size={"lg"} className="u-text-primary" />
           </div>
           <span className="u-sm-lg u-font-bold u-text-primary u-none u-display-sm-block">
             BCN ISP

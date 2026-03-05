@@ -36,7 +36,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
             onClick={action.onClick}
             disabled={action.disabled}
             iconName={action.icon as any}
-            iconSize={16}
+            iconSize={"sm"}
           >
             <span className="u-fs-sm u-font-normal">{action.label}</span>
             {action.badge && (

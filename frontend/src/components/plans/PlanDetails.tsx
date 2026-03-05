@@ -91,7 +91,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
               size="sm"
               onClick={onEdit}
               iconName="Pencil"
-              iconSize={16}
+              iconSize={"sm"}
             >
               Edit
             </Button>
@@ -186,7 +186,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
               <div className="u-space-y-2">
                 {plan.features.map((feature, index) => (
                   <div key={index} className="u-flex u-items-center u-gap-3">
-                    <Icon name="Check" size={16} className="u-text-success" />
+                    <Icon name="Check" size={"sm"} className="u-text-success" />
                     <span>{feature}</span>
                   </div>
                 ))}
@@ -260,7 +260,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
               variant="primary"
               onClick={onEdit}
               iconName="Pencil"
-              iconSize={16}
+              iconSize={"sm"}
             >
               Edit Plan
             </Button>

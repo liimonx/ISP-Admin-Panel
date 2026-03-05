@@ -94,7 +94,7 @@ const Billing: React.FC = () => {
   // Record payment mutation
   const recordPaymentMutation = useMutation({
     mutationFn: (data: {
-      invoice_id: number;
+      invoice: number;
       amount: number;
       payment_method: string;
       transaction_id?: string;
@@ -333,7 +333,7 @@ const Billing: React.FC = () => {
   };
 
   const handleSubmitPayment = (data: {
-    invoice_id: number;
+    invoice: number;
     amount: number;
     payment_method: string;
     transaction_id?: string;
@@ -417,11 +417,11 @@ const Billing: React.FC = () => {
             size="md"
             onClick={() => setIsGenerateInvoiceModalOpen(true)}
           >
-            <Icon name="Receipt" size={16} />
+            <Icon name="Receipt" size={"sm"} />
             Generate Invoice
           </Button>
           <Button variant="outline" size="md" onClick={handleExportReport}>
-            <Icon name="Download" size={16} />
+            <Icon name="Download" size={"sm"} />
             Export Report
           </Button>
         </div>
@@ -435,7 +435,7 @@ const Billing: React.FC = () => {
             size="md"
             onClick={() => setActiveTab("overview")}
           >
-            <Icon name="ChartBar" size={16} />
+            <Icon name="ChartBar" size={"sm"} />
             Overview
           </Button>
           <Button
@@ -443,7 +443,7 @@ const Billing: React.FC = () => {
             size="md"
             onClick={() => setActiveTab("invoices")}
           >
-            <Icon name="Receipt" size={16} />
+            <Icon name="Receipt" size={"sm"} />
             Invoices
           </Button>
           <Button
@@ -451,7 +451,7 @@ const Billing: React.FC = () => {
             size="md"
             onClick={() => setActiveTab("payments")}
           >
-            <Icon name="CurrencyDollar" size={16} />
+            <Icon name="CurrencyDollar" size={"sm"} />
             Payments
           </Button>
           <Button
@@ -459,7 +459,7 @@ const Billing: React.FC = () => {
             size="md"
             onClick={() => setActiveTab("reports")}
           >
-            <Icon name="ChartBar" size={16} />
+            <Icon name="ChartBar" size={"sm"} />
             Reports
           </Button>
           <Button
@@ -467,7 +467,7 @@ const Billing: React.FC = () => {
             size="md"
             onClick={() => setActiveTab("audit")}
           >
-            <Icon name="FileText" size={16} />
+            <Icon name="FileText" size={"sm"} />
             Audit Trail
           </Button>
         </div>
@@ -548,21 +548,21 @@ const Billing: React.FC = () => {
                 variant="primary"
                 onClick={() => setIsGenerateInvoiceModalOpen(true)}
               >
-                <Icon name="Plus" size={16} />
+                <Icon name="Plus" size={"sm"} />
                 Generate Invoice
               </Button>
               <Button
                 variant="outline"
                 onClick={() => setActiveTab("invoices")}
               >
-                <Icon name="Receipt" size={16} />
+                <Icon name="Receipt" size={"sm"} />
                 View All Invoices
               </Button>
               <Button
                 variant="outline"
                 onClick={() => setActiveTab("payments")}
               >
-                <Icon name="CurrencyDollar" size={16} />
+                <Icon name="CurrencyDollar" size={"sm"} />
                 View All Payments
               </Button>
               <Button
@@ -573,7 +573,7 @@ const Billing: React.FC = () => {
                   setActiveTab("invoices");
                 }}
               >
-                <Icon name="Warning" size={16} />
+                <Icon name="Warning" size={"sm"} />
                 View Overdue ({invoiceStats?.overdue_invoices || 0})
               </Button>
             </div>
@@ -721,7 +721,7 @@ const Billing: React.FC = () => {
                   );
                 }}
               >
-                <Icon name="Stack" size={16} />
+                <Icon name="Stack" size={"sm"} />
                 Bulk Generate
               </Button>
             </div>
@@ -811,7 +811,7 @@ const Billing: React.FC = () => {
                   variant="primary"
                   onClick={() => setIsGenerateInvoiceModalOpen(true)}
                 >
-                  <Icon name="Plus" size={16} />
+                  <Icon name="Plus" size={"sm"} />
                   Generate Invoice
                 </Button>
               </div>
@@ -827,7 +827,7 @@ const Billing: React.FC = () => {
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(currentPage - 1)}
               >
-                <Icon name="CaretLeft" size={16} />
+                <Icon name="CaretLeft" size={"sm"} />
                 Previous
               </Button>
               <span className="u-flex u-items-center u-px-3">
@@ -844,7 +844,7 @@ const Billing: React.FC = () => {
                 onClick={() => setCurrentPage(currentPage + 1)}
               >
                 Next
-                <Icon name="CaretRight" size={16} />
+                <Icon name="CaretRight" size={"sm"} />
               </Button>
             </div>
           )}
@@ -874,7 +874,7 @@ const Billing: React.FC = () => {
                   );
                 }}
               >
-                <Icon name="FileText" size={16} />
+                <Icon name="FileText" size={"sm"} />
                 Export Payments
               </Button>
             </div>
@@ -966,7 +966,7 @@ const Billing: React.FC = () => {
                 disabled={currentPage === 1}
                 onClick={() => setCurrentPage(currentPage - 1)}
               >
-                <Icon name="CaretLeft" size={16} />
+                <Icon name="CaretLeft" size={"sm"} />
                 Previous
               </Button>
               <span className="u-flex u-items-center u-px-3">
@@ -983,7 +983,7 @@ const Billing: React.FC = () => {
                 onClick={() => setCurrentPage(currentPage + 1)}
               >
                 Next
-                <Icon name="CaretRight" size={16} />
+                <Icon name="CaretRight" size={"sm"} />
               </Button>
             </div>
           )}
@@ -1181,7 +1181,7 @@ const Billing: React.FC = () => {
                   selectedInvoice && handleDownloadInvoice(selectedInvoice)
                 }
               >
-                <Icon name="Download" size={16} />
+                <Icon name="Download" size={"sm"} />
                 Download PDF
               </Button>
               <Button
@@ -1190,7 +1190,7 @@ const Billing: React.FC = () => {
                   selectedInvoice && handleSendInvoice(selectedInvoice)
                 }
               >
-                <Icon name="Share" size={16} />
+                <Icon name="Share" size={"sm"} />
                 Send Invoice
               </Button>
               <Button
@@ -1324,7 +1324,7 @@ const Billing: React.FC = () => {
                   handleDownloadPaymentReceipt(selectedPayment)
                 }
               >
-                <Icon name="Download" size={16} />
+                <Icon name="Download" size={"sm"} />
                 Download Receipt
               </Button>
               <Button

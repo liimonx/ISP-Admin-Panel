@@ -13,7 +13,7 @@ export interface BillingFilters {
 }
 
 export interface PaymentData {
-  invoice_id: number;
+  invoice: number;
   amount: number;
   payment_method: string;
   transaction_id?: string;

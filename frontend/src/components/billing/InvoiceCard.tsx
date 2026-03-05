@@ -123,7 +123,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           className="u-flex-1"
           onClick={() => onView(invoice)}
           iconName="Eye"
-          iconSize={16}
+          iconSize={"sm"}
         >
           View
         </Button>
@@ -135,7 +135,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
             className="u-flex-1"
             onClick={() => onPay(invoice)}
             iconName="CurrencyDollar"
-            iconSize={16}
+            iconSize={"sm"}
           >
             Pay
           </Button>
@@ -147,7 +147,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
             size="sm"
             onClick={() => onSend(invoice)}
             iconName="PaperPlane"
-            iconSize={16}
+            iconSize={"sm"}
           />
         )}
 
@@ -156,7 +156,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           size="sm"
           onClick={() => onDownload(invoice)}
           iconName="Download"
-          iconSize={16}
+          iconSize={"sm"}
         />
       </div>
     </Card>

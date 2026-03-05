@@ -138,7 +138,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
                       item.onClick();
                     }}
                   >
-                    {item.icon && <Icon name={item.icon as any} size={16} />}
+                    {item.icon && <Icon name={item.icon as any} size={"sm"} />}
                     <span className="u-fs-sm">{item.label}</span>
                   </button>
                 </React.Fragment>

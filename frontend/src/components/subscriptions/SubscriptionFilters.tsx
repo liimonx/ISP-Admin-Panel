@@ -49,7 +49,7 @@ export const SubscriptionFilters: React.FC<SubscriptionFiltersProps> = ({
             size="sm"
             onClick={onReset}
             iconName="X"
-            iconSize={16}
+            iconSize={"sm"}
           >
             Clear Filters
           </Button>

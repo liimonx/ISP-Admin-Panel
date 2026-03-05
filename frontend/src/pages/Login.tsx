@@ -208,7 +208,10 @@ const Login: React.FC = () => {
                     className="u-absolute u-right-2 u-top-50 u-transform-translate-y-50"
                     disabled={isSubmitting}
                   >
-                    <Icon name={showPassword ? "EyeSlash" : "Eye"} size={16} />
+                    <Icon
+                      name={showPassword ? "EyeSlash" : "Eye"}
+                      size={"sm"}
+                    />
                   </Button>
                 </div>
                 {errors.password && (

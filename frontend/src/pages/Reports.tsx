@@ -223,11 +223,11 @@ const Reports: React.FC = () => {
 
           <div className="u-flex u-gap-2">
             <Button variant="outline" size="md">
-              <Icon name="Download" size={16} />
+              <Icon name="Download" size={"sm"} />
               Export
             </Button>
             <Button variant="primary" size="md">
-              <Icon name="ArrowClockwise" size={16} />
+              <Icon name="ArrowClockwise" size={"sm"} />
               Refresh
             </Button>
           </div>

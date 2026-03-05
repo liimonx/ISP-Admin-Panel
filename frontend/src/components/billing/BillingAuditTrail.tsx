@@ -250,7 +250,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
       title: "Resource",
       render: (entry: AuditLogEntry) => (
         <div className="u-flex u-items-center u-gap-2">
-          <Icon name={getResourceIcon(entry.resource_type)} size={16} />
+          <Icon name={getResourceIcon(entry.resource_type)} size={"sm"} />
           <div>
             <div className="u-font-normal u-fs-sm">{entry.resource_name}</div>
             <div className="u-fs-xs u-text-secondary-emphasis u-text-capitalize">

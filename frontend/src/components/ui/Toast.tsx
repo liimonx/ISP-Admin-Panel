@@ -98,7 +98,7 @@ export const Toast: React.FC<ToastProps> = ({
           aria-label="Close notification"
           style={{ color: variantStyles.color }}
         >
-          <Icon name="X" size={16} />
+          <Icon name="X" size={"sm"} />
         </button>
       )}
     </div>

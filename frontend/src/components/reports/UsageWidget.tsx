@@ -84,7 +84,7 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
             <div className="u-flex u-items-center u-mb-2">
               <Icon
                 name={trend.isPositive ? "TrendUp" : "TrendDown"}
-                size={16}
+                size={"sm"}
                 className={trend.isPositive ? "u-text-success" : "u-text-error"}
               />
               <span
@@ -96,7 +96,9 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
               </span>
             </div>
           )}
-          {subtitle && <div className="u-fs-xs u-text-secondary">{subtitle}</div>}
+          {subtitle && (
+            <div className="u-fs-xs u-text-secondary">{subtitle}</div>
+          )}
         </div>
 
         {icon && (
@@ -105,7 +107,7 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
           >
             <Icon
               name={icon as any}
-              size={24}
+              size={"lg"}
               className={getColorClasses(color)}
             />
           </div>

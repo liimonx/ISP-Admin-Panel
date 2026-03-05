@@ -61,7 +61,7 @@ const RouterCard: React.FC<RouterCardProps> = ({
           {router.host}
         </p>
         <div className="u-flex u-items-center u-gap-2 u-mb-2">
-          <Icon name={getStatusIcon(router.status)} size={16} />
+          <Icon name={getStatusIcon(router.status)} size={"sm"} />
           <Badge
             variant={getStatusColor(router.status)}
             size="sm"
@@ -71,19 +71,19 @@ const RouterCard: React.FC<RouterCardProps> = ({
       </div>
       <div className="u-flex u-justify-between u-items-center u-mt-auto">
         <div className="u-flex u-items-center u-gap-1">
-          <Icon name="Globe" size={16} />
+          <Icon name="Globe" size={"sm"} />
           <span>Online</span>
         </div>
       </div>
       <div className="u-flex u-gap-2 u-mt-3">
         <Button variant="outline" size="sm" onClick={() => onEdit(router)}>
-          <Icon name="Gear" size={16} />
+          <Icon name="Gear" size={"sm"} />
         </Button>
         <Button variant="outline" size="sm" onClick={() => onView(router)}>
-          <Icon name="Eye" size={16} />
+          <Icon name="Eye" size={"sm"} />
         </Button>
         <Button variant="outline" size="sm" onClick={() => onDelete(router.id)}>
-          <Icon name="Trash" size={16} />
+          <Icon name="Trash" size={"sm"} />
         </Button>
       </div>
     </Card>
@@ -283,7 +283,7 @@ const RouterManagement: React.FC = () => {
               />
             </div>
             <Button variant="primary" onClick={handleCreate}>
-              <Icon name="Plus" size={16} className="u-me-2" />
+              <Icon name="Plus" size={"sm"} className="u-me-2" />
               Add Router
             </Button>
           </div>

@@ -62,7 +62,11 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
           </div>
         ) : loading ? (
           <div className="u-flex u-items-center u-justify-center u-py-8">
-            <Icon name="Spinner" size={24} className="u-spin u-text-primary" />
+            <Icon
+              name="Spinner"
+              size={"lg"}
+              className="u-spin u-text-primary"
+            />
           </div>
         ) : (
           children

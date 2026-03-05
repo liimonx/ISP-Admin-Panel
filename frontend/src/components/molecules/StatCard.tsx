@@ -60,7 +60,7 @@ export const StatCard: React.FC<StatCardProps> = ({
             <div className="u-flex u-items-center u-mb-2">
               <Icon
                 name={trend.isPositive ? "TrendUp" : "TrendDown"}
-                size={16}
+                size={"sm"}
                 className={trend.isPositive ? "u-text-success" : "u-text-error"}
               />
               <span
@@ -87,7 +87,7 @@ export const StatCard: React.FC<StatCardProps> = ({
               color: iconColor,
             }}
           >
-            <Icon name={icon as any} size={24} />
+            <Icon name={icon as any} size={"lg"} />
           </div>
         )}
       </div>
