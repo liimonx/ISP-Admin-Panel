@@ -8,6 +8,8 @@ import {
   Icon,
   Dropdown,
   Checkbox,
+  Grid,
+  GridCol,
 } from "@shohojdhara/atomix";
 import { Subscription } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
@@ -87,7 +89,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       if (!quota || quota === 0) {
         return (
           <div className="u-text-center u-min-w-36">
-            <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
+            <div className="u-font-normal u-text-primary u-mb-1">
               {used.toFixed(1)} GB
             </div>
             <Badge variant="info" size="sm" label="Unlimited" />
@@ -116,7 +118,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               {used.toFixed(1)} / {quota} GB
             </span>
             <span
-              className={`u-fs-xs u-fw-medium ${
+              className={`u-fs-xs u-font-normal ${
                 isHigh
                   ? "u-text-error"
                   : isMedium
@@ -129,13 +131,13 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           </div>
 
           <div
-            className="u-bg-secondary-subtle u-rounded-pill u-overflow-hidden u-mb-2"
+            className="u-bg-secondary-subtle u-rounded u-overflow-hidden u-mb-2"
             style={{ height: "6px" }}
           >
             <div
-              className={`u-h-100 u-rounded-pill ${
+              className={`u-h-100 u-rounded ${
                 isHigh
-                  ? "u-bg-danger"
+                  ? "u-bg-error"
                   : isMedium
                     ? "u-bg-warning"
                     : "u-bg-success"
@@ -272,10 +274,10 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <div className="u-flex u-items-center u-gap-3">
           <Avatar
             initials={subscription.customer?.name?.charAt(0) || "?"}
-            className="u-w-6 u-h-6"
+            size="sm"
           />
           <div>
-            <div className="u-fw-medium u-text-primary-emphasis">
+            <div className="u-font-normal u-text-primary">
               {subscription.customer?.name || "Unknown Customer"}
             </div>
             <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
@@ -286,7 +288,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       ),
       plan: (
         <div>
-          <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
+          <div className="u-font-normal u-text-primary u-mb-1">
             {subscription.plan?.name || "Unknown Plan"}
           </div>
           <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-flex u-items-center u-gap-1">
@@ -322,7 +324,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       status: getStatusBadge(subscription.status),
       billing: (
         <div>
-          <div className="u-fw-medium u-text-primary-emphasis">
+          <div className="u-font-normal u-text-primary">
             ${formatCurrency(subscription.monthly_fee)}
           </div>
           <div className="u-fs-sm u-text-secondary-emphasis-emphasis">
@@ -337,7 +339,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       ),
       router: (
         <div>
-          <div className="u-fw-medium u-text-primary-emphasis u-mb-1">
+          <div className="u-font-normal u-text-primary u-mb-1">
             {subscription.router?.name || "Unknown Router"}
           </div>
           <div className="u-fs-sm u-text-secondary-emphasis-emphasis u-mb-1">
@@ -423,9 +425,12 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             </div>
           }
         >
-          <Button variant="ghost" size="sm">
-            <Icon name="DotsThreeVertical" size={16} />
-          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            iconName="DotsThreeVertical"
+            iconSize={16}
+          />
         </Dropdown>
       ),
     }));
@@ -489,8 +494,13 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             No subscriptions match your current filters. Try adjusting your
             search criteria.
           </p>
-          <Button variant="primary" size="md" onClick={onCreate}>
-            <Icon name="Plus" size={16} />
+          <Button
+            variant="primary"
+            size="md"
+            onClick={onCreate}
+            iconName="Plus"
+            iconSize={16}
+          >
             Add First Subscription
           </Button>
         </div>
@@ -506,7 +516,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
           <div className="u-bg-primary-subtle u-p-3 u-border-bottom">
             <div className="u-flex u-justify-between u-items-center">
               <div className="u-flex u-items-center u-gap-3">
-                <span className="u-fw-medium u-text-primary">
+                <span className="u-font-normal u-text-primary">
                   {selectedIds.length} subscription
                   {selectedIds.length > 1 ? "s" : ""} selected
                 </span>
@@ -566,48 +576,40 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       {subscriptions.length > 0 && (
         <Card className="u-mt-4">
           <div className="u-p-4">
-            <div className="u-row">
-              <div className="u-col-md-3">
+            <Grid>
+              <GridCol md={3}>
                 <div className="u-text-center">
-                  <div className="u-fs-3 u-fw-bold u-text-primary">
+                  <div className="u-fs-3 u-font-bold u-text-primary">
                     {stats.active}
                   </div>
-                  <div className="u-fs-sm u-text-secondary-emphasis">
-                    Active
-                  </div>
+                  <div className="u-fs-sm u-text-primary">Active</div>
                 </div>
-              </div>
-              <div className="u-col-md-3">
+              </GridCol>
+              <GridCol md={3}>
                 <div className="u-text-center">
-                  <div className="u-fs-3 u-fw-bold u-text-warning">
+                  <div className="u-fs-3 u-font-bold u-text-warning">
                     {stats.pending}
                   </div>
-                  <div className="u-fs-sm u-text-secondary-emphasis">
-                    Pending
-                  </div>
+                  <div className="u-fs-sm u-text-primary">Pending</div>
                 </div>
-              </div>
-              <div className="u-col-md-3">
+              </GridCol>
+              <GridCol md={3}>
                 <div className="u-text-center">
-                  <div className="u-fs-3 u-fw-bold u-text-error">
+                  <div className="u-fs-3 u-font-bold u-text-error">
                     {stats.suspended}
                   </div>
-                  <div className="u-fs-sm u-text-secondary-emphasis">
-                    Suspended
-                  </div>
+                  <div className="u-fs-sm u-text-primary">Suspended</div>
                 </div>
-              </div>
-              <div className="u-col-md-3">
+              </GridCol>
+              <GridCol md={3}>
                 <div className="u-text-center">
-                  <div className="u-fs-3 u-fw-bold u-text-success">
+                  <div className="u-fs-3 u-font-bold u-text-primary">
                     ${stats.revenue.toLocaleString()}
                   </div>
-                  <div className="u-fs-sm u-text-secondary-emphasis">
-                    Monthly Revenue
-                  </div>
+                  <div className="u-fs-sm u-text-primary">Monthly Revenue</div>
                 </div>
-              </div>
-            </div>
+              </GridCol>
+            </Grid>
           </div>
         </Card>
       )}

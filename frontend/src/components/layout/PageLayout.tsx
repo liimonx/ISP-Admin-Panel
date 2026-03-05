@@ -49,7 +49,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                   {crumb.label}
                 </a>
               ) : (
-                <span className="u-text-foreground u-fw-medium">
+                <span className="u-text-foreground u-font-normal">
                   {crumb.label}
                 </span>
               )}
@@ -60,13 +60,13 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
 
       {/* Page Header */}
       <div className="u-mb-8">
-        <div className="u-flex u-justify-between u-align-items-start u-mb-4">
+        <div className="u-flex u-justify-between u-items-start u-mb-4">
           <div className="u-flex-1 u-min-w-0">
-            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground u-truncate">
+            <h1 className="u-text-3xl u-font-bold u-mb-2 u-text-foreground u-truncate">
               {title}
             </h1>
             {description && (
-              <p className="u-text-secondary-emphasis u-text-lg u-max-w-2xl">
+              <p className="u-text-secondary-emphasis u-sm-lg u-max-w-2xl">
                 {description}
               </p>
             )}
@@ -90,7 +90,7 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
                 ></div>
                 <span className="u-text-secondary-emphasis">
                   {stat.label}:{" "}
-                  <span className="u-fw-medium">{stat.value}</span>
+                  <span className="u-font-normal">{stat.value}</span>
                 </span>
               </div>
             ))}

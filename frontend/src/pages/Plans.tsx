@@ -394,7 +394,7 @@ const Plans: React.FC = () => {
                     <Icon name="Package" size={24} className="u-text-primary" />
                   </div>
                   <div>
-                    <h3 className="u-text-lg u-mb-1">
+                    <h3 className="u-sm-lg u-mb-1">
                       {typeof planStats.total_plans === "number"
                         ? planStats.total_plans
                         : 0}
@@ -417,7 +417,7 @@ const Plans: React.FC = () => {
                     />
                   </div>
                   <div>
-                    <h3 className="u-text-lg u-mb-1">
+                    <h3 className="u-sm-lg u-mb-1">
                       {typeof planStats.active_plans === "number"
                         ? planStats.active_plans
                         : 0}
@@ -436,7 +436,7 @@ const Plans: React.FC = () => {
                     <Icon name="Star" size={24} className="u-text-warning" />
                   </div>
                   <div>
-                    <h3 className="u-text-lg u-mb-1">
+                    <h3 className="u-sm-lg u-mb-1">
                       {typeof planStats.featured_plans === "number"
                         ? planStats.featured_plans
                         : 0}
@@ -455,7 +455,7 @@ const Plans: React.FC = () => {
                     <Icon name="TrendUp" size={24} className="u-text-info" />
                   </div>
                   <div>
-                    <h3 className="u-text-lg u-mb-1">
+                    <h3 className="u-sm-lg u-mb-1">
                       {typeof planStats.popular_plans === "number"
                         ? planStats.popular_plans
                         : 0}
@@ -522,7 +522,7 @@ const Plans: React.FC = () => {
                   id: plan.id,
                   planName: (
                     <div>
-                      <div className="u-fw-medium">{plan.name}</div>
+                      <div className="u-font-normal">{plan.name}</div>
                       {plan.description && (
                         <div className="u-text-secondary-emphasis u-fs-sm">
                           {plan.description.length > 50
@@ -542,7 +542,7 @@ const Plans: React.FC = () => {
                   ),
                   price: (
                     <div>
-                      <div className="u-fw-medium">
+                      <div className="u-font-normal">
                         {formatPrice(plan.price, plan.billing_cycle)}
                       </div>
                       <div className="u-text-secondary-emphasis u-fs-sm">
@@ -645,7 +645,9 @@ const Plans: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Plan Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">
+                Plan Name *
+              </label>
               <Input
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
@@ -659,7 +661,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Billing Cycle *
               </label>
               <Select
@@ -674,7 +676,7 @@ const Plans: React.FC = () => {
           </Grid>
 
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Description</label>
+            <label className="u-block u-mb-2 u-font-normal">Description</label>
             <Textarea
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
@@ -685,7 +687,9 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={4}>
-              <label className="u-block u-mb-2 u-fw-medium">Price (৳) *</label>
+              <label className="u-block u-mb-2 u-font-normal">
+                Price (৳) *
+              </label>
               <Input
                 type="number"
                 value={formData.price}
@@ -702,7 +706,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Download Speed *
               </label>
               <Input
@@ -722,7 +726,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Upload Speed *
               </label>
               <Input
@@ -742,7 +746,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-block u-mb-2 u-fw-medium">Speed Unit</label>
+              <label className="u-block u-mb-2 u-font-normal">Speed Unit</label>
               <Select
                 value={formData.speed_unit}
                 onChange={(e) =>
@@ -756,7 +760,7 @@ const Plans: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Setup Fee (৳) *
               </label>
               <Input
@@ -778,7 +782,7 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Data Quota</label>
+              <label className="u-block u-mb-2 u-font-normal">Data Quota</label>
               <Input
                 type="number"
                 value={formData.data_quota}
@@ -796,7 +800,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Quota Unit</label>
+              <label className="u-block u-mb-2 u-font-normal">Quota Unit</label>
               <Select
                 value={formData.quota_unit}
                 onChange={(e) =>
@@ -813,7 +817,7 @@ const Plans: React.FC = () => {
           </Grid>
 
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Features</label>
+            <label className="u-block u-mb-2 u-font-normal">Features</label>
             <Textarea
               value={formData.features}
               onChange={(e) => handleInputChange("features", e.target.value)}
@@ -894,7 +898,9 @@ const Plans: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Plan Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">
+                Plan Name *
+              </label>
               <Input
                 value={formData.name}
                 onChange={(e) => handleInputChange("name", e.target.value)}
@@ -908,7 +914,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Billing Cycle *
               </label>
               <Select
@@ -923,7 +929,7 @@ const Plans: React.FC = () => {
           </Grid>
 
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Description</label>
+            <label className="u-block u-mb-2 u-font-normal">Description</label>
             <Textarea
               value={formData.description}
               onChange={(e) => handleInputChange("description", e.target.value)}
@@ -934,7 +940,9 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={4}>
-              <label className="u-block u-mb-2 u-fw-medium">Price (৳) *</label>
+              <label className="u-block u-mb-2 u-font-normal">
+                Price (৳) *
+              </label>
               <Input
                 type="number"
                 value={formData.price}
@@ -951,7 +959,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Download Speed *
               </label>
               <Input
@@ -971,7 +979,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Upload Speed *
               </label>
               <Input
@@ -991,7 +999,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-block u-mb-2 u-fw-medium">Speed Unit</label>
+              <label className="u-block u-mb-2 u-font-normal">Speed Unit</label>
               <Select
                 value={formData.speed_unit}
                 onChange={(e) =>
@@ -1005,7 +1013,7 @@ const Plans: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={3}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Setup Fee (৳) *
               </label>
               <Input
@@ -1027,7 +1035,7 @@ const Plans: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Data Quota</label>
+              <label className="u-block u-mb-2 u-font-normal">Data Quota</label>
               <Input
                 type="number"
                 value={formData.data_quota}
@@ -1045,7 +1053,7 @@ const Plans: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Quota Unit</label>
+              <label className="u-block u-mb-2 u-font-normal">Quota Unit</label>
               <Select
                 value={formData.quota_unit}
                 onChange={(e) =>
@@ -1062,7 +1070,7 @@ const Plans: React.FC = () => {
           </Grid>
 
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Features</label>
+            <label className="u-block u-mb-2 u-font-normal">Features</label>
             <Textarea
               value={formData.features}
               onChange={(e) => handleInputChange("features", e.target.value)}

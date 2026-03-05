@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Input, Button, Icon } from "@shohojdhara/atomix";
+import { Input, Button } from "@shohojdhara/atomix";
 
 export interface SearchBarProps {
   placeholder?: string;
@@ -79,36 +79,32 @@ export const SearchBar: React.FC<SearchBarProps> = ({
           value={searchValue}
           onChange={handleInputChange}
           disabled={disabled}
-          size={size}
-          className="u-pe-10"
+          className="u-pe-10" // Add padding-end for the clear button
         />
         {searchValue && (
-          <button
-            type="button"
+          <Button
+            variant="ghost"
+            size="sm"
             onClick={handleClear}
             disabled={disabled}
-            className="u-absolute u-right-2 u-top-50 u-transform-translate-y-50 u-bg-transparent u-border-0 u-cursor-pointer u-p-1 u-text-muted hover:u-text-dark"
+            className="u-absolute u-top-50 u-end-2 u-transform u-translate-y--50 u-p-1 u-h-auto"
             aria-label="Clear search"
-          >
-            <Icon name="XCircle" size={16} />
-          </button>
+            iconName="XCircle"
+            iconSize={16}
+          />
         )}
       </div>
 
       <Button
         onClick={handleSearch}
         disabled={disabled || loading || !searchValue.trim()}
-        size={size}
-        variant="primary"
         aria-label="Search"
-        className="u-flex u-items-center u-gap-1"
+        variant="primary"
+        size={size}
+        iconName={loading ? "Spinner" : "MagnifyingGlass"}
+        className={loading ? "u-animation-spin" : ""}
       >
-        {loading ? (
-          <Icon name="Spinner" size={16} className="u-animation-spin" />
-        ) : (
-          <Icon name="MagnifyingGlass" size={16} />
-        )}
-        <span className="u-none u-sm-inline">Search</span>
+        <span className="u-none u-lg-inline u-ms-1">Search</span>
       </Button>
     </div>
   );

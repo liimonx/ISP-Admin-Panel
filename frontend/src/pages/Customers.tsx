@@ -293,12 +293,12 @@ const Customers: React.FC = () => {
     <div>
       {/* Page Header */}
       <div className="u-mb-8">
-        <div className="u-flex u-justify-between u-align-items-start u-mb-4">
+        <div className="u-flex u-justify-between u-items-start u-mb-4">
           <div>
-            <h1 className="u-text-3xl u-fw-bold u-mb-2 u-text-foreground">
+            <h1 className="u-text-3xl u-font-bold u-mb-2 u-text-foreground">
               Customer Management
             </h1>
-            <p className="u-text-secondary-emphasis u-text-lg">
+            <p className="u-text-secondary-emphasis u-sm-lg">
               Manage your customer accounts, subscriptions, and billing
               information
             </p>
@@ -409,7 +409,7 @@ const Customers: React.FC = () => {
                         className="u-me-3"
                       />
                       <div>
-                        <div className="u-fw-medium">
+                        <div className="u-font-normal">
                           {sanitizeText(customer.name)}
                         </div>
                         {customer.company_name && (
@@ -694,7 +694,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="name"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 Full Name *
               </label>
@@ -711,7 +711,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="email"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 Email *
               </label>
@@ -731,7 +731,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="phone"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 Phone *
               </label>
@@ -748,7 +748,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="company_name"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 Company Name
               </label>
@@ -766,7 +766,7 @@ const Customers: React.FC = () => {
           <div className="u-mb-4">
             <label
               htmlFor="address"
-              className="u-block u-fs-sm u-fw-medium u-mb-1"
+              className="u-block u-fs-sm u-font-normal u-mb-1"
             >
               Address *
             </label>
@@ -785,7 +785,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={4}>
               <label
                 htmlFor="city"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 City *
               </label>
@@ -802,7 +802,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={4}>
               <label
                 htmlFor="state"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 State *
               </label>
@@ -819,7 +819,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={4}>
               <label
                 htmlFor="postal_code"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 Postal Code *
               </label>
@@ -839,7 +839,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="country"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 Country *
               </label>
@@ -856,7 +856,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="tax_id"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 Tax ID
               </label>
@@ -875,7 +875,7 @@ const Customers: React.FC = () => {
             <GridCol xs={12} md={6}>
               <label
                 htmlFor="status"
-                className="u-block u-fs-sm u-fw-medium u-mb-1"
+                className="u-block u-fs-sm u-font-normal u-mb-1"
               >
                 Status *
               </label>
@@ -903,7 +903,7 @@ const Customers: React.FC = () => {
           <div className="u-mb-4">
             <label
               htmlFor="notes"
-              className="u-block u-fs-sm u-fw-medium u-mb-1"
+              className="u-block u-fs-sm u-font-normal u-mb-1"
             >
               Notes
             </label>

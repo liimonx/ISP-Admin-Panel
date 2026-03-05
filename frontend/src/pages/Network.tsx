@@ -263,7 +263,7 @@ const Network: React.FC = () => {
                 <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Total Routers
                 </div>
-                <div className="u-fs-xl u-fw-bold">
+                <div className="u-fs-xl u-font-bold">
                   {routersData?.count || 0}
                 </div>
               </div>
@@ -280,7 +280,7 @@ const Network: React.FC = () => {
                 <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Online Routers
                 </div>
-                <div className="u-fs-xl u-fw-bold">
+                <div className="u-fs-xl u-font-bold">
                   {routersData?.results?.filter((r) => r.status === "online")
                     .length || 0}
                 </div>
@@ -298,7 +298,7 @@ const Network: React.FC = () => {
                 <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Offline Routers
                 </div>
-                <div className="u-fs-xl u-fw-bold">
+                <div className="u-fs-xl u-font-bold">
                   {routersData?.results?.filter((r) => r.status === "offline")
                     .length || 0}
                 </div>
@@ -316,7 +316,7 @@ const Network: React.FC = () => {
                 <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Maintenance
                 </div>
-                <div className="u-fs-xl u-fw-bold">
+                <div className="u-fs-xl u-font-bold">
                   {routersData?.results?.filter(
                     (r) => r.status === "maintenance",
                   ).length || 0}
@@ -387,7 +387,7 @@ const Network: React.FC = () => {
                   id: router.id,
                   router: (
                     <div>
-                      <div className="u-fw-medium">{router.name}</div>
+                      <div className="u-font-normal">{router.name}</div>
                       {router.description && (
                         <div className="u-fs-sm u-text-secondary-emphasis">
                           {router.description}
@@ -530,7 +530,7 @@ const Network: React.FC = () => {
           <Grid>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">
+                <label className="u-block u-font-normal u-mb-1">
                   Router Name *
                 </label>
                 <Input
@@ -545,7 +545,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">
+                <label className="u-block u-font-normal u-mb-1">
                   Router Type
                 </label>
                 <Select
@@ -567,7 +567,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">
+                <label className="u-block u-font-normal u-mb-1">
                   Description
                 </label>
                 <Textarea
@@ -582,7 +582,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={8}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">
+                <label className="u-block u-font-normal u-mb-1">
                   Host/IP Address *
                 </label>
                 <Input
@@ -598,7 +598,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={4}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">API Port</label>
+                <label className="u-block u-font-normal u-mb-1">API Port</label>
                 <Input
                   className="u-w-100"
                   type="number"
@@ -614,7 +614,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">SSH Port</label>
+                <label className="u-block u-font-normal u-mb-1">SSH Port</label>
                 <Input
                   className="u-w-100"
                   type="number"
@@ -630,7 +630,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">Username *</label>
+                <label className="u-block u-font-normal u-mb-1">Username *</label>
                 <Input
                   className="u-w-100"
                   value={formData.username}
@@ -643,7 +643,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">Password *</label>
+                <label className="u-block u-font-normal u-mb-1">Password *</label>
                 <Input
                   className="u-w-100"
                   type="password"
@@ -660,7 +660,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">
+                <label className="u-block u-font-normal u-mb-1">
                   <input
                     type="checkbox"
                     checked={formData.use_tls}
@@ -674,7 +674,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">Location</label>
+                <label className="u-block u-font-normal u-mb-1">Location</label>
                 <Input
                   className="u-w-100"
                   value={formData.location}
@@ -687,7 +687,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">
+                <label className="u-block u-font-normal u-mb-1">
                   GPS Coordinates
                 </label>
                 <Input
@@ -702,7 +702,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">
+                <label className="u-block u-font-normal u-mb-1">
                   SNMP Community
                 </label>
                 <Input
@@ -716,7 +716,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">SNMP Port</label>
+                <label className="u-block u-font-normal u-mb-1">SNMP Port</label>
                 <Input
                   className="u-w-100"
                   type="number"
@@ -732,7 +732,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12}>
               <div className="u-mb-3">
-                <label className="u-block u-fw-medium u-mb-1">Notes</label>
+                <label className="u-block u-font-normal u-mb-1">Notes</label>
                 <Textarea
                   className="u-w-100"
                   value={formData.notes}

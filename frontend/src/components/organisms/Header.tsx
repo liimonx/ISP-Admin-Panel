@@ -59,8 +59,14 @@ export const Header: React.FC<HeaderProps> = ({
   };
 
   return (
-    <Navbar data-testid={testId} position="fixed" containerWidth="100%" glass>
-      <Nav>
+    <Navbar
+      data-testid={testId}
+      position="fixed"
+      containerWidth="100%"
+      glass
+      className="u-shadow-sm"
+    >
+      <Nav className="u-items-center u-gap-2">
         {showSidebarToggle && (
           <NavItem>
             <Button
@@ -68,21 +74,25 @@ export const Header: React.FC<HeaderProps> = ({
               size="sm"
               onClick={onMenuToggle}
               aria-label="Toggle navigation menu"
-            >
-              <Icon name="List" size={20} />
-            </Button>
+              iconName="List"
+              iconSize={20}
+            />
           </NavItem>
         )}
 
-        <NavItem>
-          <Icon name="Globe" size={24} className="u-text-primary" />
-          <span className="u-text-lg u-fw-bold u-text-primary">BCN ISP</span>
+        <NavItem className="u-flex u-items-center u-gap-2 u-ms-2">
+          <div className="u-bg-primary-subtle u-p-1 u-rounded-sm u-flex u-items-center u-justify-center">
+            <Icon name="Globe" size={24} className="u-text-primary" />
+          </div>
+          <span className="u-sm-lg u-font-bold u-text-primary u-none u-display-sm-block">
+            BCN ISP
+          </span>
         </NavItem>
       </Nav>
 
-      <Nav alignment="end">
+      <Nav alignment="end" className="u-items-center u-gap-3">
         {showSearch && (
-          <div className="u-none u-md-flex u-flex-1 u-max-w-lg u-mx-4">
+          <div className="u-none u-display-md-flex u-flex-1 u-max-w-md u-mx-4">
             <SearchBar
               value={searchValue}
               onSearch={(value) => {
@@ -92,6 +102,7 @@ export const Header: React.FC<HeaderProps> = ({
               onClear={handleSearchClear}
               placeholder="Search customers, plans, invoices..."
               fullWidth
+              size="sm"
             />
           </div>
         )}
@@ -99,48 +110,53 @@ export const Header: React.FC<HeaderProps> = ({
         {showSearch && (
           <Button
             variant="ghost"
-            size="md"
+            size="sm"
             aria-label="Search"
-            className="u-md-none"
-          >
-            <Icon name="MagnifyingGlass" size={20} />
-          </Button>
+            className="u-display-md-none"
+            iconName="MagnifyingGlass"
+            iconSize={20}
+          />
         )}
 
         {showNotifications && (
-          <Button
-            variant="ghost"
-            size="md"
-            onClick={onNotificationClick}
-            aria-label="Notifications"
-            className="u-relative"
-          >
-            <Icon name="Bell" size={20} />
+          <div className="u-relative">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={onNotificationClick}
+              aria-label="Notifications"
+              iconName="Bell"
+              iconSize={20}
+            />
             {notifications > 0 && (
               <Badge
                 variant="error"
                 size="sm"
                 label={notifications.toString()}
-                className="u-absolute u-top-0 u-end-0 u-transform u-translate-x--50 u-translate-y--50"
+                className="u-absolute u-top-0 u-end-0 u-transform u-translate-x-25 u-translate-y--25 u-z-1"
               />
             )}
-          </Button>
+          </div>
         )}
+
+        <div className="u-border-start u-border-light u-h-50 u-mx-1 u-none u-display-sm-block" />
 
         <ColorModeToggle defaultValue="dark" />
 
         {showUserMenu && user && (
-          <UserAvatar
-            user={{
-              name: user.name,
-              email: user.email,
-              avatar: user.avatar,
-              role: user.role,
-              status: user.status,
-            }}
-            showDropdown
-            size="md"
-          />
+          <div className="u-ms-2">
+            <UserAvatar
+              user={{
+                name: user.name,
+                email: user.email,
+                avatar: user.avatar,
+                role: user.role,
+                status: user.status,
+              }}
+              showDropdown
+              size="md"
+            />
+          </div>
         )}
       </Nav>
     </Navbar>

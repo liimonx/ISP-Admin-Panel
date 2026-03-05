@@ -88,7 +88,7 @@ export const Toast: React.FC<ToastProps> = ({
         style={{ color: variantStyles.borderColor }}
       />
       <div className="u-flex-grow-1">
-        <p className="u-mb-0 u-fw-medium">{message}</p>
+        <p className="u-mb-0 u-font-normal">{message}</p>
       </div>
       {onClose && (
         <button

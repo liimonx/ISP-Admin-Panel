@@ -154,7 +154,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
           <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
             Invoice
           </label>
-          <p className="u-fw-medium">{invoice.invoice_number}</p>
+          <p className="u-font-normal">{invoice.invoice_number}</p>
           <p className="u-fs-sm u-text-secondary-emphasis">
             Customer: {invoice.customer?.name}
           </p>
@@ -168,7 +168,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         <div className="u-mb-4">
           <label
             htmlFor="amount"
-            className="u-block u-fs-sm u-fw-medium u-mb-1"
+            className="u-block u-fs-sm u-font-normal u-mb-1"
           >
             Amount *
           </label>
@@ -196,7 +196,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         <div className="u-mb-4">
           <label
             htmlFor="payment_method"
-            className="u-block u-fs-sm u-fw-medium u-mb-1"
+            className="u-block u-fs-sm u-font-normal u-mb-1"
           >
             Payment Method *
           </label>
@@ -229,7 +229,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
           <div className="u-mb-4">
             <label
               htmlFor="transaction_id"
-              className="u-block u-fs-sm u-fw-medium u-mb-1"
+              className="u-block u-fs-sm u-font-normal u-mb-1"
             >
               Transaction ID *
             </label>
@@ -258,7 +258,7 @@ const PaymentForm: React.FC<PaymentFormProps> = ({
         )}
 
         <div className="u-mb-4">
-          <label htmlFor="notes" className="u-block u-fs-sm u-fw-medium u-mb-1">
+          <label htmlFor="notes" className="u-block u-fs-sm u-font-normal u-mb-1">
             Notes
           </label>
           <Textarea

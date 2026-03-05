@@ -636,7 +636,7 @@ Examples:
 .u-fs-sm        /* 0.875rem */
 .u-text-base      /* 1rem */
 .u-text-md        /* 1.125rem */
-.u-text-lg        /* 1.25rem */
+.u-sm-lg        /* 1.25rem */
 ```
 
 ##### Line Height
@@ -678,7 +678,7 @@ Examples:
 <!-- Typography hierarchy -->
 <article class="u-p-6">
   <h1 class="u-text-1 u-font-bold u-mb-4">Article Title</h1>
-  <p class="u-text-lg u-text-secondary u-mb-6">Article subtitle</p>
+  <p class="u-sm-lg u-text-secondary u-mb-6">Article subtitle</p>
   <p class="u-text-base u-lh-lg">Article content with good readability.</p>
 </article>
 

@@ -247,24 +247,28 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
   return (
     <div className={className}>
       {/* Report Controls */}
-      <Card className="u-mb-6">
-        <div className="u-flex u-justify-between u-items-center u-mb-4">
-          <h3>Billing Reports & Analytics</h3>
+      <Card
+        title="Billing Reports & Analytics"
+        className="u-mb-6"
+        actions={
           <div className="u-flex u-gap-2">
-            <Button variant="outline" size="sm">
-              <Icon name="Download" size={14} />
+            <Button
+              variant="outline"
+              size="sm"
+              iconName="Download"
+              iconSize={14}
+            >
               Export
             </Button>
-            <Button variant="outline" size="sm">
-              <Icon name="Share" size={14} />
+            <Button variant="outline" size="sm" iconName="Share" iconSize={14}>
               Share
             </Button>
           </div>
-        </div>
-
-        <div className="u-flex u-gap-4 u-align-items-end u-flex-wrap">
+        }
+      >
+        <div className="u-flex u-gap-4 u-items-end u-flex-wrap">
           <div>
-            <label className="u-fs-sm u-fw-medium u-mb-1 u-block">
+            <label className="u-fs-sm u-font-normal u-mb-1 u-block">
               Report Type
             </label>
             <Select
@@ -274,7 +278,9 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
             />
           </div>
           <div>
-            <label className="u-fs-sm u-fw-medium u-mb-1 u-block">Period</label>
+            <label className="u-fs-sm u-font-normal u-mb-1 u-block">
+              Period
+            </label>
             <Select
               value={selectedPeriod}
               onChange={(e) => setSelectedPeriod(e.target.value)}
@@ -284,19 +290,22 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
           {selectedPeriod === "custom" && (
             <>
               <div>
-                <label className="u-fs-sm u-fw-medium u-mb-1 u-block">
+                <label className="u-fs-sm u-font-normal u-mb-1 u-block">
                   Start Date
                 </label>
                 <Input
                   type="date"
                   value={dateRange.start}
                   onChange={(e) =>
-                    setDateRange((prev) => ({ ...prev, start: e.target.value }))
+                    setDateRange((prev) => ({
+                      ...prev,
+                      start: e.target.value,
+                    }))
                   }
                 />
               </div>
               <div>
-                <label className="u-fs-sm u-fw-medium u-mb-1 u-block">
+                <label className="u-fs-sm u-font-normal u-mb-1 u-block">
                   End Date
                 </label>
                 <Input
@@ -318,14 +327,14 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
           {/* Revenue Summary */}
           <Grid className="u-mb-6">
             <GridCol xs={12} md={4}>
-              <Card className="u-text-center u-p-4">
+              <Card className="u-text-center">
                 <Icon
                   name="TrendUp"
                   size={32}
                   className="u-text-success u-mb-2"
                 />
                 <h4 className="u-mb-1">Total Revenue</h4>
-                <p className="u-fs-xl u-fw-bold u-text-primary">
+                <p className="u-fs-xl u-font-bold u-text-primary">
                   {formatCurrency(calculateTotalRevenue())}
                 </p>
                 <div className="u-flex u-items-center u-justify-center u-gap-1 u-mt-2">
@@ -350,14 +359,14 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
               </Card>
             </GridCol>
             <GridCol xs={12} md={4}>
-              <Card className="u-text-center u-p-4">
+              <Card className="u-text-center">
                 <Icon
                   name="Receipt"
                   size={32}
                   className="u-text-primary u-mb-2"
                 />
                 <h4 className="u-mb-1">Avg Monthly Revenue</h4>
-                <p className="u-fs-xl u-fw-bold u-text-primary">
+                <p className="u-fs-xl u-font-bold u-text-primary">
                   {formatCurrency(
                     calculateTotalRevenue() / (revenueData?.length || 1),
                   )}
@@ -368,14 +377,14 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
               </Card>
             </GridCol>
             <GridCol xs={12} md={4}>
-              <Card className="u-text-center u-p-4">
+              <Card className="u-text-center">
                 <Icon
                   name="ChartBar"
                   size={32}
                   className="u-text-warning u-mb-2"
                 />
                 <h4 className="u-mb-1">Peak Month</h4>
-                <p className="u-fs-xl u-fw-bold u-text-primary">
+                <p className="u-fs-xl u-font-bold u-text-primary">
                   {revenueData
                     ? formatCurrency(
                         Math.max(
@@ -392,8 +401,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
           </Grid>
 
           {/* Revenue Chart */}
-          <Card className="u-mb-6">
-            <h4 className="u-mb-4">Revenue Trends</h4>
+          <Card title="Revenue Trends" className="u-mb-6">
             {revenueLoading ? (
               <div className="u-flex u-justify-center u-py-8">
                 <Spinner size="lg" />
@@ -412,8 +420,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
         <div>
           <Grid>
             <GridCol xs={12} md={6}>
-              <Card>
-                <h4 className="u-mb-4">Payment Method Distribution</h4>
+              <Card title="Payment Method Distribution" className="u-h-100">
                 {paymentMethodLoading ? (
                   <div className="u-flex u-justify-center u-py-8">
                     <Spinner size="lg" />
@@ -429,8 +436,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
               </Card>
             </GridCol>
             <GridCol xs={12} md={6}>
-              <Card>
-                <h4 className="u-mb-4">Payment Method Details</h4>
+              <Card title="Payment Method Details" className="u-h-100">
                 {paymentMethodLoading ? (
                   <div className="u-flex u-justify-center u-py-8">
                     <Spinner />
@@ -444,13 +450,13 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                           className="u-flex u-justify-between u-items-center u-p-3 u-border u-rounded"
                         >
                           <div>
-                            <div className="u-fw-medium">{method.method}</div>
+                            <div className="u-font-normal">{method.method}</div>
                             <div className="u-fs-sm u-text-secondary-emphasis">
                               {method.count} transactions
                             </div>
                           </div>
-                          <div className="u-text-right">
-                            <div className="u-fw-medium">
+                          <div className="u-text-end">
+                            <div className="u-font-normal">
                               {formatCurrency(method.amount)}
                             </div>
                             <div className="u-fs-sm u-text-secondary-emphasis">
@@ -471,8 +477,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
       {/* Top Customers Analysis */}
       {reportType === "customers" && (
         <div>
-          <Card>
-            <h4 className="u-mb-4">Top Paying Customers</h4>
+          <Card title="Top Paying Customers">
             {topCustomersLoading ? (
               <div className="u-flex u-justify-center u-py-8">
                 <Spinner size="lg" />
@@ -489,7 +494,7 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                         {index + 1}
                       </div>
                       <div className="u-flex-fill">
-                        <div className="u-fw-medium u-mb-1">
+                        <div className="u-font-normal u-mb-1">
                           {customer.customer_name}
                         </div>
                         <div className="u-fs-sm u-text-secondary-emphasis">
@@ -497,8 +502,8 @@ const BillingReports: React.FC<BillingReportsProps> = ({ className = "" }) => {
                           {customer.avg_payment_time} days
                         </div>
                       </div>
-                      <div className="u-text-right">
-                        <div className="u-fs-lg u-fw-bold u-text-success">
+                      <div className="u-text-end">
+                        <div className="u-fs-lg u-font-bold u-text-success">
                           {formatCurrency(customer.total_paid)}
                         </div>
                         <Badge

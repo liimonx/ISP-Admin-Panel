@@ -554,9 +554,9 @@ const Subscriptions: React.FC = () => {
       )}
 
       {/* Page Header */}
-      <div className="u-flex u-justify-between u-align-items-start u-mb-6">
+      <div className="u-flex u-justify-between u-items-start u-mb-6">
         <div>
-          <h1 className="u-fs-1 u-fw-bold u-text-primary-emphasis u-mb-2">
+          <h1 className="u-fs-1 u-font-bold u-text-primary-emphasis u-mb-2">
             <Icon name="Users" size={32} className="u-me-3" />
             Subscriptions
           </h1>

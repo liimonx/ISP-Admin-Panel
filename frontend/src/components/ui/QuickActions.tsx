@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Icon, Card } from "@shohojdhara/atomix";
+import { Button, Card } from "@shohojdhara/atomix";
 
 export interface QuickAction {
   id: string;
@@ -23,26 +23,22 @@ export const QuickActions: React.FC<QuickActionsProps> = ({
   className = "",
 }) => {
   return (
-    <Card className={`${className}`}>
-      <div className="u-mb-4">
-        <h3 className="u-text-lg u-fw-semibold u-mb-1">{title}</h3>
-        <p className="u-fs-sm u-text-secondary-emphasis">
-          Common tasks and shortcuts
-        </p>
-      </div>
-
-      <div className="u-grid u-grid-cols-2 u-gap-3">
+    <Card
+      title={title}
+      text="Common tasks and shortcuts"
+      className={`${className}`}
+    >
+      <div className="u-flex u-gap-3 u-mt-3 u-flex-wrap">
         {actions.map((action) => (
           <Button
             key={action.id}
             variant={action.variant || "outline"}
-            size="md"
             onClick={action.onClick}
             disabled={action.disabled}
-            className="u-flex u-flex-col u-items-center u-gap-2 u-p-4 u-h-auto u-absolute"
+            iconName={action.icon as any}
+            iconSize={16}
           >
-            <Icon name={action.icon as any} size={24} />
-            <span className="u-fs-sm u-fw-medium">{action.label}</span>
+            <span className="u-fs-sm u-font-normal">{action.label}</span>
             {action.badge && (
               <span className="u-absolute u-top-2 u-right-2 u-bg-primary u-fs-xs u-px-2 u-py-1 u-rounded-full">
                 {action.badge}

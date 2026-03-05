@@ -67,7 +67,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
         {/* Plan Header */}
         <div className="u-flex u-justify-between u-items-start">
           <div className="u-flex-1">
-            <h2 className="u-fs-xl u-fw-bold u-mb-2">{plan.name}</h2>
+            <h2 className="u-fs-xl u-font-bold u-mb-2">{plan.name}</h2>
             {plan.description && (
               <p className="u-text-secondary-emphasis u-mb-3">
                 {plan.description}
@@ -86,8 +86,13 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
             </div>
           </div>
           {onEdit && (
-            <Button variant="outline" size="sm" onClick={onEdit}>
-              <Icon name="Pencil" size={16} />
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onEdit}
+              iconName="Pencil"
+              iconSize={16}
+            >
               Edit
             </Button>
           )}
@@ -97,14 +102,14 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Pricing Information */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Pricing</h3>
+          <h3 className="u-sm-lg u-font-bold">Pricing</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-bg-light u-p-4 u-rounded-md">
               <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                 Monthly Price
               </div>
-              <div className="u-text-2xl u-fw-bold u-text-primary">
+              <div className="u-text-2xl u-font-bold u-text-primary">
                 {formatPrice(plan.price)}
               </div>
               <div className="u-fs-sm u-text-secondary-emphasis">
@@ -117,7 +122,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
                 <div className="u-fs-sm u-text-secondary-emphasis u-mb-1">
                   Setup Fee
                 </div>
-                <div className="u-fs-xl u-fw-bold">
+                <div className="u-fs-xl u-font-bold">
                   {formatPrice(plan.setup_fee)}
                 </div>
                 <div className="u-fs-sm u-text-secondary-emphasis">
@@ -132,7 +137,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Speed & Data Specifications */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Specifications</h3>
+          <h3 className="u-sm-lg u-font-bold">Specifications</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-space-y-3">
@@ -140,13 +145,13 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
                 <span className="u-text-secondary-emphasis">
                   Download Speed:
                 </span>
-                <span className="u-fw-medium">
+                <span className="u-font-normal">
                   {formatSpeed(plan.download_speed, plan.speed_unit)}
                 </span>
               </div>
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary-emphasis">Upload Speed:</span>
-                <span className="u-fw-medium">
+                <span className="u-font-normal">
                   {formatSpeed(plan.upload_speed, plan.speed_unit)}
                 </span>
               </div>
@@ -155,7 +160,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
             <div className="u-space-y-3">
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary-emphasis">Data Quota:</span>
-                <span className="u-fw-medium">
+                <span className="u-font-normal">
                   {formatDataQuota(plan.data_quota || 0, plan.quota_unit)}
                 </span>
               </div>
@@ -163,7 +168,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
                 <span className="u-text-secondary-emphasis">
                   Billing Cycle:
                 </span>
-                <span className="u-fw-medium">
+                <span className="u-font-normal">
                   {getBillingCycleLabel(plan.billing_cycle)}
                 </span>
               </div>
@@ -176,7 +181,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
           <>
             <div className="u-border-t u-my-4"></div>
             <div className="u-space-y-4">
-              <h3 className="u-text-lg u-fw-semibold">Features</h3>
+              <h3 className="u-sm-lg u-font-bold">Features</h3>
 
               <div className="u-space-y-2">
                 {plan.features.map((feature, index) => (
@@ -194,7 +199,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
 
         {/* Plan Metadata */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Plan Information</h3>
+          <h3 className="u-sm-lg u-font-bold">Plan Information</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div className="u-space-y-3">
@@ -227,19 +232,19 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
             <div className="u-space-y-3">
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary-emphasis">Created:</span>
-                <span className="u-fw-medium">
+                <span className="u-font-normal">
                   {formatDate(plan.created_at)}
                 </span>
               </div>
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary-emphasis">Last Updated:</span>
-                <span className="u-fw-medium">
+                <span className="u-font-normal">
                   {formatDate(plan.updated_at)}
                 </span>
               </div>
               <div className="u-flex u-justify-between u-items-center">
                 <span className="u-text-secondary-emphasis">Plan ID:</span>
-                <span className="u-fw-medium u-font-mono">#{plan.id}</span>
+                <span className="u-font-normal u-font-mono">#{plan.id}</span>
               </div>
             </div>
           </div>
@@ -251,8 +256,12 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
             Close
           </Button>
           {onEdit && (
-            <Button variant="primary" onClick={onEdit}>
-              <Icon name="Pencil" size={16} />
+            <Button
+              variant="primary"
+              onClick={onEdit}
+              iconName="Pencil"
+              iconSize={16}
+            >
               Edit Plan
             </Button>
           )}

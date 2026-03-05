@@ -55,7 +55,7 @@ export const StatCard: React.FC<StatCardProps> = ({
           <div className="u-fs-sm u-mb-2 u-text-secondary-emphasis">
             {title}
           </div>
-          <div className="u-text-2xl u-fw-bold u-mb-2">{value}</div>
+          <div className="u-text-2xl u-font-bold u-mb-2">{value}</div>
           {trend && (
             <div className="u-flex u-items-center u-mb-2">
               <Icon

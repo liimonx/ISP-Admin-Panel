@@ -30,7 +30,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
     <Card className={`u-h-100 ${className}`}>
       {/* Widget Header */}
       <div
-        className={`u-flex u-justify-between u-align-items-start u-mb-4 ${headerClassName}`}
+        className={`u-flex u-justify-between u-items-start u-mb-4 ${headerClassName}`}
       >
         <div className="u-flex-1 u-min-w-0">
           <div className="u-flex u-items-center u-gap-2 u-mb-1">
@@ -41,7 +41,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
                 className="u-text-primary u-flex-shrink-0"
               />
             )}
-            <h3 className="u-text-lg u-fw-semibold u-truncate">{title}</h3>
+            <h3 className="u-sm-lg u-font-bold u-truncate">{title}</h3>
           </div>
           {description && (
             <p className="u-fs-sm u-text-secondary-emphasis u-line-clamp-2">

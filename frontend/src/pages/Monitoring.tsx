@@ -300,7 +300,7 @@ const Monitoring: React.FC = () => {
                   <Icon name="Desktop" size={20} className="u-text-primary" />
                 </div>
                 <div>
-                  <h3 className="u-text-lg u-mb-1">
+                  <h3 className="u-sm-lg u-mb-1">
                     {monitoringStats.total_routers || 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
@@ -321,7 +321,7 @@ const Monitoring: React.FC = () => {
                   />
                 </div>
                 <div>
-                  <h3 className="u-text-lg u-mb-1">
+                  <h3 className="u-sm-lg u-mb-1">
                     {monitoringStats.online_routers || 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">Online</p>
@@ -342,7 +342,7 @@ const Monitoring: React.FC = () => {
                   <Icon name="Warning" size={24} className="u-text-warning" />
                 </div>
                 <div>
-                  <h3 className="u-text-lg u-mb-1">
+                  <h3 className="u-sm-lg u-mb-1">
                     {monitoringStats.alerts_count || 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
@@ -362,7 +362,7 @@ const Monitoring: React.FC = () => {
                   <Icon name="Cpu" size={20} className="u-text-success" />
                 </div>
                 <div>
-                  <h3 className="u-text-lg u-mb-1">
+                  <h3 className="u-sm-lg u-mb-1">
                     {monitoringStats.total_bandwidth_usage || 0} GB
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
@@ -383,7 +383,7 @@ const Monitoring: React.FC = () => {
         <GridCol xs={12} lg={8}>
           <Card className="u-p-4">
             <div className="u-flex u-justify-between u-items-center u-mb-4">
-              <h3 className="u-text-lg u-mb-0">Bandwidth Usage</h3>
+              <h3 className="u-sm-lg u-mb-0">Bandwidth Usage</h3>
               <Badge variant="info" label={`Last ${selectedTimeRange}`} />
             </div>
             {statsLoading ? (
@@ -400,7 +400,7 @@ const Monitoring: React.FC = () => {
         </GridCol>
         <GridCol xs={12} lg={4}>
           <Card className="u-p-4">
-            <h3 className="u-text-lg u-mb-4">Router Status Distribution</h3>
+            <h3 className="u-sm-lg u-mb-4">Router Status Distribution</h3>
             {statsLoading ? (
               <div className="u-text-center u-p-6">
                 <Spinner />
@@ -419,7 +419,7 @@ const Monitoring: React.FC = () => {
       <Card>
         <div className="u-p-4 u-border-bottom">
           <div className="u-flex u-justify-between u-items-center">
-            <h3 className="u-text-lg u-mb-0">Router Status</h3>
+            <h3 className="u-sm-lg u-mb-0">Router Status</h3>
             <Button
               variant="outline"
               size="sm"
@@ -433,7 +433,7 @@ const Monitoring: React.FC = () => {
         </div>
 
         {/* Filters */}
-        <div className="u-p-4 u-border-bottom">
+        <div className="u-p-4 u-border-b">
           <Grid>
             <GridCol xs={12} md={6}>
               <Input
@@ -482,7 +482,7 @@ const Monitoring: React.FC = () => {
                         }`}
                       ></div>
                       <div>
-                        <div className="u-fw-medium">
+                        <div className="u-font-normal">
                           {sanitizeText(router.name)}
                         </div>
                         {router.description && (
@@ -551,9 +551,8 @@ const Monitoring: React.FC = () => {
                         variant="outline"
                         size="sm"
                         onClick={() => handleRouterDetails(router)}
-                      >
-                        <Icon name="Gear" size={14} />
-                      </Button>
+                        iconName="Gear"
+                      />
                       <Button
                         variant="outline"
                         size="sm"
@@ -599,7 +598,7 @@ const Monitoring: React.FC = () => {
                   size={48}
                   className="u-text-secondary-emphasis u-mb-3"
                 />
-                <h3 className="u-text-lg u-mb-2">No routers found</h3>
+                <h3 className="u-sm-lg u-mb-2">No routers found</h3>
                 <p className="u-text-secondary-emphasis u-mb-4">
                   {searchQuery || routerStatusFilter !== "all"
                     ? "Try adjusting your filters"
@@ -629,25 +628,27 @@ const Monitoring: React.FC = () => {
         size="lg"
       >
         {selectedRouter && (
-          <div className="u-space-y-4">
+          <div className="u-my-4">
             <Grid>
               <GridCol xs={12} md={6}>
                 <div className="u-p-4 u-bg-gray-subtle u-rounded">
-                  <h4 className="u-text-lg u-mb-3">Connection Info</h4>
+                  <h4 className="u-sm-lg u-mb-3">Connection Info</h4>
                   <div className="u-space-y-2">
                     <div className="u-flex u-justify-between">
                       <span>Host:</span>
-                      <span className="u-fw-medium">{selectedRouter.host}</span>
+                      <span className="u-font-normal">
+                        {selectedRouter.host}
+                      </span>
                     </div>
                     <div className="u-flex u-justify-between">
                       <span>API Port:</span>
-                      <span className="u-fw-medium">
+                      <span className="u-font-normal">
                         {selectedRouter.api_port}
                       </span>
                     </div>
                     <div className="u-flex u-justify-between">
                       <span>SSH Port:</span>
-                      <span className="u-fw-medium">
+                      <span className="u-font-normal">
                         {selectedRouter.ssh_port}
                       </span>
                     </div>
@@ -660,11 +661,11 @@ const Monitoring: React.FC = () => {
               </GridCol>
               <GridCol xs={12} md={6}>
                 <div className="u-p-4 u-bg-gray-subtle u-rounded">
-                  <h4 className="u-text-lg u-mb-3">Performance</h4>
+                  <h4 className="u-sm-lg u-mb-3">Performance</h4>
                   <div className="u-space-y-2">
                     <div className="u-flex u-justify-between">
                       <span>Uptime:</span>
-                      <span className="u-fw-medium">
+                      <span className="u-font-normal">
                         {selectedRouter.uptime
                           ? formatUptime(selectedRouter.uptime)
                           : "N/A"}
@@ -672,19 +673,19 @@ const Monitoring: React.FC = () => {
                     </div>
                     <div className="u-flex u-justify-between">
                       <span>CPU Usage:</span>
-                      <span className="u-fw-medium">
+                      <span className="u-font-normal">
                         {selectedRouter.cpu_usage || 0}%
                       </span>
                     </div>
                     <div className="u-flex u-justify-between">
                       <span>Memory Usage:</span>
-                      <span className="u-fw-medium">
+                      <span className="u-font-normal">
                         {selectedRouter.memory_usage || 0}%
                       </span>
                     </div>
                     <div className="u-flex u-justify-between">
                       <span>Active Connections:</span>
-                      <span className="u-fw-medium">
+                      <span className="u-font-normal">
                         {selectedRouter.active_connections || 0}
                       </span>
                     </div>
@@ -695,7 +696,7 @@ const Monitoring: React.FC = () => {
 
             {selectedRouter.description && (
               <div>
-                <h4 className="u-text-lg u-mb-2">Description</h4>
+                <h4 className="u-sm-lg u-mb-2">Description</h4>
                 <p className="u-text-secondary-emphasis">
                   {sanitizeText(selectedRouter.description)}
                 </p>

@@ -231,13 +231,13 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
               </div>
 
               <div className="u-mb-2">
-                <h3 className="u-fs-2 u-fw-bold u-mb-0 u-text-primary-emphasis">
+                <h3 className="u-fs-2 u-font-bold u-mb-0 u-text-primary-emphasis">
                   Live
                 </h3>
               </div>
 
               <div>
-                <p className="u-fs-sm u-fw-medium u-mb-1 u-text-secondary-emphasis">
+                <p className="u-fs-sm u-font-normal u-mb-1 u-text-secondary-emphasis">
                   Real-time Stats
                 </p>
                 <p className="u-fs-xs u-mb-0 u-text-muted">

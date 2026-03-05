@@ -155,7 +155,7 @@ const Login: React.FC = () => {
               <div className="u-mb-4">
                 <label
                   htmlFor="username"
-                  className="u-block u-mb-2 u-fw-medium"
+                  className="u-block u-mb-2 u-font-normal"
                 >
                   Username
                 </label>
@@ -182,7 +182,7 @@ const Login: React.FC = () => {
               <div className="u-mb-4">
                 <label
                   htmlFor="password"
-                  className="u-block u-mb-2 u-fw-medium"
+                  className="u-block u-mb-2 u-font-normal"
                 >
                   Password
                 </label>

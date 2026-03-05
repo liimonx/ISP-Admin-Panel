@@ -188,10 +188,10 @@ const PlanForm: React.FC<PlanFormProps> = ({
       <form onSubmit={handleSubmit} className="u-space-y-6">
         {/* Basic Information */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Basic Information</h3>
+          <h3 className="u-sm-lg u-font-bold">Basic Information</h3>
 
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Plan Name *</label>
+            <label className="u-block u-mb-2 u-font-normal">Plan Name *</label>
             <Input
               type="text"
               value={formData.name}
@@ -204,7 +204,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           </div>
 
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Description</label>
+            <label className="u-block u-mb-2 u-font-normal">Description</label>
             <Textarea
               value={formData.description}
               onChange={(e) =>
@@ -221,11 +221,11 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Speed Configuration */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Speed Configuration</h3>
+          <h3 className="u-sm-lg u-font-bold">Speed Configuration</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Download Speed *
               </label>
               <Input
@@ -244,7 +244,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
               />
             </div>
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Upload Speed *
               </label>
               <Input
@@ -265,7 +265,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
           </div>
 
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Speed Unit</label>
+            <label className="u-block u-mb-2 u-font-normal">Speed Unit</label>
             <Select
               value={formData.speed_unit}
               onChange={(value) =>
@@ -284,11 +284,11 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Data Configuration */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Data Configuration</h3>
+          <h3 className="u-sm-lg u-font-bold">Data Configuration</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">Data Quota</label>
+              <label className="u-block u-mb-2 u-font-normal">Data Quota</label>
               <Input
                 type="number"
                 value={formData.data_quota}
@@ -306,7 +306,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
               />
             </div>
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">Quota Unit</label>
+              <label className="u-block u-mb-2 u-font-normal">Quota Unit</label>
               <Select
                 value={formData.quota_unit}
                 onChange={(value) =>
@@ -327,11 +327,11 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Pricing */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Pricing</h3>
+          <h3 className="u-sm-lg u-font-bold">Pricing</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Monthly Price
               </label>
               <Input
@@ -350,7 +350,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
               />
             </div>
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">Setup Fee</label>
+              <label className="u-block u-mb-2 u-font-normal">Setup Fee</label>
               <Input
                 type="number"
                 value={formData.setup_fee}
@@ -369,7 +369,9 @@ const PlanForm: React.FC<PlanFormProps> = ({
           </div>
 
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Billing Cycle</label>
+            <label className="u-block u-mb-2 u-font-normal">
+              Billing Cycle
+            </label>
             <Select
               value={formData.billing_cycle}
               onChange={(value) =>
@@ -389,7 +391,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Plan Status */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Plan Status</h3>
+          <h3 className="u-sm-lg u-font-bold">Plan Status</h3>
 
           <div className="u-space-y-3">
             <Checkbox
@@ -418,7 +420,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Features */}
         <div className="u-space-y-4">
-          <h3 className="u-text-lg u-fw-semibold">Features</h3>
+          <h3 className="u-sm-lg u-font-bold">Features</h3>
 
           <div className="u-space-y-3">
             <div className="u-flex u-gap-2">

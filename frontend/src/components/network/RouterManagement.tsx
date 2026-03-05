@@ -59,13 +59,13 @@ const RouterManagement: React.FC = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case "online":
-        return "u-bg-success-subtle u-text-success u-inline-flex u-px-2 u-py-1 u-fs-xs u-fw-semibold u-rounded";
+        return "u-bg-success-subtle u-text-success u-inline-flex u-px-2 u-py-1 u-fs-xs u-font-bold u-rounded";
       case "offline":
-        return "u-bg-error-subtle u-c-error u-inline-flex u-px-2 u-py-1 u-fs-xs u-fw-semibold u-rounded";
+        return "u-bg-error-subtle u-c-error u-inline-flex u-px-2 u-py-1 u-fs-xs u-font-bold u-rounded";
       case "maintenance":
-        return "u-bg-warning-subtle u-c-warning u-inline-flex u-px-2 u-py-1 u-fs-xs u-fw-semibold u-rounded";
+        return "u-bg-warning-subtle u-c-warning u-inline-flex u-px-2 u-py-1 u-fs-xs u-font-bold u-rounded";
       default:
-        return "u-bg-secondary-subtle u-c-secondary u-inline-flex u-px-2 u-py-1 u-fs-xs u-fw-semibold u-rounded";
+        return "u-bg-secondary-subtle u-c-secondary u-inline-flex u-px-2 u-py-1 u-fs-xs u-font-bold u-rounded";
     }
   };
 
@@ -75,22 +75,22 @@ const RouterManagement: React.FC = () => {
 
   return (
     <div className="u-p-6">
-      <h2 className="u-text-2xl u-fw-bold u-mb-6">Router Management</h2>
+      <h2 className="u-text-2xl u-font-bold u-mb-6">Router Management</h2>
 
       <div className="u-bg-surface u-rounded u-shadow u-overflow-hidden">
         <table className="u-w-100 uivide-y uivide-gray-200">
           <thead className="u-bg-subtle">
             <tr>
-              <th className="u-px-6 u-py-3 u-text-left u-fs-xs u-fw-medium u-text-secondary-emphasis u-uppercase">
+              <th className="u-px-6 u-py-3 u-text-left u-fs-xs u-font-normal u-text-secondary-emphasis u-uppercase">
                 Router
               </th>
-              <th className="u-px-6 u-py-3 u-text-left u-fs-xs u-fw-medium u-text-secondary-emphasis u-uppercase">
+              <th className="u-px-6 u-py-3 u-text-left u-fs-xs u-font-normal u-text-secondary-emphasis u-uppercase">
                 Status
               </th>
-              <th className="u-px-6 u-py-3 u-text-left u-fs-xs u-fw-medium u-text-secondary-emphasis u-uppercase">
+              <th className="u-px-6 u-py-3 u-text-left u-fs-xs u-font-normal u-text-secondary-emphasis u-uppercase">
                 Type
               </th>
-              <th className="u-px-6 u-py-3 u-text-left u-fs-xs u-fw-medium u-text-secondary-emphasis u-uppercase">
+              <th className="u-px-6 u-py-3 u-text-left u-fs-xs u-font-normal u-text-secondary-emphasis u-uppercase">
                 Actions
               </th>
             </tr>
@@ -100,7 +100,7 @@ const RouterManagement: React.FC = () => {
               <tr key={router.id}>
                 <td className="u-px-6 u-py-4 u-whitespace-nowrap">
                   <div>
-                    <div className="u-fs-sm u-fw-medium u-text-foreground">
+                    <div className="u-fs-sm u-font-normal u-text-foreground">
                       {router.name}
                     </div>
                     <div className="u-fs-sm u-text-secondary-emphasis">
@@ -116,7 +116,7 @@ const RouterManagement: React.FC = () => {
                 <td className="u-px-6 u-py-4 u-whitespace-nowrap u-fs-sm u-text-foreground">
                   {router.router_type}
                 </td>
-                <td className="u-px-6 u-py-4 u-whitespace-nowrap u-fs-sm u-fw-medium">
+                <td className="u-px-6 u-py-4 u-whitespace-nowrap u-fs-sm u-font-normal">
                   <button
                     onClick={() => testConnection(router)}
                     disabled={testingConnection === router.id}

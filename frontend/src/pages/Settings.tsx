@@ -236,7 +236,7 @@ const Settings: React.FC = () => {
   return (
     <Container className="u-p-6">
       <div className="u-mb-6">
-        <h1 className="u-text-2xl u-fw-bold u-mb-2">System Settings</h1>
+        <h1 className="u-text-2xl u-font-bold u-mb-2">System Settings</h1>
         <p className="u-text-secondary-emphasis">
           Configure system-wide settings and preferences for your ISP admin
           panel.
@@ -260,11 +260,11 @@ const Settings: React.FC = () => {
             <div className="u-border-b u-p-4 u-mb-4">
               <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Building" size={20} />
-                <h2 className="u-text-lg u-fw-semibold">General Settings</h2>
+                <h2 className="u-sm-lg u-font-bold">General Settings</h2>
               </div>
             </div>
             <div className="u-mb-3">
-              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-font-normal u-mb-1">
                 Company Name
               </label>
               <Input
@@ -278,7 +278,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-font-normal u-mb-1">
                 Contact Email
               </label>
               <Input
@@ -293,7 +293,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-font-normal u-mb-1">
                 Support Phone
               </label>
               <Input
@@ -307,7 +307,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-font-normal u-mb-1">
                 Timezone
               </label>
               <Select
@@ -325,7 +325,7 @@ const Settings: React.FC = () => {
             </div>
 
             <div className="u-mb-3">
-              <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+              <label className="u-block u-fs-sm u-font-normal u-mb-1">
                 Currency
               </label>
               <Select
@@ -349,12 +349,12 @@ const Settings: React.FC = () => {
             <div className="u-border-b u-p-4 u-mb-4">
               <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Shield" size={20} />
-                <h2 className="u-text-lg u-fw-semibold">Security Settings</h2>
+                <h2 className="u-sm-lg u-font-bold">Security Settings</h2>
               </div>
             </div>
             <div className="u-p-4">
               <div className="u-mb-3">
-                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-font-normal u-mb-1">
                   API Rate Limit (requests/hour)
                 </label>
                 <Input
@@ -370,7 +370,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-font-normal u-mb-1">
                   Session Timeout (minutes)
                 </label>
                 <Input
@@ -389,7 +389,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-font-normal u-mb-1">
                   Max Login Attempts
                 </label>
                 <Input
@@ -408,7 +408,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-font-normal u-mb-1">
                   Password Policy
                 </label>
                 <div className="u-p-3 u-bg-light u-rounded">
@@ -476,13 +476,13 @@ const Settings: React.FC = () => {
             <div className="u-border-b u-p-4 u-mb-4">
               <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Gear" size={20} />
-                <h2 className="u-text-lg u-fw-semibold">System Settings</h2>
+                <h2 className="u-sm-lg u-font-bold">System Settings</h2>
               </div>
             </div>
             <div className="u-p-4">
               <div className="u-flex u-items-center u-justify-between u-mb-3">
                 <div>
-                  <label className="u-fs-sm u-fw-medium">
+                  <label className="u-fs-sm u-font-normal">
                     Maintenance Mode
                   </label>
                   <p className="u-fs-xs u-text-secondary-emphasis">
@@ -499,7 +499,7 @@ const Settings: React.FC = () => {
 
               <div className="u-flex u-items-center u-justify-between u-mb-3">
                 <div>
-                  <label className="u-fs-sm u-fw-medium">Auto Backup</label>
+                  <label className="u-fs-sm u-font-normal">Auto Backup</label>
                   <p className="u-fs-xs u-text-secondary-emphasis">
                     Automatically backup system data
                   </p>
@@ -512,7 +512,7 @@ const Settings: React.FC = () => {
 
               {settings.autoBackup && (
                 <div className="u-mb-3">
-                  <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                  <label className="u-block u-fs-sm u-font-normal u-mb-1">
                     Backup Frequency
                   </label>
                   <Select
@@ -533,7 +533,7 @@ const Settings: React.FC = () => {
 
               <div className="u-flex u-items-center u-justify-between u-mb-3">
                 <div>
-                  <label className="u-fs-sm u-fw-medium">
+                  <label className="u-fs-sm u-font-normal">
                     Email Notifications
                   </label>
                   <p className="u-fs-xs u-text-secondary-emphasis">
@@ -550,7 +550,7 @@ const Settings: React.FC = () => {
 
               <div className="u-flex u-items-center u-justify-between">
                 <div>
-                  <label className="u-fs-sm u-fw-medium">
+                  <label className="u-fs-sm u-font-normal">
                     SMS Notifications
                   </label>
                   <p className="u-fs-xs u-text-secondary-emphasis">
@@ -574,12 +574,12 @@ const Settings: React.FC = () => {
             <div className="u-border-b u-p-4 u-mb-4">
               <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Gear" size={20} />
-                <h2 className="u-text-lg u-fw-semibold">Advanced Settings</h2>
+                <h2 className="u-sm-lg u-font-bold">Advanced Settings</h2>
               </div>
             </div>
             <div className="u-p-4">
               <div className="u-mb-3">
-                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-font-normal u-mb-1">
                   System Log Level
                 </label>
                 <Select
@@ -598,7 +598,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-font-normal u-mb-1">
                   Database Connection Pool Size
                 </label>
                 <Input
@@ -614,7 +614,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div className="u-mb-3">
-                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-font-normal u-mb-1">
                   Cache TTL (seconds)
                 </label>
                 <Input
@@ -630,7 +630,7 @@ const Settings: React.FC = () => {
               </div>
 
               <div>
-                <label className="u-block u-fs-sm u-fw-medium u-mb-1">
+                <label className="u-block u-fs-sm u-font-normal u-mb-1">
                   Custom CSS
                 </label>
                 <Textarea

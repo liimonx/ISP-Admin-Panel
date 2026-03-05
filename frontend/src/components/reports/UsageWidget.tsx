@@ -34,7 +34,7 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
   if (isLoading) {
     return (
       <Card className={`u-h-100 ${className}`}>
-        <div className="u-flex u-justify-between u-align-items-start u-mb-4">
+        <div className="u-flex u-justify-between u-items-start u-mb-4">
           <div className="u-flex-1">
             <div className="u-bg-light u-h-4 u-w-75 u-rounded-sm u-mb-3"></div>
             <div className="u-bg-light u-h-6 u-w-50 u-rounded-sm u-mb-2"></div>
@@ -72,11 +72,11 @@ export const UsageWidget: React.FC<UsageWidgetProps> = ({
 
   return (
     <Card className={`u-h-100 ${className}`}>
-      <div className="u-flex u-justify-between u-align-items-start">
+      <div className="u-flex u-justify-between u-items-start">
         <div className="u-flex-1">
           <div className="u-fs-sm u-mb-2 u-text-muted">{title}</div>
           <div
-            className={`u-text-2xl u-fw-bold u-mb-2 ${getColorClasses(color)}`}
+            className={`u-text-2xl u-font-bold u-mb-2 ${getColorClasses(color)}`}
           >
             {value}
           </div>

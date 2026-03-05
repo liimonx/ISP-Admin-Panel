@@ -495,14 +495,13 @@ const Billing: React.FC = () => {
           {/* Revenue Analytics */}
           <Grid className="u-mb-6">
             <GridCol xs={12} md={4}>
-              <Card className="u-text-center u-p-4">
+              <Card title="Collection Rate" className="u-text-center">
                 <Icon
                   name="TrendUp"
                   size={32}
                   className="u-text-success u-mb-2"
                 />
-                <h4 className="u-mb-1">Collection Rate</h4>
-                <p className="u-fs-xl u-fw-bold u-text-success">
+                <p className="u-fs-xl u-font-bold u-text-success">
                   {((invoiceStats?.collection_rate || 0) * 100).toFixed(1)}%
                 </p>
                 <p className="u-fs-sm u-text-secondary-emphasis">
@@ -511,14 +510,13 @@ const Billing: React.FC = () => {
               </Card>
             </GridCol>
             <GridCol xs={12} md={4}>
-              <Card className="u-text-center u-p-4">
+              <Card title="Average Payment Time" className="u-text-center">
                 <Icon
                   name="Calendar"
                   size={32}
                   className="u-text-primary u-mb-2"
                 />
-                <h4 className="u-mb-1">Average Payment Time</h4>
-                <p className="u-fs-xl u-fw-bold u-text-primary">
+                <p className="u-fs-xl u-font-bold u-text-primary">
                   {Math.round(invoiceStats?.avg_payment_days || 0)} days
                 </p>
                 <p className="u-fs-sm u-text-secondary-emphasis">
@@ -527,14 +525,13 @@ const Billing: React.FC = () => {
               </Card>
             </GridCol>
             <GridCol xs={12} md={4}>
-              <Card className="u-text-center u-p-4">
+              <Card title="Monthly Recurring" className="u-text-center">
                 <Icon
                   name="CurrencyDollar"
                   size={32}
                   className="u-text-warning u-mb-2"
                 />
-                <h4 className="u-mb-1">Monthly Recurring</h4>
-                <p className="u-fs-xl u-fw-bold u-text-warning">
+                <p className="u-fs-xl u-font-bold u-text-warning">
                   {formatCurrency(invoiceStats?.monthly_recurring_revenue || 0)}
                 </p>
                 <p className="u-fs-sm u-text-secondary-emphasis">
@@ -545,8 +542,7 @@ const Billing: React.FC = () => {
           </Grid>
 
           {/* Quick Actions */}
-          <Card className="u-mb-6">
-            <h3 className="u-mb-4">Quick Actions</h3>
+          <Card title="Quick Actions" className="u-mb-6">
             <div className="u-flex u-gap-4 u-flex-wrap">
               <Button
                 variant="primary"
@@ -586,8 +582,7 @@ const Billing: React.FC = () => {
           {/* Recent Activity */}
           <Grid>
             <GridCol xs={12} lg={6}>
-              <Card>
-                <h3 className="u-mb-4">Recent Invoices</h3>
+              <Card title="Recent Invoices">
                 {invoicesLoading ? (
                   <div className="u-flex u-justify-center u-py-4">
                     <Spinner />
@@ -603,11 +598,11 @@ const Billing: React.FC = () => {
                             : invoice.status === "overdue"
                               ? "error"
                               : "warning"
-                        } u-justify-between u-align-items-start u-flex-1 u-max-w-100`}
+                        } u-justify-between u-items-start u-flex-1 u-max-w-100`}
                         onClick={() => handleViewInvoice(invoice)}
                       >
                         <div>
-                          <div className="u-fw-medium">
+                          <div className="u-font-normal">
                             {invoice.invoice_number}
                           </div>
                           <div className="u-fs-sm ">
@@ -615,7 +610,7 @@ const Billing: React.FC = () => {
                           </div>
                         </div>
                         <div className="u-text-end">
-                          <div className="u-fw-medium">
+                          <div className="u-font-normal">
                             {formatCurrency(invoice.total_amount)}
                           </div>
                           <Badge
@@ -641,8 +636,7 @@ const Billing: React.FC = () => {
             </GridCol>
 
             <GridCol xs={12} lg={6}>
-              <Card>
-                <h3 className="u-mb-4">Recent Payments</h3>
+              <Card title="Recent Payments">
                 {paymentsLoading ? (
                   <div className="u-flex u-justify-center u-py-4">
                     <Spinner />
@@ -656,15 +650,15 @@ const Billing: React.FC = () => {
                         onClick={() => handleViewPayment(paymentRecord)}
                       >
                         <div>
-                          <div className="u-fw-medium">
+                          <div className="u-font-normal">
                             {paymentRecord.payment_number}
                           </div>
                           <div className="u-fs-sm ">
                             {paymentRecord.customer?.name}
                           </div>
                         </div>
-                        <div className="u-text-right">
-                          <div className="u-fw-medium">
+                        <div className="u-text-end">
+                          <div className="u-font-normal">
                             {formatCurrency(paymentRecord.amount)}
                           </div>
                           <Badge
@@ -736,13 +730,13 @@ const Billing: React.FC = () => {
             {invoicesData?.results && (
               <div className="u-flex u-gap-4 u-mb-4 u-p-3 u-bg-subtle u-rounded">
                 <div className="u-text-center">
-                  <div className="u-fs-lg u-fw-bold">
+                  <div className="u-fs-lg u-font-bold">
                     {invoicesData.count || 0}
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">Total</div>
                 </div>
                 <div className="u-text-center">
-                  <div className="u-fs-lg u-fw-bold u-text-success">
+                  <div className="u-fs-lg u-font-bold u-text-success">
                     {
                       invoicesData.results.filter((i) => i.status === "paid")
                         .length
@@ -751,7 +745,7 @@ const Billing: React.FC = () => {
                   <div className="u-fs-sm u-text-secondary-emphasis">Paid</div>
                 </div>
                 <div className="u-text-center">
-                  <div className="u-fs-lg u-fw-bold u-text-warning">
+                  <div className="u-fs-lg u-font-bold u-text-warning">
                     {
                       invoicesData.results.filter((i) => i.status === "pending")
                         .length
@@ -762,7 +756,7 @@ const Billing: React.FC = () => {
                   </div>
                 </div>
                 <div className="u-text-center">
-                  <div className="u-fs-lg u-fw-bold u-text-error">
+                  <div className="u-fs-lg u-font-bold u-text-error">
                     {
                       invoicesData.results.filter((i) => i.status === "overdue")
                         .length
@@ -907,7 +901,7 @@ const Billing: React.FC = () => {
                           key={method}
                           className="u-text-center u-p-3 u-border u-rounded"
                         >
-                          <div className="u-fs-sm u-fw-medium u-text-capitalize">
+                          <div className="u-fs-sm u-font-normal u-text-capitalize">
                             {method.replace("_", " ")}
                           </div>
                           <div className="u-fs-xs u-text-secondary-emphasis">
@@ -1040,7 +1034,7 @@ const Billing: React.FC = () => {
         {selectedInvoice && (
           <div>
             <div className="u-mb-4">
-              <div className="u-flex u-justify-between u-align-items-start u-mb-3">
+              <div className="u-flex u-justify-between u-items-start u-mb-3">
                 <div>
                   <h2 className="u-mb-1">{selectedInvoice.invoice_number}</h2>
                   <p className=" u-mb-2">{selectedInvoice.invoice_type}</p>
@@ -1063,7 +1057,7 @@ const Billing: React.FC = () => {
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
                   <label className="u-fs-sm  u-mb-1">Customer</label>
-                  <p className="u-fw-medium">
+                  <p className="u-font-normal">
                     {selectedInvoice.customer?.name || "N/A"}
                   </p>
                   <p className="u-fs-sm ">
@@ -1074,7 +1068,7 @@ const Billing: React.FC = () => {
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
                   <label className="u-fs-sm  u-mb-1">Subscription</label>
-                  <p className="u-fw-medium">
+                  <p className="u-font-normal">
                     {selectedInvoice.subscription?.plan?.name || "N/A"}
                   </p>
                 </div>
@@ -1135,7 +1129,7 @@ const Billing: React.FC = () => {
                     -{formatCurrency(selectedInvoice.discount_amount || 0)}
                   </span>
                 </div>
-                <div className="u-flex u-justify-between u-fw-bold u-border-top u-pt-2">
+                <div className="u-flex u-justify-between u-font-bold u-border-top u-pt-2">
                   <span>Total:</span>
                   <span>
                     {formatCurrency(selectedInvoice.total_amount || 0)}
@@ -1223,7 +1217,7 @@ const Billing: React.FC = () => {
         {selectedPayment && (
           <div>
             <div className="u-mb-4">
-              <div className="u-flex u-justify-between u-align-items-start u-mb-3">
+              <div className="u-flex u-justify-between u-items-start u-mb-3">
                 <div>
                   <h2 className="u-mb-1">
                     {selectedPayment.payment_number || "N/A"}
@@ -1250,7 +1244,7 @@ const Billing: React.FC = () => {
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
                   <label className="u-fs-sm  u-mb-1">Customer</label>
-                  <p className="u-fw-medium">
+                  <p className="u-font-normal">
                     {selectedPayment.customer?.name || "N/A"}
                   </p>
                   <p className="u-fs-sm ">
@@ -1261,7 +1255,7 @@ const Billing: React.FC = () => {
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
                   <label className="u-fs-sm  u-mb-1">Invoice</label>
-                  <p className="u-fw-medium">
+                  <p className="u-font-normal">
                     {selectedPayment.invoice?.invoice_number || "N/A"}
                   </p>
                   <p className="u-fs-sm ">
@@ -1275,7 +1269,7 @@ const Billing: React.FC = () => {
               <GridCol xs={12} md={6}>
                 <div className="u-mb-3">
                   <label className="u-fs-sm  u-mb-1">Amount</label>
-                  <p className="u-fs-xl u-fw-bold u-text-primary">
+                  <p className="u-fs-xl u-font-bold u-text-primary">
                     {formatCurrency(selectedPayment.amount || 0)}
                   </p>
                 </div>

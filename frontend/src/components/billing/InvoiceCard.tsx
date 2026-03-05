@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Card,
-  Button,
-  Badge,
-  Avatar,
-  Progress,
-  Icon,
-} from "@shohojdhara/atomix";
+import { Card, Button, Badge, Avatar, Progress } from "@shohojdhara/atomix";
 import { Invoice } from "../../types";
 import { formatCurrency, toNumber } from "../../utils/formatters";
 
@@ -68,7 +61,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
     <Card className="u-h-full">
       <div className="u-flex u-justify-between u-items-start u-mb-4">
         <div className="u-flex-1">
-          <h4 className="u-mb-1 u-text-lg u-fw-semibold">
+          <h4 className="u-mb-1 u-sm-lg u-font-bold">
             {invoice.invoice_number}
           </h4>
           <p className="u-fs-sm u-text-secondary-emphasis u-mb-2">
@@ -77,8 +70,8 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           </p>
           {getStatusBadge(invoice.status)}
         </div>
-        <div className="u-text-right">
-          <div className="u-fs-xl u-fw-bold u-text-primary">
+        <div className="u-text-end">
+          <div className="u-fs-xl u-font-bold u-text-primary">
             {formatCurrency(invoice.total_amount)}
           </div>
           {toNumber(invoice.paid_amount) > 0 && (
@@ -92,7 +85,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
       <div className="u-flex u-items-center u-gap-3 u-mb-4">
         <Avatar initials={invoice.customer?.name?.charAt(0) || "?"} size="md" />
         <div className="u-flex-1">
-          <div className="u-fw-medium u-fs-sm">
+          <div className="u-font-normal u-fs-sm">
             {invoice.customer?.name || "Unknown Customer"}
           </div>
           <div className="u-fs-xs u-text-secondary-emphasis">
@@ -107,8 +100,10 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
       {!progress.isFullyPaid && (
         <div className="u-mb-4">
           <div className="u-flex u-justify-between u-mb-2">
-            <span className="u-fs-sm u-fw-medium">Payment Progress</span>
-            <span className="u-fs-sm u-fw-medium">{progress.percentage}%</span>
+            <span className="u-fs-sm u-font-normal">Payment Progress</span>
+            <span className="u-fs-sm u-font-normal">
+              {progress.percentage}%
+            </span>
           </div>
           <Progress
             value={progress.percentage}
@@ -127,8 +122,9 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           size="sm"
           className="u-flex-1"
           onClick={() => onView(invoice)}
+          iconName="Eye"
+          iconSize={16}
         >
-          <Icon name="Eye" size={16} />
           View
         </Button>
 
@@ -138,21 +134,30 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
             size="sm"
             className="u-flex-1"
             onClick={() => onPay(invoice)}
+            iconName="CurrencyDollar"
+            iconSize={16}
           >
-            <Icon name="CurrencyDollar" size={16} />
             Pay
           </Button>
         )}
 
         {invoice.status === "pending" && (
-          <Button variant="outline" size="sm" onClick={() => onSend(invoice)}>
-            <Icon name="PaperPlane" size={16} />
-          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onSend(invoice)}
+            iconName="PaperPlane"
+            iconSize={16}
+          />
         )}
 
-        <Button variant="outline" size="sm" onClick={() => onDownload(invoice)}>
-          <Icon name="Download" size={16} />
-        </Button>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => onDownload(invoice)}
+          iconName="Download"
+          iconSize={16}
+        />
       </div>
     </Card>
   );

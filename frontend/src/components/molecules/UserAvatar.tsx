@@ -112,7 +112,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
           <div className="u-py-2">
             {/* User Info Header */}
             <div className="u-px-4 u-py-2 u-border-bottom">
-              <div className="u-fw-medium u-fs-sm">{user.name}</div>
+              <div className="u-font-normal u-fs-sm">{user.name}</div>
               {user.email && (
                 <div className="u-fs-xs u-text-muted">{user.email}</div>
               )}

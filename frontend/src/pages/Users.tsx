@@ -455,7 +455,7 @@ const Users: React.FC = () => {
                         className="u-me-3"
                       />
                       <div>
-                        <div className="u-fw-medium">{user.username}</div>
+                        <div className="u-font-normal">{user.username}</div>
                         <div className="u-text-secondary-emphasis u-fs-sm">
                           {user.first_name} {user.last_name}
                         </div>
@@ -565,7 +565,7 @@ const Users: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Username *</label>
+              <label className="u-block u-mb-2 u-font-normal">Username *</label>
               <Input
                 value={formData.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
@@ -579,7 +579,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Email *</label>
+              <label className="u-block u-mb-2 u-font-normal">Email *</label>
               <Input
                 type="email"
                 value={formData.email}
@@ -597,7 +597,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">First Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">First Name *</label>
               <Input
                 value={formData.first_name}
                 onChange={(e) =>
@@ -613,7 +613,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Last Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">Last Name *</label>
               <Input
                 value={formData.last_name}
                 onChange={(e) => handleInputChange("last_name", e.target.value)}
@@ -630,7 +630,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Role *</label>
+              <label className="u-block u-mb-2 u-font-normal">Role *</label>
               <Select
                 value={formData.role}
                 onChange={(e) => handleInputChange("role", e.target.value)}
@@ -639,7 +639,7 @@ const Users: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Phone</label>
+              <label className="u-block u-mb-2 u-font-normal">Phone</label>
               <Input
                 type="tel"
                 value={formData.phone}
@@ -657,7 +657,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Password *</label>
+              <label className="u-block u-mb-2 u-font-normal">Password *</label>
               <Input
                 type="password"
                 value={formData.password}
@@ -672,7 +672,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Confirm Password *
               </label>
               <Input
@@ -744,7 +744,7 @@ const Users: React.FC = () => {
         <div className="u-space-y-4">
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Username *</label>
+              <label className="u-block u-mb-2 u-font-normal">Username *</label>
               <Input
                 value={formData.username}
                 onChange={(e) => handleInputChange("username", e.target.value)}
@@ -758,7 +758,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Email *</label>
+              <label className="u-block u-mb-2 u-font-normal">Email *</label>
               <Input
                 type="email"
                 value={formData.email}
@@ -776,7 +776,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">First Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">First Name *</label>
               <Input
                 value={formData.first_name}
                 onChange={(e) =>
@@ -792,7 +792,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Last Name *</label>
+              <label className="u-block u-mb-2 u-font-normal">Last Name *</label>
               <Input
                 value={formData.last_name}
                 onChange={(e) => handleInputChange("last_name", e.target.value)}
@@ -809,7 +809,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Role *</label>
+              <label className="u-block u-mb-2 u-font-normal">Role *</label>
               <Select
                 value={formData.role}
                 onChange={(e) => handleInputChange("role", e.target.value)}
@@ -818,7 +818,7 @@ const Users: React.FC = () => {
               />
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">Phone</label>
+              <label className="u-block u-mb-2 u-font-normal">Phone</label>
               <Input
                 type="tel"
                 value={formData.phone}
@@ -851,7 +851,7 @@ const Users: React.FC = () => {
 
           <Grid>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 New Password (Optional)
               </label>
               <Input
@@ -868,7 +868,7 @@ const Users: React.FC = () => {
               )}
             </GridCol>
             <GridCol xs={12} md={6}>
-              <label className="u-block u-mb-2 u-fw-medium">
+              <label className="u-block u-mb-2 u-font-normal">
                 Confirm New Password
               </label>
               <Input

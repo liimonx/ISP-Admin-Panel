@@ -18,11 +18,9 @@ import {
   Callout,
   Spinner,
   Hero,
-  Block,
 } from "@shohojdhara/atomix";
 import { StatCard } from "../components/molecules/StatCard";
 import { QuickActions } from "../components/ui";
-import { API_CONFIG } from "@/config/api";
 
 // Time period options for charts
 const TIME_PERIODS = [
@@ -494,19 +492,19 @@ const Dashboard: React.FC = () => {
       {/* Interactive Charts Section */}
       <Grid className="u-mb-8">
         <GridCol xs={12} lg={8}>
-          <Card className="u-h-full">
-            <div className="u-flex u-justify-between u-items-center u-mb-6">
-              <div>
-                <h3 className="u-fs-xl u-fw-semibold u-mb-1">
-                  {selectedChart === "revenue" && "Revenue Analytics"}
-                  {selectedChart === "traffic" && "Network Traffic"}
-                  {selectedChart === "customers" && "Customer Growth"}
-                  {selectedChart === "network" && "Network Performance"}
-                </h3>
-                <p className="u-fs-sm u-text-secondary-emphasis">
-                  Track your key metrics over time
-                </p>
-              </div>
+          <Card
+            title={
+              selectedChart === "revenue"
+                ? "Revenue Analytics"
+                : selectedChart === "traffic"
+                  ? "Network Traffic"
+                  : selectedChart === "customers"
+                    ? "Customer Growth"
+                    : "Network Performance"
+            }
+            text="Track your key metrics over time"
+            className="u-h-full"
+            actions={
               <div className="u-flex u-gap-2 u-flex-wrap">
                 {TIME_PERIODS.map((period) => (
                   <Button
@@ -523,10 +521,10 @@ const Dashboard: React.FC = () => {
                   </Button>
                 ))}
               </div>
-            </div>
-
+            }
+          >
             {/* Chart Type Selector */}
-            <div className="u-flex u-gap-2 u-mb-4 u-flex-wrap">
+            <div className="u-flex u-gap-2 u-my-4 u-flex-wrap">
               {[
                 { key: "revenue", label: "Revenue", icon: "CurrencyDollar" },
                 { key: "traffic", label: "Traffic", icon: "Globe" },
@@ -545,37 +543,33 @@ const Dashboard: React.FC = () => {
               ))}
             </div>
 
-            <div className="u-h-80">
+            <div>
               {selectedChart === "revenue" && (
-                <AreaChart datasets={revenueData} size="lg" />
+                <AreaChart datasets={revenueData} size="sm" />
               )}
               {selectedChart === "traffic" && (
-                <BarChart datasets={trafficData} size="lg" />
+                <BarChart datasets={trafficData} size="sm" />
               )}
               {selectedChart === "customers" && (
-                <LineChart datasets={customerGrowthData} size="lg" />
+                <LineChart datasets={customerGrowthData} size="sm" />
               )}
               {selectedChart === "network" && (
-                <LineChart datasets={networkStatus} size="lg" />
+                <LineChart datasets={networkStatus} size="sm" />
               )}
             </div>
           </Card>
         </GridCol>
         <GridCol xs={12} lg={4}>
-          <Card className="u-h-full">
-            <div className="u-mb-4">
-              <h3 className="u-fs-xl u-fw-semibold u-mb-1">
-                Plan Distribution
-              </h3>
-              <p className="u-fs-sm u-text-secondary-emphasis">
-                Customer subscription breakdown
-              </p>
-            </div>
-            <div className="u-min-h-300">
+          <Card
+            title="Plan Distribution"
+            text="Customer subscription breakdown"
+            className="u-h-full"
+          >
+            <div className="u-mt-4">
               <DonutChart datasets={customerDistribution} size="lg" />
             </div>
             <div className="u-mt-4 u-text-center u-pt-4 u-border-top">
-              <div className="u-text-2xl u-fw-bold u-text-primary u-mb-1">
+              <div className="u-fs-xl u-font-bold u-text-primary u-mb-1">
                 {enhancedStats.total_subscriptions}
               </div>
               <p className="u-fs-sm u-text-secondary-emphasis">
@@ -589,14 +583,12 @@ const Dashboard: React.FC = () => {
       {/* Network Performance Charts */}
       <Grid className="u-mb-6">
         <GridCol xs={12} lg={6}>
-          <Card>
-            <h3 className="u-mb-4">Network Traffic</h3>
+          <Card title="Network Traffic">
             <BarChart datasets={trafficData} size="md" />
           </Card>
         </GridCol>
         <GridCol xs={12} lg={6}>
-          <Card>
-            <h3 className="u-mb-4">Network Performance</h3>
+          <Card title="Network Performance">
             <LineChart datasets={networkStatus} size="md" />
           </Card>
         </GridCol>
@@ -604,7 +596,7 @@ const Dashboard: React.FC = () => {
 
       {/* Quick Actions & System Overview */}
       <Grid className="u-mb-8">
-        <GridCol xs={12} lg={4}>
+        <GridCol xs={12} lg={5}>
           <QuickActions
             title="Quick Actions"
             actions={[
@@ -636,19 +628,16 @@ const Dashboard: React.FC = () => {
             ]}
           />
         </GridCol>
-        <GridCol xs={12} lg={8}>
-          <Card className="u-h-100">
-            <div className="u-mb-4">
-              <h3 className="u-fs-xl u-fw-semibold u-mb-1">System Overview</h3>
-              <p className="u-fs-sm u-text-secondary-emphasis">
-                Key metrics and performance indicators
-              </p>
-            </div>
-
-            <Grid>
+        <GridCol xs={12} lg={7}>
+          <Card
+            title="System Overview"
+            text="Key metrics and performance indicators"
+            className="u-h-100"
+          >
+            <Grid className="u-mt-1">
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
-                  <div className="u-text-2xl u-fw-bold u-text-success u-mb-1">
+                  <div className="u-fs-2xl u-font-bold u-text-success u-mb-1">
                     {networkUptime}%
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">
@@ -658,7 +647,7 @@ const Dashboard: React.FC = () => {
               </GridCol>
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
-                  <div className="u-text-2xl u-fw-bold u-text-primary u-mb-1">
+                  <div className="u-fs-2xl u-font-bold u-text-primary u-mb-1">
                     {enhancedStats.total_customers}
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">
@@ -668,7 +657,7 @@ const Dashboard: React.FC = () => {
               </GridCol>
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
-                  <div className="u-text-2xl u-fw-bold u-text-warning u-mb-1">
+                  <div className="u-fs-2xl u-font-bold u-text-warning u-mb-1">
                     {enhancedStats.total_routers}
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">
@@ -678,7 +667,7 @@ const Dashboard: React.FC = () => {
               </GridCol>
               <GridCol xs={6} md={3}>
                 <div className="u-text-center u-p-4">
-                  <div className="u-text-2xl u-fw-bold u-text-info u-mb-1">
+                  <div className="u-fs-2xl u-font-bold u-text-info u-mb-1">
                     ${enhancedStats.total_monthly_revenue.toLocaleString()}
                   </div>
                   <div className="u-fs-sm u-text-secondary-emphasis">
@@ -694,16 +683,10 @@ const Dashboard: React.FC = () => {
       {/* Recent Activity Section */}
       <Grid>
         <GridCol xs={12} lg={8}>
-          <Card className="u-h-100">
-            <div className="u-flex u-justify-between u-items-center u-mb-6">
-              <div>
-                <h3 className="u-fs-xl u-fw-semibold u-mb-1">
-                  Recent Customers
-                </h3>
-                <p className="u-fs-sm u-text-secondary-emphasis">
-                  Latest customer registrations and activity
-                </p>
-              </div>
+          <Card
+            title="Recent Customers"
+            text="Latest customer registrations and activity"
+            actions={
               <Button
                 variant="link"
                 size="sm"
@@ -711,12 +694,13 @@ const Dashboard: React.FC = () => {
               >
                 View All
               </Button>
-            </div>
-            <div className="u-space-y-3">
+            }
+          >
+            <div className="u-mt-3">
               {recentCustomers.map((customer, index) => (
                 <div
                   key={customer.id || index}
-                  className="u-flex u-items-center u-justify-between u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-light"
+                  className="u-flex u-items-center u-justify-between u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-light u-mb-2"
                   onClick={() => handleCustomerClick(customer)}
                 >
                   <div className="u-flex u-items-center u-gap-3">
@@ -725,7 +709,7 @@ const Dashboard: React.FC = () => {
                       size="sm"
                     />
                     <div>
-                      <div className="u-fw-medium">{customer.name}</div>
+                      <div className="u-font-normal">{customer.name}</div>
                       <div className="u-fs-sm u-text-secondary-emphasis">
                         {customer.email}
                       </div>
@@ -763,22 +747,19 @@ const Dashboard: React.FC = () => {
           </Card>
         </GridCol>
         <GridCol xs={12} lg={4}>
-          <Card className="u-h-100">
-            <div className="u-mb-6">
-              <h3 className="u-fs-xl u-fw-semibold u-mb-1">System Health</h3>
-              <p className="u-fs-sm u-text-secondary-emphasis">
-                Real-time system performance metrics
-              </p>
-            </div>
-
-            <div className="u-space-y-6">
+          <Card
+            title="System Health"
+            text="Real-time system performance metrics"
+            className="u-h-100"
+          >
+            <div className="u-mt-4">
               <div>
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Cpu" size={16} className="u-text-primary" />
-                    <span className="u-fs-sm u-fw-medium">Server Load</span>
+                    <span className="u-fs-sm u-font-normal">Server Load</span>
                   </div>
-                  <span className="u-fs-sm u-fw-semibold">
+                  <span className="u-fs-sm u-font-bold">
                     {systemStatus.serverLoad}%
                   </span>
                 </div>
@@ -798,9 +779,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Memory" size={16} className="u-text-success" />
-                    <span className="u-fs-sm u-fw-medium">Memory Usage</span>
+                    <span className="u-fs-sm u-font-normal">Memory Usage</span>
                   </div>
-                  <span className="u-fs-sm u-fw-semibold">
+                  <span className="u-fs-sm u-font-bold">
                     {systemStatus.memoryUsage}%
                   </span>
                 </div>
@@ -820,9 +801,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
                     <Icon name="HardDrive" size={16} className="u-text-info" />
-                    <span className="u-fs-sm u-fw-medium">Storage</span>
+                    <span className="u-fs-sm u-font-normal">Storage</span>
                   </div>
-                  <span className="u-fs-sm u-fw-semibold">
+                  <span className="u-fs-sm u-font-bold">
                     {systemStatus.storage}%
                   </span>
                 </div>
@@ -842,9 +823,9 @@ const Dashboard: React.FC = () => {
                 <div className="u-flex u-justify-between u-items-center u-mb-2">
                   <div className="u-flex u-items-center u-gap-2">
                     <Icon name="Globe" size={16} className="u-text-warning" />
-                    <span className="u-fs-sm u-fw-medium">Network Load</span>
+                    <span className="u-fs-sm u-font-normal">Network Load</span>
                   </div>
-                  <span className="u-fs-sm u-fw-semibold">
+                  <span className="u-fs-sm u-font-bold">
                     {systemStatus.networkLoad}%
                   </span>
                 </div>
@@ -863,7 +844,7 @@ const Dashboard: React.FC = () => {
 
             <div className="u-mt-6 u-pt-6 u-border-top">
               <div className="u-flex u-justify-between u-items-center u-mb-3">
-                <h4 className="u-fs-sm u-fw-semibold">Active Administrators</h4>
+                <h4 className="u-fs-sm u-font-bold">Active Administrators</h4>
                 <Badge variant="success" size="sm" label="3 online" />
               </div>
               <div className="u-flex u-gap-2">

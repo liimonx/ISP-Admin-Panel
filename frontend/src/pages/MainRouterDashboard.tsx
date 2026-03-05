@@ -507,7 +507,7 @@ const MainRouterDashboard: React.FC = () => {
                   title: "Interface",
                   render: (_, iface: any) => (
                     <div>
-                      <div className="u-fw-medium">{iface.name}</div>
+                      <div className="u-font-normal">{iface.name}</div>
                       <div className="u-text-secondary-emphasis u-fs-sm">
                         {iface.type}
                       </div>
@@ -588,7 +588,7 @@ const MainRouterDashboard: React.FC = () => {
                     title: "Client",
                     render: (_, conn: any) => (
                       <div>
-                        <div className="u-fw-medium">
+                        <div className="u-font-normal">
                           {conn.client_name || "Unknown"}
                         </div>
                         <div className="u-text-secondary-emphasis u-fs-sm">
@@ -679,7 +679,7 @@ const MainRouterDashboard: React.FC = () => {
                   title: "Client",
                   render: (_, lease: any) => (
                     <div>
-                      <div className="u-fw-medium">
+                      <div className="u-font-normal">
                         {lease.hostname || "Unknown"}
                       </div>
                       <div className="u-text-secondary-emphasis u-fs-sm">
@@ -745,7 +745,7 @@ const MainRouterDashboard: React.FC = () => {
                       className="u-p-3 u-bg-gray-subtle u-rounded u-flex u-justify-between"
                     >
                       <div className="u-flex-1">
-                        <div className="u-fs-sm u-fw-medium u-mb-1">
+                        <div className="u-fs-sm u-font-normal u-mb-1">
                           {log.message || sanitizeText(log.log_entry)}
                         </div>
                         <div className="u-text-secondary-emphasis u-fs-sm">
@@ -802,7 +802,7 @@ const MainRouterDashboard: React.FC = () => {
       >
         <div className="u-space-y-4">
           <div>
-            <label className="u-block u-mb-2 u-fw-medium">Command</label>
+            <label className="u-block u-mb-2 u-font-normal">Command</label>
             <Input
               value={command}
               onChange={(e) => setCommand(e.target.value)}
@@ -812,7 +812,7 @@ const MainRouterDashboard: React.FC = () => {
 
           {commandResult && (
             <div>
-              <label className="u-block u-mb-2 u-fw-medium">Output</label>
+              <label className="u-block u-mb-2 u-font-normal">Output</label>
               <Textarea
                 value={commandResult}
                 readOnly

@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, Button, Badge, Avatar, Icon } from "@shohojdhara/atomix";
+import { Card, Button, Badge, Avatar } from "@shohojdhara/atomix";
 import { Payment } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
 
@@ -70,9 +70,9 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
 
   return (
     <Card className="u-h-100">
-      <div className="u-flex u-justify-between u-align-items-start u-mb-4">
+      <div className="u-flex u-justify-between u-items-start u-mb-4">
         <div className="u-flex-fill">
-          <h4 className="u-mb-1 u-fs-lg u-fw-semibold">
+          <h4 className="u-mb-1 u-fs-lg u-font-bold">
             {payment.payment_number}
           </h4>
           <p className="u-fs-sm u-text-secondary-emphasis">
@@ -87,7 +87,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
       <div className="u-flex u-items-center u-gap-3 u-mb-4">
         <Avatar initials={payment.customer?.name?.charAt(0) || "?"} size="md" />
         <div className="u-flex-fill">
-          <div className="u-fw-medium u-fs-sm">
+          <div className="u-font-normal u-fs-sm">
             {payment.customer?.name || "Unknown Customer"}
           </div>
           <div className="u-fs-xs u-text-secondary-emphasis">
@@ -102,7 +102,7 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
       <div className="u-mb-4">
         <div className="u-flex u-justify-between u-items-center u-mb-2">
           <span className="u-fs-sm u-text-secondary-emphasis">Amount</span>
-          <span className="u-fs-xl u-fw-bold u-text-primary">
+          <span className="u-fs-xl u-font-bold u-text-primary">
             {formatCurrency(payment.amount)}
           </span>
         </div>
@@ -128,8 +128,9 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
           size="sm"
           className="u-flex-fill"
           onClick={() => onView(payment)}
+          iconName="Eye"
+          iconSize={16}
         >
-          <Icon name="Eye" size={16} />
           View
         </Button>
 
@@ -138,15 +139,20 @@ const PaymentCard: React.FC<PaymentCardProps> = ({
           size="sm"
           className="u-flex-fill"
           onClick={() => onDownload(payment)}
+          iconName="Download"
+          iconSize={16}
         >
-          <Icon name="Download" size={16} />
           Receipt
         </Button>
 
         {canRefund && (
-          <Button variant="outline" size="sm" onClick={() => onRefund(payment)}>
-            <Icon name="Refresh" size={16} />
-          </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onRefund(payment)}
+            iconName="Refresh"
+            iconSize={16}
+          />
         )}
       </div>
     </Card>

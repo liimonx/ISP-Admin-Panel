@@ -215,7 +215,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
       header: "Date & Time",
       render: (entry: AuditLogEntry) => (
         <div>
-          <div className="u-fw-medium u-fs-sm">
+          <div className="u-font-normal u-fs-sm">
             {new Date(entry.timestamp).toLocaleDateString()}
           </div>
           <div className="u-fs-xs u-text-secondary-emphasis">
@@ -231,7 +231,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
         <div className="u-flex u-items-center u-gap-2">
           <Avatar initials={entry.user.name.charAt(0)} size="sm" />
           <div>
-            <div className="u-fw-medium u-fs-sm">{entry.user.name}</div>
+            <div className="u-font-normal u-fs-sm">{entry.user.name}</div>
             <div className="u-fs-xs u-text-secondary-emphasis">
               {entry.user.email}
             </div>
@@ -251,7 +251,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
         <div className="u-flex u-items-center u-gap-2">
           <Icon name={getResourceIcon(entry.resource_type)} size={16} />
           <div>
-            <div className="u-fw-medium u-fs-sm">{entry.resource_name}</div>
+            <div className="u-font-normal u-fs-sm">{entry.resource_name}</div>
             <div className="u-fs-xs u-text-secondary-emphasis u-text-capitalize">
               {entry.resource_type}
             </div>
@@ -265,7 +265,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
       render: (entry: AuditLogEntry) => (
         <div>
           {entry.details.amount && (
-            <div className="u-fs-sm u-fw-medium">
+            <div className="u-fs-sm u-font-normal">
               {formatCurrency(entry.details.amount)}
             </div>
           )}
@@ -290,8 +290,9 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
           variant="outline"
           size="sm"
           onClick={() => handleViewDetails(entry)}
+          iconName="Eye"
+          iconSize={14}
         >
-          <Icon name="Eye" size={14} />
           View
         </Button>
       ),
@@ -313,8 +314,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
       <Card>
         <div className="u-flex u-justify-between u-items-center u-mb-4">
           <h3>Billing Audit Trail</h3>
-          <Button variant="outline" size="sm">
-            <Icon name="Download" size={14} />
+          <Button variant="outline" size="sm" iconName="Download" iconSize={14}>
             Export Log
           </Button>
         </div>
@@ -397,7 +397,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
         {selectedEntry && (
           <div>
             <div className="u-mb-4">
-              <div className="u-flex u-justify-between u-align-items-start u-mb-3">
+              <div className="u-flex u-justify-between u-items-start u-mb-3">
                 <div>
                   <h4 className="u-mb-1">Activity Details</h4>
                   <p className="u-text-secondary-emphasis">
@@ -410,7 +410,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
 
             <div className="u-space-y-4">
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-1 u-block">
+                <label className="u-fs-sm u-font-normal u-text-secondary-emphasis u-mb-1 u-block">
                   User
                 </label>
                 <div className="u-flex u-items-center u-gap-3">
@@ -419,7 +419,9 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
                     size="md"
                   />
                   <div>
-                    <div className="u-fw-medium">{selectedEntry.user.name}</div>
+                    <div className="u-font-normal">
+                      {selectedEntry.user.name}
+                    </div>
                     <div className="u-fs-sm u-text-secondary-emphasis">
                       {selectedEntry.user.email}
                     </div>
@@ -428,7 +430,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
               </div>
 
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-1 u-block">
+                <label className="u-fs-sm u-font-normal u-text-secondary-emphasis u-mb-1 u-block">
                   Resource
                 </label>
                 <div className="u-flex u-items-center u-gap-2">
@@ -437,7 +439,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
                     size={20}
                   />
                   <div>
-                    <div className="u-fw-medium">
+                    <div className="u-font-normal">
                       {selectedEntry.resource_name}
                     </div>
                     <div className="u-fs-sm u-text-secondary-emphasis u-text-capitalize">
@@ -449,7 +451,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
               </div>
 
               <div>
-                <label className="u-fs-sm u-fw-medium u-text-secondary-emphasis u-mb-1 u-block">
+                <label className="u-fs-sm u-font-normal u-text-secondary-emphasis u-mb-1 u-block">
                   Action Details
                 </label>
                 <div className="u-bg-subtle u-p-3 u-rounded">
