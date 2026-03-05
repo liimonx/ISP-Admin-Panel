@@ -18,7 +18,7 @@ import {
   Toggle,
   Textarea,
 } from "@shohojdhara/atomix";
-import { Plan } from "@/types";
+import { Plan, PlanStats } from "@/types";
 import { apiService } from "@/services/apiService";
 import { sanitizeText } from "@/utils/sanitizer";
 
@@ -108,9 +108,21 @@ const Plans: React.FC = () => {
   // Fetch plan statistics
   const { data: planStats } = useQuery({
     queryKey: ["plan-stats"],
-    queryFn: () => apiService.plans.getPlanStats(),
+    queryFn: () => apiService.plans.getPlanStats() as Promise<PlanStats>,
     staleTime: 60000, // 1 minute
     retry: 1,
+    select: (data) => {
+      // Ensure we're working with the correct data structure
+      if (data && typeof data === 'object' && !Array.isArray(data)) {
+        return data as PlanStats;
+      }
+      return {
+        total_plans: 0,
+        active_plans: 0,
+        featured_plans: 0,
+        popular_plans: 0,
+      } as PlanStats;
+    },
   });
 
   // Create plan mutation
@@ -371,7 +383,7 @@ const Plans: React.FC = () => {
       </div>
 
       {/* Statistics Cards */}
-      {planStats && (
+      {planStats && typeof planStats === 'object' && !Array.isArray(planStats) && (
         <Grid className="u-mb-6">
           <GridCol xs={6} lg={3}>
             <Card className="u-p-4">
@@ -381,7 +393,7 @@ const Plans: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
-                    {planStats.total_plans || 0}
+                    {typeof planStats.total_plans === 'number' ? planStats.total_plans : 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
                     Total Plans
@@ -402,7 +414,7 @@ const Plans: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
-                    {planStats.active_plans || 0}
+                    {typeof planStats.active_plans === 'number' ? planStats.active_plans : 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
                     Active Plans
@@ -419,7 +431,7 @@ const Plans: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
-                    {planStats.featured_plans || 0}
+                    {typeof planStats.featured_plans === 'number' ? planStats.featured_plans : 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
                     Featured Plans
@@ -436,7 +448,7 @@ const Plans: React.FC = () => {
                 </div>
                 <div>
                   <h3 className="u-text-lg u-mb-1">
-                    {planStats.popular_plans || 0}
+                    {typeof planStats.popular_plans === 'number' ? planStats.popular_plans : 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
                     Popular Plans

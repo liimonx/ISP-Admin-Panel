@@ -49,6 +49,17 @@ export interface Plan {
   updated_at: string;
 }
 
+export interface PlanStats {
+  total_plans: number;
+  active_plans: number;
+  featured_plans?: number;
+  popular_plans?: number;
+  most_popular_plan?: string;
+  average_plan_price?: number;
+  top_plans?: any[]; // Array of plan objects from /plans/stats endpoint
+  total_monthly_revenue?: number;
+}
+
 export interface Subscription {
   id: number;
   customer: Customer;
