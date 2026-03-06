@@ -41,9 +41,9 @@ export const SubscriptionStats: React.FC<SubscriptionStatsProps> = ({
   } = useQuery({
     queryKey: ["subscription-stats"],
     queryFn: () => subscriptionService.getSubscriptionStats(),
-    refetchInterval: refreshInterval,
-    staleTime: 15000, // Consider data stale after 15 seconds
-    retry: 2,
+    refetchInterval: 120000, // 2 minutes
+    staleTime: 60000, // 1 minute
+    retry: 1,
     retryDelay: 1000,
   });
 

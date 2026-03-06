@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { apiService } from "@/services/apiService";
 import {
@@ -37,33 +37,6 @@ const Dashboard: React.FC = () => {
   const [selectedChart, setSelectedChart] = useState("revenue");
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
-  const [refreshInterval] = useState(30000); // 30 seconds
-
-  // Auto-refresh data with staggered intervals
-  useEffect(() => {
-    const interval = setInterval(() => {
-      // Stagger the invalidations to prevent simultaneous requests
-      setTimeout(
-        () => queryClient.invalidateQueries({ queryKey: ["dashboard-stats"] }),
-        0,
-      );
-      setTimeout(
-        () => queryClient.invalidateQueries({ queryKey: ["recent-customers"] }),
-        1000,
-      );
-      setTimeout(
-        () =>
-          queryClient.invalidateQueries({ queryKey: ["active-subscriptions"] }),
-        2000,
-      );
-      setTimeout(
-        () => queryClient.invalidateQueries({ queryKey: ["routers-overview"] }),
-        3000,
-      );
-    }, refreshInterval);
-
-    return () => clearInterval(interval);
-  }, [refreshInterval, queryClient]);
 
   // Enhanced Dashboard stats with proper error handling
   const {
@@ -73,12 +46,9 @@ const Dashboard: React.FC = () => {
   } = useQuery({
     queryKey: ["dashboard-stats"],
     queryFn: () => apiService.getDashboardStats(),
-    refetchInterval: false,
-    staleTime: 30000,
-    retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401) return false;
-      return failureCount < 2;
-    },
+    refetchInterval: 300000,
+    staleTime: 60000,
+    retry: 1,
   });
 
   // Recent customers with better pagination
@@ -89,7 +59,7 @@ const Dashboard: React.FC = () => {
         limit: 5,
         ordering: "-created_at",
       }),
-    refetchInterval: false,
+    refetchInterval: 300000,
     staleTime: 60000,
     retry: 1,
   });
@@ -98,8 +68,8 @@ const Dashboard: React.FC = () => {
   const { data: subscriptionsData } = useQuery({
     queryKey: ["active-subscriptions"],
     queryFn: () => apiService.subscriptions.getActiveSubscriptions(),
-    refetchInterval: false,
-    staleTime: 45000,
+    refetchInterval: 300000,
+    staleTime: 60000,
     retry: 1,
   });
 
@@ -107,7 +77,7 @@ const Dashboard: React.FC = () => {
   const { data: routersData } = useQuery({
     queryKey: ["routers-overview"],
     queryFn: () => apiService.routers.getRouters({ limit: 10 }),
-    refetchInterval: false,
+    refetchInterval: 300000,
     staleTime: 60000,
     retry: 1,
   });
@@ -116,8 +86,8 @@ const Dashboard: React.FC = () => {
   const { data: monitoringStats } = useQuery({
     queryKey: ["monitoring-stats"],
     queryFn: () => apiService.monitoring.getMonitoringStats(),
-    refetchInterval: false,
-    staleTime: 30000,
+    refetchInterval: 300000,
+    staleTime: 60000,
     retry: 1,
   });
 
@@ -126,28 +96,24 @@ const Dashboard: React.FC = () => {
     queryKey: ["customer-stats"],
     queryFn: () => apiService.customers.getCustomerStats(),
     staleTime: 60000,
-    retry: 1,
   });
 
   const { data: subscriptionStats } = useQuery({
     queryKey: ["subscription-stats"],
     queryFn: () => apiService.subscriptions.getSubscriptionStats(),
     staleTime: 60000,
-    retry: 1,
   });
 
   const { data: routerStats } = useQuery({
     queryKey: ["router-stats"],
     queryFn: () => apiService.routers.getRouterStats(),
     staleTime: 60000,
-    retry: 1,
   });
 
   const { data: invoiceStats } = useQuery({
     queryKey: ["invoice-stats"],
     queryFn: () => apiService.billing.getInvoiceStats(),
     staleTime: 60000,
-    retry: 1,
   });
 
   // Refresh data mutation
@@ -380,8 +346,9 @@ const Dashboard: React.FC = () => {
             variant="primary"
             onClick={() => refreshMutation.mutate()}
             disabled={refreshMutation.isPending}
+            iconName="ArrowClockwise"
+            iconSize="sm"
           >
-            <Icon name="ArrowClockwise" size={"sm"} />
             {refreshMutation.isPending ? "Retrying..." : "Retry"}
           </Button>
         </div>
@@ -391,7 +358,7 @@ const Dashboard: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="u-flex u-justify-center u-items-center u-min-vh-100">
+      <div className="u-flex u-justify-center u-items-center u-h-100 u-py-8">
         <div className="u-text-center">
           <Spinner size="lg" className="u-mb-4" />
           <h3>Loading Dashboard...</h3>
@@ -413,25 +380,26 @@ const Dashboard: React.FC = () => {
               size="sm"
               onClick={() => refreshMutation.mutate()}
               disabled={refreshMutation.isPending}
+              iconName="ArrowClockwise"
+              iconSize="sm"
             >
-              <Icon name="ArrowClockwise" size={"sm"} className="u-me-2" />
               {refreshMutation.isPending ? "Refreshing..." : "Refresh"}
+            </Button>
+            <Button size="sm" iconName="Download" iconSize="sm">
+              Export
             </Button>
             <Button
               size="sm"
-              icon={<Icon name="Download" size={"sm"} />}
-              label="Export"
-            />
-            <Button
-              size="sm"
-              icon={<Icon name="Plus" size={"sm"} />}
-              label="Add Customer"
+              iconName="Plus"
+              iconSize="sm"
               onClick={() => (window.location.href = "/customers")}
-            />
+            >
+              Add Customer
+            </Button>
           </>
         }
         contentWidth="full"
-        backgroundImageSrc="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=3134&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3Dß"
+        backgroundImageSrc="https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=3134&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
       />
 
       {/* Stats Grid */}
@@ -490,7 +458,7 @@ const Dashboard: React.FC = () => {
         </GridCol>
       </Grid>
       {/* Interactive Charts Section */}
-      <Grid className="u-mb-8">
+      <Grid className="u-my-8">
         <GridCol xs={12} lg={8}>
           <Card
             title={
@@ -503,7 +471,6 @@ const Dashboard: React.FC = () => {
                     : "Network Performance"
             }
             text="Track your key metrics over time"
-            className="u-h-full"
             actions={
               <div className="u-flex u-gap-2 u-flex-wrap">
                 {TIME_PERIODS.map((period) => (
@@ -535,9 +502,10 @@ const Dashboard: React.FC = () => {
                   key={chart.key}
                   variant={selectedChart === chart.key ? "primary" : "ghost"}
                   size="sm"
+                  iconName={chart.icon as any}
+                  iconSize="sm"
                   onClick={() => handleChartChange(chart.key)}
                 >
-                  <Icon name={chart.icon as any} size={"sm"} />
                   {chart.label}
                 </Button>
               ))}
@@ -700,7 +668,7 @@ const Dashboard: React.FC = () => {
               {recentCustomers.map((customer, index) => (
                 <div
                   key={customer.id || index}
-                  className="u-flex u-items-center u-justify-between u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-light u-mb-2"
+                  className="u-flex u-items-center u-justify-between u-p-3 u-border u-rounded u-cursor-pointer u-mb-2"
                   onClick={() => handleCustomerClick(customer)}
                 >
                   <div className="u-flex u-items-center u-gap-3">

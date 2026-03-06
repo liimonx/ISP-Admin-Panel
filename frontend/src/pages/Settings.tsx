@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { coreService } from "../services/api/index";
+import { apiService } from "@/services/apiService";
 import {
   Card,
   Button,
@@ -86,7 +86,9 @@ const Settings: React.FC = () => {
 
   const { data: fetchedSettings, isLoading: isFetching } = useQuery({
     queryKey: ["settings"],
-    queryFn: () => coreService.getSettings(),
+    queryFn: () => apiService.core.getSettings(),
+    staleTime: 300000,
+    retry: 1,
   });
 
   useEffect(() => {
@@ -140,7 +142,8 @@ const Settings: React.FC = () => {
   }, [fetchedSettings]);
 
   const updateSettingsMutation = useMutation({
-    mutationFn: (newSettings: any) => coreService.updateSettings(newSettings),
+    mutationFn: (newSettings: any) =>
+      apiService.core.updateSettings(newSettings),
     onSuccess: () => {
       setSaveStatus({
         type: "success",

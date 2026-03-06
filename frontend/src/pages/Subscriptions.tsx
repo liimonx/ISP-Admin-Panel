@@ -82,17 +82,8 @@ const Subscriptions: React.FC = () => {
       console.log("📊 Subscriptions API response:", result);
       return result;
     },
-    staleTime: 30000,
-    retry: (failureCount, error) => {
-      // Don't retry on authentication errors
-      if (
-        error?.message?.includes("401") ||
-        error?.message?.includes("Authentication")
-      ) {
-        return false;
-      }
-      return failureCount < 2;
-    },
+    staleTime: 60000,
+    retry: 1,
     onSuccess: (data) => {
       console.log("✅ Subscriptions query succeeded:", data);
     },

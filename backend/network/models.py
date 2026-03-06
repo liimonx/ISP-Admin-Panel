@@ -90,6 +90,18 @@ class Router(models.Model):
     # Notes and Additional Info
     notes = models.TextField(blank=True, help_text=_('Additional notes'))
     
+    # Statistics (Denormalized for performance)
+    active_subscriptions_count = models.IntegerField(
+        default=0,
+        help_text=_('Cached count of active subscriptions')
+    )
+    total_bandwidth_usage = models.DecimalField(
+        max_digits=15,
+        decimal_places=2,
+        default=0,
+        help_text=_('Cached total bandwidth usage (GB)')
+    )
+    
     # Timestamps
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -139,10 +151,6 @@ class Router(models.Model):
     def get_subscriptions_count(self):
         """Get total number of subscriptions on this router."""
         return self.subscriptions.count()
-    
-    def get_active_subscriptions_count(self):
-        """Get count of active subscriptions on this router."""
-        return self.subscriptions.filter(status='active').count()
 
 
 class RouterSession(models.Model):

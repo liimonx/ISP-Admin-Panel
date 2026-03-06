@@ -43,18 +43,7 @@ class RouterViewSet(viewsets.ModelViewSet):
         return RouterSerializer
     
     def get_queryset(self):
-        queryset = Router.objects.annotate(
-            annotated_active_subscriptions_count=Coalesce(
-                Count('subscriptions', filter=Q(subscriptions__status='active')),
-                0
-            ),
-            annotated_total_bandwidth_usage=Coalesce(
-                Sum('subscriptions__data_used', filter=Q(subscriptions__status='active')),
-                models.Value(Decimal('0.00'), output_field=models.DecimalField()),
-                output_field=models.DecimalField()
-            ),
-            annotated_subscriptions_count=Count('subscriptions')
-        )
+        queryset = Router.objects.all()
         
         # Filter by status
         status_filter = self.request.query_params.get('status')

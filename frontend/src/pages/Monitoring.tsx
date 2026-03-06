@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 import {
@@ -13,7 +13,6 @@ import {
   Modal,
   Callout,
   Spinner,
-  Progress,
   DataTable,
   Pagination,
   LineChart,
@@ -22,6 +21,23 @@ import {
 } from "@shohojdhara/atomix";
 import { apiService } from "@/services/apiService";
 import { sanitizeText } from "@/utils/sanitizer";
+
+// Define TypeScript interfaces for our API responses
+interface RouterResources {
+  cpu_usage?: number;
+  memory_usage?: number;
+  disk_usage?: number;
+  temperature?: number;
+  uptime?: string;
+  load_average?: number[];
+}
+
+interface RouterBandwidth {
+  total_download?: number;
+  total_upload?: number;
+  download_speed?: number;
+  upload_speed?: number;
+}
 
 const TIME_RANGES = [
   { value: "1h", label: "Last Hour" },
@@ -51,24 +67,6 @@ const Monitoring: React.FC = () => {
 
   const itemsPerPage = 10;
 
-  // Auto-refresh data with staggered intervals
-  useEffect(() => {
-    if (!autoRefresh) return;
-
-    const intervals = [
-      setInterval(() => {
-        queryClient.invalidateQueries({ queryKey: ["monitoring-stats"] });
-      }, 30000), // 30 seconds for stats
-      setInterval(() => {
-        queryClient.invalidateQueries({ queryKey: ["routers-monitoring"] });
-      }, 60000), // 1 minute for router data
-    ];
-
-    return () => {
-      intervals.forEach(clearInterval);
-    };
-  }, [queryClient, autoRefresh]);
-
   // Build query parameters for routers
   const buildRouterQueryParams = () => {
     const params: any = {
@@ -89,21 +87,19 @@ const Monitoring: React.FC = () => {
 
   // Fetch monitoring statistics
   const {
-    data: monitoringStats,
+    data: monitoringStatsResponse,
     isLoading: statsLoading,
     error: statsError,
   } = useQuery({
     queryKey: ["monitoring-stats"],
     queryFn: () => apiService.monitoring.getMonitoringStats(),
     staleTime: 30000, // 30 seconds
-    refetchInterval: autoRefresh ? 30000 : false,
-    retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        return false;
-      }
-      return failureCount < 2;
-    },
+    refetchInterval: autoRefresh ? 60000 : false,
+    retry: 1,
   });
+
+  const monitoringStats =
+    monitoringStatsResponse?.data || monitoringStatsResponse;
 
   // Fetch routers for monitoring
   const {
@@ -121,23 +117,38 @@ const Monitoring: React.FC = () => {
     queryFn: () => apiService.routers.getRouters(buildRouterQueryParams()),
     keepPreviousData: true,
     staleTime: 60000, // 1 minute
-    refetchInterval: autoRefresh ? 60000 : false,
-    retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        return false;
-      }
-      return failureCount < 2;
-    },
-  });
-
-  // Fetch router statistics
-  const { data: routerStats } = useQuery({
-    queryKey: ["router-stats"],
-    queryFn: () => apiService.routers.getRouterStats(),
-    staleTime: 60000, // 1 minute
-    refetchInterval: autoRefresh ? 60000 : false,
+    refetchInterval: autoRefresh ? 120000 : false,
     retry: 1,
   });
+
+  // Fetch real router resources when modal is open
+  const { data: routerResourcesResponse, isLoading: isLoadingResources } =
+    useQuery({
+      queryKey: ["router-resources", selectedRouter?.id],
+      queryFn: () =>
+        selectedRouter
+          ? apiService.routers.getRouterResources(selectedRouter.id)
+          : null,
+      enabled: !!selectedRouter,
+      refetchInterval: autoRefresh ? 30000 : false,
+    });
+
+  // Fetch real router bandwidth when modal is open
+  const { data: routerBandwidthResponse, isLoading: isLoadingBandwidth } =
+    useQuery({
+      queryKey: ["router-bandwidth", selectedRouter?.id],
+      queryFn: () =>
+        selectedRouter
+          ? apiService.routers.getRouterBandwidth(selectedRouter.id)
+          : null,
+      enabled: !!selectedRouter,
+      refetchInterval: autoRefresh ? 30000 : false,
+    });
+
+  const selectedRouterResources: RouterResources | undefined =
+    routerResourcesResponse?.data;
+  const selectedRouterBandwidth: RouterBandwidth | undefined =
+    routerBandwidthResponse?.data;
 
   // Handle router details modal
   const handleRouterDetails = (router: any) => {
@@ -186,23 +197,25 @@ const Monitoring: React.FC = () => {
       routerStatus: [
         {
           label: "Online",
-          value: routerStats?.online_routers || 0,
+          value: monitoringStats?.online_routers || 0,
         },
         {
           label: "Offline",
-          value: routerStats?.offline_routers || 0,
+          value: monitoringStats?.offline_routers || 0,
         },
         {
           label: "Maintenance",
-          value: routerStats?.maintenance_routers || 0,
+          value: monitoringStats?.maintenance_routers || 0,
         },
         {
           label: "Error",
-          value:
-            (routerStats?.total_routers || 0) -
-            (routerStats?.online_routers || 0) -
-            (routerStats?.offline_routers || 0) -
-            (routerStats?.maintenance_routers || 0),
+          value: Math.max(
+            0,
+            (monitoringStats?.total_routers || 0) -
+              (monitoringStats?.online_routers || 0) -
+              (monitoringStats?.offline_routers || 0) -
+              (monitoringStats?.maintenance_routers || 0),
+          ),
         },
       ],
     };
@@ -226,7 +239,8 @@ const Monitoring: React.FC = () => {
     );
   };
 
-  const formatUptime = (uptime: number) => {
+  const formatUptime = (uptime: number | string) => {
+    if (typeof uptime === "string") return uptime; // API already formats it
     const days = Math.floor(uptime / 86400);
     const hours = Math.floor((uptime % 86400) / 3600);
     const minutes = Math.floor((uptime % 3600) / 60);
@@ -238,12 +252,22 @@ const Monitoring: React.FC = () => {
     return `${mbps.toFixed(2)} Mbps`;
   };
 
+  const formatBytes = (bytes: number) => {
+    if (bytes === 0) return "0 B";
+    const k = 1024;
+    const sizes = ["B", "KB", "MB", "GB", "TB"];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + " " + sizes[i];
+  };
+
   if (statsError || routersError) {
     return (
       <div className="u-p-4">
         <Callout variant="error">
           <strong>Error loading monitoring data:</strong>{" "}
-          {statsError?.message || routersError?.message}
+          {(statsError as any)?.message ||
+            (routersError as any)?.message ||
+            "Unknown error"}
           <Button
             variant="outline"
             size="sm"
@@ -324,12 +348,14 @@ const Monitoring: React.FC = () => {
                   <h3 className="u-sm-lg u-mb-1">
                     {monitoringStats.online_routers || 0}
                   </h3>
-                  <p className="u-text-secondary-emphasis u-mb-0">Online</p>
+                  <p className="u-text-secondary-emphasis u-mb-0">
+                    Online Routers
+                  </p>
                   <div className="u-fs-sm u-text-success">
                     {monitoringStats.total_routers > 0
                       ? `${((monitoringStats.online_routers / monitoringStats.total_routers) * 100).toFixed(1)}%`
                       : "0%"}{" "}
-                    uptime
+                    status
                   </div>
                 </div>
               </div>
@@ -339,17 +365,17 @@ const Monitoring: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-warning-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Warning" size={"lg"} className="u-text-warning" />
+                  <Icon name="Cpu" size={"lg"} className="u-text-warning" />
                 </div>
                 <div>
                   <h3 className="u-sm-lg u-mb-1">
-                    {monitoringStats.alerts_count || 0}
+                    {monitoringStats.average_cpu_usage || 0}%
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
-                    Active Alerts
+                    Avg CPU Usage
                   </p>
-                  <div className="u-fs-sm u-text-warning">
-                    {monitoringStats.critical_alerts || 0} critical
+                  <div className="u-fs-sm u-text-secondary-emphasis">
+                    Mem: {monitoringStats.average_memory_usage || 0}%
                   </div>
                 </div>
               </div>
@@ -359,17 +385,17 @@ const Monitoring: React.FC = () => {
             <Card className="u-p-4">
               <div className="u-flex u-items-center">
                 <div className="u-bg-info-subtle u-p-3 u-rounded u-me-3">
-                  <Icon name="Cpu" size={20} className="u-text-success" />
+                  <Icon name="Users" size={20} className="u-text-info" />
                 </div>
                 <div>
                   <h3 className="u-sm-lg u-mb-1">
-                    {monitoringStats.total_bandwidth_usage || 0} GB
+                    {monitoringStats.active_connections || 0}
                   </h3>
                   <p className="u-text-secondary-emphasis u-mb-0">
-                    Bandwidth Usage
+                    Active Connections
                   </p>
                   <div className="u-fs-sm u-text-info">
-                    Peak: {monitoringStats.peak_bandwidth_usage || 0} Mbps
+                    {formatBytes(monitoringStats.total_bandwidth || 0)} Total
                   </div>
                 </div>
               </div>
@@ -511,37 +537,29 @@ const Monitoring: React.FC = () => {
                   status: getStatusBadge(router.status),
                   uptime: (
                     <div>
-                      <Progress
-                        value={router.uptime_percentage || 0}
-                        size="sm"
-                        className="u-mb-1"
-                      />
-                      <div className="u-fs-sm u-text-secondary-emphasis">
-                        {router.uptime ? formatUptime(router.uptime) : "N/A"}
-                      </div>
+                      {router.last_seen ? (
+                        <div className="u-fs-sm">
+                          Last Seen:
+                          <br />
+                          {new Date(router.last_seen).toLocaleString()}
+                        </div>
+                      ) : (
+                        <div className="u-fs-sm u-text-secondary-emphasis">
+                          N/A
+                        </div>
+                      )}
                     </div>
                   ),
-                  traffic: (
+                  info: (
                     <div>
                       <div className="u-fs-sm">
-                        <Icon
-                          name="ArrowDown"
-                          size={12}
-                          className="u-me-1 u-text-success"
-                        />
-                        {router.rx_bytes
-                          ? formatBandwidth(router.rx_bytes)
-                          : "0 Mbps"}
+                        Total Bandwidth:{" "}
+                        {router.total_bandwidth_usage
+                          ? formatBytes(router.total_bandwidth_usage)
+                          : "0 B"}
                       </div>
-                      <div className="u-fs-sm">
-                        <Icon
-                          name="ArrowUp"
-                          size={12}
-                          className="u-me-1 u-text-info"
-                        />
-                        {router.tx_bytes
-                          ? formatBandwidth(router.tx_bytes)
-                          : "0 Mbps"}
+                      <div className="u-fs-sm u-text-secondary-emphasis">
+                        Subscriptions: {router.active_subscriptions_count || 0}
                       </div>
                     </div>
                   ),
@@ -571,8 +589,8 @@ const Monitoring: React.FC = () => {
                 { key: "router", title: "Router" },
                 { key: "connection", title: "Connection" },
                 { key: "status", title: "Status" },
-                { key: "uptime", title: "Uptime" },
-                { key: "traffic", title: "Traffic" },
+                { key: "uptime", title: "Activity" },
+                { key: "info", title: "Usage Info" },
                 { key: "actions", title: "Actions" },
               ]}
             />
@@ -666,27 +684,59 @@ const Monitoring: React.FC = () => {
                     <div className="u-flex u-justify-between">
                       <span>Uptime:</span>
                       <span className="u-font-normal">
-                        {selectedRouter.uptime
-                          ? formatUptime(selectedRouter.uptime)
-                          : "N/A"}
+                        {isLoadingResources ? (
+                          <Spinner size="sm" />
+                        ) : selectedRouterResources?.uptime ? (
+                          formatUptime(selectedRouterResources.uptime)
+                        ) : (
+                          "N/A"
+                        )}
                       </span>
                     </div>
                     <div className="u-flex u-justify-between">
                       <span>CPU Usage:</span>
                       <span className="u-font-normal">
-                        {selectedRouter.cpu_usage || 0}%
+                        {isLoadingResources ? (
+                          <Spinner size="sm" />
+                        ) : (
+                          `${selectedRouterResources?.cpu_usage || 0}%`
+                        )}
                       </span>
                     </div>
                     <div className="u-flex u-justify-between">
                       <span>Memory Usage:</span>
                       <span className="u-font-normal">
-                        {selectedRouter.memory_usage || 0}%
+                        {isLoadingResources ? (
+                          <Spinner size="sm" />
+                        ) : (
+                          `${selectedRouterResources?.memory_usage || 0}%`
+                        )}
                       </span>
                     </div>
                     <div className="u-flex u-justify-between">
-                      <span>Active Connections:</span>
-                      <span className="u-font-normal">
-                        {selectedRouter.active_connections || 0}
+                      <span>Up Speed:</span>
+                      <span className="u-font-normal u-text-success">
+                        {isLoadingBandwidth ? (
+                          <Spinner size="sm" />
+                        ) : selectedRouterBandwidth?.upload_speed ? (
+                          formatBandwidth(selectedRouterBandwidth.upload_speed)
+                        ) : (
+                          "0 Mbps"
+                        )}
+                      </span>
+                    </div>
+                    <div className="u-flex u-justify-between">
+                      <span>Down Speed:</span>
+                      <span className="u-font-normal u-text-info">
+                        {isLoadingBandwidth ? (
+                          <Spinner size="sm" />
+                        ) : selectedRouterBandwidth?.download_speed ? (
+                          formatBandwidth(
+                            selectedRouterBandwidth.download_speed,
+                          )
+                        ) : (
+                          "0 Mbps"
+                        )}
                       </span>
                     </div>
                   </div>
@@ -695,9 +745,9 @@ const Monitoring: React.FC = () => {
             </Grid>
 
             {selectedRouter.description && (
-              <div>
+              <div className="u-mt-4">
                 <h4 className="u-sm-lg u-mb-2">Description</h4>
-                <p className="u-text-secondary-emphasis">
+                <p className="u-text-secondary-emphasis box-border">
                   {sanitizeText(selectedRouter.description)}
                 </p>
               </div>

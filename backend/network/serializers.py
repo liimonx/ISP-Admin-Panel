@@ -55,8 +55,6 @@ class RouterListSerializer(serializers.ModelSerializer):
     is_online = serializers.BooleanField(read_only=True)
     is_mikrotik = serializers.BooleanField(read_only=True)
     api_url = serializers.CharField(read_only=True)
-    active_subscriptions_count = serializers.SerializerMethodField()
-    total_bandwidth_usage = serializers.SerializerMethodField()
     
     class Meta:
         model = Router
@@ -67,13 +65,6 @@ class RouterListSerializer(serializers.ModelSerializer):
         ]
         read_only_fields = ['id', 'created_at']
     
-    def get_active_subscriptions_count(self, obj):
-        """Get count of active subscriptions on this router."""
-        return getattr(obj, 'annotated_active_subscriptions_count', obj.get_active_subscriptions_count())
-    
-    def get_total_bandwidth_usage(self, obj):
-        """Get total bandwidth usage for this router."""
-        return float(getattr(obj, 'annotated_total_bandwidth_usage', obj.get_total_bandwidth_usage()))
 
 
 class RouterDetailSerializer(serializers.ModelSerializer):
@@ -82,10 +73,8 @@ class RouterDetailSerializer(serializers.ModelSerializer):
     is_online = serializers.BooleanField(read_only=True)
     is_mikrotik = serializers.BooleanField(read_only=True)
     api_url = serializers.CharField(read_only=True)
-    active_subscriptions_count = serializers.SerializerMethodField()
-    total_bandwidth_usage = serializers.SerializerMethodField()
-    subscriptions_count = serializers.SerializerMethodField()
-    total_bandwidth_usage_float = serializers.SerializerMethodField()
+    subscriptions_count = serializers.IntegerField(source='get_subscriptions_count', read_only=True)
+    total_bandwidth_usage_float = serializers.FloatField(source='total_bandwidth_usage', read_only=True)
     
     class Meta:
         model = Router
@@ -103,21 +92,6 @@ class RouterDetailSerializer(serializers.ModelSerializer):
             'password': {'write_only': True}
         }
     
-    def get_active_subscriptions_count(self, obj):
-        """Get count of active subscriptions on this router."""
-        return getattr(obj, 'annotated_active_subscriptions_count', obj.get_active_subscriptions_count())
-    
-    def get_total_bandwidth_usage(self, obj):
-        """Get total bandwidth usage for this router."""
-        return float(getattr(obj, 'annotated_total_bandwidth_usage', obj.get_total_bandwidth_usage()))
-    
-    def get_subscriptions_count(self, obj):
-        """Get total number of subscriptions on this router."""
-        return getattr(obj, 'annotated_subscriptions_count', obj.get_subscriptions_count())
-    
-    def get_total_bandwidth_usage_float(self, obj):
-        """Get total bandwidth usage as float for API responses."""
-        return float(getattr(obj, 'annotated_total_bandwidth_usage', obj.get_total_bandwidth_usage_float()))
 
 
 class RouterSessionSerializer(serializers.ModelSerializer):

@@ -316,7 +316,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         glass={{
           elasticity: 0,
           blurAmount: 1,
-          className: `u-fixed u-top-16 u-left-10 u-z-modal u-min-vh-90 ${collapsed ? "u-w-16" : "u-w-64"} ${className}`,
+          withBorder: false,
+          className: `u-fixed u-z-modal u-overflow-y-auto u-transition-all ${collapsed ? "u-w-16" : "u-w-64"} ${className}`,
+          style: {
+            top: "90px",
+          },
         }}
       >
         <SideMenuList>

@@ -222,12 +222,20 @@ const Reports: React.FC = () => {
           </div>
 
           <div className="u-flex u-gap-2">
-            <Button variant="outline" size="md">
-              <Icon name="Download" size={"sm"} />
+            <Button
+              variant="outline"
+              size="md"
+              iconName="Download"
+              iconSize="sm"
+            >
               Export
             </Button>
-            <Button variant="primary" size="md">
-              <Icon name="ArrowClockwise" size={"sm"} />
+            <Button
+              variant="primary"
+              size="md"
+              iconName="ArrowClockwise"
+              iconSize="sm"
+            >
               Refresh
             </Button>
           </div>
@@ -236,7 +244,7 @@ const Reports: React.FC = () => {
 
       {/* Tabs Navigation */}
       <div className="u-mb-6">
-        <div className="u-flex u-gap-1 u-border-b u-border-secondary-subtle">
+        <div className="u-flex u-gap-1 u-border-bottom u-border-secondary-subtle">
           {[
             { id: "usage", label: "Usage Reports" },
             { id: "revenue", label: "Revenue Reports" },
@@ -261,124 +269,131 @@ const Reports: React.FC = () => {
         {reportType === "usage" && (
           <div>
             {/* Usage Overview Widgets */}
-            <div
-              className="u-grid u-gap-4 u-mb-6"
-              style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              }}
-            >
-              <UsageWidget
-                title="Total Data Usage"
-                icon="Database"
-                value={`${usageData?.total_usage?.toFixed(1) || "0"} GB`}
-                subtitle="Current period"
-                trend={
-                  usageData?.usage_trend
-                    ? {
-                        value: usageData.usage_trend,
-                        isPositive: usageData.usage_trend > 0,
-                      }
-                    : undefined
-                }
-                color="primary"
-                isLoading={usageLoading}
-              />
-              <UsageWidget
-                title="Average Usage"
-                icon="ChartLine"
-                value={`${usageData?.average_usage?.toFixed(1) || "0"} GB`}
-                subtitle="Per customer"
-                color="info"
-                isLoading={usageLoading}
-              />
-              <UsageWidget
-                title="Peak Usage"
-                icon="TrendUp"
-                value={`${usageData?.peak_usage?.toFixed(1) || "0"} GB`}
-                subtitle="Highest recorded"
-                color="warning"
-                isLoading={usageLoading}
-              />
-              <UsageWidget
-                title="Bandwidth Utilization"
-                icon="Gauge"
-                value={`${usageData?.bandwidth_utilization?.toFixed(1) || "0"}%`}
-                subtitle="Network capacity"
-                color={
-                  usageData?.bandwidth_utilization > 80 ? "error" : "success"
-                }
-                isLoading={usageLoading}
-              />
-            </div>
+            <Grid className="u-mb-6">
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Total Data Usage"
+                  icon="Database"
+                  value={`${usageData?.total_usage?.toFixed(1) || "0"} GB`}
+                  subtitle="Current period"
+                  trend={
+                    usageData?.usage_trend
+                      ? {
+                          value: usageData.usage_trend,
+                          isPositive: usageData.usage_trend > 0,
+                        }
+                      : undefined
+                  }
+                  color="primary"
+                  isLoading={usageLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Average Usage"
+                  icon="ChartLine"
+                  value={`${usageData?.average_usage?.toFixed(1) || "0"} GB`}
+                  subtitle="Per customer"
+                  color="info"
+                  isLoading={usageLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Peak Usage"
+                  icon="TrendUp"
+                  value={`${usageData?.peak_usage?.toFixed(1) || "0"} GB`}
+                  subtitle="Highest recorded"
+                  color="warning"
+                  isLoading={usageLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Bandwidth Utilization"
+                  icon="Gauge"
+                  value={`${usageData?.bandwidth_utilization?.toFixed(1) || "0"}%`}
+                  subtitle="Network capacity"
+                  color={
+                    usageData?.bandwidth_utilization > 80 ? "error" : "success"
+                  }
+                  isLoading={usageLoading}
+                />
+              </GridCol>
+            </Grid>
 
             {/* Charts and Top Users */}
-            <div
-              className="u-grid u-gap-6"
-              style={{ gridTemplateColumns: "2fr 1fr" }}
-            >
-              <UsageChart
-                title="Usage Trends"
-                data={trendsData?.trends || []}
-                isLoading={trendsLoading}
-              />
-              <TopUsersWidget
-                users={topUsersData?.users || []}
-                isLoading={topUsersLoading}
-              />
-            </div>
+            <Grid className="u-mb-6">
+              <GridCol xs={12} lg={8}>
+                <UsageChart
+                  title="Usage Trends"
+                  data={trendsData?.trends || []}
+                  isLoading={trendsLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} lg={4}>
+                <TopUsersWidget
+                  users={topUsersData?.users || []}
+                  isLoading={topUsersLoading}
+                />
+              </GridCol>
+            </Grid>
           </div>
         )}
 
         {/* Revenue Reports */}
         {reportType === "revenue" && (
           <div>
-            <div
-              className="u-grid u-gap-4 u-mb-6"
-              style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))",
-              }}
-            >
-              <UsageWidget
-                title="Total Revenue"
-                icon="CurrencyDollar"
-                value={formatCurrency(revenueData?.total_revenue || 0)}
-                subtitle="Current period"
-                trend={
-                  revenueData?.revenue_trend
-                    ? {
-                        value: revenueData.revenue_trend,
-                        isPositive: revenueData.revenue_trend > 0,
-                      }
-                    : undefined
-                }
-                color="success"
-                isLoading={revenueLoading}
-              />
-              <UsageWidget
-                title="Active Customers"
-                icon="Users"
-                value={revenueData?.active_customers || 0}
-                subtitle="Paying customers"
-                color="primary"
-                isLoading={revenueLoading}
-              />
-              <UsageWidget
-                title="ARPU"
-                icon="Calculator"
-                value={formatCurrency(revenueData?.arpu || 0)}
-                subtitle="Average revenue per user"
-                color="info"
-                isLoading={revenueLoading}
-              />
-              <UsageWidget
-                title="MRR Growth"
-                icon="TrendUp"
-                value={`${revenueData?.mrr_growth?.toFixed(1) || "0"}%`}
-                subtitle="Monthly recurring revenue"
-                color={revenueData?.mrr_growth > 0 ? "success" : "error"}
-                isLoading={revenueLoading}
-              />
-            </div>
+            <Grid className="u-mb-6">
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Total Revenue"
+                  icon="CurrencyDollar"
+                  value={formatCurrency(revenueData?.total_revenue || 0)}
+                  subtitle="Current period"
+                  trend={
+                    revenueData?.revenue_trend
+                      ? {
+                          value: revenueData.revenue_trend,
+                          isPositive: revenueData.revenue_trend > 0,
+                        }
+                      : undefined
+                  }
+                  color="success"
+                  isLoading={revenueLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Active Customers"
+                  icon="Users"
+                  value={revenueData?.active_customers || 0}
+                  subtitle="Paying customers"
+                  color="primary"
+                  isLoading={revenueLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="ARPU"
+                  icon="Calculator"
+                  value={formatCurrency(revenueData?.arpu || 0)}
+                  subtitle="Average revenue per user"
+                  color="info"
+                  isLoading={revenueLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="MRR Growth"
+                  icon="TrendUp"
+                  value={`${revenueData?.mrr_growth?.toFixed(1) || "0"}%`}
+                  subtitle="Monthly recurring revenue"
+                  color={revenueData?.mrr_growth > 0 ? "success" : "error"}
+                  isLoading={revenueLoading}
+                />
+              </GridCol>
+            </Grid>
             <UsageChart
               title="Revenue Trends"
               data={revenueData?.trends || []}
@@ -390,45 +405,48 @@ const Reports: React.FC = () => {
         {/* Customer Reports */}
         {reportType === "customers" && (
           <div>
-            <div
-              className="u-grid u-gap-4 u-mb-6"
-              style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              }}
-            >
-              <UsageWidget
-                title="Total Customers"
-                icon="Users"
-                value={customerReportsData?.total_customers || 0}
-                subtitle="Total registered"
-                color="primary"
-                isLoading={customerReportsLoading}
-              />
-              <UsageWidget
-                title="Active Now"
-                icon="UserCheck"
-                value={customerReportsData?.active_customers || 0}
-                subtitle="Active status"
-                color="success"
-                isLoading={customerReportsLoading}
-              />
-              <UsageWidget
-                title="Churn Rate"
-                icon="UserMinus"
-                value={`${customerReportsData?.churn_rate || 0}%`}
-                subtitle="This period"
-                color="error"
-                isLoading={customerReportsLoading}
-              />
-              <UsageWidget
-                title="Growth Rate"
-                icon="TrendUp"
-                value={`${customerReportsData?.growth_rate || 0}%`}
-                subtitle="New vs Total"
-                color="info"
-                isLoading={customerReportsLoading}
-              />
-            </div>
+            <Grid className="u-mb-6">
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Total Customers"
+                  icon="Users"
+                  value={customerReportsData?.total_customers || 0}
+                  subtitle="Total registered"
+                  color="primary"
+                  isLoading={customerReportsLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Active Now"
+                  icon="UserCheck"
+                  value={customerReportsData?.active_customers || 0}
+                  subtitle="Active status"
+                  color="success"
+                  isLoading={customerReportsLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Churn Rate"
+                  icon="UserMinus"
+                  value={`${customerReportsData?.churn_rate || 0}%`}
+                  subtitle="This period"
+                  color="error"
+                  isLoading={customerReportsLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Growth Rate"
+                  icon="TrendUp"
+                  value={`${customerReportsData?.growth_rate || 0}%`}
+                  subtitle="New vs Total"
+                  color="info"
+                  isLoading={customerReportsLoading}
+                />
+              </GridCol>
+            </Grid>
 
             <Grid>
               <GridCol sm={8}>
@@ -471,109 +489,119 @@ const Reports: React.FC = () => {
         {/* Network Reports */}
         {reportType === "network" && (
           <div>
-            <div
-              className="u-grid u-gap-4 u-mb-6"
-              style={{
-                gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
-              }}
-            >
-              <UsageWidget
-                title="Total Routers"
-                icon="Globe"
-                value={networkReportsData?.total_routers || 0}
-                subtitle="Infrastructure"
-                color="primary"
-                isLoading={networkReportsLoading}
-              />
-              <UsageWidget
-                title="Online"
-                icon="CheckCircle"
-                value={networkReportsData?.online_routers || 0}
-                subtitle="Healthy nodes"
-                color="success"
-                isLoading={networkReportsLoading}
-              />
-              <UsageWidget
-                title="Bandwidth Util"
-                icon="Gauge"
-                value={`${networkReportsData?.bandwidth_utilization || 0}%`}
-                subtitle="Total capacity"
-                color={
-                  networkReportsData?.bandwidth_utilization > 80
-                    ? "error"
-                    : "info"
-                }
-                isLoading={networkReportsLoading}
-              />
-              <UsageWidget
-                title="Data Transferred"
-                icon="ArrowsLeftRight"
-                value={`${networkReportsData?.total_data_transferred_gb || 0} GB`}
-                subtitle="In + Out"
-                color="warning"
-                isLoading={networkReportsLoading}
-              />
-            </div>
+            <Grid className="u-mb-6">
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Total Routers"
+                  icon="Globe"
+                  value={networkReportsData?.total_routers || 0}
+                  subtitle="Infrastructure"
+                  color="primary"
+                  isLoading={networkReportsLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Online"
+                  icon="CheckCircle"
+                  value={networkReportsData?.online_routers || 0}
+                  subtitle="Healthy nodes"
+                  color="success"
+                  isLoading={networkReportsLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Bandwidth Util"
+                  icon="Gauge"
+                  value={`${networkReportsData?.bandwidth_utilization || 0}%`}
+                  subtitle="Total capacity"
+                  color={
+                    networkReportsData?.bandwidth_utilization > 80
+                      ? "error"
+                      : "info"
+                  }
+                  isLoading={networkReportsLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} sm={6} xl={3}>
+                <UsageWidget
+                  title="Data Transferred"
+                  icon="ArrowsLeftRight"
+                  value={`${networkReportsData?.total_data_transferred_gb || 0} GB`}
+                  subtitle="In + Out"
+                  color="warning"
+                  isLoading={networkReportsLoading}
+                />
+              </GridCol>
+            </Grid>
 
-            <div
-              className="u-grid u-gap-6"
-              style={{ gridTemplateColumns: "2fr 1fr" }}
-            >
-              <UsageChart
-                title="Bandwidth Trends (Mbps)"
-                data={
-                  networkReportsData?.trends?.map((t: any) => ({
-                    date: t.date,
-                    usage: t.avg_download_mbps, // Using download as primary usage metric
-                  })) || []
-                }
-                isLoading={networkReportsLoading}
-              />
-              <Card title="Resource Usage" className="u-h-100">
-                <div className="u-p-1">
-                  <div className="u-flex u-flex-column u-gap-4">
-                    <div>
-                      <div className="u-flex u-justify-between u-mb-1">
-                        <span className="u-fs-xs u-font-normal">CPU Usage</span>
-                        <span className="u-fs-xs">
-                          {networkReportsData?.resource_usage
-                            ?.avg_cpu_percent || 0}
-                          %
-                        </span>
+            <Grid className="u-mb-6">
+              <GridCol xs={12} lg={8}>
+                <UsageChart
+                  title="Bandwidth Trends (Mbps)"
+                  data={
+                    networkReportsData?.trends?.map((t: any) => ({
+                      date: t.date,
+                      usage: t.avg_download_mbps, // Using download as primary usage metric
+                    })) || []
+                  }
+                  isLoading={networkReportsLoading}
+                />
+              </GridCol>
+              <GridCol xs={12} lg={4}>
+                <Card title="Resource Usage" className="u-h-100">
+                  <div className="u-p-1">
+                    <div className="u-flex u-flex-column u-gap-4">
+                      <div>
+                        <div className="u-flex u-justify-between u-mb-1">
+                          <span className="u-fs-xs u-font-normal">
+                            CPU Usage
+                          </span>
+                          <span className="u-fs-xs">
+                            {networkReportsData?.resource_usage
+                              ?.avg_cpu_percent || 0}
+                            %
+                          </span>
+                        </div>
+                        <div className="u-w-100 u-h-2 u-bg-secondary-subtle u-rounded-circle u-relative">
+                          <div
+                            className="u-h-100 u-bg-primary u-rounded-circle u-absolute"
+                            style={{
+                              width: `${networkReportsData?.resource_usage?.avg_cpu_percent || 0}%`,
+                              left: 0,
+                              top: 0,
+                            }}
+                          />
+                        </div>
                       </div>
-                      <div className="u-w-100 u-h-2 u-bg-gray-200 u-rounded-full overflow-hidden">
-                        <div
-                          className="u-h-100 u-bg-primary"
-                          style={{
-                            width: `${networkReportsData?.resource_usage?.avg_cpu_percent || 0}%`,
-                          }}
-                        />
-                      </div>
-                    </div>
-                    <div>
-                      <div className="u-flex u-justify-between u-mb-1">
-                        <span className="u-fs-xs u-font-normal">
-                          Memory Usage
-                        </span>
-                        <span className="u-fs-xs">
-                          {networkReportsData?.resource_usage
-                            ?.avg_memory_percent || 0}
-                          %
-                        </span>
-                      </div>
-                      <div className="u-w-100 u-h-2 u-bg-gray-200 u-rounded-full overflow-hidden">
-                        <div
-                          className="u-h-100 u-bg-success"
-                          style={{
-                            width: `${networkReportsData?.resource_usage?.avg_memory_percent || 0}%`,
-                          }}
-                        />
+                      <div>
+                        <div className="u-flex u-justify-between u-mb-1">
+                          <span className="u-fs-xs u-font-normal">
+                            Memory Usage
+                          </span>
+                          <span className="u-fs-xs">
+                            {networkReportsData?.resource_usage
+                              ?.avg_memory_percent || 0}
+                            %
+                          </span>
+                        </div>
+                        <div className="u-w-100 u-h-2 u-bg-secondary-subtle u-rounded-circle u-relative">
+                          <div
+                            className="u-h-100 u-bg-success u-rounded-circle u-absolute"
+                            style={{
+                              width: `${networkReportsData?.resource_usage?.avg_memory_percent || 0}%`,
+                              left: 0,
+                              top: 0,
+                            }}
+                          />
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </Card>
-            </div>
+                </Card>
+              </GridCol>
+            </Grid>
           </div>
         )}
       </div>

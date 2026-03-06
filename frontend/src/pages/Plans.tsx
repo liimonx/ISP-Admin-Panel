@@ -96,20 +96,15 @@ const Plans: React.FC = () => {
     ],
     queryFn: () => apiService.plans.getPlans(buildQueryParams()),
     keepPreviousData: true,
-    staleTime: 30000, // 30 seconds
-    retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        return false;
-      }
-      return failureCount < 2;
-    },
+    staleTime: 60000,
+    retry: 1,
   });
 
   // Fetch plan statistics
   const { data: planStats } = useQuery({
     queryKey: ["plan-stats"],
     queryFn: () => apiService.plans.getPlanStats() as Promise<PlanStats>,
-    staleTime: 60000, // 1 minute
+    staleTime: 300000,
     retry: 1,
     select: (data) => {
       // Ensure we're working with the correct data structure
@@ -348,7 +343,8 @@ const Plans: React.FC = () => {
     return (
       <div className="u-p-4">
         <Callout variant="error">
-          <strong>Error loading plans:</strong> {error.message}
+          <strong>Error loading plans:</strong>{" "}
+          {(error as any)?.message || "Unknown error"}
           <Button
             variant="outline"
             size="sm"

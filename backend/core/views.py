@@ -11,10 +11,20 @@ from .serializers import (
     PlanStatsSerializer, RouterStatsSerializer, InvoiceStatsSerializer,
     PaymentStatsSerializer, MonthlyTrendSerializer, DailyTrendSerializer,
     PaymentMethodStatsSerializer, TopCustomerSerializer,
-    SystemSettingsSerializer, SystemSettingsUpdateSerializer
+    SystemSettingsSerializer, SystemSettingsUpdateSerializer,
+    NotificationSerializer, GlobalSearchResultSerializer
 )
 from .responses import APIResponse
-from .models import SystemSettings
+from .models import SystemSettings, Notification
+from customers.models import Customer
+from plans.models import Plan
+from network.models import Router
+from subscriptions.models import Subscription
+from billing.models import Invoice
+
+from rest_framework import viewsets
+from rest_framework.decorators import action
+from django.db.models import Q
 
 
 @api_view(['GET'])
@@ -278,3 +288,124 @@ def system_settings(request):
             )
     except Exception as e:
         return APIResponse.server_error(f"Failed to process settings request: {str(e)}")
+
+class NotificationViewSet(viewsets.ModelViewSet):
+    """
+    ViewSet for managing user notifications.
+    """
+    serializer_class = NotificationSerializer
+    permission_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """Return notifications for the current authenticated user only."""
+        return Notification.objects.filter(user=self.request.user)
+
+    @action(detail=True, methods=['post'])
+    def mark_read(self, request, pk=None):
+        """Mark a specific notification as read."""
+        try:
+            notification = self.get_object()
+            notification.is_read = True
+            notification.save()
+            return APIResponse.success(message="Notification marked as read")
+        except Exception as e:
+            return APIResponse.server_error(f"Failed to mark notification as read: {str(e)}")
+
+    @action(detail=False, methods=['post'])
+    def mark_all_read(self, request):
+        """Mark all notifications as read for the current user."""
+        try:
+            self.get_queryset().update(is_read=True)
+            return APIResponse.success(message="All notifications marked as read")
+        except Exception as e:
+            return APIResponse.server_error(f"Failed to mark all notifications as read: {str(e)}")
+
+    @action(detail=False, methods=['get'])
+    def unread_count(self, request):
+        """Get the count of unread notifications."""
+        count = self.get_queryset().filter(is_read=False).count()
+        return APIResponse.success(data={'count': count})
+
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def global_search(request):
+    """
+    Perform a global search across Customers, Plans, Subscriptions, Invoices, and Routers.
+    """
+    query = request.query_params.get('q', '').strip()
+    if not query:
+        return APIResponse.success(data=[])
+
+    results = []
+
+    # 1. Search Customers
+    customers = Customer.objects.filter(
+        Q(name__icontains=query) | Q(email__icontains=query) | Q(phone__icontains=query)
+    )[:5]
+    for c in customers:
+        results.append({
+            'id': f"customer_{c.id}",
+            'type': 'customer',
+            'title': c.name,
+            'subtitle': c.email,
+            'url': f"/customers/{c.id}"
+        })
+
+    # 2. Search Plans
+    plans = Plan.objects.filter(name__icontains=query)[:5]
+    for p in plans:
+        results.append({
+            'id': f"plan_{p.id}",
+            'type': 'plan',
+            'title': p.name,
+            'subtitle': f"Speed: {p.download_speed} {p.get_speed_unit_display()} - Price: ${p.price}",
+            'url': f"/plans/{p.id}"
+        })
+
+    # 3. Search Routers
+    routers = Router.objects.filter(
+        Q(name__icontains=query) | Q(host__icontains=query)
+    )[:5]
+    for r in routers:
+        results.append({
+            'id': f"router_{r.id}",
+            'type': 'router',
+            'title': r.name,
+            'subtitle': r.host,
+            'url': f"/network/routers/{r.id}"
+        })
+
+    # 4. Search Subscriptions (by ID if numeric, or status)
+    sub_query = Q(status__icontains=query)
+    if query.isdigit():
+        sub_query |= Q(id=int(query))
+        
+    subscriptions = Subscription.objects.filter(sub_query)[:5]
+    for s in subscriptions:
+        # Avoid related object queries if not selected; safely fetch names
+        cust_name = s.customer.name if s.customer else "Unknown Customer"
+        plan_name = s.plan.name if s.plan else "Unknown Plan"
+        results.append({
+            'id': f"subscription_{s.id}",
+            'type': 'subscription',
+            'title': f"Sub #{s.id} - {cust_name}",
+            'subtitle': f"Plan: {plan_name} - Status: {s.get_status_display()}",
+            'url': f"/subscriptions/{s.id}"
+        })
+
+    # 5. Search Invoices
+    inv_query = Q(invoice_number__icontains=query) | Q(status__icontains=query)
+    invoices = Invoice.objects.filter(inv_query)[:5]
+    for i in invoices:
+        cust_name = i.customer.name if i.customer else "Unknown Customer"
+        results.append({
+            'id': f"invoice_{i.id}",
+            'type': 'invoice',
+            'title': i.invoice_number,
+            'subtitle': f"Customer: {cust_name} - Status: {i.get_status_display()}",
+            'url': f"/billing/invoices/{i.id}"
+        })
+
+    serializer = GlobalSearchResultSerializer(results, many=True)
+    return APIResponse.success(data=serializer.data)

@@ -27,6 +27,25 @@ export interface AllStats {
   [key: string]: unknown;
 }
 
+/** Response shape returned by /api/core/search/ */
+export interface GlobalSearchResult {
+  id: string;
+  type: string;
+  title: string;
+  subtitle?: string;
+  url?: string;
+}
+
+/** Response shape returned by /api/core/notifications/ */
+export interface Notification {
+  id: number;
+  title: string;
+  message: string;
+  type: "info" | "success" | "warning" | "error";
+  is_read: boolean;
+  created_at: string;
+}
+
 export class CoreService extends BaseApiService {
   /**
    * Get comprehensive dashboard statistics in a single request.
@@ -139,4 +158,45 @@ export class CoreService extends BaseApiService {
   async updateSettings(data: any): Promise<any> {
     return this.put<any>(ENDPOINTS.CORE.SETTINGS + "/", data);
   }
+
+  /**
+   * Get global search results.
+   * Endpoint: GET /api/core/search/?q={query}
+   */
+  async globalSearch(query: string): Promise<GlobalSearchResult[]> {
+    return this.get<GlobalSearchResult[]>(ENDPOINTS.CORE.GLOBAL_SEARCH + "/", { q: query });
+  }
+
+  /**
+   * Get current user notifications.
+   * Endpoint: GET /api/core/notifications/
+   */
+  async getNotifications(params?: Record<string, any>): Promise<any> {
+    return this.get<any>(ENDPOINTS.CORE.NOTIFICATIONS + "/", params);
+  }
+
+  /**
+   * Get unread notifications count.
+   * Endpoint: GET /api/core/notifications/unread_count/
+   */
+  async getUnreadNotificationCount(): Promise<{ count: number }> {
+    return this.get<{ count: number }>(ENDPOINTS.CORE.NOTIFICATIONS + "/unread_count/");
+  }
+
+  /**
+   * Mark a specific notification as read.
+   * Endpoint: POST /api/core/notifications/{id}/mark_read/
+   */
+  async markNotificationAsRead(id: number): Promise<any> {
+    return this.post<any>(ENDPOINTS.CORE.NOTIFICATIONS + `/${id}/mark_read/`);
+  }
+
+  /**
+   * Mark all notifications as read.
+   * Endpoint: POST /api/core/notifications/mark_all_read/
+   */
+  async markAllNotificationsAsRead(): Promise<any> {
+    return this.post<any>(ENDPOINTS.CORE.NOTIFICATIONS + "/mark_all_read/");
+  }
 }
+

@@ -1,6 +1,7 @@
 // Export all types
 export * from "./base/types";
 export * from "./base/constants";
+export * from "./services/CoreService";
 
 // Export all service classes
 export { BaseApiService } from "./base/BaseApiService";

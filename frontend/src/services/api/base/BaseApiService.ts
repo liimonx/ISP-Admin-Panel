@@ -190,6 +190,7 @@ export abstract class BaseApiService {
             HTTP_STATUS.UNAUTHORIZED,
             HTTP_STATUS.FORBIDDEN,
             HTTP_STATUS.NOT_FOUND,
+            HTTP_STATUS.TOO_MANY_REQUESTS,
           ].includes(errorStatus)
         ) {
           throw error;
@@ -200,9 +201,8 @@ export abstract class BaseApiService {
           break;
         }
 
-        // Only retry on rate limit or server errors
+        // Only retry on server errors or network timeouts
         if (
-          errorStatus === HTTP_STATUS.TOO_MANY_REQUESTS ||
           errorStatus >= HTTP_STATUS.INTERNAL_SERVER_ERROR ||
           error instanceof NetworkError ||
           error.request ||

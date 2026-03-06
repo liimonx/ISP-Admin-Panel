@@ -1,5 +1,5 @@
 import React from "react";
-import { Button, Icon } from "@shohojdhara/atomix";
+import { Icon, Hero } from "@shohojdhara/atomix";
 
 export interface PageLayoutProps {
   title: string;
@@ -58,48 +58,26 @@ export const PageLayout: React.FC<PageLayoutProps> = ({
         </nav>
       )}
 
-      {/* Page Header */}
-      <div className="u-mb-8">
-        <div className="u-flex u-justify-between u-items-start u-mb-4">
-          <div className="u-flex-1 u-min-w-0">
-            <h1 className="u-text-3xl u-font-bold u-mb-2 u-text-foreground u-truncate">
-              {title}
-            </h1>
-            {description && (
-              <p className="u-text-secondary-emphasis u-sm-lg u-max-w-2xl">
-                {description}
-              </p>
-            )}
-          </div>
-          {actions && (
-            <div className="u-flex u-gap-3 u-flex-shrink-0 u-ms-4">
-              {actions}
+      <Hero title={title} text={description} actions={actions} />
+
+      {/* Quick Stats */}
+      {stats && stats.length > 0 && (
+        <div className="u-flex u-gap-6 u-fs-sm u-flex-wrap">
+          {stats.map((stat, index) => (
+            <div key={index} className="u-flex u-items-center u-gap-2">
+              <div
+                className={`u-w-3 u-h-3 u-rounded-circle ${
+                  stat.color || "u-bg-primary"
+                }`}
+              ></div>
+              <span className="u-text-secondary-emphasis">
+                {stat.label}:{" "}
+                <span className="u-font-normal">{stat.value}</span>
+              </span>
             </div>
-          )}
+          ))}
         </div>
-
-        {/* Quick Stats */}
-        {stats && stats.length > 0 && (
-          <div className="u-flex u-gap-6 u-fs-sm u-flex-wrap">
-            {stats.map((stat, index) => (
-              <div key={index} className="u-flex u-items-center u-gap-2">
-                <div
-                  className={`u-w-3 u-h-3 u-rounded-circle ${
-                    stat.color || "u-bg-primary"
-                  }`}
-                ></div>
-                <span className="u-text-secondary-emphasis">
-                  {stat.label}:{" "}
-                  <span className="u-font-normal">{stat.value}</span>
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Page Content */}
-      <div>{children}</div>
+      )}
     </div>
   );
 };

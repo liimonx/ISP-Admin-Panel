@@ -1,8 +1,12 @@
 """
 URL configuration for core app.
 """
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
 from . import views
+
+router = DefaultRouter()
+router.register(r'notifications', views.NotificationViewSet, basename='notification')
 
 urlpatterns = [
     # Dashboard and Statistics
@@ -24,4 +28,10 @@ urlpatterns = [
     # System Settings
     path('settings/', views.system_settings, name='system-settings'),
     path('settings/update/', views.update_settings_partial, name='update-settings-partial'),
+    
+    # Search
+    path('search/', views.global_search, name='global-search'),
+    
+    # Router endpoints
+    path('', include(router.urls)),
 ]

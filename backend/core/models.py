@@ -5,6 +5,7 @@ from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django.core.validators import MinValueValidator, MaxValueValidator
 import json
+from django.conf import settings
 
 
 class SystemSettings(models.Model):
@@ -181,3 +182,44 @@ class SystemSettings(models.Model):
         self.password_require_lowercase = policy_data.get("require_lowercase", True)
         self.password_require_numbers = policy_data.get("require_numbers", True)
         self.password_require_special_chars = policy_data.get("require_special_chars", True)
+
+class Notification(models.Model):
+    """
+    Notification model for system alerts and user messages.
+    """
+    class Type(models.TextChoices):
+        INFO = 'info', _('Info')
+        SUCCESS = 'success', _('Success')
+        WARNING = 'warning', _('Warning')
+        ERROR = 'error', _('Error')
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='notifications',
+        help_text=_("User this notification belongs to")
+    )
+    title = models.CharField(max_length=255, help_text=_("Notification title"))
+    message = models.TextField(help_text=_("Notification detailed message"))
+    type = models.CharField(
+        max_length=20,
+        choices=Type.choices,
+        default=Type.INFO,
+        help_text=_("Type of notification")
+    )
+    is_read = models.BooleanField(default=False, help_text=_("Whether the user has read this notification"))
+    
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        verbose_name = _("Notification")
+        verbose_name_plural = _("Notifications")
+        ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['user', 'is_read']),
+            models.Index(fields=['created_at']),
+        ]
+        
+    def __str__(self):
+        return f"{self.get_type_display()} - {self.title} ({self.user.email})"

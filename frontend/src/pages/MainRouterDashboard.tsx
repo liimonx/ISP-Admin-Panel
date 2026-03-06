@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import toast from "react-hot-toast";
 import {
@@ -45,39 +45,13 @@ const MainRouterDashboard: React.FC = () => {
 
   const itemsPerPage = 10;
 
-  // Auto-refresh data
-  useEffect(() => {
-    if (!autoRefresh) return;
-
-    const intervals = [
-      setInterval(() => {
-        queryClient.invalidateQueries({ queryKey: ["main-router-status"] });
-      }, 10000), // 10 seconds
-      setInterval(() => {
-        queryClient.invalidateQueries({ queryKey: ["main-router-bandwidth"] });
-      }, 15000), // 15 seconds
-      setInterval(() => {
-        queryClient.invalidateQueries({ queryKey: ["main-router-interfaces"] });
-      }, 30000), // 30 seconds
-    ];
-
-    return () => {
-      intervals.forEach(clearInterval);
-    };
-  }, [queryClient, autoRefresh]);
-
   // Main router status
   const { data: routerStatus, error: statusError } = useQuery({
     queryKey: ["main-router-status"],
     queryFn: () => apiService.routers.getMainRouterStatus(),
-    staleTime: 10000, // 10 seconds
-    refetchInterval: autoRefresh ? 10000 : false,
-    retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        return false;
-      }
-      return failureCount < 2;
-    },
+    staleTime: 20000, // 20 seconds
+    refetchInterval: autoRefresh ? 30000 : false,
+    retry: 1,
   });
 
   // Main router bandwidth
@@ -87,8 +61,8 @@ const MainRouterDashboard: React.FC = () => {
       apiService.routers.getMainRouterBandwidth({
         time_range: selectedTimeRange,
       }),
-    staleTime: 15000, // 15 seconds
-    refetchInterval: autoRefresh ? 15000 : false,
+    staleTime: 60000, // 1 minute
+    refetchInterval: autoRefresh ? 60000 : false,
     retry: 1,
   });
 
@@ -96,8 +70,8 @@ const MainRouterDashboard: React.FC = () => {
   const { data: interfaces, isLoading: interfacesLoading } = useQuery({
     queryKey: ["main-router-interfaces"],
     queryFn: () => apiService.routers.getMainRouterInterfaces(),
-    staleTime: 30000, // 30 seconds
-    refetchInterval: autoRefresh ? 30000 : false,
+    staleTime: 60000, // 1 minute
+    refetchInterval: autoRefresh ? 120000 : false,
     retry: 1,
   });
 
@@ -110,8 +84,8 @@ const MainRouterDashboard: React.FC = () => {
         limit: itemsPerPage,
       }),
     keepPreviousData: true,
-    staleTime: 15000, // 15 seconds
-    refetchInterval: autoRefresh ? 15000 : false,
+    staleTime: 60000, // 1 minute
+    refetchInterval: autoRefresh ? 60000 : false,
     retry: 1,
   });
 
@@ -119,8 +93,8 @@ const MainRouterDashboard: React.FC = () => {
   const { data: dhcpLeases, isLoading: dhcpLoading } = useQuery({
     queryKey: ["main-router-dhcp"],
     queryFn: () => apiService.routers.getMainRouterDhcpLeases(),
-    staleTime: 30000, // 30 seconds
-    refetchInterval: autoRefresh ? 30000 : false,
+    staleTime: 60000, // 1 minute
+    refetchInterval: autoRefresh ? 120000 : false,
     retry: 1,
   });
 
@@ -129,7 +103,7 @@ const MainRouterDashboard: React.FC = () => {
     queryKey: ["main-router-resources"],
     queryFn: () => apiService.routers.getMainRouterResources(),
     staleTime: 20000, // 20 seconds
-    refetchInterval: autoRefresh ? 20000 : false,
+    refetchInterval: autoRefresh ? 30000 : false,
     retry: 1,
   });
 
@@ -137,8 +111,8 @@ const MainRouterDashboard: React.FC = () => {
   const { data: logs, isLoading: logsLoading } = useQuery({
     queryKey: ["main-router-logs"],
     queryFn: () => apiService.routers.getMainRouterLogs({ limit: 50 }),
-    staleTime: 10000, // 10 seconds
-    refetchInterval: autoRefresh ? 10000 : false,
+    staleTime: 30000, // 30 seconds
+    refetchInterval: autoRefresh ? 120000 : false,
     retry: 1,
   });
 
@@ -263,7 +237,8 @@ const MainRouterDashboard: React.FC = () => {
     return (
       <div className="u-p-4">
         <Callout variant="error">
-          <strong>Error loading main router data:</strong> {statusError.message}
+          <strong>Error loading main router data:</strong>{" "}
+          {(statusError as any)?.message || "Unknown error"}
           <Button
             variant="outline"
             size="sm"

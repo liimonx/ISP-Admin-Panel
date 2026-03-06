@@ -28,40 +28,40 @@ export const useSidebarBadges = () => {
   const { data: customerStats, isLoading: customersLoading, error: customersError } = useQuery({
     queryKey: ["customer-stats"],
     queryFn: () => apiService.getCustomerStats(),
-    staleTime: 30000, // 30 seconds
-    refetchInterval: 60000, // Refetch every minute
-    retry: 3,
-    retryDelay: 1000,
+    staleTime: 60000,
+    refetchInterval: 120000,
+    retry: 1,
+    retryDelay: 2000,
   });
 
   // Fetch subscription stats
   const { data: subscriptionStats, isLoading: subscriptionsLoading, error: subscriptionsError } = useQuery({
     queryKey: ["subscription-stats"],
     queryFn: () => apiService.getSubscriptionStats(),
-    staleTime: 30000, // 30 seconds
-    refetchInterval: 60000, // Refetch every minute
-    retry: 3,
-    retryDelay: 1000,
+    staleTime: 60000,
+    refetchInterval: 120000,
+    retry: 1,
+    retryDelay: 2000,
   });
 
   // Fetch router stats
   const { data: routerStats, isLoading: routersLoading, error: routersError } = useQuery({
     queryKey: ["router-stats"],
     queryFn: () => apiService.getRouterStats(),
-    staleTime: 30000, // 30 seconds
-    refetchInterval: 60000, // Refetch every minute
-    retry: 3,
-    retryDelay: 1000,
+    staleTime: 60000,
+    refetchInterval: 120000,
+    retry: 1,
+    retryDelay: 2000,
   });
 
   // Fetch monitoring stats
   const { data: monitoringStats, isLoading: monitoringLoading, error: monitoringError } = useQuery({
     queryKey: ["monitoring-stats"],
     queryFn: () => apiService.getMonitoringStats(),
-    staleTime: 30000, // 30 seconds
-    refetchInterval: 30000, // Refetch every 30 seconds for monitoring
-    retry: 3,
-    retryDelay: 1000,
+    staleTime: 60000, // 60 seconds
+    refetchInterval: 60000, // Refetch every minute for monitoring
+    retry: 1,
+    retryDelay: 2000,
   });
 
   const isLoading = customersLoading || subscriptionsLoading || routersLoading || monitoringLoading;

@@ -88,7 +88,7 @@ const BillingAuditTrail: React.FC<BillingAuditTrailProps> = ({
         return generateMockAuditData();
       }
     },
-    staleTime: 30000, // 30 seconds
+    staleTime: 60000, // 1 minute
   });
 
   const generateMockAuditData = () => {

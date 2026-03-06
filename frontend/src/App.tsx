@@ -1,41 +1,51 @@
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Import Atomix CSS
-import '@shohojdhara/atomix/css';
+import "@shohojdhara/atomix/css";
 
 // Context
-import { AuthProvider } from '@/context/AuthContext';
+import { AuthProvider } from "@/context/AuthContext";
 
 // UI Components
-import { NotificationContainer } from '@/components/ui';
+import { NotificationContainer } from "@/components/ui";
 
 // Layout
-import Layout from '@/components/layout/Layout';
+import Layout from "@/components/layout/Layout";
 
 // Pages
-import Dashboard from '@/pages/Dashboard';
-import Login from '@/pages/Login';
-import Customers from '@/pages/Customers';
-import Plans from '@/pages/Plans';
-import Subscriptions from '@/pages/Subscriptions';
-import Billing from '@/pages/Billing';
-import Network from '@/pages/Network';
-import Monitoring from '@/pages/Monitoring';
-import Users from '@/pages/Users';
-import RouterManagement from '@/pages/RouterManagement';
-import MainRouterDashboard from '@/pages/MainRouterDashboard';
-import Settings from '@/pages/Settings';
-import Reports from '@/pages/Reports';
+import Dashboard from "@/pages/Dashboard";
+import Login from "@/pages/Login";
+import Customers from "@/pages/Customers";
+import Plans from "@/pages/Plans";
+import Subscriptions from "@/pages/Subscriptions";
+import Billing from "@/pages/Billing";
+import Network from "@/pages/Network";
+import Monitoring from "@/pages/Monitoring";
+import Users from "@/pages/Users";
+import RouterManagement from "@/pages/RouterManagement";
+import MainRouterDashboard from "@/pages/MainRouterDashboard";
+import Settings from "@/pages/Settings";
+import Reports from "@/pages/Reports";
 
 // Protected Route Component
-import ProtectedRoute from '@/components/common/ProtectedRoute';
+import ProtectedRoute from "@/components/common/ProtectedRoute";
 
-// Create a client
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
-      retry: 1,
+      retry: (failureCount, error: any) => {
+        const status = error?.status || error?.response?.status;
+        if (
+          status === 401 ||
+          status === 403 ||
+          status === 404 ||
+          status === 429
+        ) {
+          return false;
+        }
+        return failureCount < 1;
+      },
       refetchOnWindowFocus: false,
     },
   },
@@ -45,7 +55,9 @@ function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
-        <Router future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+        <Router
+          future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+        >
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route

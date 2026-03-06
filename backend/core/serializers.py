@@ -2,7 +2,25 @@
 Core serializers for system settings and dashboard data.
 """
 from rest_framework import serializers
-from .models import SystemSettings
+
+from .models import SystemSettings, Notification
+
+
+class NotificationSerializer(serializers.ModelSerializer):
+    """Serializer for system notifications."""
+    class Meta:
+        model = Notification
+        fields = ['id', 'title', 'message', 'type', 'is_read', 'created_at']
+        read_only_fields = ['id', 'created_at']
+
+
+class GlobalSearchResultSerializer(serializers.Serializer):
+    """Serializer for global search results."""
+    id = serializers.CharField()
+    type = serializers.CharField()
+    title = serializers.CharField()
+    subtitle = serializers.CharField(required=False, allow_blank=True)
+    url = serializers.CharField(required=False, allow_blank=True)
 
 
 class SystemSettingsSerializer(serializers.ModelSerializer):

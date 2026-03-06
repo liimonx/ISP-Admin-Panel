@@ -65,15 +65,7 @@ class AuthService {
       async (error) => {
         const originalRequest = error.config;
 
-        // Handle rate limiting with exponential backoff
-        if (error.response?.status === 429 && !originalRequest._retry) {
-          originalRequest._retry = true;
-          const retryAfter = error.response.headers["retry-after"] || 1;
-          await new Promise((resolve) =>
-            setTimeout(resolve, retryAfter * 1000),
-          );
-          return axios(originalRequest);
-        }
+        // Rate limiting should be handled upstream or fail fast
 
         // Handle token refresh
         if (error.response?.status === 401 && !originalRequest._retry) {

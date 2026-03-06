@@ -58,7 +58,7 @@ const Billing: React.FC = () => {
         search: searchQuery,
         status: statusFilter !== "all" ? statusFilter : undefined,
       }),
-    staleTime: 30000, // 30 seconds
+    staleTime: 60000,
   });
 
   // Fetch payments
@@ -74,21 +74,21 @@ const Billing: React.FC = () => {
         limit: itemsPerPage,
         search: searchQuery,
       }),
-    staleTime: 30000, // 30 seconds
+    staleTime: 60000,
   });
 
   // Fetch billing stats
   const { data: invoiceStats, error: statsError } = useQuery({
     queryKey: ["invoice-stats"],
     queryFn: () => apiService.getInvoiceStats(),
-    staleTime: 60000, // 1 minute
+    staleTime: 300000,
   });
 
   // Fetch payment stats
   const { data: paymentStats, error: paymentStatsError } = useQuery({
     queryKey: ["payment-stats"],
     queryFn: () => apiService.getPaymentStats(),
-    staleTime: 60000, // 1 minute
+    staleTime: 300000,
   });
 
   // Record payment mutation
@@ -394,7 +394,11 @@ const Billing: React.FC = () => {
           {invoiceStats && (
             <div className="u-flex u-gap-4 u-mt-3">
               <div className="u-flex u-items-center u-gap-1">
-                <Icon name="TrendUp" size={14} className="u-text-success" />
+                <Icon
+                  name="TrendUp"
+                  size={14}
+                  className="u-text-success-emphasis"
+                />
                 <span className="u-fs-sm u-text-success">
                   {formatCurrency(invoiceStats.total_revenue || 0)} total
                   revenue
@@ -433,6 +437,7 @@ const Billing: React.FC = () => {
           <Button
             variant={activeTab === "overview" ? "primary" : "ghost"}
             size="md"
+            glass
             onClick={() => setActiveTab("overview")}
           >
             <Icon name="ChartBar" size={"sm"} />
@@ -442,6 +447,7 @@ const Billing: React.FC = () => {
             variant={activeTab === "invoices" ? "primary" : "ghost"}
             size="md"
             onClick={() => setActiveTab("invoices")}
+            glass
           >
             <Icon name="Receipt" size={"sm"} />
             Invoices
@@ -450,6 +456,7 @@ const Billing: React.FC = () => {
             variant={activeTab === "payments" ? "primary" : "ghost"}
             size="md"
             onClick={() => setActiveTab("payments")}
+            glass
           >
             <Icon name="CurrencyDollar" size={"sm"} />
             Payments
@@ -458,6 +465,7 @@ const Billing: React.FC = () => {
             variant={activeTab === "reports" ? "primary" : "ghost"}
             size="md"
             onClick={() => setActiveTab("reports")}
+            glass
           >
             <Icon name="ChartBar" size={"sm"} />
             Reports
@@ -466,6 +474,7 @@ const Billing: React.FC = () => {
             variant={activeTab === "audit" ? "primary" : "ghost"}
             size="md"
             onClick={() => setActiveTab("audit")}
+            glass
           >
             <Icon name="FileText" size={"sm"} />
             Audit Trail
@@ -592,13 +601,13 @@ const Billing: React.FC = () => {
                     {invoicesData.results?.slice(0, 5).map((invoice) => (
                       <div
                         key={invoice.id}
-                        className={`u-flex u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-light u-border-${
+                        className={`u-flex u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-primary-subtle u-border-${
                           invoice.status === "paid"
                             ? "success"
                             : invoice.status === "overdue"
                               ? "error"
                               : "warning"
-                        } u-justify-between u-items-start u-flex-1 u-max-w-100`}
+                        } u-justify-between u-items-start u-w-100`}
                         onClick={() => handleViewInvoice(invoice)}
                       >
                         <div>
@@ -642,11 +651,11 @@ const Billing: React.FC = () => {
                     <Spinner />
                   </div>
                 ) : paymentsData?.results?.length ? (
-                  <div className="u-space-y-3">
+                  <div className="u-flex u-flex-column u-gap-3">
                     {paymentsData.results?.slice(0, 5).map((paymentRecord) => (
                       <div
                         key={paymentRecord.id}
-                        className="u-flex u-justify-between u-items-center u-mb-2 u-p-3 u-border u-rounded u-cursor-pointer u-bg-brand-subtle"
+                        className="u-flex u-justify-between u-items-center u-p-3 u-border u-rounded u-cursor-pointer u-bg-primary-subtle hover:u-bg-primary-subtle"
                         onClick={() => handleViewPayment(paymentRecord)}
                       >
                         <div>
@@ -689,46 +698,52 @@ const Billing: React.FC = () => {
       {activeTab === "invoices" && (
         <div>
           <Card className="u-mb-6">
-            <div className="u-flex u-gap-4 u-items-center u-mb-4">
-              <div className="u-flex-fill">
+            <Grid className="u-mb-4 u-items-center">
+              <GridCol xs={12} md={6}>
                 <Input
                   type="text"
                   placeholder="Search invoices by number, customer name, or email..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
-              </div>
-              <Select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="u-p-3"
-                options={[
-                  { value: "all", label: "All Status" },
-                  { value: "draft", label: "Draft" },
-                  { value: "pending", label: "Pending" },
-                  { value: "paid", label: "Paid" },
-                  { value: "overdue", label: "Overdue" },
-                  { value: "cancelled", label: "Cancelled" },
-                ]}
-              />
-              <Button
-                variant="outline"
-                size="md"
-                onClick={() => {
-                  // Bulk generate invoices for active subscriptions
-                  notificationManager.info(
-                    "Bulk invoice generation feature coming soon",
-                  );
-                }}
-              >
-                <Icon name="Stack" size={"sm"} />
-                Bulk Generate
-              </Button>
-            </div>
+              </GridCol>
+              <GridCol xs={12} md={3}>
+                <Select
+                  value={statusFilter}
+                  onChange={(e) => setStatusFilter(e.target.value)}
+                  options={[
+                    { value: "all", label: "All Status" },
+                    { value: "draft", label: "Draft" },
+                    { value: "pending", label: "Pending" },
+                    { value: "paid", label: "Paid" },
+                    { value: "overdue", label: "Overdue" },
+                    { value: "cancelled", label: "Cancelled" },
+                  ]}
+                />
+              </GridCol>
+              <GridCol xs={12} md={3}>
+                <div className="u-flex u-justify-end">
+                  <Button
+                    variant="outline"
+                    size="md"
+                    iconName="Stack"
+                    iconSize="sm"
+                    onClick={() => {
+                      // Bulk generate invoices for active subscriptions
+                      notificationManager.info(
+                        "Bulk invoice generation feature coming soon",
+                      );
+                    }}
+                  >
+                    Bulk Generate
+                  </Button>
+                </div>
+              </GridCol>
+            </Grid>
 
             {/* Invoice Summary Stats */}
             {invoicesData?.results && (
-              <div className="u-flex u-gap-4 u-mb-4 u-p-3 u-bg-subtle u-rounded">
+              <div className="u-flex u-justify-between u-gap-4 u-mb-4 u-p-3 u-bg-primary-subtle u-rounded">
                 <div className="u-text-center">
                   <div className="u-fs-lg u-font-bold">
                     {invoicesData.count || 0}

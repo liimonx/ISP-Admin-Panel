@@ -85,20 +85,15 @@ const Users: React.FC = () => {
     queryKey: ["users", currentPage, searchQuery, roleFilter, statusFilter],
     queryFn: () => apiService.users.getUsers(buildQueryParams()),
     keepPreviousData: true,
-    staleTime: 30000, // 30 seconds
-    retry: (failureCount, error: any) => {
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        return false;
-      }
-      return failureCount < 2;
-    },
+    staleTime: 60000,
+    retry: 1,
   });
 
   // Fetch user statistics
   const { data: userStats } = useQuery({
     queryKey: ["user-stats"],
     queryFn: () => apiService.users.getUserStats(),
-    staleTime: 60000, // 1 minute
+    staleTime: 300000,
     retry: 1,
   });
 
@@ -298,7 +293,8 @@ const Users: React.FC = () => {
     return (
       <div className="u-p-4">
         <Callout variant="error">
-          <strong>Error loading users:</strong> {error.message}
+          <strong>Error loading users:</strong>{" "}
+          {(error as any)?.message || "Unknown error"}
           <Button
             variant="outline"
             size="sm"

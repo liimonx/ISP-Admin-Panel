@@ -107,6 +107,8 @@ export const ENDPOINTS = {
     TRENDS_MONTHLY: "/core/trends/monthly",
     SETTINGS: "/core/settings",
     SETTINGS_UPDATE: "/core/settings/update",
+    GLOBAL_SEARCH: "/core/search",
+    NOTIFICATIONS: "/core/notifications",
   },
 } as const;
 

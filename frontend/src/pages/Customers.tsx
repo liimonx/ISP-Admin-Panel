@@ -77,22 +77,14 @@ const Customers: React.FC = () => {
     queryKey: ["customers", currentPage, searchQuery, statusFilter],
     queryFn: () => apiService.customers.getCustomers(buildQueryParams()),
     keepPreviousData: true,
-    staleTime: 30000, // 30 seconds
-    retry: (failureCount, error: any) => {
-      // Don't retry on authentication errors
-      if (error?.response?.status === 401 || error?.response?.status === 403) {
-        return false;
-      }
-      return failureCount < 2;
-    },
+    staleTime: 60000,
   });
 
   // Fetch customer statistics
   const { data: customerStats } = useQuery({
     queryKey: ["customer-stats"],
     queryFn: () => apiService.customers.getCustomerStats(),
-    staleTime: 60000, // 1 minute
-    retry: 1,
+    staleTime: 300000,
   });
 
   // Create customer mutation
@@ -645,112 +637,208 @@ const Customers: React.FC = () => {
         size="lg"
       >
         {selectedCustomer && (
-          <div>
-            <div className="u-flex u-items-center u-gap-3 u-mb-4">
-              <Avatar
-                initials={selectedCustomer.name?.charAt(0) || "?"}
-                size="lg"
-              />
-              <div>
-                <h2 className="u-mb-1">{selectedCustomer.name}</h2>
-                {selectedCustomer.company_name && (
-                  <p className="u-text-secondary-emphasis u-mb-1">
-                    {selectedCustomer.company_name}
-                  </p>
-                )}
-                {getStatusBadge(selectedCustomer.status)}
+          <div className="u-flex u-flex-column u-gap-4">
+            <Card>
+              <div className="u-flex u-items-center u-gap-4">
+                <Avatar
+                  initials={selectedCustomer.name?.charAt(0) || "?"}
+                  size="xl"
+                />
+                <div>
+                  <h2 className="u-fs-2xl u-font-bold u-mb-1">
+                    {selectedCustomer.name}
+                  </h2>
+                  {selectedCustomer.company_name && (
+                    <div className="u-text-secondary-emphasis u-fs-base u-mb-2 u-flex u-items-center">
+                      <Icon name="Buildings" size={16} className="u-me-2" />
+                      {selectedCustomer.company_name}
+                    </div>
+                  )}
+                  <div className="u-mt-1">
+                    {getStatusBadge(selectedCustomer.status)}
+                  </div>
+                </div>
               </div>
-            </div>
+            </Card>
 
             <Grid>
-              <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                    Email
-                  </label>
-                  <p>{selectedCustomer.email}</p>
-                </div>
+              <GridCol xs={12} xl={6}>
+                <Card className="u-h-100">
+                  <h3 className="u-fs-lg u-font-bold u-mb-4 u-flex u-items-center">
+                    <Icon
+                      name="AddressBook"
+                      size={20}
+                      className="u-me-2 u-text-primary"
+                    />
+                    Contact Information
+                  </h3>
+                  <div className="u-flex u-flex-column u-gap-3">
+                    <div>
+                      <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                        Email
+                      </label>
+                      <div className="u-flex u-items-center">
+                        <Icon
+                          name="Envelope"
+                          size={16}
+                          className="u-me-2 u-text-secondary-emphasis"
+                        />
+                        <span className="u-font-medium">
+                          {selectedCustomer.email}
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                        Phone
+                      </label>
+                      <div className="u-flex u-items-center">
+                        <Icon
+                          name="Phone"
+                          size={16}
+                          className="u-me-2 u-text-secondary-emphasis"
+                        />
+                        <span className="u-font-medium">
+                          {selectedCustomer.phone}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
               </GridCol>
-              <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                    Phone
-                  </label>
-                  <p>{selectedCustomer.phone}</p>
-                </div>
+
+              <GridCol xs={12} xl={6}>
+                <Card className="u-h-100">
+                  <h3 className="u-fs-lg u-font-bold u-mb-4 u-flex u-items-center">
+                    <Icon
+                      name="IdentificationCard"
+                      size={20}
+                      className="u-me-2 u-text-primary"
+                    />
+                    Account Details
+                  </h3>
+                  <div className="u-flex u-flex-column u-gap-3">
+                    <div>
+                      <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                        Tax ID
+                      </label>
+                      <div className="u-flex u-items-center">
+                        <Icon
+                          name="Receipt"
+                          size={16}
+                          className="u-me-2 u-text-secondary-emphasis"
+                        />
+                        <span className="u-font-medium">
+                          {selectedCustomer.tax_id || "N/A"}
+                        </span>
+                      </div>
+                    </div>
+                    <div>
+                      <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                        Customer Since
+                      </label>
+                      <div className="u-flex u-items-center">
+                        <Icon
+                          name="CalendarBlank"
+                          size={16}
+                          className="u-me-2 u-text-secondary-emphasis"
+                        />
+                        <span className="u-font-medium">
+                          {new Date(
+                            selectedCustomer.created_at,
+                          ).toLocaleDateString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </Card>
               </GridCol>
             </Grid>
 
-            <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                Address
-              </label>
-              <p>{selectedCustomer.address}</p>
-            </div>
-
-            <Grid>
-              <GridCol xs={12} md={4}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                    City
-                  </label>
-                  <p>{selectedCustomer.city}</p>
+            {/* Location Card */}
+            <Card>
+              <h3 className="u-fs-lg u-font-bold u-mb-4 u-flex u-items-center">
+                <Icon
+                  name="MapPin"
+                  size={20}
+                  className="u-me-2 u-text-primary"
+                />
+                Location
+              </h3>
+              <div className="u-mb-4">
+                <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                  Address
+                </label>
+                <div className="u-font-medium u-leading-normal">
+                  {selectedCustomer.address}
                 </div>
-              </GridCol>
-              <GridCol xs={12} md={4}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                    State
-                  </label>
-                  <p>{selectedCustomer.state}</p>
+              </div>
+              <Grid>
+                <GridCol xs={12} md={4}>
+                  <div className="u-mb-3 u-mb-md-0">
+                    <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                      City
+                    </label>
+                    <span className="u-font-medium">
+                      {selectedCustomer.city}
+                    </span>
+                  </div>
+                </GridCol>
+                <GridCol xs={12} md={4}>
+                  <div className="u-mb-3 u-mb-md-0">
+                    <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                      State
+                    </label>
+                    <span className="u-font-medium">
+                      {selectedCustomer.state}
+                    </span>
+                  </div>
+                </GridCol>
+                <GridCol xs={12} md={4}>
+                  <div>
+                    <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                      Postal Code
+                    </label>
+                    <span className="u-font-medium">
+                      {selectedCustomer.postal_code}
+                    </span>
+                  </div>
+                </GridCol>
+              </Grid>
+              <div className="u-mt-4 u-pt-4 u-border-top">
+                <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
+                  Country
+                </label>
+                <div className="u-flex u-items-center">
+                  <Icon
+                    name="GlobeHemisphereWest"
+                    size={16}
+                    className="u-me-2 u-text-secondary-emphasis"
+                  />
+                  <span className="u-font-medium">
+                    {selectedCustomer.country}
+                  </span>
                 </div>
-              </GridCol>
-              <GridCol xs={12} md={4}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                    Postal Code
-                  </label>
-                  <p>{selectedCustomer.postal_code}</p>
-                </div>
-              </GridCol>
-            </Grid>
-
-            <Grid>
-              <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                    Country
-                  </label>
-                  <p>{selectedCustomer.country}</p>
-                </div>
-              </GridCol>
-              <GridCol xs={12} md={6}>
-                <div className="u-mb-3">
-                  <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                    Tax ID
-                  </label>
-                  <p>{selectedCustomer.tax_id || "N/A"}</p>
-                </div>
-              </GridCol>
-            </Grid>
+              </div>
+            </Card>
 
             {selectedCustomer.notes && (
-              <div className="u-mb-3">
-                <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
+              <Card>
+                <h3 className="u-fs-lg u-font-bold u-mb-3 u-flex u-items-center">
+                  <Icon
+                    name="Notepad"
+                    size={20}
+                    className="u-me-2 u-text-primary"
+                  />
                   Notes
-                </label>
-                <p>{selectedCustomer.notes}</p>
-              </div>
+                </h3>
+                <p className="u-text-secondary-emphasis u-leading-normal u-p-3 u-bg-secondary-subtle u-rounded">
+                  {selectedCustomer.notes}
+                </p>
+              </Card>
             )}
 
-            <div className="u-mb-3">
-              <label className="u-fs-sm u-text-secondary-emphasis u-mb-1">
-                Created
-              </label>
-              <p>{new Date(selectedCustomer.created_at).toLocaleString()}</p>
-            </div>
-
-            <div className="u-flex u-justify-end u-gap-2 u-mt-6">
+            <div className="u-flex u-justify-end u-gap-2 u-mt-2">
               <Button
                 variant="outline"
                 onClick={() => {
@@ -766,7 +854,7 @@ const Customers: React.FC = () => {
                 variant="primary"
                 onClick={() => setIsViewModalOpen(false)}
               >
-                Close
+                Done
               </Button>
             </div>
           </div>

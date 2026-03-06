@@ -14,7 +14,6 @@ import {
   Callout,
   Select,
   Dropdown,
-  Progress,
   Textarea,
   Checkbox,
 } from "@shohojdhara/atomix";
@@ -66,6 +65,8 @@ const Network: React.FC = () => {
         search: searchQuery,
         status: statusFilter !== "all" ? statusFilter : undefined,
       }),
+    staleTime: 60000,
+    retry: 1,
   });
 
   // Create router mutation
@@ -432,14 +433,15 @@ const Network: React.FC = () => {
                   status: getStatusBadge(router.status),
                   uptime: (
                     <div>
-                      <Progress
-                        value={Math.random() * 100}
-                        size="sm"
-                        className="u-mb-1"
-                      />
-                      <div className="u-fs-xs u-text-secondary-emphasis">
-                        {Math.floor(Math.random() * 30)} days
-                      </div>
+                      {router.last_seen ? (
+                        <div className="u-fs-sm">
+                          {new Date(router.last_seen).toLocaleString()}
+                        </div>
+                      ) : (
+                        <div className="u-fs-xs u-text-secondary-emphasis">
+                          N/A
+                        </div>
+                      )}
                     </div>
                   ),
                   location: (
@@ -507,7 +509,7 @@ const Network: React.FC = () => {
                 { key: "type", title: "Type" },
                 { key: "host", title: "Host/IP" },
                 { key: "status", title: "Status" },
-                { key: "uptime", title: "Uptime" },
+                { key: "uptime", title: "Last Seen" },
                 { key: "location", title: "Location" },
                 { key: "actions", title: "Actions" },
               ]}
