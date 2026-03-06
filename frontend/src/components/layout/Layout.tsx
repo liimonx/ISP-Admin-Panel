@@ -66,12 +66,12 @@ const Layout: React.FC = () => {
         showSidebarToggle={true}
         sidebarCollapsed={sidebarCollapsed}
       />
-      <main className="u-flex-fill u-pt-16">
+      <main className="u-flex-fill u-pt-24">
         <Container type="fluid" className="u-px-4">
           <Grid>
             <GridCol sm={!sidebarCollapsed ? 2 : 0} className="u-relative">
               {/* Sidebar */}
-              <div className={`${!sidebarCollapsed ? "u-fixed u-top-16" : ""}`}>
+              <div className={`${!sidebarCollapsed ? "" : ""}`}>
                 <Sidebar collapsed={sidebarCollapsed} />
               </div>
             </GridCol>

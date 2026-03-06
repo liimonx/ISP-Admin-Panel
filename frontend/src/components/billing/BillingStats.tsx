@@ -59,7 +59,7 @@ const BillingStats: React.FC<BillingStatsProps> = ({
 
   if (isLoading) {
     return (
-      <Grid className="u-mb-6">
+      <Grid className="u-mb-4">
         {Array.from({ length: 12 }).map((_, index) => (
           <GridCol key={index} xs={12} md={6} lg={3} className="u-mb-4">
             <div className="u-p-4 u-border u-rounded">

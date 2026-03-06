@@ -310,58 +310,50 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <div
-      className={`u-min-vh-100 ${collapsed ? "u-w-16" : "u-w-64"} ${className}`}
-      data-testid={testId}
-    >
+    <div data-testid={testId}>
       {/* Navigation Menu */}
-      <div className="u-flex-1 u-overflow-y-auto u-py-4">
-        <SideMenu>
-          <SideMenuList>
-            {menuItems.map((item, index) => {
-              const showDivider =
-                index > 0 &&
-                item.category !== menuItems[index - 1].category &&
-                !collapsed;
+      <SideMenu
+        glass={{
+          elasticity: 0,
+          blurAmount: 1,
+          className: `u-fixed u-top-16 u-left-10 u-z-modal u-min-vh-90 ${collapsed ? "u-w-16" : "u-w-64"} ${className}`,
+        }}
+      >
+        <SideMenuList>
+          {menuItems.map((item) => {
+            return (
+              <React.Fragment key={item.id}>
+                {renderMenuItem(item)}
+              </React.Fragment>
+            );
+          })}
+        </SideMenuList>
 
-              return (
-                <React.Fragment key={item.id}>
-                  {showDivider && (
-                    <div className="u-my-2 u-border-top u-border-light" />
-                  )}
-                  {renderMenuItem(item)}
-                </React.Fragment>
-              );
-            })}
-          </SideMenuList>
-        </SideMenu>
-      </div>
-
-      {/* Footer */}
-      <div className="u-p-4 u-border-top u-mt-auto">
-        {!collapsed ? (
-          <div className="u-flex u-flex-column u-gap-2">
-            <div className="u-flex u-items-center u-gap-2 u-fs-xs u-text-secondary-emphasis">
-              <Icon name="Info" size={14} />
-              <span>BCN ISP v1.0.0</span>
+        <div className="u-p-4 u-border-t">
+          {!collapsed ? (
+            <div className="u-flex u-flex-column u-gap-2">
+              <div className="u-flex u-items-center u-gap-2 u-fs-xs u-text-secondary-emphasis">
+                <Icon name="Info" size={14} />
+                <span>BCN ISP v1.0.0</span>
+              </div>
+              <div className="u-flex u-items-center u-gap-2 u-fs-xs u-text-secondary-emphasis">
+                <Icon name="Globe" size={12} />
+                <span>System Online</span>
+              </div>
             </div>
-            <div className="u-flex u-items-center u-gap-2 u-fs-xs u-text-secondary-emphasis">
-              <Icon name="Globe" size={12} />
-              <span>System Online</span>
+          ) : (
+            <div className="u-flex u-justify-center">
+              <Tooltip content="BCN ISP v1.0.0 - System Online">
+                <Icon
+                  name="Info"
+                  size={"sm"}
+                  className="u-text-secondary-emphasis"
+                />
+              </Tooltip>
             </div>
-          </div>
-        ) : (
-          <div className="u-flex u-justify-center">
-            <Tooltip content="BCN ISP v1.0.0 - System Online">
-              <Icon
-                name="Info"
-                size={"sm"}
-                className="u-text-secondary-emphasis"
-              />
-            </Tooltip>
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      </SideMenu>
     </div>
   );
 };

@@ -8,6 +8,7 @@ from django.db import models
 from django.utils import timezone
 from django.conf import settings
 from datetime import datetime, timedelta
+from decimal import Decimal
 import logging
 import re
 from core.responses import APIResponse
@@ -49,7 +50,8 @@ class RouterViewSet(viewsets.ModelViewSet):
             ),
             annotated_total_bandwidth_usage=Coalesce(
                 Sum('subscriptions__data_used', filter=Q(subscriptions__status='active')),
-                models.Value(0.0, output_field=models.DecimalField())
+                models.Value(Decimal('0.00'), output_field=models.DecimalField()),
+                output_field=models.DecimalField()
             ),
             annotated_subscriptions_count=Count('subscriptions')
         )

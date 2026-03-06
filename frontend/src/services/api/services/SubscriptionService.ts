@@ -130,12 +130,12 @@ export class SubscriptionService extends BaseApiService {
     const response = await this.get<any>(ENDPOINTS.SUBSCRIPTIONS.ACTIVE + "/");
 
     // Transform response to match expected format
-    if (response.success && Array.isArray(response.data)) {
+    if (Array.isArray(response)) {
       return {
-        count: response.data.length,
-        results: response.data,
-        next: null,
-        previous: null,
+        count: response.length,
+        results: response,
+        next: undefined,
+        previous: undefined,
       };
     }
 
@@ -151,12 +151,12 @@ export class SubscriptionService extends BaseApiService {
     );
 
     // Transform response to match expected format
-    if (response.success && Array.isArray(response.data)) {
+    if (Array.isArray(response)) {
       return {
-        count: response.data.length,
-        results: response.data,
-        next: null,
-        previous: null,
+        count: response.length,
+        results: response,
+        next: undefined,
+        previous: undefined,
       };
     }
 
@@ -174,8 +174,8 @@ export class SubscriptionService extends BaseApiService {
       return {
         count: response.length,
         results: response,
-        next: null,
-        previous: null,
+        next: undefined,
+        previous: undefined,
       };
     }
 

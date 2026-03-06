@@ -8,8 +8,7 @@ import {
   Button,
   Icon,
   Container,
-  Grid,
-  GridCol,
+  Checkbox,
   Callout,
   Spinner,
 } from "@shohojdhara/atomix";
@@ -129,154 +128,145 @@ const Login: React.FC = () => {
   }
 
   return (
-    <Container className="u-min-vh-100 u-flex u-items-center u-justify-center">
-      <Grid>
-        <GridCol xs={12} sm={10} md={8} lg={6} xl={5}>
-          <Card className="u-p-6">
-            {/* Logo and Title */}
-            <div className="u-text-center u-mb-6">
-              <div className="u-mb-4">
+    <Container
+      type="sm"
+      className="u-min-vh-100 u-flex u-items-center u-justify-center"
+    >
+      <div className="u-w-100 u-max-w-md u-px-4 u-py-8">
+        <Card className="u-p-6 u-p-md-8 u-shadow-lg">
+          {/* Logo and Title */}
+          <div className="u-text-center u-mb-6">
+            <div className="u-flex u-justify-center u-mb-4">
+              <div className="u-bg-primary-subtle u-border u-border-primary u-rounded-circle u-p-3 u-flex u-items-center u-justify-center">
                 <Icon name="Globe" size={48} className="u-text-primary" />
               </div>
-              <h1 className="u-mb-2">ISP Admin Panel</h1>
-              <p className="u-text-secondary-emphasis">
-                Sign in to manage your ISP operations
-              </p>
+            </div>
+            <h1 className="u-fs-2xl u-font-bold u-mb-2">ISP Admin Panel</h1>
+            <p className="u-text-secondary-emphasis">
+              Sign in to manage your ISP operations
+            </p>
+          </div>
+
+          {/* Login Form */}
+          <form onSubmit={onSubmit}>
+            {loginError && (
+              <Callout variant="error" className="u-mb-4">
+                {loginError}
+              </Callout>
+            )}
+
+            <div className="u-mb-4">
+              <label
+                htmlFor="username"
+                className="u-block u-mb-2 u-font-normal"
+              >
+                Username
+              </label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="Enter your username"
+                autoComplete="username"
+                autoFocus
+                value={formData.username}
+                onChange={(e) => handleInputChange("username", e.target.value)}
+                name="username"
+                disabled={isSubmitting}
+              />
+              {errors.username && (
+                <div className="u-text-error u-fs-sm u-mt-1">
+                  {errors.username}
+                </div>
+              )}
             </div>
 
-            {/* Login Form */}
-            <form onSubmit={onSubmit}>
-              {loginError && (
-                <Callout variant="error" className="u-mb-4">
-                  {loginError}
-                </Callout>
-              )}
-
-              <div className="u-mb-4">
-                <label
-                  htmlFor="username"
-                  className="u-block u-mb-2 u-font-normal"
-                >
-                  Username
-                </label>
+            <div className="u-mb-4">
+              <label
+                htmlFor="password"
+                className="u-block u-mb-2 u-font-normal"
+              >
+                Password
+              </label>
+              <div className="u-relative">
                 <Input
-                  id="username"
-                  type="text"
-                  placeholder="Enter your username"
-                  autoComplete="username"
-                  autoFocus
-                  value={formData.username}
+                  id="password"
+                  type={showPassword ? "text" : "password"}
+                  placeholder="Enter your password"
+                  autoComplete="current-password"
+                  value={formData.password}
                   onChange={(e) =>
-                    handleInputChange("username", e.target.value)
+                    handleInputChange("password", e.target.value)
                   }
-                  name="username"
+                  name="password"
                   disabled={isSubmitting}
                 />
-                {errors.username && (
-                  <div className="u-text-error u-fs-sm u-mt-1">
-                    {errors.username}
-                  </div>
-                )}
-              </div>
-
-              <div className="u-mb-4">
-                <label
-                  htmlFor="password"
-                  className="u-block u-mb-2 u-font-normal"
-                >
-                  Password
-                </label>
-                <div className="u-relative">
-                  <Input
-                    id="password"
-                    type={showPassword ? "text" : "password"}
-                    placeholder="Enter your password"
-                    autoComplete="current-password"
-                    value={formData.password}
-                    onChange={(e) =>
-                      handleInputChange("password", e.target.value)
-                    }
-                    name="password"
-                    disabled={isSubmitting}
-                  />
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    type="button"
-                    onClick={togglePasswordVisibility}
-                    aria-label="Toggle password visibility"
-                    className="u-absolute u-right-2 u-top-50 u-transform-translate-y-50"
-                    disabled={isSubmitting}
-                  >
-                    <Icon
-                      name={showPassword ? "EyeSlash" : "Eye"}
-                      size={"sm"}
-                    />
-                  </Button>
-                </div>
-                {errors.password && (
-                  <div className="u-text-error u-fs-sm u-mt-1">
-                    {errors.password}
-                  </div>
-                )}
-              </div>
-
-              <div className="u-flex u-items-center u-justify-between u-mb-4">
-                <div className="u-flex u-items-center u-gap-2">
-                  <input
-                    type="checkbox"
-                    id="rememberMe"
-                    className="u-m-0 u-cursor-pointer"
-                    checked={rememberMe}
-                    onChange={(e) => setRememberMe(e.target.checked)}
-                  />
-                  <label
-                    htmlFor="rememberMe"
-                    className="u-fs-sm u-text-foreground"
-                  >
-                    Remember me
-                  </label>
-                </div>
-
                 <Button
-                  variant="link"
+                  variant="ghost"
                   size="sm"
                   type="button"
-                  className="u-p-0"
-                  onClick={() => navigate("/forgot-password")}
+                  onClick={togglePasswordVisibility}
+                  aria-label="Toggle password visibility"
+                  className="u-absolute u-right-2 u-top-50 u-transform-translate-y-50"
                   disabled={isSubmitting}
-                >
-                  Forgot password?
-                </Button>
+                  iconName={showPassword ? "EyeSlash" : "Eye"}
+                  iconSize="sm"
+                />
+              </div>
+              {errors.password && (
+                <div className="u-text-error u-fs-sm u-mt-1">
+                  {errors.password}
+                </div>
+              )}
+            </div>
+
+            <div className="u-flex u-items-center u-justify-between u-mb-4">
+              <div className="u-flex u-items-center u-gap-2">
+                <Checkbox
+                  id="rememberMe"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  label="Remember me"
+                />
               </div>
 
               <Button
-                type="submit"
-                variant="primary"
-                size="lg"
-                className="u-w-100 u-mb-4"
-                disabled={isSubmitting || isLoading}
+                variant="link"
+                size="sm"
+                type="button"
+                className="u-p-0"
+                onClick={() => navigate("/forgot-password")}
+                disabled={isSubmitting}
               >
-                {isSubmitting || isLoading ? (
-                  <>
-                    <Spinner size="sm" className="u-me-2" />
-                    Signing In...
-                  </>
-                ) : (
-                  "Sign In"
-                )}
+                Forgot password?
               </Button>
-            </form>
-          </Card>
+            </div>
 
-          {/* Footer */}
-          <div className="u-text-center u-mt-4 u-fs-sm u-text-secondary-emphasis">
-            <p>
-              © {new Date().getFullYear()} ISP Admin Panel. All rights reserved.
-            </p>
-          </div>
-        </GridCol>
-      </Grid>
+            <Button
+              type="submit"
+              variant="primary"
+              size="lg"
+              className="u-w-100 u-mb-4"
+              disabled={isSubmitting || isLoading}
+            >
+              {isSubmitting || isLoading ? (
+                <>
+                  <Spinner size="sm" className="u-me-2" />
+                  Signing In...
+                </>
+              ) : (
+                "Sign In"
+              )}
+            </Button>
+          </form>
+        </Card>
+
+        {/* Footer */}
+        <div className="u-text-center u-mt-6 u-fs-sm u-text-secondary-emphasis">
+          <p>
+            © {new Date().getFullYear()} ISP Admin Panel. All rights reserved.
+          </p>
+        </div>
+      </div>
     </Container>
   );
 };
