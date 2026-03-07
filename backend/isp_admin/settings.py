@@ -15,7 +15,7 @@ env = environ.Env()
 environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env('SECRET_KEY')
+SECRET_KEY = env('SECRET_KEY', default='placeholder-secret-key-for-build')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
@@ -285,7 +285,7 @@ SSLCOMMERZ_STORE_ID = env('SSLCOMMERZ_STORE_ID', default='')
 SSLCOMMERZ_STORE_PASSWORD = env('SSLCOMMERZ_STORE_PASSWORD', default='')
 
 # SNMP Settings
-SNMP_COMMUNITY = env('SNMP_COMMUNITY')
+SNMP_COMMUNITY = env('SNMP_COMMUNITY', default='public')
 SNMP_TIMEOUT = env.int('SNMP_TIMEOUT', default=1)
 SNMP_RETRIES = env.int('SNMP_RETRIES', default=3)
 
@@ -381,11 +381,11 @@ CACHES = {
 }
 
 # Main Router Configuration
-MAIN_ROUTER_IP = env('MAIN_ROUTER_IP')
+MAIN_ROUTER_IP = env('MAIN_ROUTER_IP', default='127.0.0.1')
 MAIN_ROUTER_API_PORT = env.int('MAIN_ROUTER_API_PORT', default=8728)
 MAIN_ROUTER_SSH_PORT = env.int('MAIN_ROUTER_SSH_PORT', default=22)
-MAIN_ROUTER_USERNAME = env('MAIN_ROUTER_USERNAME')
-MAIN_ROUTER_PASSWORD = env('MAIN_ROUTER_PASSWORD')
+MAIN_ROUTER_USERNAME = env('MAIN_ROUTER_USERNAME', default='admin')
+MAIN_ROUTER_PASSWORD = env('MAIN_ROUTER_PASSWORD', default='password')
 MAIN_ROUTER_USE_TLS = env.bool('MAIN_ROUTER_USE_TLS', default=True)
 
 # Router API Configuration
