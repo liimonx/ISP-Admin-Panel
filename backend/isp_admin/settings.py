@@ -20,7 +20,7 @@ SECRET_KEY = env('SECRET_KEY', default='placeholder-secret-key-for-build')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool('DEBUG', default=False)
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1'])
+ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['localhost', '127.0.0.1', 'isp-admin-api.onrender.com', '.onrender.com'])
 
 # Application definition
 DJANGO_APPS = [
@@ -55,21 +55,21 @@ LOCAL_APPS = [
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
-    # 'core.middleware.SecurityHeadersMiddleware',  # Temporarily disabled
-    # 'core.middleware.RateLimitMiddleware',  # Temporarily disabled
+    'core.middleware.SecurityHeadersMiddleware',
+    'core.middleware.RateLimitMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
-    # 'core.middleware.PerformanceMiddleware',  # Temporarily disabled
+    'core.middleware.PerformanceMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    # 'core.middleware.RequestLoggingMiddleware',  # Temporarily disabled
-    # 'core.middleware.APIVersionMiddleware',  # Temporarily disabled
+    'core.middleware.RequestLoggingMiddleware',
+    'core.middleware.APIVersionMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'core.middleware.PerformanceHeadersMiddleware',  # Temporarily disabled
+    'core.middleware.PerformanceHeadersMiddleware',
 ]
 
 ROOT_URLCONF = 'isp_admin.urls'
@@ -181,6 +181,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "https://liimonx.github.io",
+    "https://isp-admin-api.onrender.com",
 ]
 
 CORS_ALLOW_CREDENTIALS = True
@@ -188,6 +189,7 @@ CORS_ALLOW_CREDENTIALS = True
 # CSRF settings
 CSRF_TRUSTED_ORIGINS = [
     "https://liimonx.github.io",
+    "https://isp-admin-api.onrender.com",
 ]
 
 # Production Security Settings
