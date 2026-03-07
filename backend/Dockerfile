@@ -32,7 +32,7 @@ COPY . .
 RUN mkdir -p /app/staticfiles /app/media
 
 # Collect static files
-RUN python manage.py collectstatic --noinput
+RUN SECRET_KEY=placeholder-during-build python manage.py collectstatic --noinput
 
 # Create a non-root user
 RUN adduser --disabled-password --gecos '' appuser
