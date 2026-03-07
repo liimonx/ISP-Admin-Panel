@@ -447,9 +447,11 @@ def main_router_status(request):
         latest_metric = RouterMetric.objects.filter(router=main_router).first()
         
         # Combine real and stored data
+        from network.services import parse_uptime
+        
         status_data = {
             'status': main_router.status,
-            'uptime': resources.get('uptime', 'Unknown'),
+            'uptime': parse_uptime(resources.get('uptime', '0')),
             'version': connection_test.get('api_version', 'Unknown'),
             'last_seen': main_router.last_seen.isoformat() if main_router.last_seen else None,
             'cpu_usage': latest_metric.cpu_usage if latest_metric else resources.get('cpu_usage', 0),
@@ -530,14 +532,43 @@ def main_router_bandwidth(request):
         # Get bandwidth data from MikroTik service (includes database fallback)
         service = MikroTikService(main_router)
         bandwidth_data = service.get_bandwidth_usage()
+
+        # Get historical data for charts
+        time_range = request.query_params.get('time_range', '24h')
+        limit = 24
+        if time_range == '1h':
+            start_time = timezone.now() - timedelta(hours=1)
+            limit = 60
+        elif time_range == '6h':
+            start_time = timezone.now() - timedelta(hours=6)
+            limit = 36
+        elif time_range == '7d':
+            start_time = timezone.now() - timedelta(days=7)
+            limit = 28
+        else: # 24h
+            start_time = timezone.now() - timedelta(hours=24)
+            limit = 24
+
+        history = RouterMetric.objects.filter(
+            router=main_router,
+            timestamp__gte=start_time
+        ).order_by('timestamp')
         
+        # Aggregate history for charts
+        history_down = [float(m.download_speed) for m in history[:limit]]
+        history_up = [float(m.upload_speed) for m in history[:limit]]
+
         # Ensure all values are properly formatted and have consistent units
-        # All values should be in bytes (for totals) and bytes/s (for speeds)
         bandwidth_response = {
             'total_download': int(bandwidth_data.get('total_download', 0)),
             'total_upload': int(bandwidth_data.get('total_upload', 0)),
-            'download_speed': int(bandwidth_data.get('download_speed', 0)),
-            'upload_speed': int(bandwidth_data.get('upload_speed', 0)),
+            'download_speed': float(bandwidth_data.get('download_speed', 0)),
+            'upload_speed': float(bandwidth_data.get('upload_speed', 0)),
+            'historical_data': {
+                'download': history_down,
+                'upload': history_up,
+                'timestamps': [m.timestamp.isoformat() for m in history[:limit]]
+            },
             'interfaces': bandwidth_data.get('interfaces', {}),
             'timestamp': timezone.now().isoformat(),
         }
@@ -561,30 +592,23 @@ def main_router_bandwidth(request):
 def main_router_connections(request):
     """Get main router active connections."""
     try:
-        # Mock connection data (replace with actual MikroTik API call)
-        connections = [
-            {
-                'protocol': 'TCP',
-                'source': '192.168.1.100:54321',
-                'destination': '8.8.8.8:443',
-                'state': 'established',
-                'duration': '00:15:30',
-            },
-            {
-                'protocol': 'UDP',
-                'source': '192.168.1.101:12345',
-                'destination': '1.1.1.1:53',
-                'state': 'established',
-                'duration': '00:02:15',
-            },
-        ]
+        from network.services import MikroTikService
+        
+        # Get main router
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
+        if not main_router:
+            raise Exception("Main router not found")
+        
+        # Get real connection data
+        service = MikroTikService(main_router)
+        connections = service.get_connections()
         
         return Response({
             'success': True,
             'message': 'Main router connections retrieved successfully',
             'data': {
-                'total_connections': len(connections),
-                'connections': connections,
+                'count': len(connections),
+                'results': connections,
             },
             'timestamp': timezone.now().isoformat(),
         })
@@ -601,30 +625,23 @@ def main_router_connections(request):
 def main_router_dhcp_leases(request):
     """Get main router DHCP leases."""
     try:
-        # Mock DHCP leases data (replace with actual MikroTik API call)
-        leases = [
-            {
-                'ip_address': '192.168.1.100',
-                'mac_address': 'AA:BB:CC:DD:EE:FF',
-                'hostname': 'johns-iphone',
-                'status': 'active',
-                'expires': '2024-01-15T10:30:00Z',
-            },
-            {
-                'ip_address': '192.168.1.101',
-                'mac_address': '11:22:33:44:55:66',
-                'hostname': 'janes-laptop',
-                'status': 'active',
-                'expires': '2024-01-15T11:45:00Z',
-            },
-        ]
+        from network.services import MikroTikService
+        
+        # Get main router
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
+        if not main_router:
+            raise Exception("Main router not found")
+        
+        # Get real DHCP data
+        service = MikroTikService(main_router)
+        leases = service.get_dhcp_leases()
         
         return Response({
             'success': True,
             'message': 'Main router DHCP leases retrieved successfully',
             'data': {
-                'total_leases': len(leases),
-                'leases': leases,
+                'count': len(leases),
+                'results': leases,
             },
             'timestamp': timezone.now().isoformat(),
         })
@@ -641,15 +658,16 @@ def main_router_dhcp_leases(request):
 def main_router_resources(request):
     """Get main router system resources."""
     try:
-        # Mock resource data (replace with actual MikroTik API call)
-        resources = {
-            'cpu_usage': 25,
-            'memory_usage': 45,
-            'disk_usage': 12,
-            'temperature': 45,
-            'uptime': '15 days, 3 hours, 45 minutes',
-            'load_average': [0.5, 0.3, 0.2],
-        }
+        from network.services import MikroTikService
+        
+        # Get main router
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
+        if not main_router:
+            raise Exception("Main router not found")
+        
+        # Get real resource data
+        service = MikroTikService(main_router)
+        resources = service.get_system_resources()
         
         return Response({
             'success': True,
@@ -670,33 +688,23 @@ def main_router_resources(request):
 def main_router_logs(request):
     """Get main router system logs."""
     try:
+        from network.services import MikroTikService
+        
         limit = int(request.query_params.get('limit', 50))
         
-        # Mock log data (replace with actual MikroTik API call)
-        logs = [
-            {
-                'timestamp': '2024-01-15T10:30:00Z',
-                'level': 'info',
-                'message': 'DHCP lease added: 192.168.1.100 -> AA:BB:CC:DD:EE:FF',
-            },
-            {
-                'timestamp': '2024-01-15T10:25:00Z',
-                'level': 'warning',
-                'message': 'High CPU usage detected: 85%',
-            },
-            {
-                'timestamp': '2024-01-15T10:20:00Z',
-                'level': 'info',
-                'message': 'Interface ether1 is up',
-            },
-        ]
+        # Get main router
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
+        if not main_router:
+            raise Exception("Main router not found")
+        
+        # Get real log data
+        service = MikroTikService(main_router)
+        logs = service.get_logs(limit)
         
         return Response({
             'success': True,
             'message': 'Main router logs retrieved successfully',
-            'data': {
-                'logs': logs[:limit],
-            },
+            'data': logs,
             'timestamp': timezone.now().isoformat(),
         })
     except Exception as e:
@@ -772,8 +780,14 @@ def main_router_execute_command(request):
                 'timestamp': timezone.now().isoformat(),
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        # Mock command execution (replace with actual MikroTik API call)
-        result = f"Command executed: {command}\nResult: Mock response for {command}"
+        # Get main router
+        main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
+        if not main_router:
+            raise Exception("Main router not found")
+
+        # Execute real command
+        service = MikroTikService(main_router)
+        result = service.execute_command(command)
         
         return Response({
             'success': True,

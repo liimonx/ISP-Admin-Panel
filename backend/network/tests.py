@@ -94,6 +94,13 @@ class CommandExecutionTest(APITestCase):
             email='admin@example.com',
             password='adminpassword'
         )
+        from django.conf import settings
+        self.router = Router.objects.create(
+            name="Main Router",
+            host=settings.MAIN_ROUTER_IP,
+            router_type=Router.RouterType.MIKROTIK,
+            status=Router.Status.ONLINE
+        )
         # We need to make sure the URL name matches what's in urls.py
         # It was 'main_router_execute_command'
         self.url = reverse('main_router_execute_command')

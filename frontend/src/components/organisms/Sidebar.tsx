@@ -316,10 +316,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
         glass={{
           elasticity: 0,
           blurAmount: 1,
-          withBorder: false,
-          className: `u-fixed u-z-modal u-overflow-y-auto u-transition-all ${collapsed ? "u-w-16" : "u-w-64"} ${className}`,
+          displacementScale: 100,
+          className: `  ${collapsed ? "u-w-16" : "u-w-64"} ${className}`,
           style: {
+            position: "fixed",
             top: "90px",
+            bottom: "0",
+            height: "100%",
           },
         }}
       >
