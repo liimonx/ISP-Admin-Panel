@@ -1,5 +1,5 @@
 import React from "react";
-import { Card, LineChart } from "@shohojdhara/atomix";
+import { Card, LineChart, Spinner } from "@shohojdhara/atomix";
 
 export interface UsageChartProps {
   title: string;
@@ -33,7 +33,9 @@ export const UsageChart: React.FC<UsageChartProps> = ({
           style={{ height: `${height}px` }}
         >
           <div className="u-text-center">
-            <div className="u-spinner u-mx-auto u-mb-2"></div>
+            <div className="u-flex u-justify-center u-mb-2">
+              <Spinner size="md" />
+            </div>
             <p className="u-text-secondary">Loading chart data...</p>
           </div>
         </div>

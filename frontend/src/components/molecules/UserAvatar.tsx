@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Avatar, Badge, Icon, Dropdown } from "@shohojdhara/atomix";
+import { Avatar, Badge, Dropdown, Button } from "@shohojdhara/atomix";
 import { useAuth } from "@/context/AuthContext";
 
 export interface UserAvatarProps {
@@ -111,7 +111,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         menu={
           <div className="u-py-2">
             {/* User Info Header */}
-            <div className="u-px-4 u-py-2 u-border-bottom">
+            <div className="u-px-4 u-py-2 u-border">
               <div className="u-font-normal u-fs-sm">{user.name}</div>
               {user.email && (
                 <div className="u-fs-xs u-text-secondary">{user.email}</div>
@@ -127,20 +127,23 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
             </div>
 
             {/* Menu Items */}
-            <div className="u-py-1">
+            <div className="u-p-1">
               {items.map((item, index) => (
                 <React.Fragment key={index}>
-                  {item.divider && <div className="u-border-top u-my-1" />}
-                  <button
-                    type="button"
-                    className="u-w-100 u-text-left u-px-4 u-py-2 u-bg-transparent u-border-0 u-cursor-pointer u-flex u-items-center u-gap-2 hover:u-bg-light"
-                    onClick={() => {
-                      item.onClick();
-                    }}
+                  {item.divider && (
+                    <div className="u-border u-border-secondary-subtle u-my-1" />
+                  )}
+                  <Button
+                    variant="ghost"
+                    fullWidth
+                    onClick={item.onClick}
+                    iconName={item.icon as any}
+                    iconSize="sm"
+                    iconPosition="start"
+                    className="u-justify-start u-py-2"
                   >
-                    {item.icon && <Icon name={item.icon as any} size={"sm"} />}
-                    <span className="u-fs-sm">{item.label}</span>
-                  </button>
+                    {item.label}
+                  </Button>
                 </React.Fragment>
               ))}
             </div>

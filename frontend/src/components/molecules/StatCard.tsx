@@ -35,23 +35,23 @@ export const StatCard: React.FC<StatCardProps> = ({
 }) => {
   if (loading) {
     return (
-      <Card className={`u-h-full ${className}`} data-testid={testId}>
+      <Card className={`u-h-100 ${className}`} data-testid={testId}>
         <div className="u-flex u-justify-between u-items-start u-mb-4">
-          <div className="u-flex-1">
-            <div className="u-bg-light u-h-4 u-w-75 u-rounded u-mb-3"></div>
-            <div className="u-bg-light u-h-6 u-w-50 u-rounded u-mb-2"></div>
-            <div className="u-bg-light u-h-3 u-w-25 u-rounded"></div>
+          <div className="u-w-100">
+            <div className="u-bg-primary-subtle u-h-50 u-w-100 u-rounded u-mb-3"></div>
+            <div className="u-bg-primary-subtle u-h-50 u-w-50 u-rounded u-mb-2"></div>
+            <div className="u-bg-primary-subtle u-h-50 u-w-25 u-rounded"></div>
           </div>
-          {icon && <div className="u-bg-light u-p-2 u-rounded"></div>}
+          {icon && <div className="u-bg-primary-subtle u-p-2 u-rounded"></div>}
         </div>
       </Card>
     );
   }
 
   return (
-    <Card className={`u-h-full ${className}`} data-testid={testId}>
+    <Card className={`u-h-100 ${className}`} data-testid={testId}>
       <div className="u-flex u-justify-between u-items-start">
-        <div className="u-flex-1">
+        <div className="u-w-100">
           <div className="u-fs-sm u-mb-2 u-text-secondary-emphasis">
             {title}
           </div>

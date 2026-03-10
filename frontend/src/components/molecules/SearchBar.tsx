@@ -70,7 +70,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({
       data-testid={testId}
     >
       <div
-        className={`u-relative ${fullWidth ? "u-flex-1" : ""}`}
+        className={`u-relative ${fullWidth ? "u-flex" : ""}`}
         onKeyDown={handleKeyDown}
       >
         <Input

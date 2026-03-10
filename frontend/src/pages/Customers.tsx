@@ -588,7 +588,7 @@ const Customers: React.FC = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="u-p-4 u-border-top u-flex u-justify-end">
+              <div className="u-p-4 u-border u-flex u-justify-end">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
@@ -805,7 +805,7 @@ const Customers: React.FC = () => {
                   </div>
                 </GridCol>
               </Grid>
-              <div className="u-mt-4 u-pt-4 u-border-top">
+              <div className="u-mt-4 u-pt-4 u-border">
                 <label className="u-fs-sm u-text-secondary-emphasis u-mb-1 u-block">
                   Country
                 </label>

@@ -62,7 +62,7 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
           {Array.from({ length: 5 }).map((_, index) => (
             <div key={index} className="u-flex u-items-center u-gap-3">
               <div className="u-bg-light u-w-8 u-h-8 u-rounded-full"></div>
-              <div className="u-flex-1">
+              <div className="u-flex">
                 <div className="u-bg-light u-h-4 u-w-75 u-rounded-sm u-mb-1"></div>
                 <div className="u-bg-light u-h-3 u-w-50 u-rounded-sm"></div>
               </div>
@@ -100,7 +100,7 @@ export const TopUsersWidget: React.FC<TopUsersWidgetProps> = ({
                 />
               </div>
 
-              <div className="u-flex-1 u-min-w-0">
+              <div className="u-flex u-min-w-0">
                 <div className="u-fs-sm u-font-normal u-truncate">
                   {user.name}
                 </div>

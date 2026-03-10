@@ -531,12 +531,12 @@ const Dashboard: React.FC = () => {
           <Card
             title="Plan Distribution"
             text="Customer subscription breakdown"
-            className="u-h-full"
+            className="u-h-100"
           >
             <div className="u-mt-4">
               <DonutChart datasets={customerDistribution} size="lg" />
             </div>
-            <div className="u-mt-4 u-text-center u-pt-4 u-border-top">
+            <div className="u-mt-4 u-text-center u-pt-4 u-border">
               <div className="u-fs-xl u-font-bold u-text-primary u-mb-1">
                 {enhancedStats.total_subscriptions}
               </div>
@@ -668,8 +668,9 @@ const Dashboard: React.FC = () => {
               {recentCustomers.map((customer, index) => (
                 <div
                   key={customer.id || index}
-                  className="u-flex u-items-center u-justify-between u-p-3 u-border u-rounded u-cursor-pointer u-mb-2"
+                  className="u-flex u-items-center u-justify-between u-p-3 u-border u-rounded u-mb-2"
                   onClick={() => handleCustomerClick(customer)}
+                  role="button"
                 >
                   <div className="u-flex u-items-center u-gap-3">
                     <Avatar
@@ -818,7 +819,7 @@ const Dashboard: React.FC = () => {
               </div>
             </div>
 
-            <div className="u-mt-6 u-pt-6 u-border-top">
+            <div className="u-mt-6 u-pt-6 u-border">
               <div className="u-flex u-justify-between u-items-center u-mb-3">
                 <h4 className="u-fs-sm u-font-bold">Active Administrators</h4>
                 <Badge variant="success" size="sm" label="3 online" />

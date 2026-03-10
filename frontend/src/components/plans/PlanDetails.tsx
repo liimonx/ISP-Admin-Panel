@@ -66,7 +66,7 @@ const PlanDetails: React.FC<PlanDetailsProps> = ({
       <div className="u-space-y-6">
         {/* Plan Header */}
         <div className="u-flex u-justify-between u-items-start">
-          <div className="u-flex-1">
+          <div className="u-flex">
             <h2 className="u-fs-xl u-font-bold u-mb-2">{plan.name}</h2>
             {plan.description && (
               <p className="u-text-secondary-emphasis u-mb-3">

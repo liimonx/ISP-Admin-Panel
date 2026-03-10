@@ -467,29 +467,49 @@ const Network: React.FC = () => {
                       </Button>
                       <Dropdown
                         menu={
-                          <div>
-                            <button
+                          <div className="u-p-1">
+                            <Button
+                              variant="ghost"
+                              fullWidth
                               onClick={() => handleEditRouter(router)}
-                              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+                              iconName="Pencil"
+                              iconSize="sm"
+                              iconPosition="start"
+                              className="u-justify-start"
                             >
-                              <Icon name="Pencil" size={"sm"} />
                               Edit
-                            </button>
-                            <button className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle">
-                              <Icon name="Eye" size={"sm"} />
-                              View Details
-                            </button>
-                            <button className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle">
-                              <Icon name="GearSix" size={"sm"} />
-                              Configure
-                            </button>
-                            <button
-                              onClick={() => handleDeleteRouter(router)}
-                              className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle u-text-error"
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              fullWidth
+                              iconName="Eye"
+                              iconSize="sm"
+                              iconPosition="start"
+                              className="u-justify-start"
                             >
-                              <Icon name="Trash" size={"sm"} />
+                              View Details
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              fullWidth
+                              iconName="GearSix"
+                              iconSize="sm"
+                              iconPosition="start"
+                              className="u-justify-start"
+                            >
+                              Configure
+                            </Button>
+                            <Button
+                              variant="ghost"
+                              fullWidth
+                              onClick={() => handleDeleteRouter(router)}
+                              iconName="Trash"
+                              iconSize="sm"
+                              iconPosition="start"
+                              className="u-justify-start u-text-error"
+                            >
                               Delete
-                            </button>
+                            </Button>
                           </div>
                         }
                       >
@@ -517,7 +537,7 @@ const Network: React.FC = () => {
 
             {/* Pagination */}
             {totalPages > 1 && (
-              <div className="u-p-4 u-border-top u-flex u-justify-end">
+              <div className="u-p-4 u-border u-flex u-justify-end">
                 <Pagination
                   currentPage={currentPage}
                   totalPages={totalPages}
@@ -679,7 +699,7 @@ const Network: React.FC = () => {
             </GridCol>
             <GridCol xs={12} md={6}>
               <div className="u-mb-3 u-pt-4">
-                <label className="u-flex u-items-center u-gap-2 u-font-normal u-cursor-pointer">
+                <label className="u-flex u-items-center u-gap-2 u-font-normal">
                   <Checkbox
                     checked={formData.use_tls}
                     onChange={(e: any) =>

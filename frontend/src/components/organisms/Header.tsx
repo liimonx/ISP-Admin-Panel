@@ -107,7 +107,7 @@ export const Header: React.FC<HeaderProps> = ({
 
       <Nav alignment="end" className="u-items-center u-gap-3">
         {showSearch && (
-          <div className="u-none u-display-md-flex u-flex-1 u-max-w-md u-mx-4 u-relative">
+          <div className="u-none u-flex-md u-flex u-w-100 u-mx-4 u-relative">
             <SearchBar
               value={searchValue}
               onSearch={(value) => {
@@ -120,7 +120,7 @@ export const Header: React.FC<HeaderProps> = ({
               size="sm"
             />
             {showResults && searchValue && (
-              <div className="u-absolute u-top-100 u-start-0 u-w-100 u-mt-1 u-bg-dark u-border u-border-light u-rounded u-shadow-lg u-z-modal u-overflow-hidden">
+              <div className="u-absolute u-w-100 u-mt-1 u-bg-dark u-border u-border-secondary-subtle u-rounded u-shadow-lg u-z-modal">
                 {isSearching ? (
                   <div className="u-p-3 u-text-center u-text-secondary-emphasis u-fs-sm">
                     Searching...
@@ -131,7 +131,7 @@ export const Header: React.FC<HeaderProps> = ({
                       <a
                         key={result.id}
                         href={result.url}
-                        className="u-block u-p-3 u-border-b u-border-light u-text-decoration-none u-hover-bg-primary-subtle u-transition"
+                        className="u-block u-p-3 u-border u-border-secondary-subtle u-text-decoration-none"
                       >
                         <div className="u-flex u-items-center u-justify-between">
                           <span className="u-font-bold u-text-primary u-fs-sm">
@@ -162,7 +162,7 @@ export const Header: React.FC<HeaderProps> = ({
             variant="ghost"
             size="sm"
             aria-label="Search"
-            className="u-display-md-none"
+            className="u-none-md"
             iconName="MagnifyingGlass"
             iconSize={20}
           />
@@ -189,8 +189,8 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Notifications Dropdown */}
             {isNotificationsOpen && (
-              <div className="u-absolute u-top-100 u-end-0 u-mt-2 u-w-300 u-bg-dark u-border u-border-light u-rounded u-shadow-lg u-z-modal u-overflow-hidden">
-                <div className="u-p-3 u-border-b u-border-light u-flex u-items-center u-justify-between">
+              <div className="u-absolute u-end-0 u-mt-2 u-bg-dark u-border u-border-secondary-subtle u-rounded u-shadow-lg u-z-modal">
+                <div className="u-p-3 u-border u-border-secondary-subtle u-flex u-items-center u-justify-between">
                   <span className="u-font-bold">Notifications</span>
                   {unreadCount > 0 && (
                     <Badge
@@ -211,8 +211,8 @@ export const Header: React.FC<HeaderProps> = ({
                             onMarkNotificationRead(notif.id);
                           }
                         }}
-                        className={`u-p-3 u-border-b u-border-light u-cursor-pointer u-transition u-hover-bg-primary-subtle ${
-                          notif.is_read ? "u-opacity-50" : "u-bg-gray-subtle"
+                        className={`u-p-3 u-border u-border-secondary-subtle u-transition ${
+                          notif.is_read ? "u-opacity-50" : "u-bg-primary-subtle"
                         }`}
                       >
                         <div className="u-flex u-items-start u-gap-2">
@@ -264,7 +264,7 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         )}
 
-        <div className="u-border-start u-border-light u-h-50 u-mx-1 u-none u-display-sm-block" />
+        <div className="u-border u-border-secondary-subtle u-h-50 u-mx-1 u-none u-flex-sm-block" />
 
         <ColorModeToggle defaultValue="dark" />
 

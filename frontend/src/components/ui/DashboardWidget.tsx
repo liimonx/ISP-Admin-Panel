@@ -32,7 +32,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       <div
         className={`u-flex u-justify-between u-items-start u-mb-4 ${headerClassName}`}
       >
-        <div className="u-flex-1 u-min-w-0">
+        <div className="u-flex u-min-w-0">
           <div className="u-flex u-items-center u-gap-2 u-mb-1">
             {icon && (
               <Icon
@@ -53,7 +53,7 @@ export const DashboardWidget: React.FC<DashboardWidgetProps> = ({
       </div>
 
       {/* Widget Content */}
-      <div className={`u-flex-1 ${contentClassName}`}>
+      <div className={`u-flex ${contentClassName}`}>
         {error ? (
           <div className="u-flex u-flex-column u-items-center u-justify-center u-py-8 u-text-center">
             <Icon name="Warning" size={32} className="u-text-error u-mb-3" />

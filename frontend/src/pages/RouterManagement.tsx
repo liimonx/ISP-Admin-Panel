@@ -262,7 +262,7 @@ const RouterManagement: React.FC = () => {
       <Card className="u-mb-6">
         <div className="u-p-4">
           <div className="u-flex u-gap-4 u-items-center u-flex-wrap">
-            <div className="u-flex-1">
+            <div className="u-flex">
               <Input
                 placeholder="Search routers..."
                 value={searchQuery}

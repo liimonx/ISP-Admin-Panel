@@ -60,7 +60,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
   return (
     <Card className="u-h-full">
       <div className="u-flex u-justify-between u-items-start u-mb-4">
-        <div className="u-flex-1">
+        <div className="u-flex">
           <h4 className="u-mb-1 u-sm-lg u-font-bold">
             {invoice.invoice_number}
           </h4>
@@ -84,7 +84,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
 
       <div className="u-flex u-items-center u-gap-3 u-mb-4">
         <Avatar initials={invoice.customer?.name?.charAt(0) || "?"} size="md" />
-        <div className="u-flex-1">
+        <div className="u-flex">
           <div className="u-font-normal u-fs-sm">
             {invoice.customer?.name || "Unknown Customer"}
           </div>
@@ -120,7 +120,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
         <Button
           variant="outline"
           size="sm"
-          className="u-flex-1"
+          className="u-flex"
           onClick={() => onView(invoice)}
           iconName="Eye"
           iconSize={"sm"}
@@ -132,7 +132,7 @@ const InvoiceCard: React.FC<InvoiceCardProps> = ({
           <Button
             variant="primary"
             size="sm"
-            className="u-flex-1"
+            className="u-flex"
             onClick={() => onPay(invoice)}
             iconName="CurrencyDollar"
             iconSize={"sm"}

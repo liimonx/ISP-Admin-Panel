@@ -11,6 +11,7 @@ import {
   Grid,
   GridCol,
   Select,
+  Spinner,
 } from "@shohojdhara/atomix";
 import { Subscription } from "../../types";
 import { formatCurrency } from "../../utils/formatters";
@@ -217,53 +218,69 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
 
       if (subscription.status === "pending") {
         actions.push(
-          <button
+          <Button
             key="activate"
+            variant="ghost"
+            fullWidth
             onClick={() => onUpdateStatus(subscription, "active")}
-            className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
+            iconName="Play"
+            iconSize="sm"
+            iconPosition="start"
+            className="u-justify-start u-text-success"
           >
-            <Icon name="Play" size={"sm"} />
             Activate
-          </button>,
+          </Button>,
         );
       }
 
       if (subscription.status === "active") {
         actions.push(
-          <button
+          <Button
             key="suspend"
+            variant="ghost"
+            fullWidth
             onClick={() => onUpdateStatus(subscription, "suspended")}
-            className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-warning u-cursor-pointer hover:u-bg-warning-subtle"
+            iconName="Pause"
+            iconSize="sm"
+            iconPosition="start"
+            className="u-justify-start u-text-warning"
           >
-            <Icon name="Pause" size={"sm"} />
             Suspend
-          </button>,
+          </Button>,
         );
       }
 
       if (subscription.status === "suspended") {
         actions.push(
-          <button
+          <Button
             key="reactivate"
+            variant="ghost"
+            fullWidth
             onClick={() => onUpdateStatus(subscription, "active")}
-            className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-success u-cursor-pointer hover:u-bg-success-subtle"
+            iconName="Play"
+            iconSize="sm"
+            iconPosition="start"
+            className="u-justify-start u-text-success"
           >
-            <Icon name="Play" size={"sm"} />
             Reactivate
-          </button>,
+          </Button>,
         );
       }
 
       if (!["cancelled", "inactive"].includes(subscription.status)) {
         actions.push(
-          <button
+          <Button
             key="cancel"
+            variant="ghost"
+            fullWidth
             onClick={() => onUpdateStatus(subscription, "cancelled")}
-            className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
+            iconName="X"
+            iconSize="sm"
+            iconPosition="start"
+            className="u-justify-start u-text-error"
           >
-            <Icon name="X" size={"sm"} />
             Cancel
-          </button>,
+          </Button>,
         );
       }
 
@@ -378,55 +395,79 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
       actions: (
         <Dropdown
           menu={
-            <div>
-              <button
+            <div className="u-p-1">
+              <Button
+                variant="ghost"
+                fullWidth
                 onClick={() => onView(subscription)}
-                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+                iconName="Eye"
+                iconSize="sm"
+                iconPosition="start"
+                className="u-justify-start"
               >
-                <Icon name="Eye" size={"sm"} />
                 View Details
-              </button>
-              <button
+              </Button>
+              <Button
+                variant="ghost"
+                fullWidth
                 onClick={() => onEdit(subscription)}
-                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+                iconName="Pencil"
+                iconSize="sm"
+                iconPosition="start"
+                className="u-justify-start"
               >
-                <Icon name="Pencil" size={"sm"} />
                 Edit
-              </button>
-              <div className="u-border-top u-border-light u-my-1"></div>
+              </Button>
+              <div className="u-border u-border-secondary-subtle u-my-1" />
               {getStatusActions(subscription)}
 
-              <div className="u-border-top u-border-light u-my-1"></div>
-              <button
-                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+              <div className="u-border u-border-secondary-subtle u-my-1" />
+              <Button
+                variant="ghost"
+                fullWidth
                 onClick={() => onView(subscription)}
+                iconName="Receipt"
+                iconSize="sm"
+                iconPosition="start"
+                className="u-justify-start"
               >
-                <Icon name="Receipt" size={"sm"} />
                 Billing History
-              </button>
-              <button
-                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+              </Button>
+              <Button
+                variant="ghost"
+                fullWidth
                 onClick={() => onView(subscription)}
+                iconName="ChartBar"
+                iconSize="sm"
+                iconPosition="start"
+                className="u-justify-start"
               >
-                <Icon name="ChartBar" size={"sm"} />
                 Usage Analytics
-              </button>
-              <button
-                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-cursor-pointer hover:u-bg-secondary-subtle"
+              </Button>
+              <Button
+                variant="ghost"
+                fullWidth
                 onClick={() => onView(subscription)}
+                iconName="Wrench"
+                iconSize="sm"
+                iconPosition="start"
+                className="u-justify-start"
               >
-                <Icon name="Wrench" size={"sm"} />
                 Router Settings
-              </button>
+              </Button>
 
-              <div className="u-border-top u-border-light u-my-1"></div>
-              <button
+              <div className="u-border u-border-secondary-subtle u-my-1" />
+              <Button
+                variant="ghost"
+                fullWidth
                 onClick={() => onDelete(subscription)}
-                className="u-flex u-items-center u-gap-2 u-p-2 u-w-100 u-text-start u-bg-transparent u-border-0 u-text-error u-cursor-pointer hover:u-bg-error-subtle"
+                iconName="Trash"
+                iconSize="sm"
+                iconPosition="start"
+                className="u-justify-start u-text-error"
               >
-                <Icon name="Trash" size={"sm"} />
                 Delete
-              </button>
+              </Button>
             </div>
           }
         >
@@ -466,13 +507,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
         <div className="u-flex u-justify-center u-items-center u-py-8">
           <div className="u-text-center">
             <div className="u-flex u-justify-center u-mb-3">
-              <div
-                className="u-spinner-border u-text-primary"
-                role="status"
-                style={{ width: "32px", height: "32px" }}
-              >
-                <span className="u-visually-hidden">Loading...</span>
-              </div>
+              <Spinner size="lg" />
             </div>
             <p className="u-text-secondary-emphasis">
               Loading subscriptions...
@@ -584,7 +619,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
             <Grid>
               <GridCol md={3}>
                 <div className="u-text-center">
-                  <div className="u-fs-3 u-font-bold u-text-primary">
+                  <div className="u-fs-2xl u-font-bold u-text-primary">
                     {stats.active}
                   </div>
                   <div className="u-fs-sm u-text-primary">Active</div>
@@ -592,7 +627,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               </GridCol>
               <GridCol md={3}>
                 <div className="u-text-center">
-                  <div className="u-fs-3 u-font-bold u-text-warning">
+                  <div className="u-fs-2xl u-font-bold u-text-warning">
                     {stats.pending}
                   </div>
                   <div className="u-fs-sm u-text-primary">Pending</div>
@@ -600,7 +635,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               </GridCol>
               <GridCol md={3}>
                 <div className="u-text-center">
-                  <div className="u-fs-3 u-font-bold u-text-error">
+                  <div className="u-fs-2xl u-font-bold u-text-error">
                     {stats.suspended}
                   </div>
                   <div className="u-fs-sm u-text-primary">Suspended</div>
@@ -608,7 +643,7 @@ const SubscriptionTable: React.FC<SubscriptionTableProps> = ({
               </GridCol>
               <GridCol md={3}>
                 <div className="u-text-center">
-                  <div className="u-fs-3 u-font-bold u-text-primary">
+                  <div className="u-fs-2xl u-font-bold u-text-primary">
                     ${stats.revenue.toLocaleString()}
                   </div>
                   <div className="u-fs-sm u-text-primary">Monthly Revenue</div>

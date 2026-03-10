@@ -148,11 +148,11 @@ const Reports: React.FC = () => {
   return (
     <div className="u-p-6">
       <div className="u-mb-6">
-        <h1 className="u-fs-1 u-font-bold u-text-primary u-mb-2">
+        <h1 className="u-fs-2xl u-font-bold u-text-primary u-mb-2">
           <Icon name="ChartBar" size={32} className="u-me-3" />
           Reports & Analytics
         </h1>
-        <p className="u-text-primary u-fs-5">
+        <p className="u-text-primary u-fs-base">
           View detailed reports and analytics for your ISP operations.
         </p>
       </div>
@@ -167,7 +167,7 @@ const Reports: React.FC = () => {
             <Select
               value={reportType}
               onChange={(e) => setReportType(e.target.value)}
-              className="u-min-w-40"
+              className="u-w-100"
               options={[
                 { value: "usage", label: "Usage Reports" },
                 { value: "revenue", label: "Revenue Reports" },
@@ -184,7 +184,7 @@ const Reports: React.FC = () => {
             <Select
               value={timeRange}
               onChange={(e) => setTimeRange(e.target.value)}
-              className="u-min-w-36"
+              className="u-w-100"
               options={[
                 { value: "daily", label: "Daily" },
                 { value: "weekly", label: "Weekly" },
@@ -244,7 +244,7 @@ const Reports: React.FC = () => {
 
       {/* Tabs Navigation */}
       <div className="u-mb-6">
-        <div className="u-flex u-gap-1 u-border-bottom u-border-secondary-subtle">
+        <div className="u-flex u-gap-1 u-border">
           {[
             { id: "usage", label: "Usage Reports" },
             { id: "revenue", label: "Revenue Reports" },

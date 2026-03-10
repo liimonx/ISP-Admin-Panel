@@ -4,7 +4,6 @@ import {
   Button,
   Input,
   Textarea,
-  Callout,
   Spinner,
   Select,
   Checkbox,
@@ -188,7 +187,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
       <form onSubmit={handleSubmit} className="u-space-y-6">
         {/* Basic Information */}
         <div className="u-space-y-4">
-          <h3 className="u-sm-lg u-font-bold">Basic Information</h3>
+          <h3 className="u-fs-lg u-font-bold">Features</h3>
 
           <div>
             <label className="u-block u-mb-2 u-font-normal">Plan Name *</label>
@@ -199,8 +198,9 @@ const PlanForm: React.FC<PlanFormProps> = ({
                 setFormData((prev) => ({ ...prev, name: e.target.value }))
               }
               placeholder="Enter plan name"
-              error={errors.name}
+              className={errors.name ? "u-border-error" : ""}
             />
+            {errors.name && <p className="u-text-error u-fs-xs u-mt-1">{errors.name}</p>}
           </div>
 
           <div>
@@ -221,7 +221,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Speed Configuration */}
         <div className="u-space-y-4">
-          <h3 className="u-sm-lg u-font-bold">Speed Configuration</h3>
+          <h3 className="u-fs-lg u-font-bold">Speed Configuration</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
@@ -240,8 +240,9 @@ const PlanForm: React.FC<PlanFormProps> = ({
                 placeholder="0"
                 min="0"
                 step="0.1"
-                error={errors.download_speed}
+                className={errors.download_speed ? "u-border-error" : ""}
               />
+              {errors.download_speed && <p className="u-text-error u-fs-xs u-mt-1">{errors.download_speed}</p>}
             </div>
             <div>
               <label className="u-block u-mb-2 u-font-normal">
@@ -259,8 +260,9 @@ const PlanForm: React.FC<PlanFormProps> = ({
                 placeholder="0"
                 min="0"
                 step="0.1"
-                error={errors.upload_speed}
+                className={errors.upload_speed ? "u-border-error" : ""}
               />
+              {errors.upload_speed && <p className="u-text-error u-fs-xs u-mt-1">{errors.upload_speed}</p>}
             </div>
           </div>
 
@@ -268,10 +270,10 @@ const PlanForm: React.FC<PlanFormProps> = ({
             <label className="u-block u-mb-2 u-font-normal">Speed Unit</label>
             <Select
               value={formData.speed_unit}
-              onChange={(value) =>
+              onChange={(e: any) =>
                 setFormData((prev) => ({
                   ...prev,
-                  speed_unit: value as "mbps" | "gbps",
+                  speed_unit: (typeof e === 'object' && e?.target ? e.target.value : e) as "mbps" | "gbps",
                 }))
               }
               options={[
@@ -284,7 +286,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Data Configuration */}
         <div className="u-space-y-4">
-          <h3 className="u-sm-lg u-font-bold">Data Configuration</h3>
+          <h3 className="u-fs-lg u-font-bold">Data Configuration</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
@@ -292,27 +294,28 @@ const PlanForm: React.FC<PlanFormProps> = ({
               <Input
                 type="number"
                 value={formData.data_quota}
-                onChange={(e) =>
+                onChange={(e: any) =>
                   setFormData((prev) => ({
                     ...prev,
-                    data_quota: Number(e.target.value),
+                    data_quota: Number(e.target.value || 0),
                   }))
                 }
                 placeholder="0"
                 min="0"
                 step="0.1"
                 disabled={formData.quota_unit === "unlimited"}
-                error={errors.data_quota}
+                className={errors.data_quota ? "u-border-error" : ""}
               />
+              {errors.data_quota && <p className="u-text-error u-fs-xs u-mt-1">{errors.data_quota}</p>}
             </div>
             <div>
               <label className="u-block u-mb-2 u-font-normal">Quota Unit</label>
               <Select
                 value={formData.quota_unit}
-                onChange={(value) =>
+                onChange={(e: any) =>
                   setFormData((prev) => ({
                     ...prev,
-                    quota_unit: value as "gb" | "tb" | "unlimited",
+                    quota_unit: (typeof e === 'object' && e?.target ? e.target.value : e) as "gb" | "tb" | "unlimited",
                   }))
                 }
                 options={[
@@ -327,7 +330,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Pricing */}
         <div className="u-space-y-4">
-          <h3 className="u-sm-lg u-font-bold">Pricing</h3>
+          <h3 className="u-fs-lg u-font-bold">Pricing</h3>
 
           <div className="u-grid u-grid-cols-2 u-gap-4">
             <div>
@@ -346,8 +349,9 @@ const PlanForm: React.FC<PlanFormProps> = ({
                 placeholder="0.00"
                 min="0"
                 step="0.01"
-                error={errors.price}
+                className={errors.price ? "u-border-error" : ""}
               />
+              {errors.price && <p className="u-text-error u-fs-xs u-mt-1">{errors.price}</p>}
             </div>
             <div>
               <label className="u-block u-mb-2 u-font-normal">Setup Fee</label>
@@ -363,8 +367,9 @@ const PlanForm: React.FC<PlanFormProps> = ({
                 placeholder="0.00"
                 min="0"
                 step="0.01"
-                error={errors.setup_fee}
+                className={errors.setup_fee ? "u-border-error" : ""}
               />
+              {errors.setup_fee && <p className="u-text-error u-fs-xs u-mt-1">{errors.setup_fee}</p>}
             </div>
           </div>
 
@@ -374,10 +379,10 @@ const PlanForm: React.FC<PlanFormProps> = ({
             </label>
             <Select
               value={formData.billing_cycle}
-              onChange={(value) =>
+              onChange={(e: any) =>
                 setFormData((prev) => ({
                   ...prev,
-                  billing_cycle: value as "monthly" | "quarterly" | "yearly",
+                  billing_cycle: (typeof e === 'object' && e?.target ? e.target.value : e) as "monthly" | "quarterly" | "yearly",
                 }))
               }
               options={[
@@ -391,27 +396,27 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Plan Status */}
         <div className="u-space-y-4">
-          <h3 className="u-sm-lg u-font-bold">Plan Status</h3>
+          <h3 className="u-fs-lg u-font-bold">Plan Status</h3>
 
           <div className="u-space-y-3">
             <Checkbox
               checked={formData.is_active}
-              onChange={(checked) =>
-                setFormData((prev) => ({ ...prev, is_active: checked }))
+              onChange={(e: any) =>
+                setFormData((prev) => ({ ...prev, is_active: typeof e === 'boolean' ? e : e.target.checked }))
               }
               label="Active Plan"
             />
             <Checkbox
               checked={formData.is_featured}
-              onChange={(checked) =>
-                setFormData((prev) => ({ ...prev, is_featured: checked }))
+              onChange={(e: any) =>
+                setFormData((prev) => ({ ...prev, is_featured: typeof e === 'boolean' ? e : e.target.checked }))
               }
               label="Featured Plan"
             />
             <Checkbox
               checked={formData.is_popular}
-              onChange={(checked) =>
-                setFormData((prev) => ({ ...prev, is_popular: checked }))
+              onChange={(e: any) =>
+                setFormData((prev) => ({ ...prev, is_popular: typeof e === 'boolean' ? e : e.target.checked }))
               }
               label="Popular Plan"
             />
@@ -420,7 +425,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
 
         {/* Features */}
         <div className="u-space-y-4">
-          <h3 className="u-sm-lg u-font-bold">Features</h3>
+          <h3 className="u-fs-lg u-font-bold">Features</h3>
 
           <div className="u-space-y-3">
             <div className="u-flex u-gap-2">
@@ -429,8 +434,13 @@ const PlanForm: React.FC<PlanFormProps> = ({
                 value={newFeature}
                 onChange={(e) => setNewFeature(e.target.value)}
                 placeholder="Add a feature..."
-                onKeyPress={handleKeyPress}
-                className="u-flex-1"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    addFeature();
+                  }
+                }}
+                className="u-flex"
               />
               <Button
                 type="button"
@@ -454,7 +464,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
                     <button
                       type="button"
                       onClick={() => removeFeature(index)}
-                      className="u-bg-transparent u-border-0  u-cursor-pointer u-p-0 u-flex u-items-center u-justify-center u-w-4 u-h-4 hover:u-bg-white hover:u-text-primary u-rounded-full"
+                      className="u-bg-transparent u-border-0 u-p-0 u-flex u-items-center u-justify-center u-w-4 u-h-4 hover:u-bg-white hover:u-text-primary u-rounded-full"
                     >
                       ×
                     </button>
@@ -466,7 +476,7 @@ const PlanForm: React.FC<PlanFormProps> = ({
         </div>
 
         {/* Form Actions */}
-        <div className="u-flex u-justify-end u-gap-3 u-pt-4 u-border-top">
+        <div className="u-flex u-justify-end u-gap-3 u-pt-4 u-border">
           <Button
             type="button"
             variant="outline"

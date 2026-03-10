@@ -159,24 +159,6 @@ const Settings: React.FC = () => {
     },
   });
 
-  // Custom Toggle wrapper component
-  const CustomToggle: React.FC<{
-    isOn: boolean;
-    onToggle: (isOn: boolean) => void;
-  }> = ({ isOn, onToggle }) => (
-    <div
-      onClick={() => onToggle(!isOn)}
-      className={`u-w-10 u-h-6 u-rounded-full u-relative u-cursor-pointer ${isOn ? "u-bg-primary" : "u-bg-gray-300"}`}
-    >
-      <div
-        className={`u-absolute u-top-0.5 u-h-5 u-w-5 u-rounded-full u-transition-transform ${
-          isOn
-            ? "u-bg-white u-transform-translate-x-5"
-            : "u-bg-white u-transform-translate-x-0"
-        }`}
-      />
-    </div>
-  );
 
   const handleInputChange = (field: keyof SystemSettings, value: any) => {
     setSettings((prev) => ({
@@ -260,10 +242,10 @@ const Settings: React.FC = () => {
         {/* General Settings */}
         <GridCol sm={6} className="u-mb-4">
           <Card className="u-h-100">
-            <div className="u-border-b u-p-4 u-mb-4">
+            <div className="u-border u-p-4 u-mb-4">
               <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Building" size={20} />
-                <h2 className="u-sm-lg u-font-bold">General Settings</h2>
+                <h2 className="u-fs-lg u-font-bold">General Settings</h2>
               </div>
             </div>
             <div className="u-mb-3">
@@ -349,10 +331,10 @@ const Settings: React.FC = () => {
         {/* Security Settings */}
         <GridCol sm={6} className="u-mb-4">
           <Card className="u-h-100">
-            <div className="u-border-b u-p-4 u-mb-4">
+            <div className="u-border u-p-4 u-mb-4">
               <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Shield" size={20} />
-                <h2 className="u-sm-lg u-font-bold">Security Settings</h2>
+                <h2 className="u-fs-lg u-font-bold">Security Settings</h2>
               </div>
             </div>
             <div className="u-p-4">
@@ -433,36 +415,36 @@ const Settings: React.FC = () => {
                   </div>
                   <div className="u-flex u-items-center u-justify-between u-mb-2">
                     <span className="u-fs-sm">Require Uppercase</span>
-                    <CustomToggle
-                      isOn={settings.passwordPolicy.requireUppercase}
-                      onToggle={(isOn) =>
+                    <Toggle
+                      checked={settings.passwordPolicy.requireUppercase}
+                      onChange={(isOn: boolean) =>
                         handlePasswordPolicyChange("requireUppercase", isOn)
                       }
                     />
                   </div>
                   <div className="u-flex u-items-center u-justify-between u-mb-2">
                     <span className="u-fs-sm">Require Lowercase</span>
-                    <CustomToggle
-                      isOn={settings.passwordPolicy.requireLowercase}
-                      onToggle={(isOn) =>
+                    <Toggle
+                      checked={settings.passwordPolicy.requireLowercase}
+                      onChange={(isOn: boolean) =>
                         handlePasswordPolicyChange("requireLowercase", isOn)
                       }
                     />
                   </div>
                   <div className="u-flex u-items-center u-justify-between u-mb-2">
                     <span className="u-fs-sm">Require Numbers</span>
-                    <CustomToggle
-                      isOn={settings.passwordPolicy.requireNumbers}
-                      onToggle={(isOn) =>
+                    <Toggle
+                      checked={settings.passwordPolicy.requireNumbers}
+                      onChange={(isOn: boolean) =>
                         handlePasswordPolicyChange("requireNumbers", isOn)
                       }
                     />
                   </div>
                   <div className="u-flex u-items-center u-justify-between">
                     <span className="u-fs-sm">Require Special Characters</span>
-                    <CustomToggle
-                      isOn={settings.passwordPolicy.requireSpecialChars}
-                      onToggle={(isOn) =>
+                    <Toggle
+                      checked={settings.passwordPolicy.requireSpecialChars}
+                      onChange={(isOn: boolean) =>
                         handlePasswordPolicyChange("requireSpecialChars", isOn)
                       }
                     />
@@ -476,10 +458,10 @@ const Settings: React.FC = () => {
         {/* System Settings */}
         <GridCol sm={6} className="u-mb-4">
           <Card className="u-h-full">
-            <div className="u-border-b u-p-4 u-mb-4">
+            <div className="u-border u-p-4 u-mb-4">
               <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Gear" size={20} />
-                <h2 className="u-sm-lg u-font-bold">System Settings</h2>
+                <h2 className="u-fs-lg u-font-bold">System Settings</h2>
               </div>
             </div>
             <div className="u-p-4">
@@ -492,9 +474,9 @@ const Settings: React.FC = () => {
                     Enable maintenance mode to restrict access
                   </p>
                 </div>
-                <CustomToggle
-                  isOn={settings.maintenanceMode}
-                  onToggle={(isOn) =>
+                <Toggle
+                  checked={settings.maintenanceMode}
+                  onChange={(isOn: boolean) =>
                     handleInputChange("maintenanceMode", isOn)
                   }
                 />
@@ -507,9 +489,9 @@ const Settings: React.FC = () => {
                     Automatically backup system data
                   </p>
                 </div>
-                <CustomToggle
-                  isOn={settings.autoBackup}
-                  onToggle={(isOn) => handleInputChange("autoBackup", isOn)}
+                <Toggle
+                  checked={settings.autoBackup}
+                  onChange={(isOn: boolean) => handleInputChange("autoBackup", isOn)}
                 />
               </div>
 
@@ -543,9 +525,9 @@ const Settings: React.FC = () => {
                     Send email notifications for system events
                   </p>
                 </div>
-                <CustomToggle
-                  isOn={settings.emailNotifications}
-                  onToggle={(isOn) =>
+                <Toggle
+                  checked={settings.emailNotifications}
+                  onChange={(isOn: boolean) =>
                     handleInputChange("emailNotifications", isOn)
                   }
                 />
@@ -560,9 +542,9 @@ const Settings: React.FC = () => {
                     Send SMS notifications for critical alerts
                   </p>
                 </div>
-                <CustomToggle
-                  isOn={settings.smsNotifications}
-                  onToggle={(isOn) =>
+                <Toggle
+                  checked={settings.smsNotifications}
+                  onChange={(isOn: boolean) =>
                     handleInputChange("smsNotifications", isOn)
                   }
                 />
@@ -574,10 +556,10 @@ const Settings: React.FC = () => {
         {/* Advanced Settings */}
         <GridCol sm={6} className="u-mb-4">
           <Card className="u-h-100">
-            <div className="u-border-b u-p-4 u-mb-4">
+            <div className="u-border u-p-4 u-mb-4">
               <div className="u-flex u-items-center u-gap-2">
                 <Icon name="Gear" size={20} />
-                <h2 className="u-sm-lg u-font-bold">Advanced Settings</h2>
+                <h2 className="u-fs-lg u-font-bold">Advanced Settings</h2>
               </div>
             </div>
             <div className="u-p-4">

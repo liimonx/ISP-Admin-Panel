@@ -336,7 +336,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           })}
         </SideMenuList>
 
-        <div className="u-p-4 u-border-t">
+        <div className="u-p-4 u-border">
           {!collapsed ? (
             <div className="u-flex u-flex-column u-gap-2">
               <div className="u-flex u-items-center u-gap-2 u-fs-xs u-text-secondary-emphasis">

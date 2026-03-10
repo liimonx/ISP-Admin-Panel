@@ -601,7 +601,8 @@ const Billing: React.FC = () => {
                     {invoicesData.results?.slice(0, 5).map((invoice) => (
                       <div
                         key={invoice.id}
-                        className={`u-flex u-p-3 u-border u-rounded u-cursor-pointer hover:u-bg-primary-subtle u-border-${
+                        role="button"
+                        className={`u-flex u-p-3 u-border u-rounded hover:u-bg-primary-subtle u-border-${
                           invoice.status === "paid"
                             ? "success"
                             : invoice.status === "overdue"
@@ -655,7 +656,8 @@ const Billing: React.FC = () => {
                     {paymentsData.results?.slice(0, 5).map((paymentRecord) => (
                       <div
                         key={paymentRecord.id}
-                        className="u-flex u-justify-between u-items-center u-p-3 u-border u-rounded u-cursor-pointer u-bg-primary-subtle hover:u-bg-primary-subtle"
+                        role="button"
+                        className="u-flex u-justify-between u-items-center u-p-3 u-border u-rounded u-bg-primary-subtle hover:u-bg-primary-subtle"
                         onClick={() => handleViewPayment(paymentRecord)}
                       >
                         <div>
