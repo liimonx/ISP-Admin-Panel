@@ -37,8 +37,6 @@ const Login: React.FC = () => {
       const redirectUrl = localStorage.getItem("redirect_after_login");
       if (redirectUrl) {
         localStorage.removeItem("redirect_after_login");
-        navigate(redirectUrl, { replace: true });
-      } else {
         navigate("/", { replace: true });
       }
     }

@@ -56,6 +56,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Router
+          basename={import.meta.env.BASE_URL}
           future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
         >
           <Routes>
