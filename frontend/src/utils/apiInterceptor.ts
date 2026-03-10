@@ -1,4 +1,10 @@
 import axios, { AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios';
+ 
+declare module 'axios' {
+  export interface InternalAxiosRequestConfig {
+    metadata?: RequestMetadata;
+  }
+}
 import { apiRateLimiter } from './rateLimiter';
 import { ApiErrorHandler, ErrorLogger, ErrorNotificationHandler, AppError } from './errorHandler';
 import { authService } from '../services/authService';
@@ -43,9 +49,10 @@ export class ApiRequestInterceptor {
         if (config.url && config.method) {
           const endpoint = this.extractEndpoint(config.url);
           const userId = authService.getUserRole() || 'anonymous';
+          const method = config.method.toUpperCase();
 
           const rateLimitResult = apiRateLimiter.checkRequest(
-            config.method.toUpperCase(),
+            method,
             endpoint,
             userId
           );
@@ -56,7 +63,6 @@ export class ApiRequestInterceptor {
           }
 
           // Add rate limit headers for monitoring
-          config.headers['X-RateLimit-Remaining'] = rateLimitResult.remaining;
         }
 
         // Deduplication - prevent duplicate requests
@@ -146,8 +152,9 @@ export class ApiRequestInterceptor {
     const userId = authService.getUserRole() || 'anonymous';
 
     // Update local rate limiter
+    const method = originalRequest?.method?.toUpperCase() || 'GET';
     apiRateLimiter.handleServerRateLimit(
-      originalRequest.method?.toUpperCase(),
+      method,
       endpoint,
       retryAfter,
       userId
@@ -214,8 +221,9 @@ export class ApiRequestInterceptor {
     }
 
     // Don't retry certain request types
+    const method = originalRequest?.method?.toUpperCase() || '';
     const nonRetryableMethods = ['POST', 'PUT', 'PATCH', 'DELETE'];
-    if (nonRetryableMethods.includes(originalRequest?.method?.toUpperCase())) {
+    if (nonRetryableMethods.includes(method)) {
       return false;
     }
 

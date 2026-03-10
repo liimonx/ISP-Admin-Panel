@@ -209,7 +209,7 @@ export class ApiRateLimiter {
    * @param endpoint - API endpoint path
    * @param userId - Optional user identifier
    */
-  recordRequest(method: string, endpoint: string, userId?: string): void {
+  recordRequest(_method: string, _endpoint: string, _userId?: string): void {
     // Request is already recorded in checkRequest
     // This method is here for potential future use
   }
@@ -224,7 +224,7 @@ export class ApiRateLimiter {
   handleServerRateLimit(
     method: string,
     endpoint: string,
-    retryAfter: number,
+    _retryAfter: number,
     userId?: string
   ): void {
     const limiter = this.getLimiter(method, endpoint);
