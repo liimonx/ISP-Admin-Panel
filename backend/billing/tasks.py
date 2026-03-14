@@ -304,8 +304,10 @@ def send_overdue_notifications(self):
 
         for invoice in overdue_invoices:
             try:
-                # TODO: Implement actual email/SMS notification sending
-                # For now, just log the notification
+                # TODO: Implement SMS notification sending when SMSService is available
+                # Send email notification
+                EmailService.send_overdue_notification(invoice)
+
                 logger.info(
                     f"Overdue notification for {invoice.customer.name} - "
                     f"Invoice {invoice.invoice_number}, {invoice.days_overdue} days overdue"
