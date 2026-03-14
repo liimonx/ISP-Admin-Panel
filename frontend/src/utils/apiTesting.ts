@@ -542,7 +542,6 @@ export const devUtils = {
     if (process.env.NODE_ENV !== 'development') return;
 
     if (enabled) {
-      console.log('API Performance Logging Enabled');
       setInterval(() => {
         const report = apiTester.generatePerformanceReport();
         if (report.totalRequests > 0) {
@@ -561,9 +560,7 @@ export const devUtils = {
    * Run quick health check
    */
   quickHealthCheck: async () => {
-    console.log('Running API health check...');
     const report = await apiTester.runHealthCheck();
-    console.log('Health Check Results:', report);
     return report;
   },
 
@@ -571,9 +568,7 @@ export const devUtils = {
    * Test rate limiting
    */
   testRateLimit: async (endpoint: string = '/api/health/') => {
-    console.log(`Testing rate limit for ${endpoint}...`);
     const result = await apiTester.testRateLimit(endpoint, 15, 100);
-    console.log('Rate Limit Test Results:', result);
     return result;
   },
 
@@ -583,7 +578,6 @@ export const devUtils = {
   enableMocks: () => {
     apiMocker.enable();
     apiMocker.setupCommonMocks();
-    console.log('API mocking enabled');
   },
 
   /**
@@ -591,7 +585,6 @@ export const devUtils = {
    */
   disableMocks: () => {
     apiMocker.disable();
-    console.log('API mocking disabled');
   },
 };
 
