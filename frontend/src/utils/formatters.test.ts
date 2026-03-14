@@ -1,5 +1,27 @@
 import { describe, it, expect } from 'vitest';
-import { getInitials } from './formatters';
+import { getInitials, truncateText } from './formatters';
+
+describe('truncateText', () => {
+  it('should return the original text if it is shorter than maxLength', () => {
+    expect(truncateText('Hello', 10)).toBe('Hello');
+  });
+
+  it('should return the original text if it is exactly maxLength', () => {
+    expect(truncateText('Hello', 5)).toBe('Hello');
+  });
+
+  it('should truncate the text and append "..." if it is longer than maxLength', () => {
+    expect(truncateText('Hello World', 5)).toBe('Hello...');
+  });
+
+  it('should handle empty strings correctly', () => {
+    expect(truncateText('', 5)).toBe('');
+  });
+
+  it('should handle zero maxLength', () => {
+    expect(truncateText('Hello', 0)).toBe('...');
+  });
+});
 
 describe('getInitials', () => {
   it('should return initials for valid first and last names', () => {
