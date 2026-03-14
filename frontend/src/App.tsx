@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { HashRouter as Router, Routes, Route } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Import Atomix CSS
@@ -56,7 +56,6 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <AuthProvider>
         <Router
-          basename={import.meta.env.BASE_URL}
           future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
         >
           <Routes>
