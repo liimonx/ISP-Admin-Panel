@@ -1,0 +1,25 @@
+{% extends 'billing/email/base_email.html' %}
+
+{% block title %}OVERDUE: Invoice #{{ invoice.invoice_number }}{% endblock %}
+
+{% block content %}
+    <p>Dear {{ customer.name }},</p>
+
+    <p>This is a notification that invoice <strong>#{{ invoice.invoice_number }}</strong> generated on {{ invoice.created_at|date:"M d, Y" }} is currently <strong>overdue</strong>.</p>
+
+    <div style="background-color: #f8d7da; color: #721c24; padding: 15px; margin: 20px 0; border: 1px solid #f5c6cb; border-radius: 5px;">
+        <p><strong>Total Due:</strong> {{ invoice.total_amount }}</p>
+        <p><strong>Original Due Date:</strong> {{ invoice.due_date|date:"M d, Y" }}</p>
+        <p><strong>Days Overdue:</strong> {{ invoice.days_overdue }}</p>
+    </div>
+
+    <p>Please make the payment as soon as possible to avoid service interruption. If payment is not received, your service may be suspended.</p>
+
+    <p>If you have already made the payment, please disregard this notice.</p>
+
+    <p>To view your invoice or make a payment, please click the link below:</p>
+
+    <div style="text-align: center;">
+        <a href="#" class="button" style="background-color: #dc3545; color: white;">View & Pay Invoice</a>
+    </div>
+{% endblock %}
