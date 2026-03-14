@@ -129,19 +129,28 @@ def customer_search_view(request):
 @permission_classes([permissions.IsAuthenticated])
 def customer_stats_view(request):
     """Get customer statistics."""
-    total_customers = Customer.objects.count()
-    active_customers = Customer.objects.filter(status='active').count()
-    inactive_customers = Customer.objects.filter(status='inactive').count()
-    suspended_customers = Customer.objects.filter(status='suspended').count()
-    cancelled_customers = Customer.objects.filter(status='cancelled').count()
-    
-    # Monthly growth
     from django.utils import timezone
     from datetime import timedelta
+    from django.db.models import Count, Q
     
     now = timezone.now()
     last_month = now - timedelta(days=30)
-    new_customers_this_month = Customer.objects.filter(created_at__gte=last_month).count()
+
+    stats_data = Customer.objects.aggregate(
+        total_customers=Count('id'),
+        active_customers=Count('id', filter=Q(status='active')),
+        inactive_customers=Count('id', filter=Q(status='inactive')),
+        suspended_customers=Count('id', filter=Q(status='suspended')),
+        cancelled_customers=Count('id', filter=Q(status='cancelled')),
+        new_customers_this_month=Count('id', filter=Q(created_at__gte=last_month))
+    )
+
+    total_customers = stats_data['total_customers'] or 0
+    active_customers = stats_data['active_customers'] or 0
+    inactive_customers = stats_data['inactive_customers'] or 0
+    suspended_customers = stats_data['suspended_customers'] or 0
+    cancelled_customers = stats_data['cancelled_customers'] or 0
+    new_customers_this_month = stats_data['new_customers_this_month'] or 0
     
     stats = {
         'total_customers': total_customers,
