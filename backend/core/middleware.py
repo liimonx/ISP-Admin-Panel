@@ -113,26 +113,31 @@ class RateLimitMiddleware(MiddlewareMixin):
         current_minute = int(time.time() // 60)
         cache_key = f"rate_limit:{client_id}:{limit_type}:{current_minute}"
 
-        # Get current request count
-        current_count = cache.get(cache_key, 0)
+        try:
+            # Get current request count
+            current_count = cache.get(cache_key, 0)
 
-        if current_count >= limit:
-            # Log rate limit violation
-            logger.warning(
-                f"Rate limit exceeded for {client_id}",
-                extra={
-                    'client_id': client_id,
-                    'limit_type': limit_type,
-                    'current_count': current_count,
-                    'limit': limit,
-                    'path': request.path,
-                    'method': request.method
-                }
-            )
-            return True
+            if current_count >= limit:
+                # Log rate limit violation
+                logger.warning(
+                    f"Rate limit exceeded for {client_id}",
+                    extra={
+                        'client_id': client_id,
+                        'limit_type': limit_type,
+                        'current_count': current_count,
+                        'limit': limit,
+                        'path': request.path,
+                        'method': request.method
+                    }
+                )
+                return True
 
-        # Increment counter
-        cache.set(cache_key, current_count + 1, 60)  # Expire after 1 minute
+            # Increment counter
+            cache.set(cache_key, current_count + 1, 60)  # Expire after 1 minute
+        except Exception as e:
+            # If cache is unavailable (e.g. Redis down), log warning and allow request
+            logger.warning(f"Cache unavailable for rate limiting: {str(e)}")
+            return False
 
         return False
 

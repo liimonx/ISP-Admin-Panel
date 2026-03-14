@@ -373,14 +373,16 @@ DATABASES['default']['CONN_MAX_AGE'] = CONN_MAX_AGE
 
 # Cache Configuration
 CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': env('REDIS_URL', default='redis://127.0.0.1:6379/1'),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        }
-    }
+    'default': env.cache('REDIS_URL', default='locmemcache://'),
 }
+
+# Optional: Keep the explicit redis config if needed for complex options, 
+# but env.cache() handles the common case better for Render/Heroku
+if CACHES['default']['BACKEND'] == 'django_redis.cache.RedisCache':
+    CACHES['default']['OPTIONS'] = {
+        'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        'IGNORE_EXCEPTIONS': True,  # This tells django-redis to not raise errors on connection failure
+    }
 
 # Main Router Configuration
 MAIN_ROUTER_IP = env('MAIN_ROUTER_IP', default='127.0.0.1')
