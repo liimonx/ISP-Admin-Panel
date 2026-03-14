@@ -64,3 +64,32 @@ class EmailService:
         except Exception as e:
             logger.error(f"Failed to send invoice reminder email: {str(e)}", exc_info=True)
             return False
+
+    @staticmethod
+    def send_invoice_overdue(invoice):
+        """
+        Send overdue invoice notification to customer via email.
+        """
+        try:
+            subject = f"ACTION REQUIRED: Invoice #{invoice.invoice_number} is Overdue"
+            from_email = settings.DEFAULT_FROM_EMAIL
+            to_email = [invoice.customer.email]
+
+            context = {
+                'invoice': invoice,
+                'customer': invoice.customer,
+                'company_name': getattr(settings, 'COMPANY_NAME', 'ISP Admin'),
+            }
+
+            html_content = render_to_string('billing/email/invoice_overdue.html', context)
+            text_content = strip_tags(html_content)
+
+            msg = EmailMultiAlternatives(subject, text_content, from_email, to_email)
+            msg.attach_alternative(html_content, "text/html")
+            msg.send()
+
+            logger.info(f"Overdue invoice email sent to {invoice.customer.email} for invoice {invoice.invoice_number}")
+            return True
+        except Exception as e:
+            logger.error(f"Failed to send overdue invoice email: {str(e)}", exc_info=True)
+            return False
