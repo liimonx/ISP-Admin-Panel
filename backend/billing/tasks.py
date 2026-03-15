@@ -7,12 +7,8 @@ from decimal import Decimal
 from celery import shared_task
 from django.utils import timezone
 from django.db import transaction
-from django.conf import settings
 from .models import Invoice, Payment
 from .services import BillingService
-from subscriptions.models import Subscription
-from customers.models import Customer
-from core.exceptions import BusinessLogicError, ExternalServiceError
 from core.email import EmailService
 
 logger = logging.getLogger(__name__)
@@ -547,6 +543,7 @@ def generate_billing_reports(self, month=None, year=None):
         target_month = month or now.month
         target_year = year or now.year
 
+        from .services import BillingReportService
         report = BillingReportService.generate_monthly_report(target_month, target_year)
 
         # TODO: Save report to file or send via email
