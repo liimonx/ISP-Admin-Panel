@@ -5,7 +5,7 @@ from drf_spectacular.utils import extend_schema
 from core.responses import APIResponse, paginate_response
 from .models import Customer
 from .serializers import (
-    CustomerSerializer, CustomerCreateSerializer, CustomerUpdateSerializer,
+    CustomerCreateSerializer, CustomerUpdateSerializer,
     CustomerListSerializer, CustomerDetailSerializer
 )
 from django.db import models
