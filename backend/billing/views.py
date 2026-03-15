@@ -4,7 +4,6 @@ from django.db.models.functions import TruncDay
 from django.utils import timezone
 from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import filters
 from drf_spectacular.utils import extend_schema
