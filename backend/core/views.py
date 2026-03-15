@@ -381,7 +381,7 @@ def global_search(request):
     if query.isdigit():
         sub_query |= Q(id=int(query))
         
-    subscriptions = Subscription.objects.filter(sub_query)[:5]
+    subscriptions = Subscription.objects.select_related('customer', 'plan').filter(sub_query)[:5]
     for s in subscriptions:
         # Avoid related object queries if not selected; safely fetch names
         cust_name = s.customer.name if s.customer else "Unknown Customer"
