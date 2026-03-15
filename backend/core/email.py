@@ -66,12 +66,12 @@ class EmailService:
             return False
 
     @staticmethod
-    def send_overdue_notification(invoice):
+    def send_invoice_overdue(invoice):
         """
-        Send overdue notification to customer via email.
+        Send overdue invoice notification to customer via email.
         """
         try:
-            subject = f"URGENT: Invoice #{invoice.invoice_number} is Overdue"
+            subject = f"ACTION REQUIRED: Invoice #{invoice.invoice_number} is Overdue"
             from_email = settings.DEFAULT_FROM_EMAIL
             to_email = [invoice.customer.email]
 
@@ -88,8 +88,8 @@ class EmailService:
             msg.attach_alternative(html_content, "text/html")
             msg.send()
 
-            logger.info(f"Overdue notification email sent to {invoice.customer.email} for invoice {invoice.invoice_number}")
+            logger.info(f"Overdue invoice email sent to {invoice.customer.email} for invoice {invoice.invoice_number}")
             return True
         except Exception as e:
-            logger.error(f"Failed to send overdue notification email: {str(e)}", exc_info=True)
+            logger.error(f"Failed to send overdue invoice email: {str(e)}", exc_info=True)
             return False

@@ -300,15 +300,19 @@ def send_overdue_notifications(self):
 
         for invoice in overdue_invoices:
             try:
-                # TODO: Implement SMS notification sending when SMSService is available
-                # Send email notification
-                EmailService.send_overdue_notification(invoice)
+                # Send overdue invoice notification via email
+                success = EmailService.send_invoice_overdue(invoice)
 
-                logger.info(
-                    f"Overdue notification for {invoice.customer.name} - "
-                    f"Invoice {invoice.invoice_number}, {invoice.days_overdue} days overdue"
-                )
-                sent_count += 1
+                if success:
+                    logger.info(
+                        f"Overdue notification sent to {invoice.customer.name} - "
+                        f"Invoice {invoice.invoice_number}, {invoice.days_overdue} days overdue"
+                    )
+                    sent_count += 1
+                else:
+                    error_msg = f"Failed to send overdue notification for {invoice.invoice_number}: EmailService returned False"
+                    logger.error(error_msg)
+                    errors.append(error_msg)
 
             except Exception as e:
                 error_msg = f"Failed to send overdue notification for {invoice.invoice_number}: {str(e)}"
