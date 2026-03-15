@@ -133,10 +133,8 @@ const Billing: React.FC = () => {
   // Generate invoice mutation
   const generateInvoiceMutation = useMutation({
     mutationFn: async (data: any) => {
-      console.log("Generating invoice with data:", data);
       try {
         const result = await apiService.generateInvoice(data);
-        console.log("Invoice generation successful:", result);
         return result;
       } catch (error) {
         console.error("Invoice generation failed:", error);
@@ -144,7 +142,6 @@ const Billing: React.FC = () => {
       }
     },
     onSuccess: (result) => {
-      console.log("Invoice generated successfully:", result);
       queryClient.invalidateQueries({ queryKey: ["invoices"] });
       queryClient.invalidateQueries({ queryKey: ["invoice-stats"] });
       setIsGenerateInvoiceModalOpen(false);
@@ -295,8 +292,6 @@ const Billing: React.FC = () => {
   };
 
   const handleGenerateInvoice = (data: any) => {
-    console.log("handleGenerateInvoice called with:", data);
-
     // Validate required fields
     if (!data.customer_id) {
       notificationManager.error("Customer is required to generate invoice");
@@ -328,7 +323,6 @@ const Billing: React.FC = () => {
       notes: data.notes?.trim() || undefined,
     };
 
-    console.log("Cleaned data for invoice generation:", cleanData);
     generateInvoiceMutation.mutate(cleanData);
   };
 
