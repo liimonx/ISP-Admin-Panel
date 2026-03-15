@@ -10,7 +10,6 @@ from django.db import transaction
 from django.conf import settings
 from .models import Invoice, Payment
 from .services import BillingService
-from subscriptions.models import Subscription
 from customers.models import Customer
 from core.exceptions import BusinessLogicError, ExternalServiceError
 from core.email import EmailService
