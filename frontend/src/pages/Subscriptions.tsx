@@ -135,22 +135,15 @@ const Subscriptions: React.FC = () => {
         throw new Error(`Validation failed: ${validation.errors.join(", ")}`);
       }
 
-      console.log("Creating subscription with data:", data);
       return subscriptionService.createSubscription(data);
     },
     onSuccess: (createdSubscription) => {
-      console.log("✅ Subscription created successfully:", createdSubscription);
-
       // Invalidate and refetch queries immediately
-      console.log("🔄 Invalidating subscription queries...");
       queryClient.invalidateQueries({ queryKey: ["subscriptions"] });
       queryClient.invalidateQueries({ queryKey: ["subscription-stats"] });
 
       // Force immediate refetch
-      console.log("🔄 Force refetching subscriptions...");
-      refetchSubscriptions().then(() => {
-        console.log("✅ Subscriptions refetched after creation");
-      });
+      refetchSubscriptions();
 
       setIsCreateModalOpen(false);
       resetForm();
