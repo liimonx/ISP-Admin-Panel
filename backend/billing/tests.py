@@ -1,6 +1,5 @@
 from decimal import Decimal
 from datetime import date, timedelta
-<<<<<<< perf-billing-payment-stats-n-plus-one-10420951534994094791
 import time
 
 from django.test import TestCase
@@ -10,7 +9,6 @@ from django.db import connection
 from django.utils import timezone
 from django.contrib.auth import get_user_model
 from rest_framework.test import APITestCase
-=======
 import random
 
 from django.test import TestCase
@@ -22,21 +20,17 @@ from django.test.utils import CaptureQueriesContext
 
 from dateutil.relativedelta import relativedelta
 from rest_framework.test import APIClient
->>>>>>> main
 from rest_framework import status
 
 from plans.models import Plan
 from billing.services import BillingService
-<<<<<<< perf-billing-payment-stats-n-plus-one-10420951534994094791
 from billing.models import Payment, Invoice
 from customers.models import Customer
 
 User = get_user_model()
-=======
 from billing.models import Invoice
 from customers.models import Customer
 
->>>>>>> main
 
 class BillingServiceTest(TestCase):
 
@@ -145,7 +139,6 @@ class BillingServiceTest(TestCase):
         self.assertEqual(calculated_amount, expected_amount)
 
 
-<<<<<<< perf-billing-payment-stats-n-plus-one-10420951534994094791
 class PaymentStatsPerformanceTest(APITestCase):
     def setUp(self):
         self.user = User.objects.create_user(
@@ -228,7 +221,6 @@ class PaymentStatsPerformanceTest(APITestCase):
             self.assertEqual(day_stat['successful_count'], 1)
             # Use Decimal comparison to be robust against SQLite/Postgres differences in Sum return type stringification
             self.assertEqual(Decimal(day_stat['total_amount']), Decimal('200.00'))
-=======
 class InvoiceStatsPerformanceTest(TestCase):
     def setUp(self):
         self.client = APIClient()
@@ -305,4 +297,3 @@ class InvoiceStatsPerformanceTest(TestCase):
             self.assertEqual(month_data['invoice_count'], 2, f"Failed for month {month_data['month']}")
             self.assertEqual(Decimal(month_data['total_amount']), Decimal('300.00'))
             self.assertEqual(Decimal(month_data['paid_amount']), Decimal('100.00'))
->>>>>>> main

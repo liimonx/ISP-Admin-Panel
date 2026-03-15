@@ -1,0 +1,24 @@
+{% extends 'billing/email/base_email.html' %}
+
+{% block title %}URGENT: Invoice #{{ invoice.invoice_number }} is Overdue{% endblock %}
+
+{% block content %}
+    <p>Dear {{ customer.name }},</p>
+
+    <p>This is an urgent notice that your invoice <strong>#{{ invoice.invoice_number }}</strong> generated on {{ invoice.created_at|date:"M d, Y" }} is now <strong>{{ invoice.days_overdue }} days overdue</strong>.</p>
+
+    <div style="background-color: #f8d7da; color: #721c24; padding: 15px; margin: 20px 0; border: 1px solid #f5c6cb; border-radius: 5px;">
+        <p><strong>Total Due:</strong> {{ invoice.total_amount }}</p>
+        <p><strong>Due Date was:</strong> {{ invoice.due_date|date:"M d, Y" }}</p>
+    </div>
+
+    <p>Please make a payment as soon as possible to avoid any interruption to your services.</p>
+
+    <p>If you have already made the payment, please let us know or disregard this notice.</p>
+
+    <p>To view your invoice or make a payment, please click the link below:</p>
+
+    <div style="text-align: center;">
+        <a href="#" class="button">View & Pay Invoice</a>
+    </div>
+{% endblock %}
