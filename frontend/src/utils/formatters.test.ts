@@ -2,24 +2,33 @@ import { describe, it, expect } from 'vitest';
 import { getInitials, truncateText } from './formatters';
 
 describe('truncateText', () => {
-  it('should return the original text if it is shorter than maxLength', () => {
+  it('should return the original string if it is shorter than maxLength', () => {
     expect(truncateText('Hello', 10)).toBe('Hello');
   });
 
-  it('should return the original text if it is exactly maxLength', () => {
+  it('should return the original string if its length is exactly maxLength', () => {
     expect(truncateText('Hello', 5)).toBe('Hello');
   });
 
-  it('should truncate the text and append "..." if it is longer than maxLength', () => {
+  it('should truncate the string and append "..." if it is longer than maxLength', () => {
     expect(truncateText('Hello World', 5)).toBe('Hello...');
+    expect(truncateText('A very long string that needs truncation', 10)).toBe('A very lon...');
   });
 
   it('should handle empty strings correctly', () => {
     expect(truncateText('', 5)).toBe('');
+    expect(truncateText('', 0)).toBe('');
   });
 
-  it('should handle zero maxLength', () => {
+  it('should handle zero maxLength by returning "..." for non-empty strings', () => {
     expect(truncateText('Hello', 0)).toBe('...');
+  });
+
+  it('should handle negative maxLength', () => {
+    // text.length > -1 is true for 'Hello'
+    // 'Hello'.slice(0, -1) -> 'Hell' + '...'
+    expect(truncateText('Hello', -1)).toBe('Hell...');
+    expect(truncateText('Hello', -10)).toBe('...');
   });
 });
 
