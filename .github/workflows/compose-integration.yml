@@ -1,0 +1,78 @@
+name: Docker Compose Integration
+
+on:
+  push:
+    branches: [main, develop]
+    paths:
+      - 'docker-compose.yml'
+      - 'backend/**'
+      - 'frontend/**'
+      - 'nginx.conf'
+      - '.github/workflows/compose-integration.yml'
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  compose-test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Create .env for testing
+        run: |
+          cat > .env << EOF
+          POSTGRES_DB=isp_admin
+          POSTGRES_USER=isp_admin
+          POSTGRES_PASSWORD=test-password-ci
+          SECRET_KEY=test-secret-key-ci
+          MAIN_ROUTER_IP=127.0.0.1
+          MAIN_ROUTER_PASSWORD=test-pass
+          MIKROTIK_MOCK_MODE=True
+          VITE_API_BASE_URL=http://localhost:8000
+          EOF
+      
+      - name: Start services with Docker Compose
+        run: docker compose up -d --build
+        timeout-minutes: 10
+      
+      - name: Wait for services to be healthy
+        run: |
+          for i in {1..30}; do
+            if docker compose ps | grep -q "healthy"; then
+              echo "Services are healthy"
+              exit 0
+            fi
+            echo "Waiting for services... ($i/30)"
+            sleep 10
+          done
+          echo "Services did not become healthy"
+          docker compose logs
+          exit 1
+      
+      - name: Test backend health
+        run: |
+          curl -f http://localhost:8000/health/ || exit 1
+      
+      - name: Test frontend
+        run: |
+          curl -f http://localhost:3000/ || exit 1
+      
+      - name: Verify database connectivity
+        run: |
+          docker compose exec -T db pg_isready -U isp_admin -d isp_admin || exit 1
+      
+      - name: Verify Redis connectivity
+        run: |
+          docker compose exec -T redis redis-cli ping || exit 1
+      
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs
+      
+      - name: Cleanup
+        if: always()
+        run: docker compose down -v
