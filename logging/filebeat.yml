@@ -1,0 +1,31 @@
+filebeat.inputs:
+- type: container
+  enabled: true
+  paths:
+    - '/var/lib/docker/containers/*/*.log'
+  multiline.pattern: '^\['
+  multiline.negate: true
+  multiline.match: after
+  fields:
+    service: isp-admin
+
+processors:
+  - add_docker_metadata:
+      host: "unix:///var/run/docker.sock"
+  - add_host_metadata:
+  - add_fields:
+      target: ''
+      fields:
+        environment: production
+
+output.logstash:
+  hosts: ["${LOGSTASH_HOST:logstash}:${LOGSTASH_PORT:5000}"]
+  bulk_max_size: 2048
+
+logging.level: info
+logging.to_files: true
+logging.files:
+  path: /var/log/filebeat
+  name: filebeat
+  keepfiles: 7
+  permissions: 0644

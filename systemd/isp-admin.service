@@ -1,0 +1,36 @@
+[Unit]
+Description=ISP Admin Panel Docker Application
+After=docker.service network.target
+Requires=docker.service
+
+[Service]
+Type=exec
+WorkingDirectory=/opt/isp-admin
+Environment="DOCKER_HOST=unix:///var/run/docker.sock"
+
+# Start service
+ExecStart=/usr/local/bin/docker-compose -f docker-compose.prod.yml up
+
+# Graceful shutdown
+ExecStop=/usr/local/bin/docker-compose -f docker-compose.prod.yml down
+TimeoutStopSec=300
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+StartLimitInterval=60s
+StartLimitBurst=3
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/isp-admin
+
+# Resource limits
+CPUQuota=400%
+MemoryLimit=8G
+
+[Install]
+WantedBy=multi-user.target
