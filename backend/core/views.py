@@ -3,8 +3,6 @@ Core views for dashboard and common functionality.
 """
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
-from rest_framework import status
 from .services import DashboardService
 from .serializers import (
     DashboardStatsSerializer, CustomerStatsSerializer, SubscriptionStatsSerializer,
