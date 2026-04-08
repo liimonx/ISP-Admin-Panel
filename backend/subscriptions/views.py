@@ -1,15 +1,14 @@
-from rest_framework import generics, permissions, filters, status
+from rest_framework import generics, permissions, status
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from django.db.models import Sum
-from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from core.responses import APIResponse
 from .models import Subscription
 from .serializers import (
     SubscriptionSerializer, SubscriptionCreateSerializer, SubscriptionUpdateSerializer,
     SubscriptionDetailSerializer, SubscriptionListSerializer,
-    SubscriptionStatusUpdateSerializer, DataUsageUpdateSerializer, DataUsageResetSerializer
+    SubscriptionStatusUpdateSerializer, DataUsageUpdateSerializer
 )
 import logging
 
