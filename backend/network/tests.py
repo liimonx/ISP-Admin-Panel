@@ -119,6 +119,23 @@ class CommandExecutionTest(APITestCase):
         # This asserts that a valid command IS allowed for superuser
         self.assertEqual(response.status_code, status.HTTP_200_OK, "Superuser should be able to execute valid commands")
 
+    def test_unauthorized_commands_rejected(self):
+        self.client.force_authenticate(user=self.superuser)
+        unauthorized_commands = [
+            'reboot',
+            'system reset-configuration',
+            'user remove admin',
+            'ip address add address 1.1.1.1'
+        ]
+        for cmd in unauthorized_commands:
+            data = {'command': cmd}
+            response = self.client.post(self.url, data)
+            self.assertEqual(
+                response.status_code,
+                status.HTTP_403_FORBIDDEN,
+                f"Unauthorized command '{cmd}' should be rejected"
+            )
+
     def test_command_injection_prevented(self):
         self.client.force_authenticate(user=self.superuser)
         injection_payloads = [

@@ -780,6 +780,27 @@ def main_router_execute_command(request):
                 'timestamp': timezone.now().isoformat(),
             }, status=status.HTTP_400_BAD_REQUEST)
 
+        ALLOWED_COMMANDS = [
+            'ping',
+            'traceroute',
+            'system resource print',
+            'interface print',
+            'log print'
+        ]
+
+        is_allowed = any(
+            command == cmd or command.startswith(cmd + ' ')
+            for cmd in ALLOWED_COMMANDS
+        )
+
+        if not is_allowed:
+            logger.warning(f"Unauthorized command execution attempt: {command}")
+            return Response({
+                'success': False,
+                'message': 'Command not allowed. Only specific read-only commands are permitted.',
+                'timestamp': timezone.now().isoformat(),
+            }, status=status.HTTP_403_FORBIDDEN)
+
         # Get main router
         main_router = Router.objects.filter(host=settings.MAIN_ROUTER_IP).first()
         if not main_router:
