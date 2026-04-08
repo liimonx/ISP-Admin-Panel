@@ -3,7 +3,6 @@ Custom middleware for the ISP Admin API including rate limiting and security enh
 """
 import time
 import logging
-from typing import Dict, Optional
 from django.conf import settings
 from django.core.cache import cache
 from django.http import JsonResponse
