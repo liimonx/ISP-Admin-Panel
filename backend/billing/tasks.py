@@ -286,6 +286,34 @@ def send_invoice_reminders(self, days_before_due=3):
 
 
 @shared_task(bind=True, max_retries=3)
+def send_overdue_invoice_email_task(self, invoice_id):
+    """Asynchronously send an overdue notification email for a specific invoice."""
+    try:
+        invoice = Invoice.objects.select_related('customer').get(id=invoice_id)
+        success = EmailService.send_invoice_overdue(invoice)
+
+        if success:
+            logger.info(
+                f"Overdue notification sent to {invoice.customer.name} - "
+                f"Invoice {invoice.invoice_number}, {invoice.days_overdue} days overdue"
+            )
+            return {'success': True, 'invoice_id': invoice_id}
+        else:
+            error_msg = f"Failed to send overdue notification for {invoice.invoice_number}: EmailService returned False"
+            logger.error(error_msg)
+            return {'success': False, 'invoice_id': invoice_id, 'error': error_msg}
+
+    except Invoice.DoesNotExist:
+        logger.error(f"Invoice not found: {invoice_id}")
+        return {'success': False, 'invoice_id': invoice_id, 'error': 'Invoice not found'}
+    except Exception as exc:
+        logger.error(f"Overdue invoice email task failed for {invoice_id}: {str(exc)}", exc_info=True)
+        if self.request.retries < self.max_retries:
+            raise self.retry(exc=exc, countdown=60 * (2 ** self.request.retries))
+        return {'success': False, 'invoice_id': invoice_id, 'error': str(exc)}
+
+
+@shared_task(bind=True, max_retries=3)
 def send_overdue_notifications(self):
     """Send notifications for overdue invoices."""
     logger.info("Starting overdue notification sending...")
@@ -293,38 +321,19 @@ def send_overdue_notifications(self):
     try:
         overdue_invoices = Invoice.objects.filter(
             status=Invoice.Status.OVERDUE
-        ).select_related('customer')
+        ).only('id')
 
-        sent_count = 0
-        errors = []
+        queued_count = 0
 
         for invoice in overdue_invoices:
-            try:
-                # Send overdue invoice notification via email
-                success = EmailService.send_invoice_overdue(invoice)
+            send_overdue_invoice_email_task.delay(invoice.id)
+            queued_count += 1
 
-                if success:
-                    logger.info(
-                        f"Overdue notification sent to {invoice.customer.name} - "
-                        f"Invoice {invoice.invoice_number}, {invoice.days_overdue} days overdue"
-                    )
-                    sent_count += 1
-                else:
-                    error_msg = f"Failed to send overdue notification for {invoice.invoice_number}: EmailService returned False"
-                    logger.error(error_msg)
-                    errors.append(error_msg)
-
-            except Exception as e:
-                error_msg = f"Failed to send overdue notification for {invoice.invoice_number}: {str(e)}"
-                logger.error(error_msg)
-                errors.append(error_msg)
-
-        logger.info(f"Sent {sent_count} overdue notifications")
+        logger.info(f"Queued {queued_count} overdue notifications")
 
         return {
             'success': True,
-            'sent_count': sent_count,
-            'errors': errors
+            'queued_count': queued_count
         }
 
     except Exception as exc:
