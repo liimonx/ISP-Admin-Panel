@@ -1,13 +1,12 @@
-from django.db.models import Sum, Avg, Max, Count, Q, F
+from django.db.models import Sum, Avg, Max, Count
 from django.utils import timezone
-from datetime import datetime, timedelta
+from datetime import timedelta
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.response import Response
 from core.responses import APIResponse
 from customers.models import Customer
 from subscriptions.models import Subscription
-from billing.models import Invoice, Payment
+from billing.models import Invoice
 
 
 @api_view(['GET'])
@@ -219,7 +218,6 @@ def network_reports(request):
 def usage_reports(request):
     """Get usage reports data"""
     from monitoring.models import RouterMetric
-    from network.models import Router
     
     # Get actual usage data from monitoring metrics
     latest_metrics = RouterMetric.objects.filter(
