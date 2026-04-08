@@ -45,15 +45,22 @@ def sync_pppoe_users():
     routers = Router.objects.filter(status='online', router_type='mikrotik')
     total_synced = 0
     
+    # Pre-fetch active subscriptions and group them by router ID
+    active_subscriptions_qs = Subscription.objects.filter(
+        router__in=routers,
+        status='active'
+    ).select_related('customer', 'plan')
+
+    subscriptions_by_router = {}
+    for sub in active_subscriptions_qs:
+        subscriptions_by_router.setdefault(sub.router_id, []).append(sub)
+
     for router in routers:
         try:
             service = MikroTikService(router)
             
-            # Get active subscriptions for this router
-            active_subscriptions = Subscription.objects.filter(
-                router=router,
-                status='active'
-            ).select_related('customer', 'plan')
+            # Get active subscriptions for this router from pre-fetched dict
+            active_subscriptions = subscriptions_by_router.get(router.id, [])
             
             # Get current PPPoE users on router
             router_users = service.get_pppoe_users()
