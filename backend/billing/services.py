@@ -464,8 +464,69 @@ class PaymentProcessingService:
     @staticmethod
     def process_sslcommerz_payment(invoice: Invoice, transaction_data: dict) -> Payment:
         """Process SSLCommerz payment."""
-        # TODO: Implement SSLCommerz integration
-        pass
+        try:
+            from sslcommerz_lib import SSLCOMMERZ
+        except ImportError:
+            raise ValueError("sslcommerz-lib is not installed")
+
+        config = {
+            'store_id': settings.SSLCOMMERZ_STORE_ID,
+            'store_pass': settings.SSLCOMMERZ_STORE_PASSWORD,
+            'issandbox': getattr(settings, 'DEBUG', True)
+        }
+        sslcz = SSLCOMMERZ(config)
+
+        # Validate IPN Hash
+        if not sslcz.hash_validate_ipn(transaction_data):
+            raise ValueError("Invalid IPN hash")
+
+        val_id = transaction_data.get('val_id')
+        if not val_id:
+            raise ValueError("val_id missing in transaction data")
+
+        # Validate transaction order
+        validation_response = sslcz.validationTransactionOrder(val_id)
+
+        status = validation_response.get('status')
+        if status not in ['VALID', 'VALIDATED']:
+            raise ValueError(f"Invalid transaction status: {status}")
+
+        amount_paid = Decimal(str(validation_response.get('amount', '0')))
+
+        if amount_paid < invoice.total_amount:
+            raise ValueError(f"Amount paid ({amount_paid}) is less than invoice total ({invoice.total_amount})")
+
+        tran_id = validation_response.get('tran_id')
+
+        with transaction.atomic():
+            payment_number = BillingService._generate_payment_number()
+
+            payment = Payment.objects.create(
+                invoice=invoice,
+                customer=invoice.customer,
+                payment_number=payment_number,
+                amount=amount_paid,
+                payment_method=Payment.PaymentMethod.SSLCOMMERZ,
+                external_id=val_id,
+                transaction_id=tran_id,
+                status=Payment.Status.PENDING
+            )
+
+            payment.mark_as_completed()
+
+            logger.info(
+                "Processed SSLCommerz payment for invoice",
+                extra={
+                    'payment_id': payment.id,
+                    'payment_number': payment_number,
+                    'invoice_id': invoice.id,
+                    'invoice_number': invoice.invoice_number,
+                    'amount': str(payment.amount),
+                    'method': payment.payment_method
+                }
+            )
+
+            return payment
 
 
 class BillingReportService:
