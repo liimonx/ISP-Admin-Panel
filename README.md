@@ -89,7 +89,7 @@ cd bcn
 
 ```bash
 # Copy environment template
-cp backend/env.example .env
+cp .env.example .env
 
 # Edit environment variables
 nano .env
@@ -113,6 +113,63 @@ docker-compose logs -f
 - **Admin Panel**: [http://localhost:8000/admin](http://localhost:8000/admin)
 
 ## 🔧 Development Setup
+
+### Docker Development Setup
+
+For local development with Docker, follow these steps:
+
+1. **Prerequisites**:
+   - Install [Docker](https://www.docker.com/products/docker-desktop/)
+   - Install [Docker Compose](https://docs.docker.com/compose/install/) (included with Docker Desktop)
+
+2. **Setup**:
+   ```bash
+   # Make the setup script executable (if not already)
+   chmod +x setup-docker-dev.sh
+   
+   # Run the Docker development setup
+   ./setup-docker-dev.sh
+   ```
+
+3. **Access the application**:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+   - Admin Panel: http://localhost:8000/admin
+   - Combined via Nginx: http://localhost
+
+4. **Useful Docker commands**:
+   ```bash
+   # View logs
+   docker-compose logs -f
+   
+   # View specific service logs
+   docker-compose logs -f backend
+   
+   # Run Django commands
+   docker-compose exec backend python manage.py [command]
+   
+   # Stop services
+   docker-compose down
+   
+   # Stop and remove volumes (resets database)
+   docker-compose down -v
+   
+   # Rebuild services
+   docker-compose build
+   ```
+
+5. **Configuration**:
+   - The `.env` file contains your development configuration
+   - Database data is persisted in Docker volumes
+   - Static and media files are mounted from your local directories
+
+6. **Alternative frontend development**:
+   You can also run the frontend locally with hot reloading:
+   ```bash
+   cd frontend
+   npm run dev
+   ```
+   This will proxy API requests to http://localhost:8000 automatically.
 
 ### Local Development
 
@@ -189,27 +246,44 @@ bcn/
 ├── nginx/                  # Nginx configuration
 ├── ssl/                    # SSL certificates
 ├── docker-compose.yml      # Docker Compose configuration
+├── .env                    # Environment configuration (single file for dev)
+├── .env.example            # Environment configuration template
 ├── build-all.sh           # Build script
 ├── setup-dev.sh           # Development setup
+├── setup-docker-dev.sh    # Docker development setup
 ├── deploy.sh              # Deployment script
 └── README.md              # This file
 ```
 
 ## 🔐 Environment Configuration
 
+### Single Environment File Approach
+
+The project uses a single `.env` file for both local and Docker development:
+
+- **For Docker**: Uses PostgreSQL with credentials from `.env`
+- **For local development**: Set `USE_POSTGRES=false` in `.env` to use SQLite instead
+
 ### Required Environment Variables
 
-Create a `.env` file in the project root:
+Create a `.env` file in the project root by copying the example:
+
+```bash
+cp .env.example .env
+```
+
+Key environment variables in `.env`:
 
 ```env
 # Database Configuration
 POSTGRES_DB=isp_admin
 POSTGRES_USER=isp_admin
 POSTGRES_PASSWORD=your_secure_password
+USE_POSTGRES=true  # Set to false to use SQLite for local development
 
 # Django Configuration
 SECRET_KEY=your_secret_key_here
-DEBUG=False
+DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
 
 # Main Router Configuration
