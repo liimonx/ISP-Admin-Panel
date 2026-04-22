@@ -357,25 +357,31 @@ def send_pending_invoices(self, batch_size=50):
 
         sent_count = 0
         errors = []
+        invoices_to_update = []
+        now = timezone.now()
+        status_sent = Invoice.Status.SENT if hasattr(Invoice.Status, 'SENT') else Invoice.Status.PENDING
 
         for invoice in pending_invoices:
             try:
-                with transaction.atomic():
-                    # Mark as sent
-                    invoice.status = Invoice.Status.SENT if hasattr(Invoice.Status, 'SENT') else Invoice.Status.PENDING
-                    invoice.sent_at = timezone.now()
-                    invoice.save()
+                # Mark as sent (in-memory)
+                invoice.status = status_sent
+                invoice.sent_at = now
 
-                    # Send invoice via email
-                    EmailService.send_invoice(invoice)
+                # Send invoice via email
+                EmailService.send_invoice(invoice)
 
-                    sent_count += 1
-                    logger.info(f"Sent invoice {invoice.invoice_number} to {invoice.customer.email}")
+                invoices_to_update.append(invoice)
+                sent_count += 1
+                logger.info(f"Sent invoice {invoice.invoice_number} to {invoice.customer.email}")
 
             except Exception as e:
                 error_msg = f"Failed to send invoice {invoice.invoice_number}: {str(e)}"
                 logger.error(error_msg)
                 errors.append(error_msg)
+
+        # Bulk update statuses
+        if invoices_to_update:
+            Invoice.objects.bulk_update(invoices_to_update, ['status', 'sent_at'])
 
         # If there are more invoices to send, schedule another task
         remaining_count = Invoice.objects.filter(
