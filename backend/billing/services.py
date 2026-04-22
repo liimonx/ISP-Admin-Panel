@@ -458,8 +458,17 @@ class PaymentProcessingService:
     @staticmethod
     def process_bkash_payment(invoice: Invoice, transaction_id: str) -> Payment:
         """Process bKash payment."""
-        # TODO: Implement bKash integration
-        pass
+        # Mock bKash integration since actual API keys and business logic are not available
+        payment_data = {
+            'amount': invoice.balance_due,
+            'payment_method': Payment.PaymentMethod.BKASH,
+            'transaction_id': transaction_id,
+            'notes': f'bKash transaction: {transaction_id}'
+        }
+
+        # Reuse the existing process_payment method to handle Payment record creation
+        # and marking the invoice as paid
+        return BillingService.process_payment(invoice, payment_data)
 
     @staticmethod
     def process_sslcommerz_payment(invoice: Invoice, transaction_data: dict) -> Payment:
