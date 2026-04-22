@@ -63,22 +63,8 @@ def check_database_connection():
         return False
 
 
-def main():
-    """Main setup function."""
-    print("🚀 Setting up ISP Admin Panel for production...")
-    print("=" * 50)
-    
-    # Check database connection
-    if not check_database_connection():
-        print("❌ Cannot proceed without database connection")
-        return
-    
-    # Apply migrations
-    print("\n📦 Applying database migrations...")
-    if not run_command('migrate', verbosity=0):
-        return
-    
-    # Create admin user
+def setup_admin_user():
+    """Create the admin user."""
     print("\n👤 Creating admin user...")
     admin_username = os.environ.get('DJANGO_ADMIN_USERNAME', 'admin')
     admin_email = os.environ.get('DJANGO_ADMIN_EMAIL', 'admin@isp.com')
@@ -90,25 +76,16 @@ def main():
     else:
         admin_password_source = "env"
 
-    if not run_command('create_admin',
-                      f'--username={admin_username}',
-                      f'--email={admin_email}',
-                      f'--password={admin_password}'):
-        return
-    
-    # Collect static files
-    print("\n📁 Collecting static files...")
-    if not run_command('collectstatic', '--noinput', verbosity=0):
-        return
-    
-    # Seed with real data
-    print("\n🌱 Seeding database with real data...")
-    if not run_command('seed_real_data', '--customers=100', '--subscriptions=200'):
-        return
-    
-    # Create superuser (backup)
-    print("\n🔐 Creating backup superuser...")
+    success = run_command('create_admin',
+                          f'--username={admin_username}',
+                          f'--email={admin_email}',
+                          f'--password={admin_password}')
+    return success, admin_username, admin_password, admin_password_source
 
+
+def setup_backup_superuser():
+    """Create the backup superuser."""
+    print("\n🔐 Creating backup superuser...")
     superuser_username = os.environ.get('DJANGO_SUPERUSER_USERNAME', 'superadmin')
     superuser_email = os.environ.get('DJANGO_SUPERUSER_EMAIL', 'superadmin@isp.com')
     superuser_password = os.environ.get('DJANGO_SUPERUSER_PASSWORD')
@@ -119,6 +96,7 @@ def main():
     else:
         superuser_password_source = "env"
 
+    success = True
     try:
         if not User.objects.filter(username=superuser_username).exists():
             User.objects.create_superuser(
@@ -136,6 +114,43 @@ def main():
             print("ℹ️  Backup superuser already exists")
     except Exception as e:
         print(f"❌ Failed to create backup superuser: {e}")
+        success = False
+
+    return success, superuser_username, superuser_password, superuser_password_source
+
+
+def main():
+    """Main setup function."""
+    print("🚀 Setting up ISP Admin Panel for production...")
+    print("=" * 50)
+
+    # Check database connection
+    if not check_database_connection():
+        print("❌ Cannot proceed without database connection")
+        return
+
+    # Apply migrations
+    print("\n📦 Applying database migrations...")
+    if not run_command('migrate', verbosity=0):
+        return
+
+    # Create admin user
+    success, admin_username, admin_password, admin_password_source = setup_admin_user()
+    if not success:
+        return
+
+    # Collect static files
+    print("\n📁 Collecting static files...")
+    if not run_command('collectstatic', '--noinput', verbosity=0):
+        return
+
+    # Seed with real data
+    print("\n🌱 Seeding database with real data...")
+    if not run_command('seed_real_data', '--customers=100', '--subscriptions=200'):
+        return
+
+    # Create superuser (backup)
+    success, superuser_username, superuser_password, superuser_password_source = setup_backup_superuser()
     
     print("\n" + "=" * 50)
     print("🎉 Production setup completed successfully!")
