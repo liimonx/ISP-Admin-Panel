@@ -9,6 +9,8 @@ from rest_framework.test import APITestCase
 from rest_framework import status
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from unittest.mock import patch, MagicMock
+from network.services import MikroTikService
 
 User = get_user_model()
 
@@ -150,3 +152,79 @@ class CommandExecutionTest(APITestCase):
             data = {'command': payload}
             response = self.client.post(self.url, data)
             self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST, f"Payload '{payload}' should be rejected")
+
+class MikroTikServiceConnectionTest(TestCase):
+    def setUp(self):
+        self.router = Router.objects.create(
+            name="Test Router",
+            host="192.168.1.1",
+            username="admin",
+            password="password",
+            api_port=8728,
+            router_type=Router.RouterType.MIKROTIK,
+            status=Router.Status.ONLINE,
+        )
+
+    @patch('network.services.MikroTikService.connect')
+    def test_connection_success(self, mock_connect):
+        service = MikroTikService(self.router)
+        service._mock_mode = False
+
+        mock_connection = MagicMock()
+        service.connection = mock_connection
+
+        def mock_path(*args):
+            path_mock = MagicMock()
+            if args == ('system', 'resource'):
+                path_mock.select.return_value = [{'version': '7.1', 'uptime': '1d', 'cpu-load': 10, 'free-memory': 100, 'total-memory': 200}]
+            elif args == ('system', 'identity'):
+                path_mock.select.return_value = [{'name': 'Router1'}]
+            return path_mock
+
+        mock_connection.path.side_effect = mock_path
+
+        result = service.test_connection()
+        self.assertTrue(result['success'])
+        self.assertIn('response_time_ms', result)
+        self.assertEqual(result['api_version'], '7.1')
+        self.assertEqual(result['router_name'], 'Router1')
+        self.assertEqual(result['uptime'], '1d')
+        self.assertEqual(result['cpu_usage'], 10)
+        self.assertEqual(result['memory_usage'], 50)
+
+    @patch('network.services.MikroTikService.connect')
+    def test_connection_empty_response(self, mock_connect):
+        service = MikroTikService(self.router)
+        service._mock_mode = False
+
+        mock_connection = MagicMock()
+        service.connection = mock_connection
+
+        def mock_path(*args):
+            path_mock = MagicMock()
+            path_mock.select.return_value = []
+            return path_mock
+
+        mock_connection.path.side_effect = mock_path
+
+        result = service.test_connection()
+        self.assertFalse(result['success'])
+        self.assertEqual(result['error'], 'No response from router')
+
+    @patch('network.services.MikroTikService.connect')
+    def test_connection_failure_exception(self, mock_connect):
+        service = MikroTikService(self.router)
+        service._mock_mode = False
+
+        # We need to mock connect to raise an exception or mock the connection property path to raise an exception
+        # Actually, in the code, `connect` is not what raises the exception in the test block,
+        # because `connect` is called in `__enter__`. If it fails, it's raised.
+        # Wait, the `try` block in `test_connection` catches exceptions.
+        # Let's mock `connect` to raise an exception.
+
+        mock_connect.side_effect = Exception("Connection Timeout")
+
+        result = service.test_connection()
+        self.assertFalse(result['success'])
+        self.assertEqual(result['error'], 'Connection Timeout')
+        self.assertIn('response_time_ms', result)
