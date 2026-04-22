@@ -93,9 +93,36 @@ TEMPLATES = [
 WSGI_APPLICATION = 'isp_admin.wsgi.application'
 
 # Database
-DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres://user:password@localhost:5432/isp_admin')
-}
+# https://docs.djangoproject.com/en/4.2/ref/settings/#databases
+
+import os
+
+if os.getenv('USE_POSTGRES', 'true').lower() == 'true':
+    # Use PostgreSQL as configured in the original settings
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': env('DB_NAME', default='isp_admin'),
+            'USER': env('DB_USER', default='isp_admin'),
+            'PASSWORD': env('DB_PASSWORD', default='SecureDbPass2024!'),
+            'HOST': env('DB_HOST', default='localhost'),
+            'PORT': env('DB_PORT', default='5432'),
+            'OPTIONS': {
+                'connect_timeout': 10,
+            },
+        }
+    }
+else:
+    # Use SQLite for simpler development setup
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
+    }
+
+CONN_MAX_AGE = env.int('CONN_MAX_AGE', default=60)
+DATABASES['default']['CONN_MAX_AGE'] = CONN_MAX_AGE
 
 # Password validation
 AUTH_PASSWORD_VALIDATORS = [
@@ -155,7 +182,8 @@ REST_FRAMEWORK = {
     'DEFAULT_THROTTLE_RATES': {
         'anon': '100/hour',
         'user': '1000/hour'
-    }
+    },
+    'DEFAULT_THROTTLE_CACHE': 'default',
 }
 
 # JWT Settings
@@ -215,8 +243,18 @@ SPECTACULAR_SETTINGS = {
 }
 
 # Celery Configuration
-CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
+if DEBUG:
+    # In development, use in-memory broker if Redis is not available
+    CELERY_BROKER_URL = 'memory://'
+    CELERY_RESULT_BACKEND = 'cache+memory://'
+    # Disable some Celery features in development to prevent errors
+    CELERY_TASK_ALWAYS_EAGER = True
+    CELERY_TASK_EAGER_PROPAGATES = True
+else:
+    # In production, use Redis
+    CELERY_BROKER_URL = env('REDIS_URL', default='redis://localhost:6379/0')
+    CELERY_RESULT_BACKEND = env('REDIS_URL', default='redis://localhost:6379/0')
+
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
@@ -372,16 +410,25 @@ CONN_MAX_AGE = env.int('CONN_MAX_AGE', default=60)
 DATABASES['default']['CONN_MAX_AGE'] = CONN_MAX_AGE
 
 # Cache Configuration
-CACHES = {
-    'default': env.cache('REDIS_URL', default='locmemcache://'),
-}
-
-# Optional: Keep the explicit redis config if needed for complex options, 
-# but env.cache() handles the common case better for Render/Heroku
-if CACHES['default']['BACKEND'] == 'django_redis.cache.RedisCache':
-    CACHES['default']['OPTIONS'] = {
-        'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-        'IGNORE_EXCEPTIONS': True,  # This tells django-redis to not raise errors on connection failure
+if DEBUG:
+    # In development, use local memory cache as fallback
+    CACHES = {
+        'default': {
+            'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+            'LOCATION': 'default-cache',
+        }
+    }
+else:
+    # In production, use Redis
+    CACHES = {
+        'default': {
+            'BACKEND': 'django_redis.cache.RedisCache',
+            'LOCATION': env('REDIS_URL', default='redis://localhost:6379/0'),
+            'OPTIONS': {
+                'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+                'IGNORE_EXCEPTIONS': True,  # This tells django-redis to not raise errors on connection failure
+            },
+        }
     }
 
 # Main Router Configuration

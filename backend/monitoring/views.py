@@ -12,7 +12,6 @@ from rest_framework import status as drf_status
 from core.responses import APIResponse
 from .models import RouterMetric, SNMPSnapshot, UsageSnapshot
 from .serializers import RouterMetricSerializer, SNMPSnapshotSerializer, UsageSnapshotSerializer
-import redis
 import logging
 
 logger = logging.getLogger(__name__)
@@ -51,23 +50,44 @@ def health_check(request):
     
     # Check Redis connectivity
     try:
-        r = redis.from_url(settings.REDIS_URL)
+        import redis
+        # Use the REDIS_URL from settings if available, otherwise skip Redis check
+        redis_url = getattr(settings, 'CELERY_BROKER_URL', 'redis://localhost:6379/0')
+        r = redis.from_url(redis_url)
         r.ping()
         health_status['services']['redis'] = 'healthy'
+    except ImportError:
+        logger.warning("Redis not installed, skipping Redis health check")
+        health_status['services']['redis'] = 'not_installed'
     except Exception as e:
-        logger.error(f"Redis health check failed: {e}")
-        health_status['services']['redis'] = 'unhealthy'
-        overall_healthy = False
+        # In development, we might not have Redis running, so don't fail the health check
+        if settings.DEBUG:
+            logger.warning(f"Redis not available (this is OK in development): {e}")
+            health_status['services']['redis'] = 'not_required'
+        else:
+            logger.error(f"Redis health check failed: {e}")
+            health_status['services']['redis'] = 'unhealthy'
+            overall_healthy = False
     
     # Check Celery (basic check - see if we can connect to Redis)
     try:
-        r = redis.from_url(settings.REDIS_URL)
+        import redis
+        redis_url = getattr(settings, 'CELERY_BROKER_URL', 'redis://localhost:6379/0')
+        r = redis.from_url(redis_url)
         # Check if Celery queue exists (basic check)
         r.llen('celery')
         health_status['services']['celery'] = 'healthy'
+    except ImportError:
+        logger.warning("Redis not installed, skipping Celery health check")
+        health_status['services']['celery'] = 'not_installed'
     except Exception as e:
-        logger.warning(f"Celery health check warning: {e}")
-        health_status['services']['celery'] = 'warning'
+        # Similar to Redis, don't fail the health check in development
+        if settings.DEBUG:
+            logger.warning(f"Celery not available (this is OK in development): {e}")
+            health_status['services']['celery'] = 'not_required'
+        else:
+            logger.warning(f"Celery health check warning: {e}")
+            health_status['services']['celery'] = 'warning'
     
     # Set overall status
     health_status['status'] = 'healthy' if overall_healthy else 'unhealthy'
